@@ -11,7 +11,7 @@
  *  - add UI for naming zips
  *  - add UI for attaching zip to notification
  *
- * @version   1.2
+ * @version   1.3
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/
@@ -216,6 +216,11 @@ class GW_Zip_Files {
 		foreach ( $form['fields'] as $field ) {
 			if ( $this->is_applicable_field( $field ) ) {
 				return true;
+			} elseif ( $field->type === 'form' ) {
+				$child_form = GFAPI::get_form( $field->gpnfForm );
+				if ( $this->has_applicable_field( $child_form ) ) {
+					return true;
+				}
 			}
 		}
 
@@ -460,8 +465,8 @@ class GW_Zip_Files {
 
 new GW_Zip_Files(
 	array(
-		'form_id' => 123,
-		'zip_name' => 'my-sweet-archive',
+		'form_id'       => 123,
+		'zip_name'      => 'my-sweet-archive',
 		'notifications' => array( '5f4668ec2afbb' ),
-	)
+	),
 );
