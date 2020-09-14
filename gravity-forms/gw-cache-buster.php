@@ -4,7 +4,7 @@
  *
  * Bypass your website cache when loading a Gravity Forms form.
  *
- * @version 0.2
+ * @version 0.3
  * @author  David Smith <david@gravitywiz.com>
  * @license GPL-2.0+
  * @link    http://gravitywiz.com/
@@ -13,11 +13,9 @@
  * Plugin URI: http://gravitywiz.com/
  * Description: Bypass your website cache when loading a Gravity Forms form.
  * Author: Gravity Wiz
- * Version: 0.2
+ * Version: 0.3
  * Author URI: http://gravitywiz.com
  *
- * @todo
- * - Pass query string to AJAX form.
  */
 class GW_Cache_Buster {
 
@@ -138,9 +136,21 @@ class GW_Cache_Buster {
 				}
 			</style>
 		</div>
+		<?php
+		// Store current URL parameters and include them in AJAX call
+		// This preserves dynamic form population
+		$params         = array();
+		$exclude_params = array( 'action', 'form_id', 'atts' ); // Exclude parameters that may clash
+		foreach ( $_GET as $k => $v ) {
+			if ( ! in_array( $k, $exclude_params, true ) ) {
+				$params[ $k ] = sprintf( '%s=%s', $k, $_GET[ $k ] );
+			}
+		}
+		$params = ( count( $params ) > 0 ) ? '&' . join( '&', $params ) : '';
+		?>
 		<script type="text/javascript">
 			( function ( $ ) {
-				$.post( '<?php echo admin_url( 'admin-ajax.php' ); ?>?action=gfcb_get_form&form_id=<?php echo $form_id; ?>', {
+				$.post( '<?php echo admin_url( 'admin-ajax.php' ); ?>?action=gfcb_get_form&form_id=<?php echo $form_id, $params; ?>', {
 					action: 'gfcb_get_form',
 					form_id: '<?php echo $form_id; ?>',
 					atts: '<?php echo json_encode( $attributes ); ?>'
