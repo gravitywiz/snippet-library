@@ -31,41 +31,43 @@ class GW_Rounding {
 	protected $class_regex = 'gw-round-(\w+)-?(\w+)?';
 
 	public static function get_instance() {
-		if( null == self::$instance )
+		if ( null == self::$instance ) {
 			self::$instance = new self;
+		}
 		return self::$instance;
 	}
 
 	private function __construct( $args = array() ) {
 
 		// make sure we're running the required minimum version of Gravity Forms
-		if( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=' ) )
+		if ( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=' ) ) {
 			return;
+		}
 
 		// time for hooks
-		add_filter( 'gform_pre_render',            array( $this, 'prepare_form_and_load_script' ), 10, 2 );
+		add_filter( 'gform_pre_render', array( $this, 'prepare_form_and_load_script' ), 10, 2 );
 		add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ) );
-		add_filter( 'gform_enqueue_scripts',       array( $this, 'enqueue_form_scripts' ) );
+		add_filter( 'gform_enqueue_scripts', array( $this, 'enqueue_form_scripts' ) );
 
-		add_action( 'gform_pre_submission',     array( $this, 'override_submitted_value' ), 10, 5 );
+		add_action( 'gform_pre_submission', array( $this, 'override_submitted_value' ), 10, 5 );
 		add_filter( 'gform_calculation_result', array( $this, 'override_submitted_calculation_value' ), 10, 5 );
 
 	}
 
 	public function prepare_form_and_load_script( $form, $is_ajax_enabled ) {
 
-		if( ! $this->is_applicable_form( $form ) ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
 			return $form;
 		}
 
-		if( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
-			add_action( 'wp_footer',            array( $this, 'output_script' ) );
+		if ( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
+			add_action( 'wp_footer', array( $this, 'output_script' ) );
 			add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
-			add_action( 'admin_footer',         array( $this, 'output_script' ) );
+			add_action( 'admin_footer', array( $this, 'output_script' ) );
 		}
 
-		foreach( $form['fields'] as &$field ) {
-			if( preg_match( $this->get_class_regex(), $field['cssClass'] ) ) {
+		foreach ( $form['fields'] as &$field ) {
+			if ( preg_match( $this->get_class_regex(), $field['cssClass'] ) ) {
 				$field['cssClass'] .= ' gw-rounding';
 			}
 		}
@@ -277,13 +279,13 @@ class GW_Rounding {
 
 	function add_init_script( $form ) {
 
-		if( ! $this->is_applicable_form( $form ) ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
 			return;
 		}
 
-		$args = array(
-			'formId'    => $form['id'],
-			'classRegex' => $this->class_regex
+		$args   = array(
+			'formId'     => $form['id'],
+			'classRegex' => $this->class_regex,
 		);
 		$script = 'new GWRounding( ' . json_encode( $args ) . ' );';
 
@@ -293,7 +295,7 @@ class GW_Rounding {
 
 	function enqueue_form_scripts( $form ) {
 
-		if( $this->is_applicable_form( $form ) ) {
+		if ( $this->is_applicable_form( $form ) ) {
 			wp_enqueue_script( 'gform_gravityforms' );
 		}
 
@@ -301,13 +303,13 @@ class GW_Rounding {
 
 	function override_submitted_value( $form ) {
 
-		foreach( $form['fields'] as $field ) {
-			if( $this->is_applicable_field( $field ) && ! is_a( $field, 'GF_Field_Calculation' ) ) {
+		foreach ( $form['fields'] as $field ) {
+			if ( $this->is_applicable_field( $field ) && ! is_a( $field, 'GF_Field_Calculation' ) ) {
 
 				$value = rgpost( "input_{$field['id']}" );
 
 				$is_currency = $field->get_input_type() == 'number' && $field->numberFormat == 'currency';
-				if( $is_currency ) {
+				if ( $is_currency ) {
 					$value = GFCommon::to_number( $value );
 				}
 
@@ -322,7 +324,7 @@ class GW_Rounding {
 
 	function override_submitted_calculation_value( $result, $formula, $field, $form, $entry ) {
 
-		if( $this->is_applicable_field( $field ) ) {
+		if ( $this->is_applicable_field( $field ) ) {
 			$result = $this->process_rounding_actions( $result, $this->get_rounding_actions( $field ) );
 		}
 
@@ -331,7 +333,7 @@ class GW_Rounding {
 
 	function process_rounding_actions( $value, $actions ) {
 
-		foreach( $actions as $action ) {
+		foreach ( $actions as $action ) {
 			$value = $this->round( $value, $action['action'], $action['action_value'] );
 		}
 
@@ -340,19 +342,19 @@ class GW_Rounding {
 
 	function round( $value, $action, $action_value ) {
 
-		$value = floatval( $value );
+		$value        = floatval( $value );
 		$action_value = intval( $action_value );
 
-		switch( $action ) {
+		switch ( $action ) {
 			case 'min':
 				$min = $action_value;
-				if( $value < $min ) {
+				if ( $value < $min ) {
 					$value = $min;
 				}
 				break;
 			case 'max':
 				$max = $action_value;
-				if( $value > $max ) {
+				if ( $value > $max ) {
 					$value = $max;
 				}
 				break;
@@ -380,8 +382,8 @@ class GW_Rounding {
 
 	function is_applicable_form( $form ) {
 
-		foreach( $form['fields'] as $field ) {
-			if( $this->is_applicable_field( $field ) ) {
+		foreach ( $form['fields'] as $field ) {
+			if ( $this->is_applicable_field( $field ) ) {
 				return true;
 			}
 		}
@@ -403,18 +405,18 @@ class GW_Rounding {
 
 		preg_match_all( $this->get_class_regex(), rgar( $field, 'cssClass' ), $matches, PREG_SET_ORDER );
 
-		foreach( $matches as $match ) {
+		foreach ( $matches as $match ) {
 
 			list( $full_match, $action, $action_value ) = array_pad( $match, 3, false );
 
-			if( $action_value === false ) {
+			if ( $action_value === false ) {
 				$action_value = $action;
-				$action = 'round';
+				$action       = 'round';
 			}
 
 			$action = array(
 				'action'       => $action,
-				'action_value' => $action_value
+				'action_value' => $action_value,
 			);
 
 			$actions[] = $action;
