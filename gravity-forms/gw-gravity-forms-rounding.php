@@ -28,7 +28,7 @@ class GW_Rounding {
 
 	protected static $is_script_output = false;
 
-	protected $class_regex = 'gw-round-(\w+)-?(\w+)?';
+	protected $class_regex = 'gw-round-([\w|0-9.]+)-?([\w|0-9.]+)?';
 
 	public static function get_instance() {
 		if ( null == self::$instance ) {
@@ -125,7 +125,6 @@ class GW_Rounding {
 
 						var matches         = getMatchGroups( String( str ), new RegExp( self.classRegex.replace( /\\/g, '\\' ), 'i' ) ),
 							roundingActions = [];
-
 						for( var i = 0; i < matches.length; i++ ) {
 
 							var action      = matches[i][1],
@@ -231,7 +230,7 @@ class GW_Rounding {
 						var interval, base, min, max;
 
 						value = parseFloat( value );
-						actionValue = parseInt( actionValue );
+						actionValue = parseFloat( actionValue );
 
 						switch( action ) {
 							case 'min':
@@ -263,7 +262,7 @@ class GW_Rounding {
 								break;
 						}
 
-						return parseInt( value );
+						return parseFloat( value );
 					};
 
 					self.init();
