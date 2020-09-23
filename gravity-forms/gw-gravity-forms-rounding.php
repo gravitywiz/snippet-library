@@ -161,7 +161,7 @@ class GW_Rounding {
 
 							// Otherwise, target all inputs of the given field.
 							if( ! $targets || ! $targets.length ) {
-								$targets = $( this ).find( 'inputs' );
+								$targets = $( this ).find( 'input' );
 							}
 
 							$targets.each( function() {
