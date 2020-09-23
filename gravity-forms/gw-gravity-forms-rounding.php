@@ -255,6 +255,15 @@ class GW_Rounding {
 								base     = Math.floor( value / interval );
 								value    = base * interval;
 								break;
+							case 'custom':
+								/**
+								 * Custom rounding filter
+								 *
+								 * @param int value       Current input value to be rounded
+								 * @param int actionValue Custom value passed in CSS class name (e.g. gw-rounding-custom-10, actionValue = 10)
+								 */
+								value = window.gform.applyFilters( 'gw-rounding-custom', value, actionValue );
+								break;
 							default:
 								interval = actionValue;
 								base     = Math.round( value / interval );
