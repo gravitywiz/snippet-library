@@ -226,7 +226,6 @@ class GW_Rounding {
 					};
 
 					GWRounding.round = function( value, actionValue, action ) {
-
 						var interval, base, min, max;
 
 						value = parseFloat( value );
@@ -255,19 +254,26 @@ class GW_Rounding {
 								base     = Math.floor( value / interval );
 								value    = base * interval;
 								break;
-							case 'custom':
+							case 'round':
+								interval = actionValue;
+								base = Math.round(value / interval);
+								value = base * interval;
+								break;
+							default:
 								/**
 								 * Custom rounding filter
+								 *
+								 * Use this filter to implement your own rounding method. The filter's name is based on
+								 * the CSS class set on the field.
+								 *
+								 * Example:
+								 * CSS Class: gw-rounding-mycustomroundroundingfunc-10
+								 * Filter: gw_rounding_mycustomroundingfunc
 								 *
 								 * @param int value       Current input value to be rounded
 								 * @param int actionValue Custom value passed in CSS class name (e.g. gw-rounding-custom-10, actionValue = 10)
 								 */
-								value = window.gform.applyFilters( 'gw-rounding-custom', value, actionValue );
-								break;
-							default:
-								interval = actionValue;
-								base     = Math.round( value / interval );
-								value    = base * interval;
+								value = window.gform.applyFilters( 'gw_rounding_{0}'.format(action), value, actionValue );
 								break;
 						}
 
