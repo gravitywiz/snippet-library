@@ -357,7 +357,7 @@ class GW_Rounding {
 	function round( $value, $action, $action_value ) {
 
 		$value        = floatval( $value );
-		$action_value = intval( $action_value );
+		$action_value = floatval( $action_value );
 
 		switch ( $action ) {
 			case 'min':
@@ -382,14 +382,30 @@ class GW_Rounding {
 				$base     = floor( $value / $interval );
 				$value    = $base * $interval;
 				break;
-			default:
+			case 'round':
 				$interval = $action_value;
 				$base     = round( $value / $interval );
 				$value    = $base * $interval;
 				break;
+			default:
+				/**
+				 * Custom rounding filter
+				 *
+				 * Use this filter to implement your own rounding method. The filter's name is based on
+				 * the CSS class set on the field.
+				 *
+				 * Example:
+				 * CSS Class: gw-rounding-mycustomroundroundingfunc-10
+				 * Filter: gw_rounding_mycustomroundingfunc
+				 *
+				 * @param int $value       Current input value to be rounded
+				 * @param int $actionValue Custom value passed in CSS class name (e.g. gw-rounding-custom-10, actionValue = 10)
+				 */
+				$value = apply_filters( sprintf( 'gw_rounding_%s', $action, $value, $action_value ) );
+				break;
 		}
 
-		return intval( $value );
+		return floatval( $value );
 	}
 
 	// # HELPERS
