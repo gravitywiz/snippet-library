@@ -10,7 +10,7 @@
  * employees are assigned to the next available shift, and/or balancing the responsibility of any task-oriented
  * submission (e.g. support request, job application, contest entry).
  *
- * @version  1.2
+ * @version  1.3
  * @author   David Smith <david@gravitywiz.com>
  * @license  GPL-2.0+
  * @link     http://gravitywiz.com/
@@ -118,7 +118,13 @@ class GW_Round_Robin {
 
 	public function get_rotation_values( $field_id, $form ) {
 
-		$field    = GFAPI::get_field( $form, $field_id );
+		$field = clone GFAPI::get_field( $form, $field_id );
+
+		// Add support for GP Limit Choices.
+		if ( is_callable( 'gp_limit_choices' ) ) {
+			$field->choices = gp_limit_choices()->apply_choice_limits( $field->choices, $field, $form );
+		}
+
 		$rotation = array_filter( wp_list_pluck( $field->choices, 'value' ) );
 
 		return $rotation;
@@ -135,23 +141,7 @@ class GW_Round_Robin {
 
 # Configuration
 
-new GW_Round_Robin(
-	array(
-		'form_id'  => 123,
-		'field_id' => 4,
-	)
-);
-
-new GW_Round_Robin(
-	array(
-		'form_id'  => 719,
-		'field_id' => 3,
-	)
-);
-
-new GW_Round_Robin(
-	array(
-		'form_id'  => 719,
-		'field_id' => 4,
-	)
-);
+new GW_Round_Robin( array(
+	'form_id'  => 123,
+	'field_id' => 4,
+) );
