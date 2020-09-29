@@ -10,7 +10,7 @@
  *  + rounding up to a specific minimum   (i.e. min of 50 would round 1 to 50, 51 and greater would not be rounded) | class: 'gw-round-min-50'
  *  + rounding down to a specific maximum (i.e. max of 25 would round 26 to 25, 25 and below would not be rounded)  | class: 'gw-round-max-25'
  *
- * @version 1.12
+ * @version 1.13
  * @author  David Smith <david@gravitywiz.com>
  * @license GPL-2.0+
  * @link    http://gravitywiz.com/rounding-increments-gravity-forms/
@@ -19,7 +19,7 @@
  * Plugin URI:   http://gravitywiz.com/rounding-increments-gravity-forms/
  * Description:  Round your field values (including calculations) up, down, by an increment, or to a specific minimum or maximum value.
  * Author:       Gravity Wiz
- * Version:      1.12
+ * Version:      1.13
  * Author URI:   http://gravitywiz.com
  */
 class GW_Rounding {
@@ -126,11 +126,10 @@ class GW_Rounding {
 						var matches         = getMatchGroups( String( str ), new RegExp( self.classRegex.replace( /\\/g, '\\' ), 'i' ) ),
 							roundingActions = [];
 						for( var i = 0; i < matches.length; i++ ) {
-
 							var action      = matches[i][1],
 								actionValue = matches[i][2];
 
-							if( typeof actionValue == 'undefined' ) {
+							if( typeof actionValue == 'undefined' && ! isNaN( parseFloat( action ) ) ) {
 								actionValue = action;
 								action = 'round';
 							}
@@ -227,10 +226,8 @@ class GW_Rounding {
 
 					GWRounding.round = function( value, actionValue, action ) {
 						var interval, base, min, max;
-
 						value = parseFloat( value );
 						actionValue = parseFloat( actionValue );
-
 						switch( action ) {
 							case 'min':
 								min = actionValue;
@@ -267,13 +264,13 @@ class GW_Rounding {
 								 * the CSS class set on the field.
 								 *
 								 * Example:
-								 * CSS Class: gw-rounding-mycustomroundroundingfunc-10
-								 * Filter: gw_rounding_mycustomroundingfunc
+								 * CSS Class: gw-round-mycustomroundroundingfunc-10
+								 * Filter: gw_round_mycustomroundingfunc
 								 *
 								 * @param int value       Current input value to be rounded
-								 * @param int actionValue Custom value passed in CSS class name (e.g. gw-rounding-custom-10, actionValue = 10)
+								 * @param int actionValue Custom value passed in CSS class name (e.g. gw-round-custom-10, actionValue = 10)
 								 */
-								value = window.gform.applyFilters( 'gw_rounding_{0}'.format(action), value, actionValue );
+								value = window.gform.applyFilters( 'gw_round_{0}'.format(action), value, actionValue );
 								break;
 						}
 
@@ -395,13 +392,13 @@ class GW_Rounding {
 				 * the CSS class set on the field.
 				 *
 				 * Example:
-				 * CSS Class: gw-rounding-mycustomroundroundingfunc-10
-				 * Filter: gw_rounding_mycustomroundingfunc
+				 * CSS Class: gw-round-mycustomroundroundingfunc-10
+				 * Filter: gw_round_mycustomroundingfunc
 				 *
 				 * @param int $value       Current input value to be rounded
-				 * @param int $actionValue Custom value passed in CSS class name (e.g. gw-rounding-custom-10, actionValue = 10)
+				 * @param int $actionValue Custom value passed in CSS class name (e.g. gw-round-custom-10, actionValue = 10)
 				 */
-				$value = apply_filters( sprintf( 'gw_rounding_%s', $action, $value, $action_value ) );
+				$value = apply_filters( sprintf( 'gw_round_%s', $action ), $value, $action_value );
 				break;
 		}
 
@@ -439,7 +436,7 @@ class GW_Rounding {
 
 			list( $full_match, $action, $action_value ) = array_pad( $match, 3, false );
 
-			if ( $action_value === false ) {
+			if ( $action_value === false && is_numeric( $action ) ) {
 				$action_value = $action;
 				$action       = 'round';
 			}
