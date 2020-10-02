@@ -177,9 +177,10 @@ class GW_Populate_Date {
 			if ( is_array( $modifier ) ) {
 				$key            = sprintf( 'input_%s', str_replace( '.', '_', $modifier['inputId'] ) );
 				$modifier_field = GFAPI::get_field( $field->formId, (int) $modifier['inputId'] );
+				$number_format  = $modifier_field->numberFormat ? $modifier_field->numberFormat : 'currency';
 				// Default number format to whatever is set in the currency. This might cause issues if a Number field
 				// is configured to a different number format; however, this matches how the JS works for now.
-				$value    = gf_apply_filters( array( 'gwpd_get_field_value', $this->_args['form_id'], $modifier['inputId'] ), GFCommon::clean_number( rgpost( $key ), 'currency' ), $modifier['inputId'] );
+				$value    = gf_apply_filters( array( 'gwpd_get_field_value', $this->_args['form_id'], $modifier['inputId'] ), GFCommon::clean_number( rgpost( $key ), $number_format ), $modifier['inputId'] );
 				$modifier = $value > 0 ? sprintf( str_replace( '{0}', '%d', $modifier['modifier'] ), $value ) : false;
 			}
 
@@ -305,12 +306,27 @@ class GW_Populate_Date {
 					self.getFieldValue = function( inputId ) {
 
 						var $input = self.getInputs( inputId ),
-							value  = gformToNumber( $input.val() );
+							value  = self.getCleanNumber( $input.val(), gformExtractFieldId( inputId ), self.formId );
 
 						value = gform.applyFilters( 'gwpd_get_field_value', value, $input, inputId );
 
 						return value;
 					};
+
+					/**
+					 * Gravity Forms gformToNumber() and other number-conversion methods do a great job converting
+					 * currency text to raw numbers but they are still in numeric format of the specified currency
+					 */
+					self.getCleanNumber = function( value, fieldId, formId ) {
+						var numberFormat = gf_get_field_number_format( fieldId, formId );
+						var decimalSep   = gformGetDecimalSeparator( numberFormat ? numberFormat : 'currency' );
+						if ( decimalSep === ',' ) {
+							value = value.replace( '.', '' ).replace( ',', '.' );
+						} else {
+							value = value.replace( ',', '' );
+						}
+						return parseFloat( value );
+					}
 
 					self.getInputs = function( inputId ) {
 
