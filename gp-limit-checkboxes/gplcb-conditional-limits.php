@@ -4,7 +4,7 @@
  *
  * Provide conditional min/max for your checkbox fields.
  *
- * @version   0.4
+ * @version   0.5
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/...
@@ -16,7 +16,7 @@
  * Version: 0.4
  * Author URI: http://gravitywiz.com
  */
-class GPLC_Conditional_Limits {
+class GPLCB_Conditional_Limits {
 
 	protected static $is_script_output = false;
 
@@ -87,7 +87,7 @@ class GPLC_Conditional_Limits {
 					window['gf_form_conditional_logic'] = [];
 				}
 
-				window.GPLCConditionalLimits = function( args ) {
+				window.GPLCBConditionalLimits = function( args ) {
 
 					var self = this;
 
@@ -170,7 +170,7 @@ class GPLC_Conditional_Limits {
 			'conditionals' => $this->_args['conditionals'],
 		);
 
-		$script = 'new GPLCConditionalLimits( ' . json_encode( $args ) . ' );';
+		$script = 'new GPLCBConditionalLimits( ' . json_encode( $args ) . ' );';
 		$slug   = implode( '_', array( __class__, $this->_args['form_id'], $this->_args['field_id'] ) );
 
 		GFFormDisplay::add_init_script( $this->_args['form_id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
@@ -205,7 +205,7 @@ class GPLC_Conditional_Limits {
 
 # Configuration
 
-new GPLC_Conditional_Limits( array(
+new GPLCB_Conditional_Limits( array(
     'form_id' => 1654,
     'field_id' => 7,
     'conditionals' => array(
