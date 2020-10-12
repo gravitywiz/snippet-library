@@ -48,7 +48,14 @@ class GW_Create_Coupon {
 		}
 
 		$coupon_code = rgar( $entry, $this->_args['source_field_id'] );
-		$coupon_name = rgar ($entry, $this->_args['name_field_id']);
+
+		if ($this->_args['name_field_id'] == false){
+			$coupon_name = $coupon_code;
+		}else{
+			$coupon_name = rgar ($entry, $this->_args['name_field_id']);
+			$coupon_name = ($coupon_name == ''? $coupon_code : $coupon_name);
+		}
+		
 		$amount      = $this->_args['amount'];
 		$type        = $this->_args['type'];
 
@@ -171,11 +178,11 @@ class GW_Create_Coupon {
 	 *
 	 * @link https://gist.github.com/mikejolley/3969579#file-gistfile1-txt
 	 */
-	public function create_coupon_wc( $coupon_code, $amount, $type, $entry, $form ) {
+	public function create_coupon_wc( $coupon_name, $coupon_code, $amount, $type, $entry, $form ) {
 
 		$coupon = array(
 			'post_title'   => $coupon_code,
-			'post_content' => '',
+			'post_content' => $coupon_name,
 			'post_status'  => 'publish',
 			'post_author'  => 1,
 			'post_type'	   => 'shop_coupon'
