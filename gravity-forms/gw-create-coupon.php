@@ -18,6 +18,7 @@ class GW_Create_Coupon {
 		$this->_args = wp_parse_args( $args, array(
 			'form_id'         => false,
 			'source_field_id' => false,
+			'name_field_id'   => false,
 			'plugin'          => 'gf', // accepts: 'gf', 'wc', 'edd'
 			'amount'          => 0,
 			'type'            => '', // accepts: 'fixed_cart', 'percent', 'fixed_product', 'percent_product'
@@ -47,6 +48,7 @@ class GW_Create_Coupon {
 		}
 
 		$coupon_code = rgar( $entry, $this->_args['source_field_id'] );
+		$coupon_name = rgar ($entry, $this->_args['name_field_id']);
 		$amount      = $this->_args['amount'];
 		$type        = $this->_args['type'];
 
@@ -61,19 +63,19 @@ class GW_Create_Coupon {
 		$plugin_func = array( $this, sprintf( 'create_coupon_%s', $this->_args['plugin'] ) );
 
 		if( is_callable( $plugin_func ) ) {
-			call_user_func( $plugin_func, $coupon_code, $amount, $type, $entry, $form );
+			call_user_func( $plugin_func, $coupon_name, $coupon_code, $amount, $type, $entry, $form );
 		}
 
 	}
 
-	public function create_coupon_edd( $coupon_code, $amount, $type, $entry, $form ) {
+	public function create_coupon_edd( $coupon_name, $coupon_code, $amount, $type, $entry, $form ) {
 
 		if( ! is_callable( 'edd_store_discount' ) ) {
 			return;
 		}
 
 		$meta = wp_parse_args( $this->_args['meta'], array(
-			'name'              => $coupon_code,
+			'name'              => $coupon_name,
 			'code'              => $coupon_code,
 			'type'              => $type,
 			'amount'            => $amount,
@@ -112,7 +114,7 @@ class GW_Create_Coupon {
 
 	}
 
-	public function create_coupon_gf( $coupon_code, $amount, $type, $entry, $form ) {
+	public function create_coupon_gf( $coupon_name, $coupon_code, $amount, $type, $entry, $form ) {
 
 		if( ! class_exists( 'GFCoupons' ) ) {
 			return;
@@ -127,7 +129,7 @@ class GW_Create_Coupon {
 
 		$meta = wp_parse_args( $this->_args['meta'], array(
 			'form_id'           => false,
-			'coupon_name'       => $coupon_code,
+			'coupon_name'       => $coupon_name,
 			'coupon_code'       => strtoupper( $coupon_code ),
 			'coupon_type'       => $type, // 'flat', 'percentage'
 			'coupon_amount'     => $amount,
@@ -220,6 +222,8 @@ new GW_Create_Coupon( array(
 	'form_id'         => 608,
 	// ID of the field whose value will be used as the coupon code
 	'source_field_id' => 1,
+	// ID of the field whose value will be used as the title of the coupon
+	'name_field_id'   => 2,
 	// which plugin the coupon should be created for (i.e. WooCommerce = 'wc')
 	'plugin'          => '', // accepts: 'gf', 'wc', 'edd'
 	// type of coupon code to be created, available types will differ depending on the plugin
