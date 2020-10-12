@@ -55,7 +55,7 @@ class GW_Create_Coupon {
 			$coupon_name = rgar ($entry, $this->_args['name_field_id']);
 			$coupon_name = ($coupon_name == ''? $coupon_code : $coupon_name);
 		}
-		
+
 		$amount      = $this->_args['amount'];
 		$type        = $this->_args['type'];
 
@@ -180,6 +180,7 @@ class GW_Create_Coupon {
 	 */
 	public function create_coupon_wc( $coupon_name, $coupon_code, $amount, $type, $entry, $form ) {
 
+		// WooCommerce coupon uses the Post Title as the coupon code hence $coupon_code is assiged to Post Title and $coupon_name is assigned to the Post Content
 		$coupon = array(
 			'post_title'   => $coupon_code,
 			'post_content' => $coupon_name,
