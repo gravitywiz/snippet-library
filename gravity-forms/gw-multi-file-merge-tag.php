@@ -1,13 +1,13 @@
 <?php
 /**
 * Gravity Wiz // Multi-File Merge Tag for Post Content Templates
-* 
-* Enhance the merge tag for multi-file upload fields by adding support for outputting markup that corresponds to the 
-* uploaded file. Example: image files will be wrapped in an <img> tag. Out of the box, this snippet only supports 
+*
+* Enhance the merge tag for multi-file upload fields by adding support for outputting markup that corresponds to the
+* uploaded file. Example: image files will be wrapped in an <img> tag. Out of the box, this snippet only supports
 * images and is limited to the 'jpg', 'png', and 'gif'.
-* 
+*
 * The default merge tag for the multi-file upload field will output the URL for each of the files.
-* 
+*
 * @version   1.5
 * @author    David Smith <david@gravitywiz.com>
 * @license   GPL-2.0+
@@ -15,259 +15,263 @@
 * @copyright 2018 Gravity Wiz, LLC.
 */
 class GW_Multi_File_Merge_Tag {
-    
-    private static $instance = null;
 
-    /**
-     * Temporarily stores the values of the 'gform_merge_tag_filter' filter for use in the 'gform_replace_merge_tags' filter.
-     *
-     * @var array
-     */
-    private $_merge_tag_args = array();
-    private $_settings = array();
-    
-    private function __construct() {
-        add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_merge_tag' ), 10, 7 );
-        add_filter( 'gform_advancedpostcreation_post', array( $this, 'modify_apc_post_content' ), 10, 4 );
-    }
-    
-    public static function get_instance() {
-        
-        if( null == self::$instance )
-            self::$instance = new self;
-            
-        return self::$instance;
-    }
+	private static $instance = null;
 
-    public function get_default_args() {
-        return array(
-            'form_id' => false,
-            'field_ids' => array(),
-            'exclude_forms' => array(),
-            'default_markup' => '<li><a href="{url}">{filename}.{ext}</a></li>',
-            'markup' => array(
-                array(
-                    'file_types' => array( 'jpg', 'png', 'gif' ),
-                    'markup' => '<img src="{url}" width="33%" />'
-                ),
-                array(
-                    'file_types' => array( 'mp4', 'ogg', 'webm' ),
-                    'markup' => '<video width="320" height="240" controls>
+	/**
+	 * Temporarily stores the values of the 'gform_merge_tag_filter' filter for use in the 'gform_replace_merge_tags' filter.
+	 *
+	 * @var array
+	 */
+	private $_merge_tag_args = array();
+	private $_settings       = array();
+
+	private function __construct() {
+		add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_merge_tag' ), 10, 7 );
+		add_filter( 'gform_advancedpostcreation_post', array( $this, 'modify_apc_post_content' ), 10, 4 );
+	}
+
+	public static function get_instance() {
+
+		if ( null == self::$instance ) {
+			self::$instance = new self;
+		}
+
+		return self::$instance;
+	}
+
+	public function get_default_args() {
+		return array(
+			'form_id'        => false,
+			'field_ids'      => array(),
+			'exclude_forms'  => array(),
+			'default_markup' => '<li><a href="{url}">{filename}.{ext}</a></li>',
+			'markup'         => array(
+				array(
+					'file_types' => array( 'jpg', 'png', 'gif' ),
+					'markup'     => '<img src="{url}" width="33%" />',
+				),
+				array(
+					'file_types' => array( 'mp4', 'ogg', 'webm' ),
+					'markup'     => '<video width="320" height="240" controls>
                                     <source src="{url}" type="video/{ext}">
                                     Your browser does not support the video tag.
-                                 </video>'
-                ),
-                array(
-                    'file_types' => array( 'ogv' ),
-                    'markup' => '<video width="320" height="240" controls>
+                                 </video>',
+				),
+				array(
+					'file_types' => array( 'ogv' ),
+					'markup'     => '<video width="320" height="240" controls>
                                     <source src="{url}" type="video/ogg">
                                     Your browser does not support the video tag.
-                                 </video>'
-                )
-            )
-        );
-    }
+                                 </video>',
+				),
+			),
+		);
+	}
 
-    public function register_settings( $args = array() ) {
+	public function register_settings( $args = array() ) {
 
-        $args = wp_parse_args( $args, $this->get_default_args() );
+		$args = wp_parse_args( $args, $this->get_default_args() );
 
-        if( ! $args['form_id'] ) {
-            $this->_settings['global'] = $args;
-        } else {
-            $this->_settings[ $args['form_id'] ] = $args;
-        }
+		if ( ! $args['form_id'] ) {
+			$this->_settings['global'] = $args;
+		} else {
+			$this->_settings[ $args['form_id'] ] = $args;
+		}
 
-    }
-    
-    public function replace_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ) {
+	}
 
-        preg_match_all( '/{[^{]*?:(\d+(\.\d+)?)(:(.*?))?}/mi', $text, $matches, PREG_SET_ORDER );
-        
-        foreach( $matches as $match ) {
-            
-            $input_id = $match[1];
-            $field = GFFormsModel::get_field( $form, $input_id );
-            
-            if( ! $this->is_applicable_field( $field ) ) {
-	            continue;
-            }
-            
-            if( $format != 'html' ) {
-                
-                $value = $this->_merge_tag_args['value'];
-                
-            } else {
+	public function replace_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ) {
 
-	            if( $entry['id'] == null && is_callable( array( 'GWPreviewConfirmation', 'preview_image_value' ) ) ) {
-		            $files = GWPreviewConfirmation::preview_image_value( 'input_' . $field->id, $field, $form, $entry );
-	            } else {
-		            $value = GFFormsModel::get_lead_field_value( $entry, $field );
-		            $files = empty( $value ) ? array() : json_decode( $value, true );
-	            }
+		preg_match_all( '/{[^{]*?:(\d+(\.\d+)?)(:(.*?))?}/mi', $text, $matches, PREG_SET_ORDER );
 
-                $value = '';
-                if( $files ) {
-                    foreach( $files as &$file ) {
-                        $value .= $this->get_file_markup( $file, $form['id'] );
-                        $value = str_replace( $file, $field->get_download_url( $file, false ), $value );
-                    }
-                }
+		foreach ( $matches as $match ) {
 
-            }
+			$input_id = $match[1];
+			$field    = GFFormsModel::get_field( $form, $input_id );
 
-	        $has_value = ! empty( $value );
+			if ( ! $this->is_applicable_field( $field ) ) {
+				continue;
+			}
 
-            // Replace each instance of our merge tag individually so we can check if it is part of a [gf conditional]
-	        // shortcode; if so, replace the value with 1 so it can correctly evaluate as having a value.
-            do {
-	            $pos = strpos( $text, $match[0] );
-	            if ( $pos !== false ) {
-		            $replace = substr( $text, $pos - 11, 10 ) == 'merge_tag=' ? $has_value : $value;
-		            $text = substr_replace( $text, $replace, $pos, strlen( $match[0] ));
-	            }
-            } while( $pos !== false );
-            
-        }
+			if ( $format !== 'html' ) {
 
-        return $text;
-    }
+				$value = $this->_merge_tag_args['value'];
 
-    public function modify_apc_post_content( $post, $feed, $entry, $form ) {
+			} else {
 
-    	// GF_Advanced_Post_Creation::prepare_post_content() only accepts a feed so we must modify the content directly
+				if ( $entry['id'] === null && is_callable( array( 'GWPreviewConfirmation', 'preview_image_value' ) ) ) {
+					$files = GWPreviewConfirmation::preview_image_value( 'input_' . $field->id, $field, $form, $entry );
+				} else {
+					$value = GFFormsModel::get_lead_field_value( $entry, $field );
+					$files = empty( $value ) ? array() : json_decode( $value, true );
+				}
+
+				$value = '';
+				if ( $files ) {
+					foreach ( $files as &$file ) {
+						$value .= $this->get_file_markup( $file, $form['id'] );
+						$value  = str_replace( $file, $field->get_download_url( $file, false ), $value );
+					}
+				}
+			}
+
+			$has_value = ! empty( $value );
+
+			// Replace each instance of our merge tag individually so we can check if it is part of a [gf conditional]
+			// shortcode; if so, replace the value with 1 so it can correctly evaluate as having a value.
+			do {
+				$pos = strpos( $text, $match[0] );
+				if ( $pos !== false ) {
+					$replace = substr( $text, $pos - 11, 10 ) === 'merge_tag=' ? $has_value : $value;
+					$text    = substr_replace( $text, $replace, $pos, strlen( $match[0] ) );
+				}
+			} while ( $pos !== false );
+
+		}
+
+		return $text;
+	}
+
+	public function modify_apc_post_content( $post, $feed, $entry, $form ) {
+
+		// GF_Advanced_Post_Creation::prepare_post_content() only accepts a feed so we must modify the content directly
 		// in the feed and then pass the modified feed so it can do the rest of its work.
 		$feed['meta']['postContent'] = $this->replace_merge_tag( $feed['meta']['postContent'], $form, $entry, false, false, true, 'html' );
 
 		$post['post_content'] = gf_advancedpostcreation()->prepare_post_content( $feed, $entry, $form );
 
-    	return $post;
+		return $post;
 	}
-    
-    public function get_file_markup( $file, $form_id ) {
-        
-        $value = str_replace( " ", "%20", $file );
-        $file_info = pathinfo( $value );
-        
-        extract( $file_info ); // gives us $dirname, $basename, $extension, $filename
 
-        if( ! $extension )
-            return $value;
+	public function get_file_markup( $file, $form_id ) {
 
-        $markup_settings = $this->get_markup_settings( $form_id );
-        if( empty( $markup_settings ) )
-            return $value;
+		$value     = str_replace( ' ', '%20', $file );
+		$file_info = pathinfo( $value );
 
-        $markup_found = false;
+		extract( $file_info ); // gives us $dirname, $basename, $extension, $filename
 
-        foreach( $markup_settings as $file_type_markup ) {
+		if ( ! $extension ) {
+			return $value;
+		}
 
-            $file_types = array_map( 'strtolower', $file_type_markup['file_types'] );
-            if( ! in_array( strtolower( $extension ), $file_types ) )
-                continue;
+		$markup_settings = $this->get_markup_settings( $form_id );
+		if ( empty( $markup_settings ) ) {
+			return $value;
+		}
 
-            $markup_found = true;
-            $markup = $file_type_markup['markup'];
+		$markup_found = false;
 
-            $tags = array(
-                '{url}' => $file,
-                '{filename}' => $filename,
-                '{basename}' => $basename,
-                '{ext}' => $extension
-            );
+		foreach ( $markup_settings as $file_type_markup ) {
 
-            foreach( $tags as $tag => $tag_value ) {
-                $markup = str_replace( $tag, $tag_value, $markup );
-            }
+			$file_types = array_map( 'strtolower', $file_type_markup['file_types'] );
+			if ( ! in_array( strtolower( $extension ), $file_types, true ) ) {
+				continue;
+			}
 
-            $value = $markup;
-            break;
-        }
+			$markup_found = true;
+			$markup       = $file_type_markup['markup'];
 
-        if( ! $markup_found && $default_markup = $this->get_default_markup( $form_id ) ) {
+			$tags = array(
+				'{url}'      => $file,
+				'{filename}' => $filename,
+				'{basename}' => $basename,
+				'{ext}'      => $extension,
+			);
 
-            $tags = array(
-                '{url}' => $file,
-                '{filename}' => $filename,
-                '{basename}' => $basename,
-                '{ext}' => $extension
-            );
+			foreach ( $tags as $tag => $tag_value ) {
+				$markup = str_replace( $tag, $tag_value, $markup );
+			}
 
-            foreach( $tags as $tag => $tag_value ) {
-                $default_markup = str_replace( $tag, $tag_value, $default_markup );
-            }
+			$value = $markup;
+			break;
+		}
 
-            $value = $default_markup;
+		if ( ! $markup_found && $default_markup = $this->get_default_markup( $form_id ) ) {
 
-        }
-        
-        return $value;
-    }
+			$tags = array(
+				'{url}'      => $file,
+				'{filename}' => $filename,
+				'{basename}' => $basename,
+				'{ext}'      => $extension,
+			);
 
-    public function get_markup_settings( $form_id ) {
+			foreach ( $tags as $tag => $tag_value ) {
+				$default_markup = str_replace( $tag, $tag_value, $default_markup );
+			}
 
-        $form_markup_settings = rgars( $this->_settings, "$form_id/markup" ) ? rgars( $this->_settings, "$form_id/markup" ) : array();
-        $global_markup_settings = rgars( $this->_settings, 'global/markup' ) ? rgars( $this->_settings, 'global/markup' ) : array();
+			$value = $default_markup;
 
-        return array_merge( $form_markup_settings, $global_markup_settings );
-    }
+		}
 
-    public function get_default_markup( $form_id ) {
+		return $value;
+	}
 
-        $default_markup = rgars( $this->_settings, "$form_id/default_markup" );
-        if( ! $default_markup )
-            $default_markup = rgars( $this->_settings, 'global/default_markup' );
+	public function get_markup_settings( $form_id ) {
 
-        return $default_markup;
-    }
+		$form_markup_settings   = rgars( $this->_settings, "$form_id/markup" ) ? rgars( $this->_settings, "$form_id/markup" ) : array();
+		$global_markup_settings = rgars( $this->_settings, 'global/markup' ) ? rgars( $this->_settings, 'global/markup' ) : array();
 
-    public function is_excluded_form( $form_id ) {
+		return array_merge( $form_markup_settings, $global_markup_settings );
+	}
 
-        $has_global_settings = isset( $this->_settings['global'] );
-        $excluded_forms = (array) rgars( $this->_settings, 'global/exclude_forms' );
+	public function get_default_markup( $form_id ) {
 
-        $explicity_excluded = $has_global_settings && in_array( $form_id, $excluded_forms );
-        $passively_excluded = ! $has_global_settings && ! isset( $this->_settings[$form_id] );
+		$default_markup = rgars( $this->_settings, "$form_id/default_markup" );
+		if ( ! $default_markup ) {
+			$default_markup = rgars( $this->_settings, 'global/default_markup' );
+		}
 
-        return $explicity_excluded || $passively_excluded;
-    }
+		return $default_markup;
+	}
 
-    public function is_applicable_field( $field ) {
+	public function is_excluded_form( $form_id ) {
 
-	    $field_ids = rgars( $this->_settings, "{$field->formId}/field_ids" );
+		$has_global_settings = isset( $this->_settings['global'] );
+		$excluded_forms      = (array) rgars( $this->_settings, 'global/exclude_forms' );
 
-        $is_valid_form = ! $this->is_excluded_form( $field['formId'] );
-        $is_matching_field_id = empty( $field_ids ) || in_array( $field->id, $field_ids );
-        $is_file_upload_filed = GFFormsModel::get_input_type( $field ) == 'fileupload';
-        $is_multi = rgar( $field, 'multipleFiles' );
+		$explicity_excluded = $has_global_settings && in_array( $form_id, $excluded_forms );
+		$passively_excluded = ! $has_global_settings && ! isset( $this->_settings[ $form_id ] );
 
-        return $is_valid_form && $is_matching_field_id && $is_file_upload_filed && $is_multi;
-    }
-    
+		return $explicity_excluded || $passively_excluded;
+	}
+
+	public function is_applicable_field( $field ) {
+
+		$field_ids = rgars( $this->_settings, "{$field->formId}/field_ids" );
+
+		$is_valid_form        = ! $this->is_excluded_form( $field['formId'] );
+		$is_matching_field_id = empty( $field_ids ) || in_array( $field->id, $field_ids );
+		$is_file_upload_filed = GFFormsModel::get_input_type( $field ) === 'fileupload';
+		$is_multi             = rgar( $field, 'multipleFiles' );
+
+		return $is_valid_form && $is_matching_field_id && $is_file_upload_filed && $is_multi;
+	}
+
 }
 
 function gw_multi_file_merge_tag() {
-    return GW_Multi_File_Merge_Tag::get_instance();
+	return GW_Multi_File_Merge_Tag::get_instance();
 }
 
 # Usage
 
-//gw_multi_file_merge_tag()->register_settings();
+gw_multi_file_merge_tag()->register_settings();
 
 # Global
 //gw_multi_file_merge_tag()->register_settings( array(
-//    'markup' => array(
-//        array(
-//            'file_types' => array( 'pdf', 'txt', 'doc', 'docx', 'ppt', 'eps', 'zip' ),
-//            'markup' => '<div class="gw-file gw-text gw-{ext}"><a href="{url}"><span>{filename}</span></a><a href="{url}">{filename}</a></div>'
-//        )
-//    )
+//	'markup' => array(
+//		array(
+//			'file_types' => array( 'pdf', 'txt', 'doc', 'docx', 'ppt', 'eps', 'zip' ),
+//			'markup' => '<div class="gw-file gw-text gw-{ext}"><a href="{url}"><span>{filename}</span></a><a href="{url}">{filename}</a></div>'
+//		)
+//	)
 //) );
 
 # Global w/ exclusions
-/*gw_multi_file_merge_tag()->register_settings( array(
-    'exclude_forms' => 378
-) );*/
+//gw_multi_file_merge_tag()->register_settings( array(
+//	'exclude_forms' => 378
+//) );
 
 # Specific form
 //gw_multi_file_merge_tag()->register_settings( array(
@@ -290,39 +294,39 @@ function gw_multi_file_merge_tag() {
 //    )
 //) );
 
-/*gw_multi_file_merge_tag()->register_settings( array(
-    'form_id' => 391,
-    'markup' => array(
-        array(
-            'file_types' => array( 'jpg', 'jpeg', 'png', 'gif' ),
-            'markup' => '<div class="gw-file gw-image gw-{ext}"><a href="{url}"><img src="{url}"></a><a href="{url}">{filename}</a></div>'
-        ),
-        array(
-            'file_types' => array( 'pdf', 'txt', 'doc', 'docx', 'ppt', 'eps', 'zip' ),
-            'markup' => '<div class="gw-file gw-text gw-{ext}"><a href="{url}"><span>{filename}</span></a><a href="{url}">{filename}</a></div>'
-        ),
-        array(
-            'file_types' => array( 'mp4', 'ogg', 'webm' ),
-            'markup' => '<div class="gw-file gw-video gw-{ext}"><video><source src="{url}" type="video/{ext}" />Your browser does not support the video tag.</video><a href="{url}">{filename}</a></div>'
-        ),
-        array(
-            'file_types' => array( 'ogv' ),
-            'markup' => '<div class="gw-file gw-video gw-ogv"><video><source src="{url}" type="video/ogg" />Your browser does not support the video tag.</video><a href="{url}">{filename}</a></div>'
-        ),
-        array(
-            'file_types' => array( 'mp3' ),
-            'markup' => '<div class="gw-file gw-audio gw-{ext}"><audio controls><source src="{url}" type="audio/mpeg">Your browser does not support the audio tag.</audio><a href="{url}">{filename}</a></div>'
-        ),
-        array(
-            'file_types' => array( 'wmv' ),
-            'markup' => '<div class="gw-file gw-video gw-{ext}"><object type="video/x-ms-wmv" data="{url}" width="100%" height="120" >
-                    <param name="src" value="{url}" />
-                    <param name="autostart" value="true" />
-                    <param name="controller" value="true" />
-                    <param name="qtsrcdontusebrowser" value="true" />
-                    <param name="enablejavascript" value="true" />
-                    <a href="{url}">Movie of a Fish Store in Barcelona</a></object><a href="{url}">{filename}</a>
-            </div>'
-        )
-    )
-) );*/
+//gw_multi_file_merge_tag()->register_settings( array(
+//	'form_id' => 391,
+//	'markup' => array(
+//		array(
+//			'file_types' => array( 'jpg', 'jpeg', 'png', 'gif' ),
+//			'markup' => '<div class="gw-file gw-image gw-{ext}"><a href="{url}"><img src="{url}"></a><a href="{url}">{filename}</a></div>'
+//		),
+//		array(
+//			'file_types' => array( 'pdf', 'txt', 'doc', 'docx', 'ppt', 'eps', 'zip' ),
+//			'markup' => '<div class="gw-file gw-text gw-{ext}"><a href="{url}"><span>{filename}</span></a><a href="{url}">{filename}</a></div>'
+//		),
+//		array(
+//			'file_types' => array( 'mp4', 'ogg', 'webm' ),
+//			'markup' => '<div class="gw-file gw-video gw-{ext}"><video><source src="{url}" type="video/{ext}" />Your browser does not support the video tag.</video><a href="{url}">{filename}</a></div>'
+//		),
+//		array(
+//			'file_types' => array( 'ogv' ),
+//			'markup' => '<div class="gw-file gw-video gw-ogv"><video><source src="{url}" type="video/ogg" />Your browser does not support the video tag.</video><a href="{url}">{filename}</a></div>'
+//		),
+//		array(
+//			'file_types' => array( 'mp3' ),
+//			'markup' => '<div class="gw-file gw-audio gw-{ext}"><audio controls><source src="{url}" type="audio/mpeg">Your browser does not support the audio tag.</audio><a href="{url}">{filename}</a></div>'
+//		),
+//		array(
+//			'file_types' => array( 'wmv' ),
+//			'markup' => '<div class="gw-file gw-video gw-{ext}"><object type="video/x-ms-wmv" data="{url}" width="100%" height="120" >
+//					<param name="src" value="{url}" />
+//					<param name="autostart" value="true" />
+//					<param name="controller" value="true" />
+//					<param name="qtsrcdontusebrowser" value="true" />
+//					<param name="enablejavascript" value="true" />
+//					<a href="{url}">Movie of a Fish Store in Barcelona</a></object><a href="{url}">{filename}</a>
+//			</div>'
+//		)
+//	)
+//) );
