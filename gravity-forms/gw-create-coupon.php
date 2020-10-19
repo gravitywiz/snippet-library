@@ -56,10 +56,10 @@ class GW_Create_Coupon {
 			$coupon_name = ($coupon_name == ''? $coupon_code : $coupon_name);
 		}
 
-		$limit_value = rgar($entry, $this->_args['meta']['coupon_limit']);
-		if ($limit_value != null){
-			 $this->_args['meta']['coupon_limit'] = $limit_value;
-		}
+		$limit_value = $this->_args['meta']['coupon_limit'];
+        if( is_callable( $limit_value ) ) {
+            $limit_value = call_user_func( $limit_value );
+        }
 
 		$amount      = $this->_args['amount'];
 		$type        = $this->_args['type'];
