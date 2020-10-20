@@ -20,7 +20,7 @@ class GW_Create_Coupon {
 		$this->_args = wp_parse_args( $args, array(
 			'form_id'         => false,
 			'source_field_id' => false,
-            'name_field_id'   => false,
+			'name_field_id'   => false,
 			'plugin'          => 'gf', // accepts: 'gf', 'wc', 'edd'
 			'amount'          => 0,
 			'type'            => '', // accepts: 'fixed_cart', 'percent', 'fixed_product', 'percent_product'
@@ -59,9 +59,9 @@ class GW_Create_Coupon {
 		}
 
 		$limit_value = $this->_args['meta']['coupon_limit'];
-        if( is_callable( $limit_value ) ) {
-            $limit_value = call_user_func( $limit_value );
-        }
+		if ( is_callable( $limit_value ) ) {
+			$limit_value = call_user_func( $limit_value );
+		}
 
 		$amount = $this->_args['amount'];
 		$type   = $this->_args['type'];
