@@ -4,7 +4,7 @@
 *
 * Allows you to exclude characters from unique IDs generated using GPUID.
 *
-* @version   1.1
+* @version   1.2
 * @author    Eihab Ibrahim <eihab@gravitywiz.com>
 * @license   GPL-2.0+
 * @link      http://gravitywiz.com/calculate-number-of-days-between-two-dates/
@@ -48,16 +48,15 @@ class GWExcludeUIDChars {
 	}
 
 	public function exclude_action( $unique, $form_id, $field_id ) {
-		if ( ! $this->sitewide && ( $form_id !== $this->form_id || $field_id !== $this->field_id ) ) {
+		if ( ! $this->sitewide && ( intval( $form_id ) !== $this->form_id || intval( $field_id ) !== $this->field_id ) ) {
 			return $unique;
 		}
 
 		// Setup valid replacements array
 		$alphanumeric        = array_merge( range( 'a', 'z' ), range( 0, 9 ) );
-		$alphanumeric        = array_diff( $alphanumeric, $this->exclude );
+		$alphanumeric        = array_values( array_diff( $alphanumeric, $this->exclude ) );
 		$alphanumeric_length = count( $alphanumeric );
-
-		$unique = str_split( $unique );
+		$unique              = str_split( $unique );
 
 		for ( $i = 0, $max = count( $unique ); $i < $max; $i++ ) {
 			// Replace excluded characters with a random valid substitute
