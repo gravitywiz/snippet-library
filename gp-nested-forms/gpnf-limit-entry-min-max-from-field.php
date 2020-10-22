@@ -93,18 +93,17 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 
 			if ( $min !== null && $min !== '' && $entry_count < $min ) {
 				$field['failed_validation']  = true;
-				$field['validation_message'] = sprintf( __( 'Please enter a minimum of %d %s', 'gp-nested-forms' ), $min, $min > 1 ? $nested_form_field->get_items_label() : $nested_form_field->get_item_label() );
+				$field['validation_message'] = sprintf( __( 'Please enter a minimum of %1$d %2$s', 'gp-nested-forms' ), $min, $min > 1 ? $nested_form_field->get_items_label() : $nested_form_field->get_item_label() );
 
 				$has_validation_error = true;
 			}
 
 			if ( $max !== null && $max !== '' && $entry_count > $max ) {
 				$field['failed_validation']  = true;
-				$field['validation_message'] = sprintf( __( 'Please enter a maximum of %d %s', 'gp-nested-forms' ), $max, $max > 1 ? $nested_form_field->get_items_label() : $nested_form_field->get_item_label() );
+				$field['validation_message'] = sprintf( __( 'Please enter a maximum of %1$d %2$s', 'gp-nested-forms' ), $max, $max > 1 ? $nested_form_field->get_items_label() : $nested_form_field->get_item_label() );
 
 				$has_validation_error = true;
 			}
-
 		}
 
 		$validation_result['is_valid'] = ! $has_validation_error;
@@ -116,51 +115,51 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 	public function output_script() {
 		?>
 
-        <script type="text/javascript">
+		<script type="text/javascript">
 
-            (function ($) {
+			(function ($) {
 
-                window.GPNFDynamicEntryMax = function (args) {
+				window.GPNFDynamicEntryMax = function (args) {
 
-                    var self = this;
+					var self = this;
 
-                    // copy all args to current object: (list expected props)
-                    for (prop in args) {
-                        if (args.hasOwnProperty(prop))
-                            self[prop] = args[prop];
-                    }
+					// copy all args to current object: (list expected props)
+					for (prop in args) {
+						if (args.hasOwnProperty(prop))
+							self[prop] = args[prop];
+					}
 
-                    self.init = function () {
+					self.init = function () {
 
-                        var maxFieldId = 'input_' + self.parentFormId + '_' + self.maxFieldId;
+						var maxFieldId = 'input_' + self.parentFormId + '_' + self.maxFieldId;
 
-                        gform.addFilter('gpnf_entry_limit_max', function (max, currentFormId, currentFieldId) {
-                            if (self.parentFormId != currentFormId || self.nestedFormFieldId != currentFieldId) {
-                                return max;
-                            }
+						gform.addFilter('gpnf_entry_limit_max', function (max, currentFormId, currentFieldId) {
+							if (self.parentFormId != currentFormId || self.nestedFormFieldId != currentFieldId) {
+								return max;
+							}
 
-                            var $maxField = $( '#' + maxFieldId );
-                            var value = parseInt($maxField.val());
+							var $maxField = $( '#' + maxFieldId );
+							var value = parseInt($maxField.val());
 
-                            return value ? value : self.defaultMax;
-                        });
+							return value ? value : self.defaultMax;
+						});
 
-                        gform.addAction( 'gform_input_change', function( el, formId, fieldId ) {
-                        	if ( el.id === maxFieldId ) {
+						gform.addAction( 'gform_input_change', function( el, formId, fieldId ) {
+							if ( el.id === maxFieldId ) {
 								// Force Knockout to recalculate the max when the number has changed
 								window[ 'GPNestedForms_{0}_{1}'.format( self.parentFormId, self.nestedFormFieldId ) ].viewModel.entries.valueHasMutated();
 							}
 						} );
 
-                    };
+					};
 
-                    self.init();
+					self.init();
 
-                }
+				}
 
-            })(jQuery);
+			})(jQuery);
 
-        </script>
+		</script>
 
 		<?php
 	}
@@ -182,7 +181,7 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 		$slug   = implode( '_', array(
 			'gpnf_dynamic_entry_max_template',
 			$this->_args['parent_form_id'],
-			$this->_args['nested_form_field_id']
+			$this->_args['nested_form_field_id'],
 		) );
 
 		GFFormDisplay::add_init_script( $this->_args['parent_form_id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
