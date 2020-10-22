@@ -132,22 +132,25 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 
                     self.init = function () {
 
-                        var $maxField = $('#input_' + self.parentFormId + '_' + self.maxFieldId);
+                        var maxFieldId = 'input_' + self.parentFormId + '_' + self.maxFieldId;
 
                         gform.addFilter('gpnf_entry_limit_max', function (max, currentFormId, currentFieldId) {
                             if (self.parentFormId != currentFormId || self.nestedFormFieldId != currentFieldId) {
                                 return max;
                             }
 
+                            var $maxField = $( '#' + maxFieldId );
                             var value = parseInt($maxField.val());
 
                             return value ? value : self.defaultMax;
                         });
 
-                        $maxField.on('change', function () {
-                            // Force Knockout to recalculate the max when the number has changed
-                            window['GPNestedForms_' + self.parentFormId + '_' + self.nestedFormFieldId].viewModel.entries.valueHasMutated();
-                        });
+                        gform.addAction( 'gform_input_change', function( el, formId, fieldId ) {
+                        	if ( el.id === maxFieldId ) {
+								// Force Knockout to recalculate the max when the number has changed
+								window[ 'GPNestedForms_{0}_{1}'.format( self.parentFormId, self.nestedFormFieldId ) ].viewModel.entries.valueHasMutated();
+							}
+						} );
 
                     };
 
