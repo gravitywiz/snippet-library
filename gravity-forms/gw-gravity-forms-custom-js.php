@@ -4,7 +4,7 @@
  *
  * Include custom Javascript with your form.
  *
- * @version  1.4
+ * @version  1.5
  * @author   David Smith <david@gravitywiz.com>
  * @license  GPL-2.0+
  * @link     http://gravitywiz.com/
@@ -53,6 +53,8 @@ class GF_Custom_JS {
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_editor_script' ) );
 			add_filter( 'gform_form_settings', array( $this, 'add_custom_js_setting' ), 10, 2 );
 			add_filter( 'gform_pre_form_settings_save', array( $this, 'save_custom_js_setting' ), 10, 2 );
+			add_filter( 'gform_noconflict_scripts', array( $this, 'noconflict_scripts' ) );
+			add_filter( 'gform_noconflict_styles', array( $this, 'noconflict_styles' ) );
 		}
 
 		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
@@ -71,6 +73,20 @@ class GF_Custom_JS {
 		wp_enqueue_script( 'wp-theme-plugin-editor' );
 		wp_enqueue_style( 'wp-codemirror' );
 
+	}
+
+	public function noconflict_scripts( $scripts = array() ) {
+		$scripts[] = 'code-editor';
+		$scripts[] = 'jshint';
+		$scripts[] = 'jsonlint';
+		$scripts[] = 'wp-theme-plugin-editor';
+		return $scripts;
+	}
+
+	public function noconflict_styles( $scripts = array() ) {
+		$scripts[] = 'code-editor';
+		$scripts[] = 'wp-codemirror';
+		return $scripts;
 	}
 
 	public function add_custom_js_setting( $settings, $form ) {
@@ -140,8 +156,8 @@ class GF_Custom_JS {
 				$( document ).bind( 'gform_post_render', function() {
 
 					<?php foreach( $this->get_script_queue() as $script ):
-						echo html_entity_decode( str_replace( array_keys( $allowed_entities ), $allowed_entities, $script ) );
-					endforeach; ?>
+					echo html_entity_decode( str_replace( array_keys( $allowed_entities ), $allowed_entities, $script ) );
+				endforeach; ?>
 
 				} );
 
