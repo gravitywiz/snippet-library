@@ -5,6 +5,9 @@
  *
  * Create a link that will delete an entry when clicked.
  *
+ * Video:
+ * https://www.loom.com/share/b561a5eaf47942a78f5be06cfc98c879
+ *
  * Example of URL:
  * https://local.local/?gppcmt-action=delete&eid={pretty_entry_id}
  *
