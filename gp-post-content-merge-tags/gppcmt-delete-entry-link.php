@@ -22,7 +22,7 @@ add_action( 'init', function() {
 
 	$allowed_form_ids = array( 123 );
 
-	if ( ! isset( $_GET['gppcmt-action'] ) || $_GET['gppcmt-action'] === 'delete' || isset( $_GET['eid'] ) || $_GET['eid'] ) {
+	if ( ! isset( $_GET['gppcmt-action'] ) || $_GET['gppcmt-action'] !== 'delete' || ! isset( $_GET['eid'] ) || ! $_GET['eid'] ) {
 		return;
 	}
 
