@@ -8,7 +8,7 @@
  * Plugin URI:   https://gravitywiz.com/gravity-forms-all-fields-template/
  * Description:  Modify the {all_fields} merge tag output via a template file.
  * Author:       Gravity Wiz
- * Version:      0.9.7
+ * Version:      0.9.8
  * Author URI:   http://gravitywiz.com
  *
  * Usage:
@@ -150,8 +150,10 @@ class GW_All_Fields_Template {
 						$field_ids[]   = array_pop( $field_id_bits );
 					}
 				}
+
 			} else {
 
+				$input_ids = $mod_value;
 				$field_ids = array_map( 'intval', $mod_value );
 
 			}
@@ -170,8 +172,27 @@ class GW_All_Fields_Template {
 					}
 					break;
 				case 'exclude':
-					if ( in_array( $field->id, $field_ids ) ) {
-						$value = false;
+					if ( in_array( (int) $field->id, $field_ids, true ) ) {
+
+						$exclude_full_value = true;
+
+						// Check for input-specific exclusions.
+						if ( is_array( $raw_value ) ) {
+							$values = $raw_value;
+							foreach ( $input_ids as $input_id ) {
+								$target_field_id = intval( $input_id );
+								if ( (string) $target_field_id !== (string) $input_id && $target_field_id === intval( $field->id ) ) {
+									$exclude_full_value  = false;
+									$values[ $input_id ] = '';
+								}
+							}
+							$value = GFCommon::get_lead_field_display( $field, $values );
+						}
+
+						if ( $exclude_full_value ) {
+							$value = false;
+						}
+
 					}
 					break;
 			}
