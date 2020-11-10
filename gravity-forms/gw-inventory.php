@@ -28,8 +28,8 @@ class GW_Inventory {
 			return;
 		}
 
-		add_filter( "gform_pre_render_{$this->_args['form_id']}", array( $this, 'limit_by_field_values' ) );
-		add_filter( "gform_validation_{$this->_args['form_id']}", array( $this, 'limit_by_field_values_validation' ) );
+		add_filter( 'gform_pre_render', array( $this, 'limit_by_field_values' ) );
+		add_filter( 'gform_validation', array( $this, 'limit_by_field_values_validation' ) );
 
 		// check 'field_group' for date fields; if found, limit based on exhausted inventory days.
 		if ( ! empty( $this->_args['field_group'] ) ) {
@@ -108,7 +108,7 @@ class GW_Inventory {
 		} else {
 
 			$event_slug = "gwinv_out_of_stock_{$this->_args['input_id']}";
-			$event_name = GFForms::get_page() == 'notification_edit' ? $this->get_notification_event_name() : __( 'Event name is only populated on Notification Edit view; saves a DB call to get the form on every ' );
+			$event_name = GFForms::get_page() === 'notification_edit' ? $this->get_notification_event_name() : __( 'Event name is only populated on Notification Edit view; saves a DB call to get the form on every ' );
 
 			$this->_notification_event = new GW_Notification_Event( array(
 				'form_id'    => $this->_args['form_id'],
@@ -122,6 +122,10 @@ class GW_Inventory {
 	}
 
 	public function limit_by_field_values( $form ) {
+
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $form;
+		}
 
 		if ( $this->is_in_stock() ) {
 			return $form;
@@ -138,6 +142,10 @@ class GW_Inventory {
 
 	public function limit_by_field_values_validation( $validation_result ) {
 
+		if ( ! $this->is_applicable_form( $validation_result['form'] ) ) {
+			return $validation_result;
+		}
+
 		$input_id           = $this->_args['input_id'];
 		$limit              = $this->get_stock_quantity();
 		$validation_message = $this->_args['not_enough_stock_message'];
@@ -147,7 +155,7 @@ class GW_Inventory {
 
 		foreach ( $form['fields'] as &$field ) {
 
-			if ( intval( $field['id'] ) === intval( $input_id ) ) {
+			if ( intval( $field['id'] ) !== intval( $input_id ) ) {
 				continue;
 			}
 
@@ -478,6 +486,13 @@ class GW_Inventory {
 			$wrapped[] = sprintf( '"%s"', $string );
 		}
 		return implode( ', ', $wrapped );
+	}
+
+	public function is_applicable_form( $form ) {
+
+		$form_id = isset( $form['id'] ) ? $form['id'] : $form;
+
+		return empty( $this->_args['form_id'] ) || $form_id == $this->_args['form_id'];
 	}
 
 }
