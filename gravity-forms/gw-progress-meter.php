@@ -158,7 +158,7 @@ class GW_Progress_Meter {
 				background-color: #42C414;
 			}
 			.gwpm-count, .gwpm-goal {
-				line-height: 2rem;
+				line-height: 2;
 			}
 			.gwpm-count {
 				width: 50%;
