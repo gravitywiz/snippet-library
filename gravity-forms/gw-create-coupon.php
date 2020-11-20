@@ -185,7 +185,7 @@ class GW_Create_Coupon {
             $start_date = date('Y-m-d H:i:s');
         }
 
-        // WooCommerce coupon uses the Post Title as the coupon code hence $coupon_code is assiged to Post Title and $coupon_name is assigned to the Post Content
+        // WooCommerce coupon uses the Post Title as the coupon code hence $coupon_code is assigned to Post Title and $coupon_name is assigned to the Post Content
 		$coupon = array(
 			'post_title'   => $coupon_code,
 			'post_content' => $coupon_name,
