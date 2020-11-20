@@ -3,7 +3,6 @@
  * Gravity Perks // Nested Forms // Dynamically Set Entry Min/Max From Field Value
  * http://gravitywiz.com/documentation/gravity-forms-nested-forms/
  */
-
 class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 
 	public function __construct( $args = array() ) {
@@ -49,11 +48,7 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 
 	public function validate( $validation_result ) {
 
-		if ( $validation_result['form']['id'] != $this->_args['parent_form_id'] ) {
-			return $validation_result;
-		}
-
-		if ( ! $this->_args['max_field_id'] && ! $this->_args['min_field_id'] ) {
+		if ( ! $this->is_applicable_form( $validation_result['form']['id'] ) ) {
 			return $validation_result;
 		}
 
@@ -87,7 +82,7 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 				$has_validation_error = true;
 			}
 
-			if ( $field['id'] !== $nested_form_field_id ) {
+			if ( $field['id'] !== $nested_form_field_id || ! $this->should_field_be_validated( $form, $field ) ) {
 				continue;
 			}
 
@@ -192,7 +187,20 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 
 		$form_id = isset( $form['id'] ) ? $form['id'] : $form;
 
-		return empty( $this->_args['form_id'] ) || $form_id == $this->_args['form_id'];
+		return empty( $this->_args['parent_form_id'] ) || (int) $form_id === (int) $this->_args['parent_form_id'];
+	}
+
+	public function should_field_be_validated( $form, $field ) {
+
+		if ( (int) $field['pageNumber'] !== (int) GFFormDisplay::get_source_page( $form['id'] ) ) {
+			return false;
+		}
+
+		if ( GFFormsModel::is_field_hidden( $form, $field, array() ) ) {
+			return false;
+		}
+
+		return true;
 	}
 
 }
