@@ -180,13 +180,19 @@ class GW_Create_Coupon {
 	 */
 	public function create_coupon_wc( $coupon_name, $coupon_code, $amount, $type, $entry, $form ) {
 
-		// WooCommerce coupon uses the Post Title as the coupon code hence $coupon_code is assiged to Post Title and $coupon_name is assigned to the Post Content
+        $start_date = $this->_args['meta']['start_date'];
+        if ( $start_date ==''|| strtotime($start_date) == false )  {
+            $start_date = date('Y-m-d H:i:s');
+        }
+
+        // WooCommerce coupon uses the Post Title as the coupon code hence $coupon_code is assiged to Post Title and $coupon_name is assigned to the Post Content
 		$coupon = array(
 			'post_title'   => $coupon_code,
 			'post_content' => $coupon_name,
 			'post_status'  => 'publish',
 			'post_author'  => 1,
-			'post_type'	   => 'shop_coupon'
+			'post_type'	   => 'shop_coupon',
+            'post_date'    => $start_date
 		);
 
 		$new_coupon_id = wp_insert_post( $coupon );
