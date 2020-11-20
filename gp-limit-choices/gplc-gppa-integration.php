@@ -60,9 +60,11 @@ class GPLC_GPPA_Integration {
 		}
 		?>
 		<script>
-			window.gform.addFilter('gppa_template_rows', function (templateRows, field, populate) {
+			window.gform.addFilter( 'gppa_template_rows', function ( templateRows, field, populate ) {
 
-				if (populate !== 'choices') return templateRows;
+				if ( populate !== 'choices' ) {
+					return templateRows
+				}
 
 				templateRows.push( {
 					id: 'limit',
@@ -70,7 +72,7 @@ class GPLC_GPPA_Integration {
 				} );
 
 				return templateRows;
-			});
+			} );
 		</script>
 		<?php
 	}
