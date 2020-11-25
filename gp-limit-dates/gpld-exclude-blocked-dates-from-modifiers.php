@@ -10,7 +10,7 @@
  * @link    https://gravitywiz.com
  *
  * Plugin Name: GP Limit Dates — Exclude Blocked Dates from Modifiers
- * Plugin URI: http://gravitywiz.com
+ * Plugin URI: http://gravitywiz.com/documentation/gravity-forms-limit-dates/
  * Description: Automatically excludes blocked dates from a Date Modifier in GP Limit Dates.
  * Author: Gravity Wiz
  * Version: 0.1
