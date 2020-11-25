@@ -1,7 +1,21 @@
 <?php
 /**
  * Gravity Perks // GP Limit Dates // Exclude Blocked Dates from Modifiers
- * http://gravitywiz.com/
+ *
+ * Automatically excludes blocked dates from a Date Modifier in GP Limit Dates.
+ *
+ * @version 0.1
+ * @author  David Smith <david@gravitywiz.com>
+ * @license GPL-2.0+
+ * @link    https://gravitywiz.com
+ *
+ * Plugin Name: GP Limit Dates — Exclude Blocked Dates from Modifiers
+ * Plugin URI: http://gravitywiz.com/documentation/gravity-forms-limit-dates/
+ * Description: Automatically excludes blocked dates from a Date Modifier in GP Limit Dates.
+ * Author: Gravity Wiz
+ * Version: 0.1
+ * Author URI: http://gravitywiz.com
+ *
  */
 add_filter( 'gpld_date_value', 'gpld_extend_modifiers_by_blocked_dates', 10, 4 );
 function gpld_extend_modifiers_by_blocked_dates( $end_date, $field, $key, $options ) {
