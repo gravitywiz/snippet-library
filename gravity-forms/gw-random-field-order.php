@@ -158,7 +158,8 @@ class GFRandomFields {
 	 */
 	public function modify_target_page( $page_number, $form, $current_page ) {
 
-		$form = $this->pre_render( $form );
+		$page_number = intval( $page_number );
+		$form        = $this->pre_render( $form );
 
 		$page_has_visible_fields = false;
 		foreach ( $form['fields'] as $field ) {
@@ -169,12 +170,16 @@ class GFRandomFields {
 
 		if ( ! $page_has_visible_fields ) {
 			// Are we moving to the next or previous page?
-			$is_next      = $current_page < $page_number;
-			$page_number += $is_next ? 1 : -1;
-			$max_page     = GFFormDisplay::get_max_page_number( $form );
-			if ( $page_number < GFFormDisplay::get_max_page_number( $form ) ) {
+			$is_next  = $page_number === 0 || $page_number > $current_page;
+			$max_page = GFFormDisplay::get_max_page_number( $form );
+			if ( $page_number !== 0 && $page_number < $max_page ) {
+				$page_number += $is_next ? 1 : -1;
+				// When moving to a previous page, always stop at the first page. Otherwise, we'll submit the form.
+				if ( ! $is_next && $page_number === 0 ) {
+					return 1;
+				}
 				$page_number = $this->modify_target_page( $page_number, $form, $current_page );
-			} elseif ( $page_number > $max_page ) {
+			} elseif ( $page_number >= $max_page ) {
 				// Target page number 0 to submit the form.
 				$page_number = 0;
 			}
