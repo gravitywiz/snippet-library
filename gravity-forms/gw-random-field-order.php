@@ -5,7 +5,7 @@
  *
  * Randomly display a specified number of fields on your form.
  *
- * @version 1.1
+ * @version 1.2
  * @author  David Smith <david@gravitywiz.com>
  * @license GPL-2.0+
  * @link    https://gravitywiz.com/random-fields-with-gravity-forms/
@@ -14,7 +14,7 @@
  * Plugin URI:  https://gravitywiz.com/random-fields-with-gravity-forms/
  * Description: Randomly display a specified number of fields on your form.
  * Author:      Gravity Wiz
- * Version:     1.1
+ * Version:     1.2
  * Author URI:  http://gravitywiz.com
  */
 class GFRandomFields {
@@ -25,14 +25,15 @@ class GFRandomFields {
 
 	public function __construct( $form_id, $display_count = 5, $random_field_ids = false ) {
 
-		$this->_form_id             = $form_id;
-		$this->all_random_field_ids = (array) $random_field_ids;
-		$this->display_count        = $display_count;
+		$this->_form_id             = (int) $form_id;
+		$this->all_random_field_ids = array_map( 'intval', (array) $random_field_ids );
+		$this->display_count        = (int) $display_count;
 
 		add_filter( "gform_pre_render_$form_id", array( $this, 'pre_render' ) );
 		add_filter( "gform_form_tag_$form_id", array( $this, 'store_selected_field_ids' ) );
 		add_filter( "gform_validation_$form_id", array( $this, 'validate' ) );
 		add_filter( "gform_pre_submission_filter_$form_id", array( $this, 'pre_render' ) );
+		add_filter( "gform_target_page_{$form_id}", array( $this, 'modify_target_page' ), 10, 3 );
 
 		//add_filter( "gform_admin_pre_render_$form_id",      array( $this, 'admin_pre_render' ) );
 		//add_action( 'gform_entry_created',                  array( $this, 'save_selected_field_ids_meta' ), 10, 2 );
@@ -45,7 +46,7 @@ class GFRandomFields {
 
 	public function admin_pre_render( $form ) {
 
-		if ( $form['id'] != $this->_form_id ) {
+		if ( (int) $form['id'] !== $this->_form_id ) {
 			return $form;
 		}
 
@@ -79,8 +80,8 @@ class GFRandomFields {
 
 		foreach ( $form['fields'] as $field ) {
 
-			if ( in_array( $field['id'], $this->all_random_field_ids ) ) {
-				if ( in_array( $field['id'], $selected_fields ) ) {
+			if ( in_array( (int) $field['id'], $this->all_random_field_ids, true ) ) {
+				if ( in_array( (int) $field['id'], $selected_fields ) ) {
 					$filtered_fields[] = $field;
 				}
 			} else {
@@ -136,10 +137,50 @@ class GFRandomFields {
 	}
 
 	public function save_selected_field_ids_meta( $entry, $form ) {
-		if ( $form['id'] == $this->_form_id ) {
+		if ( (int) $form['id'] === $this->_form_id ) {
 			$hash = $this->get_selected_field_ids_hash();
 			gform_add_meta( $entry['id'], "_gfrf_field_ids_{$hash}", $this->get_selected_field_ids() );
 		}
+	}
+
+	/**
+	 * When the form is submitted modify the target page to avoid navigating to a page that has no visible fields.
+	 *
+	 * Known limitation: If the first page of a form has no visible fields, this will not avoid that as this only works
+	 * on submission.
+	 *
+	 * @param $page_number
+	 * @param $form
+	 * @param $current_page
+	 * @param $field_values
+	 *
+	 * @return int|mixed
+	 */
+	public function modify_target_page( $page_number, $form, $current_page ) {
+
+		$form = $this->pre_render( $form );
+
+		$page_has_visible_fields = false;
+		foreach ( $form['fields'] as $field ) {
+			if ( (int) $field->pageNumber === (int) $page_number && GFFormDisplay::is_field_validation_supported( $field ) ) {
+				$page_has_visible_fields = true;
+			}
+		}
+
+		if ( ! $page_has_visible_fields ) {
+			// Are we moving to the next or previous page?
+			$is_next      = $current_page < $page_number;
+			$page_number += $is_next ? 1 : -1;
+			$max_page     = GFFormDisplay::get_max_page_number( $form );
+			if ( $page_number < GFFormDisplay::get_max_page_number( $form ) ) {
+				$page_number = $this->modify_target_page( $page_number, $form, $current_page );
+			} elseif ( $page_number > $max_page ) {
+				// Target page number 0 to submit the form.
+				$page_number = 0;
+			}
+		}
+
+		return $page_number;
 	}
 
 }
