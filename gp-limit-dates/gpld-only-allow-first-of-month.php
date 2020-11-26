@@ -18,7 +18,7 @@ add_filter( 'gpld_limit_dates_options_123_4', function( $field_options, $form, $
 		$current->modify( 'first day of this month' );
 		$exceptions[] = $current->format( 'm/d/Y' );
 		$current->add( $month );
-		if ( $current->format( 'Y' ) === $target_year ) {
+		if ( (int) $current->format( 'Y' ) === $target_year ) {
 			break;
 		}
 	}
