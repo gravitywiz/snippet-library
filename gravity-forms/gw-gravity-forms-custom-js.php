@@ -13,7 +13,7 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Include custom Javascript with your form.
  * Author:       Gravity Wiz
- * Version:      1.4
+ * Version:      1.5
  * Author URI:   http://gravitywiz.com
  *
  * Usage:
