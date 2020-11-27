@@ -4,7 +4,7 @@
  * http://gravitywiz.com/documentation/gp-limit-dates/
  */
 // Update "123" in the filter name to your form ID and "1" to your field ID.
-add_filter(  'gpld_limit_dates_options_123_1', function( $options, $form, $field ) {
+add_filter( 'gpld_limit_dates_options_123_1', function( $options, $form, $field ) {
 	global $wpdb;
 
 	$results        = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT meta_value FROM {$wpdb->prefix}gf_entry_meta WHERE form_id = %d AND meta_key = %d", $form['id'], $field->id ) );
