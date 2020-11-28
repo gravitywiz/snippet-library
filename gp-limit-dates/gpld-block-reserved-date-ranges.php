@@ -90,7 +90,8 @@ class GPLD_Block_Reserved_Date_Ranges {
 
 		$exceptions = array_unique( $exceptions );
 
-		$field_options['exceptions'] = $exceptions;
+		$field_options['exceptionMode'] = 'disable';
+		$field_options['exceptions']    = $exceptions;
 
 		return $field_options;
 	}
