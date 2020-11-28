@@ -4,25 +4,20 @@
  * DO NOT USE. THIS IS A WORK IN PROGRESS.
  * ---------------------------------------
  *
- * Gravity Wiz // Gravity Forms // Snippet Name
+ * Gravity Wiz // Gravity Forms // Field to Field Conditional Logic
  *
- * A brief description about this snippet and the functionality it provides. Might also include basic usage instructions if applicable.
+ * Compare fields in Gravity Forms conditional logic. Is Field A greater than Field B? Is the emergency contact's name different than
+ * the patient's? Is Date A after Date B?
  *
- * @version  0.1
- * @author   David Smith <david@gravitywiz.com>
- * @license  GPL-2.0+
- * @link     http://gravitywiz.com/...
- *
- * Plugin Name:  Snippet Name
- * Plugin URI:   http://gravitywiz.com/...
- * Description:  A brief description about this snippet and the functionality it provides. Might also include basic usage instructions if applicable.
+ * Plugin Name:  GF Field to Field Conditional Logic
+ * Plugin URI:   http://gravitywiz.com/
+ * Description:  Compare fields in Gravity Forms conditional logic.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.9
  * Author URI:   http://gravitywiz.com
  *
  * @todo
  *  - Add UI for selecting merge tags.
- *  - Add UI for selecting fields in choice-based fields.
  *  - Add support for CL on next/prev buttons.
  */
 class GF_Field_To_Field_Conditional_Logic {
