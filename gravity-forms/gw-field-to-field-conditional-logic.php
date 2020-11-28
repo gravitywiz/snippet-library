@@ -36,8 +36,7 @@ class GF_Field_To_Field_Conditional_Logic {
 
 	public function init() {
 
-		// @todo Add support for comparing choice-based fields.
-		//add_filter( 'gform_admin_pre_render', array( $this, 'enqueue_inline_admin_script' ) );
+		add_filter( 'gform_admin_pre_render', array( $this, 'enqueue_inline_admin_script' ) );
 
 		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
 		add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
@@ -54,8 +53,36 @@ class GF_Field_To_Field_Conditional_Logic {
 		?>
 
 		<script>
-			gform.addFilter( 'gform_conditional_logic_values_input', function( str, objectType, ruleIndex, selectedFieldId, selectedValue ) {
-				return str;
+			gform.addFilter( 'gform_conditional_logic_values_input', function( markup, objectType, ruleIndex, selectedFieldId, selectedValue ) {
+				var selectedField = GetFieldById( selectedFieldId );
+				if ( ! selectedField || ! selectedField.choices.length ) {
+					return markup;
+				}
+				var matches = markup.matchAll( /(<select.+?>)(.+?)(<\/select>)/g );
+				for ( var match of matches ) {
+
+					var choiceOptions = match[2];
+					var fieldOptions  = [];
+
+					for ( var field of window.form.fields ) {
+						if ( ! IsConditionalLogicField( field ) ) {
+							continue;
+						}
+						var value = '{:' + field.id + ':value}';
+						var isSelected = value === selectedValue;
+						fieldOptions.push( '<option value="{0}" {2}>{1}</option>'.format( value, GetLabel( field ), isSelected ? 'selected' : '' ) );
+						if ( isSelected ) {
+							var $choiceSelect = jQuery( '<select>' + choiceOptions + '</select>' );
+							$choiceSelect.find( 'option:selected' ).remove();
+							choiceOptions = $choiceSelect.html();
+							$choiceSelect.remove();
+						}
+					}
+
+					markup = match[1] + '<optgroup label="Field Choices">' + choiceOptions + '</optgroup><optgroup label="Fields">' + fieldOptions.join( "\n" ) + '</optgroup>' + match[3];
+
+				}
+				return markup;
 			}, 9 );
 		</script>
 
@@ -110,7 +137,7 @@ class GF_Field_To_Field_Conditional_Logic {
 								return rule;
 							}
 
-							rule.value = GFMergeTag.getMergeTagValue( formId, mergeTags[0][1] );
+							rule.value = GFMergeTag.getMergeTagValue( formId, mergeTags[0][1], mergeTags[0][3] );
 
 							return rule;
 						} );
