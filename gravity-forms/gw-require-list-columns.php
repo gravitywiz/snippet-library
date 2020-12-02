@@ -68,7 +68,7 @@ class GWRequireListColumns {
 				}
 
 				foreach ( $values as $value ) {
-					if ( empty( $value ) ) {
+					if ( empty( $value ) && $value !== '0' ) {
 						$new_validation_error        = true;
 						$field['failed_validation']  = true;
 						$field['validation_message'] = $field['errorMessage'] ? $field['errorMessage'] : 'All inputs must be filled out.';
