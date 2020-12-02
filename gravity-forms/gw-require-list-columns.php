@@ -107,20 +107,21 @@ class GWRequireListColumns {
 
 }
 
-// accepted parameters
+// Uncomment one of the following lines and customize to activate this snippet.
+// Accepted parameters
 // new GWRequireListColumns($form_id, $field_ids);
 
 // apply to all list fields on all forms
-new GWRequireListColumns();
+// new GWRequireListColumns();
 
 // apply to all list fields on a specific form
-# new GWRequireListColumns(4);
+// new GWRequireListColumns(4);
 
 // apply to specific list field on a specific form
-# new GWRequireListColumns(4, 2);
+// new GWRequireListColumns(4, 2);
 
 // apply to specific list fields (plural) on a specific form
-# new GWRequireListColumns(4, array(2,3));
+// new GWRequireListColumns(4, array(2,3));
 
 // require specific field columns on a specific form
 // new GWRequireListColumns( 240, 1, array( 2, 3 ) );
