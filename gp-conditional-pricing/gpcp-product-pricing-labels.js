@@ -5,14 +5,14 @@
  * This snippet requires the PHP counterpart gpcp-product-pricing-labels.php
  */
 ( function( $ ) {
-	function update_price_lables() {
+	function update_price_labels() {
 		$( 'label[data-gpcp-template], option[data-gpcp-template]' ).each( function() {
-			var $priceElem = $( this ).is( 'option' ) ? $( this ) : $( this ).siblings( 'input' ),
-				price = gformFormatMoney( $priceElem.val().split( '|' )[1] ),
-				template = $( this ).attr( 'data-gpcp-template' );
+			var $priceElem = $( this ).is( 'option' ) ? $( this ) : $( this ).siblings( 'input' );
+			var price = gformFormatMoney( $priceElem.val().split( '|' )[1] );
+			var template = $( this ).attr( 'data-gpcp-template' );
 			$( this ).html( template.replace( '{price}', price ) );
 		} );
 	}
-	gform.addAction( 'gpcp_after_update_pricing', update_price_lables);
-	update_price_lables();
+	gform.addAction( 'gpcp_after_update_pricing', update_price_labels);
+	update_price_labels();
 } )( jQuery );
