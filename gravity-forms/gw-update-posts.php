@@ -49,6 +49,10 @@ class GW_Update_Posts {
 		//get post
 		$post = get_post( rgar( $entry, $this->_args['post_id'] ) );
 
+		if ( ! current_user_can( 'edit_post', $post->ID ) ) {
+			return;
+		}
+
 		//change post content
 		$post->post_title = rgar( $entry, $this->_args['title'] );
 		$post->post_content = rgar( $entry, $this->_args['content'] );
