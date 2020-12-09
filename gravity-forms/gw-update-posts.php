@@ -13,8 +13,7 @@ class GW_Update_Posts {
 
 	public function __construct( $args = array() ) {
 
-		// set our default arguments, parse against the provided arguments, and store for
-		// use throughout the class
+		// Set our default arguments, parse against the provided arguments, and store for use throughout the class.
 		$this->_args = wp_parse_args(
 			$args,
 			array(
@@ -25,15 +24,14 @@ class GW_Update_Posts {
 			)
 		);
 
-		// do version check in the init to make sure if GF is going to be loaded, it is
-		// already loaded
+		// Do version check in the init to make sure if GF is going to be loaded, it is already loaded.
 		add_action( 'init', array( $this, 'init' ) );
 
 	}
 
 	public function init() {
 
-		// make sure we're running the required minimum version of Gravity Forms
+		// Make sure we're running the required minimum version of Gravity Forms.
 		if ( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=') ) {
 			return;
 		}
@@ -46,18 +44,16 @@ class GW_Update_Posts {
 
 	public function set_post_content( $entry, $form ) {
 
-		//get post
+		// Get the post and, if the current user has capabilities, update post with new content.
 		$post = get_post( rgar( $entry, $this->_args['post_id'] ) );
 
 		if ( ! current_user_can( 'edit_post', $post->ID ) ) {
 			return;
 		}
 
-		//change post content
 		$post->post_title = rgar( $entry, $this->_args['title'] );
 		$post->post_content = rgar( $entry, $this->_args['content'] );
 
-		//update post
 		wp_update_post( $post );
 	}
 
