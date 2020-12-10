@@ -53,30 +53,32 @@ class GF_Field_To_Field_Conditional_Logic {
 				if ( ! selectedField || ! selectedField.choices.length ) {
 					return markup;
 				}
-				var matches = markup.matchAll( /(<select.+?>)(.+?)(<\/select>)/g );
-				for ( var match of matches ) {
+				var match         = markup.match( /(<select.+?>)(.+?)(<\/select>)/ );
+				var choiceOptions = match ? match[2] : markup;
+				var fieldOptions  = [];
 
-					var choiceOptions = match[2];
-					var fieldOptions  = [];
-
-					for ( var field of window.form.fields ) {
-						if ( ! IsConditionalLogicField( field ) ) {
-							continue;
-						}
-						var value = '{:' + field.id + ':value}';
-						var isSelected = value === selectedValue;
-						fieldOptions.push( '<option value="{0}" {2}>{1}</option>'.format( value, GetLabel( field ), isSelected ? 'selected' : '' ) );
-						if ( isSelected ) {
-							var $choiceSelect = jQuery( '<select>' + choiceOptions + '</select>' );
-							$choiceSelect.find( 'option:selected' ).remove();
-							choiceOptions = $choiceSelect.html();
-							$choiceSelect.remove();
-						}
+				for ( var field of window.form.fields ) {
+					if ( ! IsConditionalLogicField( field ) ) {
+						continue;
 					}
-
-					markup = match[1] + '<optgroup label="Field Choices">' + choiceOptions + '</optgroup><optgroup label="Fields">' + fieldOptions.join( "\n" ) + '</optgroup>' + match[3];
-
+					var value = '{:' + field.id + ':value}';
+					var isSelected = value === selectedValue;
+					fieldOptions.push( '<option value="{0}" {2}>{1}</option>'.format( value, GetLabel( field ), isSelected ? 'selected' : '' ) );
+					if ( isSelected ) {
+						var $choiceSelect = jQuery( '<select>' + choiceOptions + '</select>' );
+						$choiceSelect.find( 'option:selected' ).remove();
+						choiceOptions = $choiceSelect.html();
+						$choiceSelect.remove();
+					}
 				}
+
+				markup = '{0}<optgroup label="Field Choices">{1}</optgroup><optgroup label="Fields">{2}</optgroup>{3}'.format(
+					match ? match[1] : '',
+					choiceOptions,
+					fieldOptions.join( "\n" ),
+					match ? match[3] : '',
+				);
+
 				return markup;
 			}, 9 );
 		</script>
