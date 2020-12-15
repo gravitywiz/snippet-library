@@ -53,7 +53,7 @@ class GF_Field_To_Field_Conditional_Logic {
 				if ( ! selectedField || ! selectedField.choices.length ) {
 					return markup;
 				}
-				var match         = markup.match( /(<select.+?>)(.+?)(<\/select>)/ );
+				var match         = markup.match( /(<select.+?>)((?:.|\n)+?)(<\/select>)/ );
 				var choiceOptions = match ? match[2] : markup;
 				var fieldOptions  = [];
 
