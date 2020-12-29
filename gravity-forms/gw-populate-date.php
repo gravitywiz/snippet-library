@@ -152,10 +152,11 @@ class GW_Populate_Date {
 			$timestamp = current_time( 'timestamp' );
 		}
 
+		$target_is_date_field = GFFormsModel::get_input_type( $field ) === 'date';
 		// Always respect the passed format; it may conflict with the Date format but this is used at the user's discretion.
-		if ( $this->_args['format'] ) {
+		if ( $this->_args['format'] || ! $target_is_date_field ) {
 			$format = $this->get_format();
-		} elseif ( GFFormsModel::get_input_type( $field ) == 'date' ) {
+		} else {
 
 			list( $format, $divider ) = $field['dateFormat'] ? array_pad( explode( '_', $field['dateFormat'] ), 2, 'slash' ) : array( 'mdy', 'slash' );
 			$dividers                 = array(
