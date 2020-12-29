@@ -1,12 +1,12 @@
 <?php
 /**
- * Gravity Forms // WC GF Product Add-ons // Remove Price in Card Description
+ * Gravity Forms // WC GF Product Add-ons // Remove Price from Cart Description
  * https://gravitywiz.com/
  *
- * Add "wcgfpa-remove-price" to your field's CSS Class Name setting and this snippet will automatically handle remove
+ * Add "wcgfpa-remove-price" to your field's CSS Class Name setting and this snippet will automatically remove the
  * price from the product's description in the cart.
  *
- * Default:
+ * Default description:
  * Product Name B: Second Choice ($25.00)
  *
  * Price removed:
