@@ -13,7 +13,7 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Compare fields in Gravity Forms conditional logic.
  * Author:       Gravity Wiz
- * Version:      0.9
+ * Version:      0.9.1
  * Author URI:   http://gravitywiz.com
  *
  * @todo
@@ -49,11 +49,18 @@ class GF_Field_To_Field_Conditional_Logic {
 
 		<script>
 			gform.addFilter( 'gform_conditional_logic_values_input', function( markup, objectType, ruleIndex, selectedFieldId, selectedValue ) {
+
 				var selectedField = GetFieldById( selectedFieldId );
 				if ( ! selectedField || ! selectedField.choices.length ) {
 					return markup;
 				}
-				var match         = markup.match( /(<select.+?>)((?:.|\n)+?)(<\/select>)/ );
+
+				// If this is not a <select> return the markup unmodified.
+				var match = markup.match( /(<select.+?>)((?:.|\n)+?)(<\/select>)/ );
+				if ( ! match ) {
+				    return markup;
+                }
+
 				var choiceOptions = match ? match[2] : markup;
 				var fieldOptions  = [];
 
