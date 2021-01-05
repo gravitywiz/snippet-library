@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // GP Nested Forms // Pass Nested Form Entries to ACF Repeater Field when using GF APC
+ * Gravity Perks // GP Nested Forms // Pass Nested Form Entries to ACF Repeater Field when using GF APC Add-on
  * http://gravitywiz.com/documentation/gravity-forms-nested-forms/
  */
 
