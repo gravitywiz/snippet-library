@@ -15,10 +15,11 @@ function gw_child_entries_to_repeater( $entry, $form ) {
 		'custom_field_one' => 5,
 		'custom_field_two' => 6,
 	);
-
+	// Update test_repeat to the field name of the ACF repeater field.
+	$acf_repeater_field_name = 'test_repeat';
 	/* STOP! You don't need to edit below this line. */
 
-	$parent_entry = new GPNF_Entry( $entry );
+	$parent_entry  = new GPNF_Entry( $entry );
 	$child_entries = $parent_entry->get_child_entries( $nested_form_field_id );
 	$repeat_value  = array();
 	$created_posts = gform_get_meta( $entry['id'], 'gravityformsadvancedpostcreation_post_id' );
@@ -26,13 +27,13 @@ function gw_child_entries_to_repeater( $entry, $form ) {
 		$post_id = $post['post_id'];
 		foreach ( $child_entries as $child_entry ) {
 			$value = array();
-			foreach( $field_map as $acf_field_name => $child_entry_field_id ) {
+			foreach ( $field_map as $acf_field_name => $child_entry_field_id ) {
 				$value[ $acf_field_name ] = rgar( $child_entry, $child_entry_field_id );
 			}
 			array_push( $repeat_value, $value );
 		}
 		// Update test_repeat to the field name of the ACF repeater field.
-		update_field( 'test_repeat', $repeat_value, $post_id );
+		update_field( $acf_repeater_field_name, $repeat_value, $post_id );
 	}
 
 }
