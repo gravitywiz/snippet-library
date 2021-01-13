@@ -6,7 +6,7 @@
  * Plugin URI:   http://gravitywiz.com/documentation/gravity-forms-date-time-calculator/
  * Description:  Display calculated time differences in hours & minutes (e.g. 3 hours, 45 minutes).
  * Author:       Gravity Wiz
- * Version:      0.1 
+ * Version:      0.1
  * Author URI:   http://gravitywiz.com
  */
 class GPDTC_Format_Hours_Mins {
