@@ -56,7 +56,9 @@ class GPDTC_Format_Hours_Mins {
 
 					self.init = function() {
 
-						console.log( 'doing the magic!' );
+						if ( window.gpdtcFormatHoursMinsInitialized ) {
+							return;
+						}
 
 						gform.addFilter( 'gform_calculation_result', function( result, formulaField, formId, calcObj ) {
 							if( self.isApplicableField( formId, formulaField.field_id ) ) {
@@ -74,6 +76,8 @@ class GPDTC_Format_Hours_Mins {
 							}
 							return formattedResult;
 						} );
+
+						window.gpdtcFormatHoursMinsInitialized = true;
 
 					};
 
