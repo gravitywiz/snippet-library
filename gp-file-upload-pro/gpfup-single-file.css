@@ -1,0 +1,57 @@
+/**
+ * Gravity Perks // File Upload Pro // Single File Theme
+ * https://gravitywiz.com/documentation/gravity-forms-file-upload-pro/
+ *
+ * Instructions
+ *
+ * 1. Copy and paste these styles into your theme's style.css file (or anywhere your theme allows custom CSS).
+ * 2. Enable File Upload Pro on your File Upload field.
+ * 3. Set the "Maximum Number of Files" to "1" (on the General tab).
+ * 4. Add "gpfup-single-file" to the "Custom CSS Class" setting (on the Appearance tab).
+ */
+.gpfup-single-file .gpfup__droparea.gpfup__maxed,
+.gpfup-single-file .gpfup__has-error .gpfup__droparea {
+	display: none;
+}
+.gpfup-single-file .gpfup__files {
+	border: 0;
+	box-shadow: none;
+}
+.gpfup-single-file .gpfup__file {
+	display: block;
+	padding: 0;
+}
+.gpfup-single-file .gpfup__preview {
+	margin-right: 0;
+	width: 100% !important;
+}
+.gpfup-single-file .gpfup__preview img {
+	width: auto !important;
+	height: auto !important;
+	max-width: 100%;
+}
+.gpfup-single-file .gpfup:not(.gpfup__has-error) .gpfup__file-info {
+	position: absolute;
+	bottom: 0;
+	transition: opacity .3s ease-in-out;
+	width: 100%;
+	border-radius: 0 0 4px 4px;
+	padding: 0.5rem;
+	color: #fff;
+	background: #000;
+	background: linear-gradient(0deg, rgba(2, 0, 36, 1) 0%, rgba(0, 0, 0, 1) 0%, rgba(255, 255, 255, 0) 100%);
+	margin: 0;
+}
+.gpfup-single-file .gpfup__delete {
+	padding: 4px;
+	background-color: #fff;
+}
+.gpfup-single-file .gpfup__has-error .gpfup__file-info {
+	border: 1px solid rgba( 0, 0, 0, 0.15 );
+	border-radius: 2px;
+	margin-right: 0;
+	padding: 1rem;
+}
+.gpfup-single-file .gpfup__has-error .gpfup__preview {
+	display: none;
+}
