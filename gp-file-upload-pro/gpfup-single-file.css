@@ -11,8 +11,8 @@
  * 3. Set the "Maximum Number of Files" to "1" (on the General tab).
  * 4. Add "gpfup-single-file" to the "Custom CSS Class" setting (on the Appearance tab).
  */
-.gpfup-single-file .gpfup__droparea.gpfup__maxed,
-.gpfup-single-file .gpfup__has-error .gpfup__droparea {
+.gpfup-single-file .gpfup--maxed .gpfup__droparea,
+.gpfup-single-file .gpfup--has-error .gpfup__droparea {
 	display: none;
 }
 .gpfup-single-file .gpfup__files {
@@ -32,7 +32,7 @@
 	height: auto !important;
 	max-width: 100%;
 }
-.gpfup-single-file .gpfup:not(.gpfup__has-error) .gpfup__file-info {
+.gpfup-single-file .gpfup:not(.gpfup--has-error) .gpfup__file-info {
 	position: absolute;
 	bottom: 0;
 	transition: opacity .3s ease-in-out;
@@ -48,12 +48,12 @@
 	padding: 4px;
 	background-color: #fff;
 }
-.gpfup-single-file .gpfup__has-error .gpfup__file-info {
+.gpfup-single-file .gpfup--has-error .gpfup__file-info {
 	border: 1px solid rgba( 0, 0, 0, 0.15 );
 	border-radius: 2px;
 	margin-right: 0;
 	padding: 1rem;
 }
-.gpfup-single-file .gpfup__has-error .gpfup__preview {
+.gpfup-single-file .gpfup--has-error .gpfup__preview {
 	display: none;
 }
