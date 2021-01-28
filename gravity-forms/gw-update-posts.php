@@ -2,9 +2,9 @@
 /**
  * Gravity Wiz // Gravity Forms // Update Posts
  *
- * Update existing post title and content with values from Gravity Forms.
+ * Update existing post title, content, and custom fields with values from Gravity Forms.
  *
- * @version 0.1
+ * @version 0.2
  * @author  Scott Buchmann <scott@gravitywiz.com>
  * @license GPL-2.0+
  * @link    http://gravitywiz.com
@@ -17,10 +17,11 @@ class GW_Update_Posts {
 		$this->_args = wp_parse_args(
 			$args,
 			array(
-				'form_id' => false,
-				'post_id' => false,
-				'title'   => false,
-				'content' => false,
+				'form_id'    => false,
+				'post_id'    => false,
+				'title'      => false,
+				'content'    => false,
+				'meta' => array()
 			)
 		);
 
@@ -53,6 +54,15 @@ class GW_Update_Posts {
 
 		$post->post_title = rgar( $entry, $this->_args['title'] );
 		$post->post_content = rgar( $entry, $this->_args['content'] );
+
+		// Assign custom fields.
+		$meta = $this->_args['meta'];
+
+		foreach ( $meta as $key => $value ) {
+			$meta_input["$key"] = rgar( $entry, $value );
+		}
+
+		$post->meta_input = $meta_input;
 
 		wp_update_post( $post );
 	}
