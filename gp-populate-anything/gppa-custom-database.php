@@ -25,7 +25,7 @@ class GPPA_Object_Type_Database_Testing extends GPPA_Object_Type_Database {
 	}
 
 	public function get_db() {
-		return new wpdb(self::DB_USER,self::DB_PASSWORD,self::DB_NAME,self::DB_HOST);
+		return new wpdb(self::DB_USER, self::DB_PASSWORD, self::DB_NAME, self::DB_HOST);
 	}
 }
 
