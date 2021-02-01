@@ -17,13 +17,14 @@ class GW_Populate_Date {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
 		$this->_args = wp_parse_args( $args, array(
-			'form_id'         => false,
-			'target_field_id' => false,
-			'source_field_id' => false,
-			'format'          => '',
-			'modifier'        => false,
-			'min_date'        => false,
-			'enable_i18n'     => false,
+			'form_id'                => false,
+			'target_field_id'        => false,
+			'source_field_id'        => false,
+			'format'                 => '',
+			'modifier'               => false,
+			'min_date'               => false,
+			'enable_i18n'            => false,
+			'override_on_submission' => false,
 		) );
 
 		$this->_field_values = array();
@@ -52,6 +53,10 @@ class GW_Populate_Date {
 		} else {
 			add_filter( 'gform_pre_render', array( $this, 'populate_date_on_pre_render' ) );
 		}
+
+		if ( $this->_args['override_on_submission'] ) {
+			add_action( 'gform_pre_submission', array( $this, 'override_on_submission' ) );
+        }
 
 	}
 
@@ -116,6 +121,20 @@ class GW_Populate_Date {
 		}
 
 	}
+
+	public function override_on_submission( $form ) {
+
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $form;
+		}
+
+		foreach ( $form['fields'] as $field ) {
+			if ( $field['id'] == $this->_args['target_field_id'] ) {
+				$_POST[ "input_{$field['id']}" ] = $this->get_modified_date( $field );
+			}
+		}
+
+    }
 
 	public function get_source_timestamp( $field ) {
 
