@@ -21,7 +21,7 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 
 	$walker = function( $terms, $parent_id = 0, &$out_array = array(), $level = 0 ) use ( &$walker ) {
 		foreach ( $terms as $item ) {
-			if ( $item->parent === $parent_id ) {
+			if ( intval( $item->parent ) === intval( $parent_id ) ) {
 				$item->name  = str_repeat( '—', $level ) . ' ' . $item->name;
 				$out_array[] = $item;
 				$walker( $terms, $item->term_id, $out_array, $level + 1 );
