@@ -19,21 +19,30 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 		return $choices;
 	}
 
-	$walker = function( $terms, $parent_id = 0, &$out_array = array(), $level = 0 ) use ( &$walker ) {
-		foreach ( $terms as $item ) {
-			if ( intval( $item->parent ) === intval( $parent_id ) ) {
-				$item->name  = str_repeat( '—', $level ) . ' ' . $item->name;
-				$out_array[] = $item;
-				$walker( $terms, $item->term_id, $out_array, $level + 1 );
+	$all_terms = get_terms( array(
+		'hide_empty' => false,
+		'taxonomy'   => $taxonomy->name,
+	) );
+
+	// Walk through all terms but only output terms filtered by Populate Anything.
+	$walker = function( $all_terms, $term_ids, $parent_id = 0, &$out_array = array(), $level = 0 ) use ( &$walker ) {
+		foreach ( $all_terms as $term ) {
+			if ( intval( $term->parent ) === intval( $parent_id ) ) {
+				$is_applicable_term = in_array( $term->term_id, $term_ids );
+				if ( $is_applicable_term ) {
+					$term->name  = str_repeat( '—', $level ) . ' ' . $term->name;
+					$out_array[] = $term;
+				}
+				$walker( $all_terms, $term_ids, $term->term_id, $out_array, ( $is_applicable_term ? $level + 1 : $level ) );
 			}
 		}
 		return $out_array;
 	};
 
-	$objects = $walker( $objects );
+	$terms   = $walker( $all_terms, wp_list_pluck( $objects, 'term_id' ) );
 	$choices = array();
 
-	foreach ( $objects as $object ) {
+	foreach ( $terms as $object ) {
 		$choices[] = array(
 			'value' => $object->term_id,
 			'text'  => $object->name,
