@@ -27,6 +27,16 @@ class GPPA_Object_Type_Database_Testing extends GPPA_Object_Type_Database {
 	public function get_db() {
 		return new wpdb( self::DB_USER, self::DB_PASSWORD, self::DB_NAME, self::DB_HOST );
 	}
+
+	public function __construct( $id ) {
+		parent::__construct( $id );
+
+		add_action( sprintf( 'gppa_pre_object_type_query_%s', $id ), array( $this, 'add_filter_hooks' ) );
+	}
+
+	public function add_filter_hooks() {
+		add_filter( sprintf( 'gppa_object_type_%s_filter', $this->id ), array( $this, 'process_filter_default' ), 10, 4 );
+	}
 }
 
 add_action('init', function() {
