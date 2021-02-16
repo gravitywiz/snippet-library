@@ -152,9 +152,17 @@ class GW_Rounding {
 
 							var $targets;
 
+							debugger;
+
 							// Attempt to target only the quantity input of a Single Product field.
 							if( $( this ).hasClass( 'gfield_price' ) ) {
 								$targets = $( this ).find( '.ginput_quantity' );
+								// Currently, we don't have a way to specify if we want to round the quantity or the price
+								// of Calculated Product fields. For now, we'll assume if there is no quantity input, we
+								// want to round the price.
+								if ( ! $targets.length && $( this ).hasClass( 'gfield_calculation' ) ) {
+									$targets = $( this ).find( 'input[id^=ginput_base_price]' );
+								}
 							}
 
 							// Otherwise, target all inputs of the given field.
