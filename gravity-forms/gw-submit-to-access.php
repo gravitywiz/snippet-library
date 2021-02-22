@@ -4,7 +4,7 @@
  *
  * Require that a form be submitted before a post or page can be accessed.
  *
- * @version   1.7
+ * @version   1.8
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      https://gravitywiz.com/submit-gravity-form-access-content/
@@ -15,7 +15,7 @@
  * Plugin URI: https://gravitywiz.com/submit-gravity-form-access-content/
  * Description: Require that a form be submitted before a post or page can be accessed.
  * Author: Gravity Wiz
- * Version: 1.7
+ * Version: 1.8
  * Author URI: http://gravitywiz.com
  */
 class GW_Submit_Access {
@@ -257,7 +257,13 @@ class GW_Submit_Access {
 			return true;
 		}
 
-		$form_ids        = $this->get_form_ids( $post_id );
+		$form_ids = $this->get_form_ids( $post_id );
+
+		return $this->has_submitted_form( $form_ids );
+	}
+
+	function has_submitted_form( $form_ids ) {
+
 		$submitted_forms = $this->get_submitted_forms();
 
 		// if not form-specific and at least one form is submitted, user has access
