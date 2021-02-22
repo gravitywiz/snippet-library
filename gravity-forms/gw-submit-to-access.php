@@ -20,7 +20,9 @@
  */
 class GW_Submit_Access {
 
-	public function __construct( $args = array() ) {
+	private static $instance = null;
+
+	private function __construct( $args = array() ) {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
 		$this->_args = wp_parse_args( $args, array(
@@ -34,6 +36,13 @@ class GW_Submit_Access {
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
 		add_action( 'init', array( $this, 'init' ) );
 
+	}
+
+	public static function get_instance( $args = array() ) {
+		if ( self::$instance === null ) {
+			self::$instance = new GW_Submit_Access( $args );
+		}
+		return self::$instance;
 	}
 
 	public function init() {
@@ -149,7 +158,7 @@ class GW_Submit_Access {
 		return $content;
 	}
 
-	function cache_bypass_content( $content ) {
+	public function cache_bypass_content( $content ) {
 		global $post;
 
 		ob_start();
@@ -181,7 +190,7 @@ class GW_Submit_Access {
 		return ob_get_clean();
 	}
 
-	function ajax_get_content() {
+	public function ajax_get_content() {
 
 		$post_id = rgpost( 'post' );
 
@@ -207,7 +216,7 @@ class GW_Submit_Access {
 		die( $content );
 	}
 
-	function get_requires_submission_message( $post_id ) {
+	public function get_requires_submission_message( $post_id ) {
 
 		$requires_submission_message = get_post_meta( $post_id, 'gwsa_requires_submission_message', true );
 		$contains_form_merge_tag     = strpos( $requires_submission_message, '{form}' ) !== false;
@@ -247,11 +256,11 @@ class GW_Submit_Access {
 		return do_shortcode( $requires_submission_message );
 	}
 
-	function get_requires_submission_redirect( $post_id ) {
+	public function get_requires_submission_redirect( $post_id ) {
 		return get_post_meta( $post_id, 'gwsa_requires_submission_redirect', true );
 	}
 
-	function has_access( $post_id ) {
+	public function has_access( $post_id ) {
 
 		if ( ! $this->requires_access( $post_id ) ) {
 			return true;
@@ -262,7 +271,7 @@ class GW_Submit_Access {
 		return $this->has_submitted_form( $form_ids );
 	}
 
-	function has_submitted_form( $form_ids ) {
+	public function has_submitted_form( $form_ids ) {
 
 		$submitted_forms = $this->get_submitted_forms();
 
@@ -280,11 +289,11 @@ class GW_Submit_Access {
 		return false;
 	}
 
-	function requires_access( $post_id ) {
+	public function requires_access( $post_id ) {
 		return get_post_meta( $post_id, 'gwsa_require_submission', true ) == true;
 	}
 
-	function get_submitted_forms() {
+	public function get_submitted_forms() {
 
 		// always check the cookie first; will allow user meta vs cookie to be set per page in the future
 		$submitted_forms = (array) json_decode( stripslashes( rgar( $_COOKIE, 'gwsa_submitted_forms' ) ) );
@@ -298,7 +307,7 @@ class GW_Submit_Access {
 		return array_filter( $submitted_forms );
 	}
 
-	function add_submitted_form( $form ) {
+	public function add_submitted_form( $form ) {
 
 		$submitted_forms = $this->get_submitted_forms();
 		$form_id         = $form['id'];
@@ -317,12 +326,14 @@ class GW_Submit_Access {
 
 	}
 
-	function get_form_ids( $post_id ) {
+	public function get_form_ids( $post_id ) {
 		return array_filter( array_map( 'trim', explode( ',', get_post_meta( $post_id, 'gwsa_form_ids', true ) ) ) );
 	}
 
 }
 
-# Configuration
+function gw_submit_to_access() {
+	return GW_Submit_Access::get_instance();
+}
 
-new GW_Submit_Access();
+gw_submit_to_access();
