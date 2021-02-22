@@ -39,18 +39,18 @@ class GW_Submit_Access {
 	public function init() {
 
 		// make sure we're running the required minimum version of Gravity Forms
-		if( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=' ) ) {
+		if ( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=' ) ) {
 			return;
 		}
 
 		// setting later so we can use GFCommon::get_base_url() to get GF's spinner URL
-		if( empty( $this->_args['loading_message'] ) ) {
+		if ( empty( $this->_args['loading_message'] ) ) {
 			$this->_args['loading_message'] = '<span class="gwsa-loading">Loading content... <img src="' . GFCommon::get_base_url() . '/images/spinner.gif" /></span>';
 		}
 
-		add_action( 'wp',         array( $this, 'check_global_requirements' ), 5 );
+		add_action( 'wp', array( $this, 'check_global_requirements' ), 5 );
 		add_action( 'admin_init', array( $this, 'check_global_requirements' ), 5 );
-		add_action( 'wp',         array( $this, 'check_for_access_redirect' ) );
+		add_action( 'wp', array( $this, 'check_for_access_redirect' ) );
 
 		add_action( 'gform_pre_submission', array( $this, 'add_submitted_form' ) );
 		add_filter( 'the_content', array( $this, 'maybe_hide_the_content' ) );
@@ -64,23 +64,23 @@ class GW_Submit_Access {
 
 	public function check_global_requirements() {
 
-		if( current_user_can( 'administrator' ) && is_admin() ) {
+		if ( current_user_can( 'administrator' ) && is_admin() ) {
 			return;
 		}
 
 		$global_posts = $this->get_global_posts();
-		if( empty( $global_posts ) ) {
+		if ( empty( $global_posts ) ) {
 			return;
 		}
 
 		// if we're already on a global post, don't do anything
 		$object = get_queried_object();
-		if( is_a( $object, 'WP_Post' ) && in_array( $object->ID, wp_list_pluck( $global_posts, 'ID' ) ) ) {
+		if ( is_a( $object, 'WP_Post' ) && in_array( $object->ID, wp_list_pluck( $global_posts, 'ID' ) ) ) {
 			return;
 		}
 
-		foreach( $global_posts as $global_post ) {
-			if( ! $this->has_access( $global_post->ID ) ) {
+		foreach ( $global_posts as $global_post ) {
+			if ( ! $this->has_access( $global_post->ID ) ) {
 				wp_redirect( get_permalink( $global_post ) );
 				exit;
 			}
@@ -91,20 +91,20 @@ class GW_Submit_Access {
 	public function get_global_posts() {
 
 		$query = array(
-			'post_type' => 'any',
+			'post_type'  => 'any',
 			'meta_query' => array(
 				'relation' => 'or',
 				array(
 					'key'   => 'gwsa_require_submission',
-					'value' => 'global'
+					'value' => 'global',
 				),
 			),
 		);
 
-		if( is_user_logged_in() ) {
+		if ( is_user_logged_in() ) {
 			$query['meta_query'][] = array(
 				'key'   => 'gwsa_require_submission',
-				'value' => 'global_logged_in'
+				'value' => 'global_logged_in',
 			);
 		}
 
@@ -117,16 +117,16 @@ class GW_Submit_Access {
 	public function check_for_access_redirect() {
 		global $post;
 
-		if( is_admin() ) {
+		if ( is_admin() ) {
 			return;
 		}
 
-		if( ! $post || ! $this->requires_access( $post->ID ) || $this->has_access( $post->ID ) ) {
+		if ( ! $post || ! $this->requires_access( $post->ID ) || $this->has_access( $post->ID ) ) {
 			return;
 		}
 
 		$url = $this->get_requires_submission_redirect( $post->ID );
-		if( $url ) {
+		if ( $url ) {
 			wp_redirect( $url );
 			exit;
 		}
@@ -136,13 +136,13 @@ class GW_Submit_Access {
 	public function maybe_hide_the_content( $content ) {
 		global $post;
 
-		if( ! $this->requires_access( $post->ID ) ) {
+		if ( ! $this->requires_access( $post->ID ) ) {
 			return $content;
 		}
 
-		if( $this->_args['bypass_cache'] ) {
+		if ( $this->_args['bypass_cache'] ) {
 			$content = $this->cache_bypass_content( $content );
-		} else if( ! $this->has_access( $post->ID ) ) {
+		} elseif ( ! $this->has_access( $post->ID ) ) {
 			$content = $this->get_requires_submission_message( $post->ID );
 		}
 
@@ -161,18 +161,18 @@ class GW_Submit_Access {
 
 		<script type="text/javascript">
 
-            var ajaxUrl = '<?php echo admin_url( 'admin-ajax.php' ); ?>';
+			var ajaxUrl = '<?php echo admin_url( 'admin-ajax.php' ); ?>';
 
-            ( function( $ ) {
+			( function( $ ) {
 
-                $.post( ajaxUrl, {
-                    action: 'gwas_get_content',
-                    post:   <?php echo $post->ID; ?>,
-                }, function( response ) {
-                    $( '#gwsa-content' ).html( response );
-                } );
+				$.post( ajaxUrl, {
+					action: 'gwas_get_content',
+					post:   <?php echo $post->ID; ?>,
+				}, function( response ) {
+					$( '#gwsa-content' ).html( response );
+				} );
 
-            } )( jQuery );
+			} )( jQuery );
 
 		</script>
 
@@ -185,9 +185,9 @@ class GW_Submit_Access {
 
 		$post_id = rgpost( 'post' );
 
-		if( $this->has_access( $post_id ) ) {
+		if ( $this->has_access( $post_id ) ) {
 
-			$post = get_post( $post_id );
+			$post            = get_post( $post_id );
 			$GLOBALS['post'] = get_post( $post_id );
 			setup_postdata( $post );
 
@@ -210,39 +210,37 @@ class GW_Submit_Access {
 	function get_requires_submission_message( $post_id ) {
 
 		$requires_submission_message = get_post_meta( $post_id, 'gwsa_requires_submission_message', true );
-		$contains_form_merge_tag = strpos( $requires_submission_message, '{form}' ) !== false;
+		$contains_form_merge_tag     = strpos( $requires_submission_message, '{form}' ) !== false;
 
-		if( ! $requires_submission_message || $contains_form_merge_tag ) {
+		if ( ! $requires_submission_message || $contains_form_merge_tag ) {
 
 			$form_ids = $this->get_form_ids( $post_id );
 
-			if( ! empty( $form_ids ) ) {
+			if ( ! empty( $form_ids ) ) {
 
 				ob_start();
 				$form = GFAPI::get_form( $form_ids[0] );
 				require_once( GFCommon::get_base_path() . '/form_display.php' );
 				GFFormDisplay::print_form_scripts( $form, true );
 				gravity_form( $form_ids[0], false, false, false, array(), $this->_args['bypass_cache'] );
-				$form_markup = ob_get_clean();
+				$form_markup                 = ob_get_clean();
 				$requires_submission_message = $contains_form_merge_tag ? str_replace( '{form}', $form_markup, $requires_submission_message ) : $form_markup;
 
 				// Replace form's action URL.
-				if( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-					$search = remove_query_arg( 'gf_token' );
+				if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+					$search  = remove_query_arg( 'gf_token' );
 					$replace = get_permalink( rgpost( 'post' ) );
 					// get_permalink() defaults to whatever protocol the site url is configured for; we need to be sure
 					// if the form is being loaded on an https page, that our action url is also https.
-					if( is_ssl() ) {
+					if ( is_ssl() ) {
 						$replace = str_replace( 'http://', 'https://', $replace );
 					}
 					$requires_submission_message = str_replace( $search, $replace, $requires_submission_message );
 				}
-
 			}
-
 		}
 
-		if( ! $requires_submission_message ) {
+		if ( ! $requires_submission_message ) {
 			$requires_submission_message = $this->_args['requires_submission_message'];
 		}
 
@@ -255,7 +253,7 @@ class GW_Submit_Access {
 
 	function has_access( $post_id ) {
 
-		if( ! $this->requires_access( $post_id ) ) {
+		if ( ! $this->requires_access( $post_id ) ) {
 			return true;
 		}
 
@@ -263,13 +261,13 @@ class GW_Submit_Access {
 		$submitted_forms = $this->get_submitted_forms();
 
 		// if not form-specific and at least one form is submitted, user has access
-		if( empty( $form_ids ) && ! empty( $submitted_forms ) ) {
+		if ( empty( $form_ids ) && ! empty( $submitted_forms ) ) {
 			return true;
 		}
 
 		// has specifically required form been submitted?
 		$matching_form_ids = array_intersect( $form_ids, $submitted_forms );
-		if( ! empty( $matching_form_ids ) ) {
+		if ( ! empty( $matching_form_ids ) ) {
 			return true;
 		}
 
@@ -286,7 +284,7 @@ class GW_Submit_Access {
 		$submitted_forms = (array) json_decode( stripslashes( rgar( $_COOKIE, 'gwsa_submitted_forms' ) ) );
 
 		// if user meta is enabled, merge forms stored there as well
-		if( $this->_args['enable_user_meta'] ) {
+		if ( $this->_args['enable_user_meta'] ) {
 			$user_meta_forms = (array) wp_get_current_user()->get( 'gwsa_submitted_forms' );
 			$submitted_forms = array_merge( $submitted_forms, $user_meta_forms );
 		}
@@ -297,19 +295,18 @@ class GW_Submit_Access {
 	function add_submitted_form( $form ) {
 
 		$submitted_forms = $this->get_submitted_forms();
-		$form_id = $form['id'];
+		$form_id         = $form['id'];
 
-		if( ! in_array( $form_id, $submitted_forms ) && ! headers_sent() ) {
+		if ( ! in_array( $form_id, $submitted_forms ) && ! headers_sent() ) {
 
 			$submitted_forms[] = $form_id;
 
-			if( $this->_args['enable_user_meta'] && is_user_logged_in() ) {
+			if ( $this->_args['enable_user_meta'] && is_user_logged_in() ) {
 				update_user_meta( get_current_user_id(), 'gwsa_submitted_forms', $submitted_forms );
 			} else {
 				$expiration = $this->_args['is_persistent'] ? strtotime( '+1 year' ) : null;
 				setcookie( 'gwsa_submitted_forms', json_encode( $submitted_forms ), $expiration, '/' );
 			}
-
 		}
 
 	}
