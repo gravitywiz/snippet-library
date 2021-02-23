@@ -21,7 +21,7 @@
  * 3. Select the desired child form for which you wish to fetch child entries.
  * 4. Add a filter and filter where Parent Entry ID entry meta is equal to the the Hidden field you created in Step 1.
  *
- * @version  1.1
+ * @version  1.2
  * @author   David Smith <david@gravitywiz.com>
  * @license  GPL-2.0+
  * @link     https://gravitywiz.com/documentation/gravity-forms-populate-anything/
@@ -30,7 +30,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  * Description:  A brief description about this snippet and the functionality it provides. Might also include basic usage instructions if applicable.
  * Author:       Gravity Wiz
- * Version:      1.1
+ * Version:      1.2
  * Author URI:   http://gravitywiz.com
  */
 class GPPA_Populate_Child_Entries {
