@@ -5,7 +5,7 @@
  * Pass an entry ID and populate the form automatically. No form configuration required. Optionally update the entry on
  * submission.
  *
- * @version  1.5
+ * @version  1.6
  * @author   David Smith <david@gravitywiz.com>
  * @license  GPL-2.0+
  * @link     http://gravitywiz.com/
@@ -15,7 +15,7 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Pass an entry ID and populate the form automatically. No form configuration required. Optionally update the entry on submission.
  * Author:       Gravity Wiz
- * Version:      1.4
+ * Version:      1.6
  * Author URI:   http://gravitywiz.com
  */
 class GW_Populate_Form {
@@ -23,9 +23,10 @@ class GW_Populate_Form {
 	public function __construct( $args = array() ) {
 
 		$this->_args = wp_parse_args( $args, array(
-			'form_id'   => false,
-			'query_arg' => 'eid',
-			'update'    => false,
+			'form_id'          => false,
+			'query_arg'        => 'eid',
+			'update'           => false,
+			'dynamic_override' => false,
 		) );
 
 		add_action( 'init', array( $this, 'init' ) );
@@ -75,8 +76,15 @@ class GW_Populate_Form {
 				$field['inputs'] = $inputs;
 			}
 
-			$field['inputName'] = $field['id'];
-
+			// If dynamic override is set, only map the field ID if it's empty
+			// Otherwise, leave it as is to populate from GF's dynamic population
+			if ( $this->_args['dynamic_override'] ) {
+				if ( strlen( $field['inputName'] ) < 1 ) {
+					$field['inputName'] = $field['id'];
+				}
+			} else {
+				$field['inputName'] = $field['id'];
+			}
 		}
 
 		return $form;
@@ -172,4 +180,6 @@ class GW_Populate_Form {
 
 new GW_Populate_Form( array(
 	'update' => true,
+	// Uncomment the next line to allow dynamic population to override entry's data
+	// 'dynamic_override' => true,
 ) );
