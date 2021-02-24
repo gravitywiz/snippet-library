@@ -7,8 +7,6 @@ function get_custom_order_summary_markup( $markup, $order, $form, $entry, $order
 	ob_start();
 	?>
 
-	NIL PRICING
-
 	<table class="gpecf-order-summary" cellspacing="0" width="100%" style="<?php gp_ecommerce_fields()->style( '.order-summary' ); ?>">
 		<thead>
 		<tr>
