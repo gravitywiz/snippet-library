@@ -126,20 +126,9 @@ class GPPA_Populate_Child_Entries {
 						return null;
 					}
 
-					// Wait for the first nested form field view model to be available
-					var waitTimeoutCount = 0;
-					self.initWait = function() {
-						var form = window[ 'GPNestedForms_{0}_{1}'.format( self.formId, self.nestedFormFieldIds[ 0 ] ) ];
-						if ( form && form.viewModel ) {
-							return self.init();
-						}
-						if ( waitTimeoutCount < 50 ) {
-							waitTimeoutCount++;
-							window.setTimeout(self.initWait, 1);
-						}
-					}
-
-					self.initWait();
+					$(function(){
+						self.init();
+					});
 
 				}
 
