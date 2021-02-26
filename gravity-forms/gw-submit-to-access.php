@@ -137,7 +137,6 @@ class GW_Submit_Access {
 		$url = $this->get_requires_submission_redirect( $post->ID );
 		if ( $url ) {
 			wp_redirect( $url );
-			exit;
 		}
 
 	}
