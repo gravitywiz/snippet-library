@@ -3,6 +3,13 @@
  * Gravity Perks // Populate Anything // Explode Commas into Choices
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
+ * Plugin Name:  GPPA Explode Commas into Choices
+ * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-populate-anything/
+ * Description:  Convert comma-delimited values into choices when populated into a choice-based field.
+ * Author:       Gravity Wiz
+ * Version:      0.1
+ * Author URI:   https://gravitywiz.com
+ *
  * If you have an array-like value mapped to a choice-based field, Populate Anything does not yet know when it should be
  * converted to choices or imploded into a string so it defaults to the latter.
  *
