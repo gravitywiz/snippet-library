@@ -4,12 +4,12 @@
  *
  * Generate multiple unique IDs. Does not work with sequential IDs.
  *
- * @version   1.2
+ * @version   1.3
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/
  */
-class GP_Unique_ID_Multiple_IDs {
+class GPUID_Multiple_IDs {
 
 	public function __construct( $args = array() ) {
 
@@ -38,50 +38,72 @@ class GP_Unique_ID_Multiple_IDs {
 
 	}
 
-	function populate_field_value( $entry, $form ) {
+	public function populate_field_value( $entry, $form, $fulfilled = false ) {
+
+		$feed = null;
+
+		if ( rgar( $entry, 'partial_entry_id' ) ) {
+			return $entry;
+		}
 
 		foreach ( $form['fields'] as $field ) {
 
-			if ( $this->is_applicable_field( $field, $form, $entry ) ) {
-
-				$count        = $this->get_count( $entry );
-				$source_field = GFFormsModel::get_field( $form, $this->_args['source_field_id'] );
-				$value        = array();
-
-				// add source field ID as first of the X IDs
-				$value[] = rgar( $entry, $source_field['id'] );
-
-				for ( $i = 1; $i < $count; $i++ ) {
-					$value[] = gp_unique_id()->get_unique( $form['id'], $source_field );
-				}
-
-				//$value = $this->save_value_to_entry( $entry['id'], $form['id'], $field, implode( "\n", $value ) );
-
-				$entry[ $field['id'] ] = implode( "\n", $value );
-
-				GFAPI::update_entry( $entry );
-
+			if ( ! $this->is_applicable_field( $field, $form, $entry ) ) {
+				continue;
 			}
+
+			if ( $feed === null ) {
+				$feed = gp_unique_id_field()->get_paypal_standard_feed( $form, $entry );
+				/**
+				 * Modify the feed that indicates a payment gateway is configured that
+				 * accepts delayed payments (i.e. PayPal Standard).
+				 *
+				 * This filter allows 3rd party payment add-ons to add support for delaying unique ID generation when
+				 * one of their feeds is present.
+				 *
+				 * @since 1.3.1
+				 *
+				 * @param $feed  array The payment feed.
+				 * @param $form  array The current form object.
+				 * @param $entry array The current entry object.
+				 */
+				$feed = gf_apply_filters( array( 'gpui_wait_for_payment_feed', $form['id'], $field->id ), $feed, $form, $entry );
+			}
+
+			/**
+			 * Indicate whether the unique ID generation should wait for a completed payment.
+			 *
+			 * Only applies to payment gateways that accept delayed payments (i.e. PayPal Standard).
+			 *
+			 * @since 1.3.0
+			 *
+			 * @param $wait_for_payment bool  Whether or not to wait for payment. Defaults to false.
+			 * @param $form             array The current form object.
+			 * @param $entry            array The current entry object.
+			 */
+			$wait_for_payment = $feed && gf_apply_filters( array( 'gpui_wait_for_payment', $form['id'], $field->id ), false, $feed, $form, $entry );
+			if ( $wait_for_payment && ! $fulfilled ) {
+				continue;
+			}
+
+			$count        = $this->get_count( $entry );
+			$source_field = GFFormsModel::get_field( $form, $this->_args['source_field_id'] );
+			$value        = array();
+
+			// add source field ID as first of the X IDs
+			$value[] = rgar( $entry, $source_field['id'] );
+
+			for ( $i = 1; $i < $count; $i++ ) {
+				$value[] = gp_unique_id()->get_unique( $form['id'], $source_field );
+			}
+
+			$entry[ $field['id'] ] = implode( "\n", $value );
+
+			GFAPI::update_entry( $entry );
+
 		}
 
 		return $entry;
-	}
-
-	function save_value_to_entry( $entry_id, $form_id, $field, $value ) {
-		global $wpdb;
-
-		$result = $wpdb->insert(
-			GFFormsModel::get_lead_details_table_name(),
-			array(
-				'lead_id'      => $entry_id,
-				'form_id'      => $form_id,
-				'field_number' => $field['id'],
-				'value'        => $value,
-			),
-			array( '%d', '%d', '%d', '%s' )
-		);
-
-		return $result ? $value : false;
 	}
 
 	function get_count( $entry ) {
@@ -107,8 +129,8 @@ class GP_Unique_ID_Multiple_IDs {
 
 	function is_applicable_field( $field, $form, $entry ) {
 
-		$is_form            = $form['id'] == $this->_args['form_id'];
-		$is_target_field_id = $field['id'] == $this->_args['target_field_id'];
+		$is_form            = (int) $form['id'] === (int) $this->_args['form_id'];
+		$is_target_field_id = (int) $field['id'] === (int) $this->_args['target_field_id'];
 		$is_visible         = ! GFFormsModel::is_field_hidden( $form, $field, array(), $entry );
 
 		return $is_form && $is_target_field_id && $is_visible;
@@ -128,14 +150,14 @@ class GP_Unique_ID_Multiple_IDs {
 
 # Configuration
 
-//new GP_Unique_ID_Multiple_IDs( array(
+//new GPUID_Multiple_IDs( array(
 //   'form_id'         => 694,
 //   'source_field_id' => 35,
 //   'target_field_id' => 36,
 //   'count'           => 2
 //) );
 
-//new GP_Unique_ID_Multiple_IDs( array(
+//new GPUID_Multiple_IDs( array(
 //	'form_id'         => 753,
 //	'source_field_id' => 1,
 //	'target_field_id' => 2,
@@ -144,7 +166,7 @@ class GP_Unique_ID_Multiple_IDs {
 //	),
 //) );
 
-// new GP_Unique_ID_Multiple_IDs( array(
+// new GPUID_Multiple_IDs( array(
 //     'form_id'         => 694,
 //     'target_field_id' => 36,
 //     'source_field_id' => 35,
