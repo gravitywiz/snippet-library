@@ -23,9 +23,10 @@ class GW_Rename_Uploaded_Files {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
 		$this->_args = wp_parse_args( $args, array(
-			'form_id'  => false,
-			'field_id' => false,
-			'template' => '',
+			'form_id'          => false,
+			'field_id'         => false,
+			'template'         => '',
+			'ignore_extension' => false,
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -173,10 +174,17 @@ class GW_Rename_Uploaded_Files {
 		$pathinfo  = pathinfo( $file_path );
 		$counter   = 1;
 
-		// increment the filename if it already exists (i.e. balloons.jpg, balloons1.jpg, balloons2.jpg)
-		while ( file_exists( $file_path ) ) {
-			$file_path = str_replace( ".{$pathinfo['extension']}", "{$counter}.{$pathinfo['extension']}", GFFormsModel::get_physical_file_path( $file ) );
-			$counter++;
+		if ( $this->_args['ignore_extension'] ) {
+			while ( glob( str_replace( ".{$pathinfo['extension']}", '.*', $file_path ) ) ) {
+				$file_path = str_replace( ".{$pathinfo['extension']}", "{$counter}.{$pathinfo['extension']}", GFFormsModel::get_physical_file_path( $file ) );
+				$counter ++;
+			}
+		} else {
+			// increment the filename if it already exists (i.e. balloons.jpg, balloons1.jpg, balloons2.jpg)
+			while ( file_exists( $file_path ) ) {
+				$file_path = str_replace( ".{$pathinfo['extension']}", "{$counter}.{$pathinfo['extension']}", GFFormsModel::get_physical_file_path( $file ) );
+				$counter ++;
+			}
 		}
 
 		$file = str_replace( basename( $file ), basename( $file_path ), $file );
