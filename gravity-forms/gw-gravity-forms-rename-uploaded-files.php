@@ -274,7 +274,10 @@ class GW_Rename_Uploaded_Files {
 # Configuration
 
 new GW_Rename_Uploaded_Files( array(
-	'form_id'  => 628,
-	'field_id' => 3,
-	'template' => '{Name (First):1.3}-{Name (Last):1.6}-{filename}', // most merge tags are supported, original file extension is preserved
+	'form_id'          => 628,
+	'field_id'         => 3,
+	// most merge tags are supported, original file extension is preserved
+	'template'         => '{Name (First):1.3}-{Name (Last):1.6}-{filename}',
+	// Ignore extension when renaming files and keep them in sequence (e.g. a.jpg, a1.png, a2.pdf etc.)
+	'ignore_extension' => false,
 ) );
