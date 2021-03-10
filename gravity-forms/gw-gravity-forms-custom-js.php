@@ -94,9 +94,9 @@ class GF_Custom_JS {
 		// GF 2.5 may fire `gform_form_settings` before `save_custom_js_setting`
 		$custom_js = rgar( $form, 'customJS' );
 		$post_js   = esc_html( rgpost( 'customJS' ) );
-		if ( $post_js && $post_js !== $custom_js ) {
-			$custom_js = $post_js;
-		}
+		// Always favor posted JS if it's available
+		$custom_js = ( $post_js ) ? $post_js : $custom_js;
+
 		$settings[ __( 'Custom Javascript' ) ] = array(
 			'custom_js' => sprintf(
 				'<tr id="custom_js_setting" class="child_setting_row">
