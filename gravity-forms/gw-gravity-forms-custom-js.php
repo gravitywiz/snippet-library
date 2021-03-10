@@ -92,10 +92,10 @@ class GF_Custom_JS {
 	public function add_custom_js_setting( $settings, $form ) {
 
 		// GF 2.5 may fire `gform_form_settings` before `save_custom_js_setting`
-		$customJS = rgar( $form, 'customJS' );
-		$postJS   = esc_html( rgpost( 'custom_js' ) );
-		if ( $postJS && $postJS !== $customJS ) {
-			$customJS = $postJS;
+		$custom_js = rgar( $form, 'customJS' );
+		$post_js   = esc_html( rgpost( 'customJS' ) );
+		if ( $post_js && $post_js !== $custom_js ) {
+			$custom_js = $post_js;
 		}
 		$settings[ __( 'Custom Javascript' ) ] = array(
 			'custom_js' => sprintf(
@@ -115,7 +115,7 @@ class GF_Custom_JS {
 					.CodeMirror-wrap { border: 1px solid #e1e1e1; }
 				</style>',
 				__( 'Include any custom Javascript that you would like to output wherever this form is rendered.' ),
-				$customJS
+				$custom_js
 			),
 		);
 
