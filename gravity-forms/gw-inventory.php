@@ -4,7 +4,7 @@
  *
  * Specify an inventory for any Gravity Forms field.
  *
- * @version   2.19
+ * @version   2.20
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/better-inventory-with-gravity-forms/
