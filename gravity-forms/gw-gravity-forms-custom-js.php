@@ -91,12 +91,18 @@ class GF_Custom_JS {
 
 	public function add_custom_js_setting( $settings, $form ) {
 
+		// GF 2.5 may fire `gform_form_settings` before `save_custom_js_setting`
+		$customJS = rgar( $form, 'customJS' );
+		$postJS   = esc_html( rgpost( 'custom_js' ) );
+		if ( $postJS && $postJS !== $customJS ) {
+			$customJS = $postJS;
+		}
 		$settings[ __( 'Custom Javascript' ) ] = array(
 			'custom_js' => sprintf(
 				'<tr id="custom_js_setting" class="child_setting_row">
 					<td colspan="2">
 						<p style="margin-top:-1rem;">%s</p>
-						<textarea id="custom_js" name="custom_js" spellcheck="false" 
+						<textarea id="custom_js" name="custom_js" spellcheck="false"
 							style="width:100%%;height:14rem;">%s</textarea>
 					</td>
 				</td>
@@ -109,7 +115,7 @@ class GF_Custom_JS {
 					.CodeMirror-wrap { border: 1px solid #e1e1e1; }
 				</style>',
 				__( 'Include any custom Javascript that you would like to output wherever this form is rendered.' ),
-				rgar( $form, 'customJS' )
+				$customJS
 			),
 		);
 
