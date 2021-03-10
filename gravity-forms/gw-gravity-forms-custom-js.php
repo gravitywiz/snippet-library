@@ -4,7 +4,7 @@
  *
  * Include custom Javascript with your form.
  *
- * @version  1.6
+ * @version  1.6.1
  * @author   David Smith <david@gravitywiz.com>
  * @license  GPL-2.0+
  * @link     http://gravitywiz.com/
@@ -13,7 +13,7 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Include custom Javascript with your form.
  * Author:       Gravity Wiz
- * Version:      1.6
+ * Version:      1.6.1
  * Author URI:   http://gravitywiz.com
  *
  * Usage:
@@ -93,7 +93,7 @@ class GF_Custom_JS {
 
 		// GF 2.5 may fire `gform_form_settings` before `save_custom_js_setting`
 		$custom_js = rgar( $form, 'customJS' );
-		$post_js   = esc_html( rgpost( 'customJS' ) );
+		$post_js   = esc_html( rgpost( 'custom_js' ) );
 		// Always favor posted JS if it's available
 		$custom_js = ( $post_js ) ? $post_js : $custom_js;
 
