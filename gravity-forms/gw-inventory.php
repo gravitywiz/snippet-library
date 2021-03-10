@@ -296,7 +296,7 @@ class GW_Inventory {
 			$quantity_input = '';
 			// GF will default to a quantity of 1 if it can't find the input for a Quantity field.
 			if ( $field->type === 'quantity' ) {
-				$quantity_input = sprintf( '<input type="hidden" name="input_%d_%d" value="0" /></div>', $field->formId, $field->id );
+				$quantity_input = sprintf( '<input type="hidden" name="input_%d_%d" value="0" />', $field->formId, $field->id );
 			}
 
 			return sprintf( '<div class="ginput_container">%s%s</div>', $this->_args['out_of_stock_message'], $quantity_input );
@@ -460,7 +460,7 @@ class GW_Inventory {
 			'join'   => "INNER JOIN {$wpdb->prefix}gf_entry e ON e.id = em.entry_id",
 			'where'  => $wpdb->prepare( "
                 WHERE em.form_id = %d
-                AND em.meta_key = %s 
+                AND em.meta_key = %s
                 AND e.status = 'active'\n",
 				$form_id, $input_id
 			),
