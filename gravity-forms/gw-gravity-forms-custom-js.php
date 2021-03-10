@@ -4,7 +4,7 @@
  *
  * Include custom Javascript with your form.
  *
- * @version  1.5
+ * @version  1.6
  * @author   David Smith <david@gravitywiz.com>
  * @license  GPL-2.0+
  * @link     http://gravitywiz.com/
@@ -13,7 +13,7 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Include custom Javascript with your form.
  * Author:       Gravity Wiz
- * Version:      1.5
+ * Version:      1.6
  * Author URI:   http://gravitywiz.com
  *
  * Usage:
