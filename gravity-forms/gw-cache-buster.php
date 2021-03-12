@@ -179,7 +179,7 @@ class GW_Cache_Buster {
 			$form_id = isset( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : 0;
 		}
 
-		$atts = json_decode( rgpost( 'atts' ) );
+		$atts = json_decode( rgpost( 'atts' ), true );
 
 		gravity_form( $form_id, rgar( $atts, 'title' ), rgar( $atts, 'description' ), false, rgar( $atts, 'field_values' ), true /* default to true; add support for non-ajax in the future */, rgar( $atts, 'tabindex' ) );
 
