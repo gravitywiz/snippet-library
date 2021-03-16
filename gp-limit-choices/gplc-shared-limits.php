@@ -95,8 +95,15 @@ class GPLS_Shared_Limits {
 			$query['where'] = str_replace( sprintf( 'AND em.form_id = %d', $field->formId ), '', $query['where'] );
 
 			$join_conditions = array();
-			foreach( $form_group as $form_id => $field_id ) {
-				$join_conditions[] = sprintf( '( em.form_id = %1$d AND ( em.meta_key = \'%2$d\' OR em.meta_key LIKE \'%2$d.%%\' ) )', $form_id, $field_id );
+			foreach( $form_group as $form_id => $field_ids ) {
+				$field_clauses = array();
+				if ( ! is_array( $field_ids ) ) {
+					$field_ids = array( $field_ids );
+				}
+				foreach ( $field_ids as $field_id ) {
+					$field_clauses[] = "em.meta_key = '{$field_id}' OR em.meta_key LIKE '{$field_id}%'";
+				}
+				$join_conditions[] = "( em.form_id = {$form_id} AND ( " . implode( " OR ", $field_clauses ) . " ) )";
 			}
 
 			$query['from'] = sprintf( "FROM {$wpdb->prefix}gf_entry e INNER JOIN {$wpdb->prefix}gf_entry_meta em ON em.entry_id = e.id AND ( %s )", implode( "\nOR\n", $join_conditions ) );
