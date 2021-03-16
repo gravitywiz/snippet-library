@@ -4,7 +4,7 @@
  *
  * Bypass your website cache when loading a Gravity Forms form.
  *
- * @version 0.3
+ * @version 0.4
  * @author  David Smith <david@gravitywiz.com>
  * @license GPL-2.0+
  * @link    http://gravitywiz.com/
@@ -13,7 +13,7 @@
  * Plugin URI: http://gravitywiz.com/
  * Description: Bypass your website cache when loading a Gravity Forms form.
  * Author: Gravity Wiz
- * Version: 0.3
+ * Version: 0.4
  * Author URI: http://gravitywiz.com
  *
  */
@@ -179,7 +179,7 @@ class GW_Cache_Buster {
 			$form_id = isset( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : 0;
 		}
 
-		$atts = json_decode( rgpost( 'atts' ) );
+		$atts = json_decode( rgpost( 'atts' ), true );
 
 		gravity_form( $form_id, rgar( $atts, 'title' ), rgar( $atts, 'description' ), false, rgar( $atts, 'field_values' ), true /* default to true; add support for non-ajax in the future */, rgar( $atts, 'tabindex' ) );
 

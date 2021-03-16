@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * GP Limit Choices // Gravity Perks // Display How Many Spots Left
+ *
+ * Display how many spots are left in the choice label when using the GP Limit Choices perk
+ * http://gravitywiz.com/gravity-perks/
+ */
+
+add_filter( 'gplc_remove_choices', '__return_false' );
+
+add_filter( 'gplc_pre_render_choice', 'my_add_how_many_left_message', 10, 5 );
+function my_add_how_many_left_message( $choice, $exceeded_limit, $field, $form, $count ) {
+
+	$limit         = rgar( $choice, 'limit' );
+	$how_many_left = max( $limit - $count, 0 );
+
+	$message = "($how_many_left spots left)";
+
+	$choice['text'] = $choice['text'] . " $message";
+
+	return $choice;
+}
