@@ -36,13 +36,50 @@ class GW_Progress_Meter {
 	public function do_meter_shortcode( $output, $atts ) {
 
 		$atts = shortcode_atts( array(
-			'id'     => false,
-			'status' => 'total', // accepts 'total', 'unread', 'starred', 'trash', 'spam'
-			'goal'   => false,
-			'field'  => false,
+			'id'          => false,
+			'status'      => 'total', // accepts 'total', 'unread', 'starred', 'trash', 'spam'
+			'goal'        => false,
+			'field'       => false,
 			'count_label' => '%d submissions',
-			'goal_label' => '%d goal',
-		), $atts );
+			'goal_label'  => '%d goal',
+			'hook'        => false, // Accepts a string; used via the `shortcode_atts_gf_progress_meter` filter to conditionally filter the $atts.
+		), $atts, 'gf_progress_meter' );
+
+		$count            = $this->get_count( $atts );
+		$percent_complete = $count <= 0 ? 0 : round( ( $count / $atts['goal'] ) * 100 );
+		$classes          = array( 'gwpm-container' );
+
+		if ( $percent_complete >= 100 ) {
+			$classes[] = 'gwpm-goal-reached';
+		}
+
+		if ( $percent_complete > 100 ) {
+			$classes[]        = 'gwpm-goal-exceeded';
+			$percent_complete = 100;
+		}
+
+		$output = '<div class="' . implode( ' ', $classes ) . '">
+			<div class="gwpm-meter">
+				<div class="gwpm-fill" style="width:' . $percent_complete . '%;"></div>
+			</div>
+			<div class="gwpm-count">
+				' . $this->prepare_label( $atts['count_label'], 'count', $count ) . '
+			</div>
+			<div class="gwpm-goal">
+				' . $this->prepare_label( $atts['goal_label'], 'goal', $atts['goal'] ) . ' 
+			</div>
+		</div>';
+
+		$this->enqueue_styles();
+
+		return $output;
+	}
+
+	public function get_count( $atts ) {
+
+		if ( isset( $atts['count'] ) && $atts['count'] ) {
+			return $atts['count'];
+		}
 
 		if ( $atts['field'] ) {
 
@@ -96,33 +133,7 @@ class GW_Progress_Meter {
 
 		}
 
-		$percent_complete = $count <= 0 ? 0 : round( ( $count / $atts['goal'] ) * 100 );
-		$classes          = array( 'gwpm-container' );
-
-		if ( $percent_complete >= 100 ) {
-			$classes[] = 'gwpm-goal-reached';
-		}
-
-		if ( $percent_complete > 100 ) {
-			$classes[]        = 'gwpm-goal-exceeded';
-			$percent_complete = 100;
-		}
-
-		$output = '<div class="' . implode( ' ', $classes ) . '">
-			<div class="gwpm-meter">
-				<div class="gwpm-fill" style="width:' . $percent_complete . '%;"></div>
-			</div>
-			<div class="gwpm-count">
-				' . $this->prepare_label( $atts['count_label'], 'count', $count ) . '
-			</div>
-			<div class="gwpm-goal">
-				' . $this->prepare_label( $atts['goal_label'], 'goal', $atts['goal'] ) . ' 
-			</div>
-		</div>';
-
-		$this->enqueue_styles();
-
-		return $output;
+		return $count;
 	}
 
 	public function enqueue_styles() {
