@@ -42,7 +42,7 @@ class GW_Progress_Meter {
 			'field'       => false,
 			'count_label' => '%d submissions',
 			'goal_label'  => '%d goal',
-			'hook'        => false, // Accepts a string; used via the `shortcode_atts_gf_progress_meter` filter to conditionally filter the $atts.
+			'name'        => false, // Accepts a string; used via the `shortcode_atts_gf_progress_meter` filter to conditionally filter the $atts.
 		), $atts, 'gf_progress_meter' );
 
 		$count            = $this->get_count( $atts );
