@@ -8,7 +8,7 @@
  * @version   1.8
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
- * @link      http://gravitywiz.com/...
+ * @link      https://gravitywiz.com/require-existing-value-submission-gravity-forms/
  */
 class GW_Value_Exists_Validation {
 
