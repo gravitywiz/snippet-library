@@ -7,8 +7,7 @@
  * @version   1.0
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
- * @link      http://gravitywiz.com/...
- * @copyright 2019 Gravity Wiz
+ * @link      https://gravitywiz.com/edit-gravity-forms-entries-on-the-front-end/
  */
 // Update "123" with your form ID.
 add_filter( 'gform_entry_id_pre_save_lead_123', 'my_update_entry_on_form_submission', 10, 2 );
