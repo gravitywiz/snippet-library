@@ -1,16 +1,5 @@
 <?php
 /**
- * Gravity Perks // GP Limit Choices // Field Group
- *
- * Specify a group of fields that should create a unique choice to limited. For example, a Date field and Radio Button field could be
- * combined to sell x tickets per date where the ticket type is controlled by the Radio Button field and the date is
- * selected in the Date field.
- *
- * @version   1.4
- * @author    David Smith <david@gravitywiz.com>
- * @license   GPL-2.0+
- * @link      http://gravitywiz.com/documentation/gp-limit-choices/
- *
  * Plugin Name: GP Limit Choices - Field Groups
  * Plugin URI: http://gravitywiz.com/documentation/gp-limit-choices/
  * Description: Specify a group of fields that should create a unique choice to be limited.
