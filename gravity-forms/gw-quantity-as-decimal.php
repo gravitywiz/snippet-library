@@ -7,7 +7,6 @@
  * Version:      1.3
  * Author URI:   http://gravitywiz.com
  */
-
 class GW_Quantity_Decimal {
 
 	private static $_current_form;
