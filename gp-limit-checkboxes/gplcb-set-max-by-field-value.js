@@ -1,3 +1,10 @@
+/**
+ * Gravity Perks // GP Limit Checkboxes // Set Max Limit by Field Value
+ * https://gravitywiz.com/documentation/gravity-forms-limit-checkboxes/
+ * 
+ * This javascript snippet sets the max limit of a Checkbox field using the value in a field on the form. 
+ */
+
 gform.addFilter( 'gplc_group', function( group, fieldId, $elem, gplc ) {
 
 	var formId = 123,
