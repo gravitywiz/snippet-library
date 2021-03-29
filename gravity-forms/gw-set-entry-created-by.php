@@ -6,7 +6,7 @@
  * populate a Drop Down field (or any other single value field type) with WordPress users and then set the selected user
  * as the creator of the entry.
  *
- * Plugin Name:  GF Set Entry Creator by Field Value
+ * Plugin Name:  GF - Set Entry Creator by Field Value
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Set the entry creator by field value. The value must be a valid WordPress user ID.
  * Author:       Gravity Wiz
