@@ -5,10 +5,12 @@
  * Add/remove list field rows automatically based on the value entered in the specified field. Removes the add/remove
  * that normally buttons next to List field rows.
  *
- * @version   1.3
- * @author    David Smith <david@gravitywiz.com>
- * @license   GPL-2.0+
- * @link      http://gravitywiz.com/set-number-of-list-field-rows-by-field-value//
+ * Plugin Name:  Gravity Wiz // Gravity Forms // Set Number of List Field Rows by Field Value
+ * Plugin URI:   http://gravitywiz.com/set-number-of-list-field-rows-by-field-value/
+ * Description:  This snippet adds/removes list field rows automatically based on the value entered in the specified field.
+ * Author:       Gravity Wiz
+ * Version:      1.3
+ * Author URI:   https://gravitywiz.com
  */
 class GWAutoListFieldRows {
 
