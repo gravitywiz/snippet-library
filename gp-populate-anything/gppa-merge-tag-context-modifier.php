@@ -1,7 +1,7 @@
 <?php
 /**
  * Gravity Perks // Populate Anything // Replace Merge Tags in Specific Context
- * http://gravitywiz.com/documentation/gravity-forms-nested-forms/
+ * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
  * @video https://www.loom.com/share/d626a60769ee48579b6f426a677918a3
  *
@@ -14,6 +14,13 @@
  * In this example, we'll assume that the ID of the Drop Down field is 1.
  *
  * Note: This currently is limited to entries.
+ *
+ * Plugin Name:  Populate Anything - Replace Merge Tags in Specific Context
+ * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-populate-anything/
+ * Description:  This snippet allows you to replace a merge tag in the context of an entry selected in a GPPA-populated field.
+ * Author:       Gravity Wiz
+ * Version:      0.1
+ * Author URI:   https://gravitywiz.com
  */
 add_filter( 'gppa_live_merge_tag_value', function( $merge_tag_match_value, $merge_tag, $form, $field_id, $entry_values ) {
 
