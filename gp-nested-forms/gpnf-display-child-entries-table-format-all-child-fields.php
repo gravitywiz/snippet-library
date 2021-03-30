@@ -1,11 +1,12 @@
 <?php
 /**
  * Gravity Perks // GP Nested Forms // Display Table Format for All Fields
- * http://gravitywiz.com/documentation/gravity-forms-nested-forms/
+ * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
+ *
  * MODIFIED: Show *all* child fields.
  *
- * Gravity Perks // GP Nested Forms // Display Table Format for All Fields
- * Plugin URI:   http://gravitywiz.com/documentation/gravity-forms-nested-forms/
+ * Plugin Name:  GP Nested Forms - Set Entry Creator by Field Value
+ * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  * Description:  This snippet displays the Child entries of all Nested Forms field on a form in a table format.
  * Author:       Gravity Wiz
  * Version:      0.1
