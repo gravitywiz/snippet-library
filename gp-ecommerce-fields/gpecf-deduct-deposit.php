@@ -1,10 +1,10 @@
 <?php
 /**
  * Gravity Perks // GP eCommerce Fields // Deduct Deposit from Order Summary
- * http://gravitywiz.com/documentation/gravity-forms-ecommerce-fields/
+ * https://gravitywiz.com/documentation/gravity-forms-ecommerce-fields/
  *
- * Plugin Name:  Gravity Perks // GP eCommerce Fields // Deduct Deposit from Order Summary
- * Plugin URI:   http://gravitywiz.com/documentation/gravity-forms-ecommerce-fields/
+ * Plugin Name:   GP eCommerce Fields - Deduct Deposit from Order Summary
+ * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-ecommerce-fields/
  * Description:  This snippet uses a Produdct field to create a deposit field and deducts the deposit from Order Summary
  * Author:       Gravity Wiz
  * Version:      0.1
