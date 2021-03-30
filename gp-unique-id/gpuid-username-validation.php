@@ -1,6 +1,7 @@
 <?php
 /**
  * Gravity Perks // GP Unique ID // Unique ID as Username or Site Address
+ * https://gravitywiz.com/documentation/gravity-forms-unique-id/
  *
  * The Unique ID field is populated on submission, after validation. This snippet runs post-validation to allow User Registration feeds with a Unique ID
  * field mapped as the username to still pass validation.
