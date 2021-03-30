@@ -15,7 +15,7 @@
  *
  * Note: This currently is limited to entries.
  *
- * Plugin Name:  Populate Anything - Replace Merge Tags in Specific Context
+ * Plugin Name:  GP Populate Anything - Replace Merge Tags in Specific Context
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  * Description:  This snippet allows you to replace a merge tag in the context of an entry selected in a GPPA-populated field.
  * Author:       Gravity Wiz
