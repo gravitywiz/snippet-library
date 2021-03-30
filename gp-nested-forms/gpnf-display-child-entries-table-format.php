@@ -1,7 +1,7 @@
 <?php
 /**
  * Gravity Perks // GP Nested Forms // Display Table Format for All Fields
- * http://gravitywiz.com/documentation/gravity-forms-nested-forms/
+ * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
  * This snippet displays the child entries in a table format when using the {all_fields} merge tag with the gpnf_table modifier. 
  * Add "gpnf_table" as a modifier to the {all_fields} merge tag to enable this functionality.
@@ -10,8 +10,8 @@
  * {all_fields:gpnf_table}
  * {all_fields:nohidden,gpnf_table}
  *
- * Gravity Perks // GP Nested Forms // Display Table Format for All Fields
- * Plugin URI:   http://gravitywiz.com/documentation/gravity-forms-nested-forms/
+ * Plugin Name:  GP Nested Forms - Display Table Format for All Fields
+ * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  * Description:  This snippet displays the child entries in a table format when using the {all_fields} merge tag with the gpnf_table modifier.
  * Author:       Gravity Wiz
  * Version:      0.1
