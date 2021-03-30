@@ -1,10 +1,11 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Schedule a Post by Date Field (for Multiple Forms)
+ * https://gravitywiz.com
  *
  * Schedule your Gravity Form generated posts to be published at a future date, specified by the user via GF Date and Time fields.
  *
- * Plugin Name:  GF — Schedule a Post by Date Field (for Multiple Forms)
+ * Plugin Name:  Gravity Forms — Schedule a Post by Date Field (for Multiple Forms)
  * Plugin URI:   https://gravitywiz.com
  * Description:  Schedule your Gravity Form generated posts to be published at a future date, specified by the user via GF Date and Time fields.
  * Author:       Gravity Wiz
