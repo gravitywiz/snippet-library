@@ -1,13 +1,13 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Redirect if Email Exists
- *
+ * https://gravitywiz.com/
  * Redirect to a specified URL if the the submitted email address matches an existing user.
  *
  * Note: Does not work with AJAX-enabled forms.
  *
  * Plugin Name: Gravity Forms - Redirect if Email Exists
- * Plugin URI: http://gravitywiz.com/
+ * Plugin URI: https://gravitywiz.com/
  * Description: Redirect to a specified URL if the the submitted email address matches an existing user.
  * Author: Gravity Wiz
  * Version: 0.1
@@ -19,9 +19,9 @@ class GW_Redirect_Email_Exists {
 
         // set our default arguments, parse against the provided arguments, and store for use throughout the class
         $this->_args = wp_parse_args( $args, array(
-            'form_id' => false,
-	        'email_field_id' => false,
-	        'redirect_url' => false,
+		'form_id' => false,
+	    	'email_field_id' => false,
+	    	'redirect_url' => false,
         ) );
 
         // do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -64,7 +64,7 @@ class GW_Redirect_Email_Exists {
 # Configuration
 
 new GW_Redirect_Email_Exists( array(
-	'form_id'        => 90,
-	'email_field_id' => 2,
+	'form_id'        => 123,
+	'email_field_id' => 4,
 	'redirect_url'   => 'http://google.com'
 ) );
