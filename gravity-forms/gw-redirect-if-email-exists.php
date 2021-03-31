@@ -2,6 +2,7 @@
 /**
  * Gravity Wiz // Gravity Forms // Redirect if Email Exists
  * https://gravitywiz.com/
+ * 
  * Redirect to a specified URL if the the submitted email address matches an existing user.
  *
  * Note: Does not work with AJAX-enabled forms.
