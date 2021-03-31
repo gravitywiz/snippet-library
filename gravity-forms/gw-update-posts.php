@@ -21,6 +21,7 @@ class GW_Update_Posts {
 				'post_id'    => false,
 				'title'      => false,
 				'content'    => false,
+				'author'     => false,
 				'meta' => array()
 			)
 		);
@@ -54,6 +55,7 @@ class GW_Update_Posts {
 
 		$post->post_title = rgar( $entry, $this->_args['title'] );
 		$post->post_content = rgar( $entry, $this->_args['content'] );
+		$post->post_content = rgar( $entry, $this->_args['author'] );
 
 		// Assign custom fields.
 		$meta = $this->_args['meta'];
