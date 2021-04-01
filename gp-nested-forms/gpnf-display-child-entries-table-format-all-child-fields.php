@@ -1,13 +1,13 @@
 <?php
 /**
- * Gravity Perks // GP Nested Forms // Display Table Format for All Fields
+ * Gravity Perks // GP Nested Forms // Display Table Format for All Fields and Show All Child Fields
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
- * MODIFIED: Show *all* child fields.
+ * This snippet displays all the Child entries of all Nested Forms field on a form in a table format, when using the {all_fields} merge tag. 
  *
- * Plugin Name:  GP Nested Forms - Display Table Format for All Fields
+ * Plugin Name:  GP Nested Forms - Display Table Format for All Fields and Show All Child Fields
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-nested-forms/
- * Description:  This snippet displays the Child entries of all Nested Forms field on a form in a table format.
+ * Description:  This snippet displays all the Child entries of all Nested Forms field on a form in a table format.
  * Author:       Gravity Wiz
  * Version:      0.1
  * Author URI:   https://gravitywiz.com
@@ -20,7 +20,7 @@ add_action( 'init', function () {
 
 	add_filter( 'gform_merge_tag_filter', function ( $value, $merge_tag, $modifiers, $field, $raw_value ) {
 
-		if ( $field->type != 'form' || $value === false ) {
+		if ( ! is_callable( 'gp_nested_forms' ) || $field->type != 'form' || $value === false || strpos( $modifiers, 'gpnf_table' ) === false ) {
 			return $value;
 		}
 
