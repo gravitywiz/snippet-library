@@ -2,9 +2,9 @@
 /**
  * Gravity Wiz // Gravity Forms // Update Posts
  *
- * Update existing post title, content, and custom fields with values from Gravity Forms.
+ * Update existing post title, content, author and custom fields with values from Gravity Forms.
  *
- * @version 0.2
+ * @version 0.3
  * @author  Scott Buchmann <scott@gravitywiz.com>
  * @license GPL-2.0+
  * @link    http://gravitywiz.com
@@ -55,7 +55,7 @@ class GW_Update_Posts {
 
 		$post->post_title = rgar( $entry, $this->_args['title'] );
 		$post->post_content = rgar( $entry, $this->_args['content'] );
-		$post->post_content = rgar( $entry, $this->_args['author'] );
+		$post->post_author = (int) rgar( $entry, $this->_args['author'] );
 
 		// Assign custom fields.
 		$meta = $this->_args['meta'];
