@@ -1,11 +1,16 @@
 <?php
 /**
+ * Gravity Perks // Limit Choices // Field Groups
+ * http://gravitywiz.com/documentation/gp-limit-choices/
+ *
+ * Specify a group of fields to create a unique choice to be limited.
+ *
  * Plugin Name: GP Limit Choices - Field Groups
- * Plugin URI: http://gravitywiz.com/documentation/gp-limit-choices/
+ * Plugin URI:  http://gravitywiz.com/documentation/gp-limit-choices/
  * Description: Specify a group of fields that should create a unique choice to be limited.
- * Author: Gravity Wiz
- * Version: 1.4
- * Author URI: http://gravitywiz.com
+ * Author:      Gravity Wiz
+ * Version:     1.5
+ * Author URI:  http://gravitywiz.com
  */
 class GP_Limit_Choices_Field_Group {
 
@@ -46,25 +51,26 @@ class GP_Limit_Choices_Field_Group {
 		unset( $field_ids[ array_search( $field->id, $field_ids ) ] );
 		$field_ids = array_values( $field_ids );
 
-		$form = GFAPI::get_form( $field->formId );
-		$join = $where = array();
+		$form   = GFAPI::get_form( $field->formId );
+		$join   = $where = array();
 		$select = $from = '';
+		$_alias = null;
 
 		foreach( $field_ids as $index => $field_id ) {
 
 			$field  = GFFormsModel::get_field( $form, $field_id );
 			$alias  = sprintf( 'fgem%d', $index + 1 );
-			$_alias = null;
 
 			if( $index == 0 ) {
 				$_alias  = $alias;
 				$select  = "SELECT DISTINCT {$alias}.entry_id";
 				$from    = "FROM {$wpdb->prefix}gf_entry_meta {$alias}";
-				$value   = $field->get_value_save_entry( GFFormsModel::get_field_value( $field ), $form, null, null, null );
-				$where[] = $wpdb->prepare( "( {$alias}.form_id = %d AND {$alias}.meta_key = %s AND {$alias}.meta_value = %s )", $field->formId, $field_id, $value );
 			} else {
 				$join[]  = "INNER JOIN {$wpdb->prefix}gf_entry_meta {$alias} ON {$_alias}.entry_id = {$alias}.entry_id";
 			}
+
+			$value   = $field->get_value_save_entry( GFFormsModel::get_field_value( $field ), $form, null, null, null );
+			$where[] = $wpdb->prepare( "( {$alias}.form_id = %d AND {$alias}.meta_key = %s AND {$alias}.meta_value = %s )", $field->formId, $field_id, $value );
 
 		}
 
@@ -189,21 +195,11 @@ class GP_Limit_Choices_Field_Group {
 
 						self.$form        = $( '#gform_wrapper_{0}'.format( self.formId ) );
 						self.$targetField = $( '#field_{0}_{1}'.format( self.formId, self.targetFieldId ) );
-						self.$triggerFields = false;
 
-						for( var i = 0; i < self.triggerFieldIds.length; i++ ) {
-							var $field = $( '#field_{0}_{1}'.format( self.formId, self.triggerFieldIds[ i ] ) );
-							if ( ! self.$triggerFields ) {
-								self.$triggerFields = $().add( $field );
+						gform.addAction( 'gform_input_change', function( elem, formId, fieldId ) {
+							if ( $.inArray( parseInt( fieldId ), self.triggerFieldIds ) !== -1 ) {
+								self.refresh();
 							}
-							// @todo Test with multiple triggers.
-							else {
-								self.$triggerFields.add( $field );
-							}
-						}
-
-						self.$triggerFields.on( 'change', function() {
-							self.refresh();
 						} );
 
 						self.refresh();
@@ -258,6 +254,6 @@ class GP_Limit_Choices_Field_Group {
 # Configuration
 
 new GP_Limit_Choices_Field_Group( array(
-    'form_id'   => 1485,
-    'field_ids' => array( 1, 2 )
+    'form_id'   => 123,
+    'field_ids' => array( 3, 4 )
 ) );
