@@ -4,12 +4,23 @@
  * Plugin URI:   http://gravitywiz.com/documentation/gravity-forms-limit-choices/
  * Description:  Provides the ability to set limits on dynamic choices populated by Populate Anything.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   http://gravitywiz.com
  */
 class GPLC_GPPA_Integration {
 
-	public function __construct() {
+	private static $instance;
+
+	public static function get_instance() {
+
+		if ( ! self::$instance ) {
+			self::$instance = new GPLC_GPPA_Integration();
+		}
+
+		return self::$instance;
+	}
+
+	private function __construct() {
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
 		add_action( 'init', array( $this, 'init' ) );
@@ -83,6 +94,8 @@ class GPLC_GPPA_Integration {
 
 }
 
-# Configuration
+function gplc_gppa_integration() {
+	return GPLC_GPPA_Integration::get_instance();
+}
 
-new GPLC_GPPA_Integration();
+gplc_gppa_integration();
