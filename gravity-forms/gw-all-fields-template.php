@@ -8,7 +8,7 @@
  * Plugin URI:   https://gravitywiz.com/gravity-forms-all-fields-template/
  * Description:  Modify the {all_fields} merge tag output via a template file.
  * Author:       Gravity Wiz
- * Version:      0.9.8
+ * Version:      0.9.9
  * Author URI:   http://gravitywiz.com
  *
  * Usage:
@@ -114,14 +114,50 @@ class GW_All_Fields_Template {
 		$whitelist = array( 'filter', 'include', 'exclude', 'nopricingfields' );
 		$context   = rgar( $modifiers, 'context', false );
 
-		foreach ( $modifiers as $modifier => $mod_value ) {
+		foreach ( $modifiers as $modifier => $mod_values ) {
 
 			if ( ! in_array( $modifier, $whitelist ) ) {
 				continue;
 			}
 
-			if ( ! is_array( $mod_value ) ) {
-				$mod_value = array( $mod_value );
+			if ( ! is_array( $mod_values ) ) {
+				$mod_values = array( $mod_values );
+			}
+
+			foreach ( $mod_values as $mod_value ) {
+				if ( ! is_numeric( $mod_value ) ) {
+					/**
+					 * Filter an individual value specified for the given modifier.
+					 *
+					 * The primary intent is to provide a mechanism for specifying a custom value that will be replaced
+					 * with an array of field IDs. For example, if you want to exclude fields with personal information
+					 * from some instances of the {all_fields} merge tag, you could specify a custom modifier value like
+					 * so:
+					 *
+					 * ```
+					 * {all_fields:exclude[persInfoFields]}
+					 * ```
+					 *
+					 * And then create a custom function to identify the IDs of those fields.
+					 *
+					 * ```
+					 * add_filter( 'gwaft_modifier_value_persInfoFields', function() {
+					 *     return array( 1, 2, 3 );
+					 * } );
+					 * ```
+					 *
+					 * @since 0.9.9
+					 *
+					 * @param string    $mod_value The custom modifier value to be replaced.
+					 * @param string    $modifier  The current modifier.
+					 * @param array     $modifiers All modifiers specified for the current merge tag.
+					 * @param \GF_Field $field     The current field.
+					 */
+					$new_value = gf_apply_filters( array( 'gwaft_modifier_value', $mod_value, $field->formId ), $mod_value, $modifier, $modifiers, $field );
+					if ( $new_value !== $mod_value ) {
+						array_splice( $mod_values, array_search( $mod_value, $mod_values, true ), 1, $new_value );
+					}
+				}
 			}
 
 			if ( $modifier === 'nopricingfields' ) {
@@ -144,7 +180,7 @@ class GW_All_Fields_Template {
 				}
 
 				$field_ids = array();
-				foreach ( $mod_value as $field_id ) {
+				foreach ( $mod_values as $field_id ) {
 					if ( intval( $field_id ) == $nested_form_field_id && $field_id !== intval( $field_id ) ) {
 						$field_id_bits = explode( '.', $field_id );
 						$field_ids[]   = array_pop( $field_id_bits );
@@ -153,8 +189,8 @@ class GW_All_Fields_Template {
 
 			} else {
 
-				$input_ids = $mod_value;
-				$field_ids = array_map( 'intval', $mod_value );
+				$input_ids = $mod_values;
+				$field_ids = array_map( 'intval', $mod_values );
 
 			}
 
