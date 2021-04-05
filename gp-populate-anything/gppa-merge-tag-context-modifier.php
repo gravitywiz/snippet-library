@@ -3,7 +3,7 @@
  * Gravity Perks // Populate Anything // Replace Merge Tags in Specific Context
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
- * @video https://www.loom.com/share/d626a60769ee48579b6f426a677918a3
+ * Instruction Video: https://www.loom.com/share/d626a60769ee48579b6f426a677918a3
  *
  * This snippet allows you to replace a merge tag in the context of an entry selected in a GPPA-populated field. For
  * example, if you populate a Drop Down field with entries and then have an HTML field which includes the {all_fields}
@@ -13,7 +13,7 @@
  *
  * In this example, we'll assume that the ID of the Drop Down field is 1.
  *
- * Note: This currently is limited to entries.
+ * Note: This snippet is currently limited to entries.
  *
  * Plugin Name:  GP Populate Anything - Replace Merge Tags in Specific Context
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-populate-anything/
