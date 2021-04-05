@@ -12,7 +12,7 @@
  * Version:      0.1
  * Author URI:   http://gravitywiz.com
  */
-class WooGFRemoveFieldFromProductDescription {
+class WCGFPA_Remove_Field_From_Product_Description {
     
     public function __construct() {
         
@@ -109,4 +109,4 @@ class WooGFRemoveFieldFromProductDescription {
     
 }
 
-new WooGFRemoveFieldFromProductDescription();
+new WCGFPA_Remove_Field_From_Product_Description();
