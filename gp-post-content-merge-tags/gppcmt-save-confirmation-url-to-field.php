@@ -1,7 +1,7 @@
 <?php
 /**
  * Gravity Perks // GP Post Content Merge Tags // Save Confirmation URL to Field
- * http://gravitywiz.com/documentation/gravity-forms-post-content-merge-tags/
+ * https://gravitywiz.com/documentation/gravity-forms-post-content-merge-tags/
  *
  * This snippet saves the Confirmation URL to a field. 
  */
