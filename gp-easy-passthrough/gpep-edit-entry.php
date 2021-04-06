@@ -35,5 +35,5 @@ class GPEPEditEntry {
 // Configurations
 new GPEPEditEntry( array(
 	'form_id'        => 179,   // Set this to the form ID
-	'delete_partial' => true, // Set this to true to delete partial entries if enabled
+	'delete_partial' => false, // Set this to true to delete partial entries if enabled
 ) );
