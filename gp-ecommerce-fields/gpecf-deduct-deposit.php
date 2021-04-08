@@ -27,8 +27,8 @@ add_action( 'wp_loaded', function() {
 			return gp_ecommerce_fields()->add_ecommerce_fields_to_order( $order, $form, $entry );
 		}
 
-		// Update the "2" to your deposit field ID.
-		$deposit =& $order['products'][2];
+		// Update the "4" to your deposit field ID.
+		$deposit =& $order['products'][4];
 
 		// Run this first so calculations are reprocessed before we convert deposit to a negative number.
 		$order = gp_ecommerce_fields()->add_ecommerce_fields_to_order( $order, $form, $entry );
