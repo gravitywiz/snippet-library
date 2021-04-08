@@ -9,7 +9,7 @@
  * @license   GPL-2.0+
  * @link      https://gravitywiz.com/edit-gravity-forms-entries-on-the-front-end/
  */
-class GPEPEditEntry {
+class GPEP_Edit_Entry {
 	private $form_id;
 	private $delete_partial;
 
@@ -33,7 +33,7 @@ class GPEPEditEntry {
 }
 
 // Configurations
-new GPEPEditEntry( array(
+new GPEP_Edit_Entry( array(
 	'form_id'        => 179,   // Set this to the form ID
 	'delete_partial' => false, // Set this to true to delete partial entries if enabled
 ) );
