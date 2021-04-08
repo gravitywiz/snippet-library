@@ -11,7 +11,7 @@
  * Description:  This snippet allows you to disbale the Read Only property on fields for Admin users.
  * Author:       Gravity Wiz
  * Version:      0.1
- * Author URI:   https://gravitywiz.com
+ * Author URI:   https://gravitywiz.com/
  */
 add_filter( 'gform_pre_render', function( $form ) {
     foreach( $form['fields'] as $field ) {
