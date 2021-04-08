@@ -3,7 +3,8 @@
  * Gravity Perks // GP Post Content Merge Tags // Save Confirmation URL to Field
  * https://gravitywiz.com/documentation/gravity-forms-post-content-merge-tags/
  *
- * This snippet saves the Confirmation URL to a field. 
+ * Save the confirmation URL (including the generated eid parameter) to a field on your form 
+ * so that it can be mapped via Gravity Forms feeds and used anywhere field-based merge tags are supported.
  */
 // 1. Update "123" to your form ID.
 add_filter( 'gform_entry_post_save_123', function( $entry ) {
