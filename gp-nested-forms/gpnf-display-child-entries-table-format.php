@@ -25,7 +25,7 @@ add_filter( 'gform_merge_tag_filter', function ( $value, $merge_tag, $modifiers,
 	if ( ! is_callable( 'gp_nested_forms' ) || $field->type != 'form' || $value === false || strpos( $modifiers, 'gpnf_table' ) === false ) {
 		return $value;
 	}
-
+	$nested_form = GFAPI::get_form( rgar( $field, 'gpnfForm' ) );
 	// Adds support for :filter modifier on Nested Form field merge tags but not {all_fields}.
 	$nested_field_ids = strpos( $modifiers, 'gpnf_all_fields' ) !== false ? wp_list_pluck( $nested_form['fields'], 'id' ) : $field->gpnfFields;
 	if ( function_exists( 'gw_all_fields_template' ) ) {
