@@ -5,7 +5,7 @@
  * Pass an entry ID and populate the form automatically. No form configuration required. Optionally update the entry on
  * submission.
  *
- * @version  1.6
+ * @version  1.6.1
  * @author   David Smith <david@gravitywiz.com>
  * @license  GPL-2.0+
  * @link     http://gravitywiz.com/
@@ -15,7 +15,7 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Pass an entry ID and populate the form automatically. No form configuration required. Optionally update the entry on submission.
  * Author:       Gravity Wiz
- * Version:      1.6
+ * Version:      1.6.1
  * Author URI:   http://gravitywiz.com
  */
 class GW_Populate_Form {
