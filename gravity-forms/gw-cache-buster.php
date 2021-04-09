@@ -150,6 +150,7 @@ class GW_Cache_Buster {
 		?>
 		<script type="text/javascript">
 			( function ( $ ) {
+				var formId = '<?php echo $form_id ?>';
 				$.post( '<?php echo admin_url( 'admin-ajax.php' ); ?>?action=gfcb_get_form&form_id=<?php echo $form_id, $params; ?>', {
 					action: 'gfcb_get_form',
 					form_id: '<?php echo $form_id; ?>',
@@ -158,6 +159,11 @@ class GW_Cache_Buster {
 					$( '#gf-cache-buster-form-container-<?php echo $form_id; ?>' ).html( response ).fadeIn();
 					if( window['gformInitDatepicker'] ) {
 						gformInitDatepicker();
+					}
+					// Initialize GPPA
+					if( response.indexOf('GPPA') > -1 ) {
+						window.gform.doAction('gpnf_init_nested_form', formId);
+						jQuery(document).trigger('gform_post_render', [formId, 1]);
 					}
 				} );
 			} ( jQuery ) );
