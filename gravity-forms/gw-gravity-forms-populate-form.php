@@ -41,6 +41,7 @@ class GW_Populate_Form {
 
 		add_filter( 'gform_form_args', array( $this, 'prepare_field_values_for_population' ) );
 		add_filter( 'gform_entry_id_pre_save_lead', array( $this, 'set_submission_entry_id' ), 10, 2 );
+		add_action( 'gform_field_validation', array( $this, 'validate_field' ), 12, 4 );
 
 	}
 
@@ -161,6 +162,31 @@ class GW_Populate_Form {
 		add_filter( 'gform_use_post_value_for_conditional_logic_save_entry', '__return_true' );
 
 		return $this->get_entry_id();
+	}
+
+	/**
+	 * Validate form fields and override duplicate entry errors when updating an entry
+	 *
+	 * @param $result array  Validation result
+	 * @param $value string|array Field value
+	 * @param $form array GF Form array
+	 * @param $field GF_Field GF Field object
+	 *
+	 * @return array $result   Filtered validation result
+	 */
+	public function validate_field( $result, $value, $form, $field ) {
+		if ( $this->is_applicable_form( $form ) ) {
+			if ( $this->_args['update'] && ! $result['is_valid'] && $field->noDuplicates ) {
+				// Confirm that the error message is actually due to duplicate entry before overriding it
+				$message = is_array( $value ) ? __( 'This field requires a unique entry and the values you entered have already been used.', 'gravityforms' ) :
+					sprintf( __( "This field requires a unique entry and '%s' has already been used", 'gravityforms' ), $value );
+				if ( $result['message'] === $message ) {
+					// Override error
+					$result['is_valid'] = true;
+				}
+			}
+		}
+		return $result;
 	}
 
 	public function get_entry_id() {
