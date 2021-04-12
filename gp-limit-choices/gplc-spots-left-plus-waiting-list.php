@@ -2,12 +2,12 @@
 /**
  * Gravity Perks // GP Limit Choices // Spots Left + Waiting List Message
  *
- * This snippet allows you to display the number of spots left in the label of each choice. If there are no spots left, it will display a waiting list message.
- * https://gravitywiz.com/documentation/gp-limit-choices/
+ * Display the number of spots left in the label of each choice. If there are no spots left, it will display a waiting list message.
+ * https://gravitywiz.com/documentation/gravity-forms-limit-choices/
  *
  * Plugin Name:  GP Limit Choices — Spots Left + Waiting List Message
- * Plugin URI:   https://gravitywiz.com/documentation/gp-limit-choices/
- * Description:  This snippet allows you to display the number of spots left in the label of each choice. If there are no spots left, it will display a waiting list message.
+ * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-limit-choices/
+ * Description:  Display the number of spots left in the label of each choice. If there are no spots left, it will display a waiting list message.
  * Author:       Gravity Wiz
  * Version:      0.1
  * Author URI:   https://gravitywiz.com
