@@ -1,12 +1,12 @@
 <?php
 /**
- * Gravity Wiz // Gravity Forms // Save & Continue Auto Load for Gravity Forms
+ * Gravity Wiz // Gravity Forms // Save & Continue Auto Load
  * https://gravitywiz.com
  *
  * Automatically load previously saved data (via Gravity Forms' Save & Continue functionality) when a logged-in user views a form.
  * This snippet is useful when you want logged in users to continue filling their form without using the Save and Continue link.
  *
- * Plugin Name: Gravity Forms - Save & Continue Auto Load for Gravity Forms
+ * Plugin Name: Gravity Forms - Save & Continue Auto Load
  * Plugin URI: https://gravitywiz.com
  * Description: Automatically load previously saved data (via Gravity Forms' Save & Continue functionality) when a logged-in user views a form.
  * Author: Gravity Wiz
