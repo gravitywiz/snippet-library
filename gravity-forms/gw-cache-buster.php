@@ -162,8 +162,7 @@ class GW_Cache_Buster {
 					}
 					// Initialize GPPA
 					if( response.indexOf('GPPA') > -1 ) {
-						window.gform.doAction('gpnf_init_nested_form', formId);
-						jQuery(document).trigger('gform_post_render', [formId, 1]);
+						window.gform.doAction('gppa_register_form', formId);
 					}
 				} );
 			} ( jQuery ) );
