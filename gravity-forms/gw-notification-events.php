@@ -28,9 +28,7 @@ class GW_Notification_Event {
 			'trigger'     => array(),
 		) );
 
-		extract( $this->_args );
-
-		if ( ! $event_name ) {
+		if ( ! $this->_args['event_name'] ) {
 			return;
 		}
 
@@ -149,7 +147,7 @@ class GW_Notification_Event {
 
 		$form_id = isset( $form['id'] ) ? $form['id'] : $form;
 
-		return empty( $this->_args['form_id'] ) || $form_id == $this->_args['form_id'];
+		return empty( $this->_args['form_id'] ) || (int) $form_id === (int) $this->_args['form_id'];
 	}
 
 }
