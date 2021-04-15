@@ -49,35 +49,29 @@ class GW_Create_Coupon {
 			return;
 		}
 
-		$coupon_code = rgar( $entry, $this->_args['source_field_id'] );
+		$coupon_codes = $this->get_coupon_codes( $entry, $this->_args['source_field_id'] );
 
-		if ( $this->_args['name_field_id'] === false ) {
-			$coupon_name = $coupon_code;
-		} else {
-			$coupon_name = rgar( $entry, $this->_args['name_field_id'] );
-			$coupon_name = $coupon_name === '' ? $coupon_code : $coupon_name;
-		}
+		foreach ( $coupon_codes as $coupon_code ) {
 
-		$limit_value = $this->_args['meta']['coupon_limit'];
-		if ( is_callable( $limit_value ) ) {
-			$limit_value = call_user_func( $limit_value );
-		}
+			if ( $this->_args['name_field_id'] === false ) {
+				$coupon_name = $coupon_code;
+			} else {
+				$coupon_name = rgar( $entry, $this->_args['name_field_id'] );
+				$coupon_name = $coupon_name === '' ? $coupon_code : $coupon_name;
+			}
 
-		$amount = $this->_args['amount'];
-		$type   = $this->_args['type'];
+			$amount = $this->_args['amount'];
+			$type   = $this->_args['type'];
 
-		if ( ! $coupon_code ) {
-			return;
-		}
+			if ( is_callable( $amount ) ) {
+				$amount = call_user_func( $amount );
+			}
 
-		if ( is_callable( $amount ) ) {
-			$amount = call_user_func( $amount );
-		}
+			$plugin_func = array( $this, sprintf( 'create_coupon_%s', $this->_args['plugin'] ) );
 
-		$plugin_func = array( $this, sprintf( 'create_coupon_%s', $this->_args['plugin'] ) );
-
-		if ( is_callable( $plugin_func ) ) {
-			call_user_func( $plugin_func, $coupon_name, $coupon_code, $amount, $type, $entry, $form );
+			if ( is_callable( $plugin_func ) ) {
+				call_user_func( $plugin_func, $coupon_name, $coupon_code, $amount, $type, $entry, $form );
+			}
 		}
 
 	}
@@ -190,8 +184,8 @@ class GW_Create_Coupon {
 	public function create_coupon_wc( $coupon_name, $coupon_code, $amount, $type, $entry, $form ) {
 
 		$start_date = rgar( $this->_args['meta'], 'start_date' );
-		if ( $start_date == '' || strtotime( $start_date ) == false ) {
-			$start_date = date( 'Y-m-d H:i:s' );
+		if ( $start_date === '' || ! strtotime( $start_date ) ) {
+			$start_date = gmdate( 'Y-m-d H:i:s' );
 		}
 
 		// WooCommerce coupon uses the Post Title as the coupon code hence $coupon_code is assigned to Post Title and $coupon_name is assigned to the Post Content
@@ -227,6 +221,10 @@ class GW_Create_Coupon {
 			update_post_meta( $new_coupon_id, $meta_key, $meta_value );
 		}
 
+	}
+
+	public function get_coupon_codes( $entry, $source_field_id ) {
+		return array_filter( explode( "\n", rgar( $entry, $source_field_id ) ) );
 	}
 
 	function is_applicable_form( $form ) {
