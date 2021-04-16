@@ -1,13 +1,9 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Snippet Name
+ * http://gravitywiz.com/path/to/snippet/
  *
  * A brief description about this snippet and the functionality it provides. Might also include basic usage instructions if applicable.
- *
- * @version  0.1
- * @author   David Smith <david@gravitywiz.com>
- * @license  GPL-2.0+
- * @link     http://gravitywiz.com/...
  *
  * Plugin Name:  Snippet Name
  * Plugin URI:   http://gravitywiz.com/...
