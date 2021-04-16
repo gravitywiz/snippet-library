@@ -77,11 +77,6 @@ class GW_Deduct_Deposit {
 # Configuration
 
 new GW_Deduct_Deposit( array(
-	'form_id'          => 200, // The ID of your form.
-	'deposit_field_id' => 8,   // Update the "4" to your deposit field ID.
-) );
-
-new GW_Deduct_Deposit( array(
-	'form_id'          => 201, // The ID of your form.
-	'deposit_field_id' => 8,   // Update the "7" to your deposit field ID.
+	'form_id'          => 123, // Update "123" to the ID of your form.
+	'deposit_field_id' => 4,   // Update the "4" to your deposit field ID.
 ) );
