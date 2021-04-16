@@ -10,31 +10,54 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-ecommerce-fields/
  * Description:  This snippet uses a Produdct field to create a deposit field and deducts the deposit from Order Summary
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   https://gravitywiz.com
  */
-add_action( 'wp_loaded', function() {
+class GW_Deduct_Deposit {
 
-	if( ! function_exists( 'gp_ecommerce_fields' ) ) {
-		return;
+	public function __construct( $args ) {
+
+		$this->_args = wp_parse_args( $args, array(
+			'form_id'          => false,
+			'deposit_field_id' => false,
+		) );
+
+		// GPECF inits on priority 15 and we must wait for it to bind its function so we can remove it.
+		add_action( 'init', array( $this, 'init' ), 16 );
+
+
 	}
 
-	remove_action( 'gform_product_info', array( gp_ecommerce_fields(), 'add_ecommerce_fields_to_order' ), 9, 3 );
-	add_action( 'gform_product_info', function( $order, $form, $entry ) {
+	public function init() {
 
-		// Update "123" to the ID of your form.
-		if( $form['id'] != 123 ) {
+		if ( ! function_exists( 'gp_ecommerce_fields' ) ) {
+			return;
+		}
+
+		remove_action( 'gform_product_info', array( gp_ecommerce_fields(), 'add_ecommerce_fields_to_order' ), 9 );
+
+		add_action( 'gform_product_info', array( $this, 'deduct_deposit' ), 9, 3 );
+
+	}
+
+	public function deduct_deposit( $order, $form, $entry ) {
+
+		// If we've already deducted deposits, return the order as is.
+		if ( rgar( $order, 'depositsDeducted' ) ) {
+			return $order;
+		}
+		// Make sure we're processing this function only for the current instance of this class.
+		else if ( (int) $form['id'] !== (int) $this->_args['form_id'] ) {
 			return gp_ecommerce_fields()->add_ecommerce_fields_to_order( $order, $form, $entry );
 		}
 
-		// Update the "4" to your deposit field ID.
-		$deposit =& $order['products'][4];
+		$deposit =& $order['products'][ $this->_args['deposit_field_id'] ];
 
 		// Run this first so calculations are reprocessed before we convert deposit to a negative number.
 		$order = gp_ecommerce_fields()->add_ecommerce_fields_to_order( $order, $form, $entry );
 
 		// Convert deposit to a negative number so it is deducted from the total.
-		$deposit['price'] = GFCommon::to_money( GFCommon::to_number( $deposit['price'], $entry['currency'] ) * $deposit['quantity'] * -1, $entry['currency'] );
+		$deposit['price'] = GFCommon::to_money( GFCommon::to_number( $deposit['price'], $entry['currency'] ) * $deposit['quantity'] * - 1, $entry['currency'] );
 
 		// Quantity is factored into price above.
 		$deposit['quantity'] = 1;
@@ -42,7 +65,23 @@ add_action( 'wp_loaded', function() {
 		// Set the discount flag so GP eCommerce Fields knows this is a deposit.
 		$deposit['isDiscount'] = true;
 
-		return $order;
-	}, 9, 3 );
+		// Indicate that this order has been processed for deposits.
+		$order['depositsDeducted'] = true;
 
-} );
+		return $order;
+
+	}
+
+}
+
+# Configuration
+
+new GW_Deduct_Deposit( array(
+	'form_id'          => 200, // The ID of your form.
+	'deposit_field_id' => 8,   // Update the "4" to your deposit field ID.
+) );
+
+new GW_Deduct_Deposit( array(
+	'form_id'          => 201, // The ID of your form.
+	'deposit_field_id' => 8,   // Update the "7" to your deposit field ID.
+) );
