@@ -37,7 +37,7 @@ class GW_GPNF_Delay_Child_Notifications {
 		if ( in_array( rgar( $form, 'id' ), $this->form_ids, true ) ) {
 				return $entry;
 		}
-				return gpnf_notification_processing()->maybe_send_child_notifications( $entry, $form );
+		return gpnf_notification_processing()->maybe_send_child_notifications( $entry, $form );
 	}
 }
 
