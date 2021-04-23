@@ -20,14 +20,14 @@ class GW_Choice_Count {
 			'form_id'          => false,
 			'count_field_id'   => false,
 			'choice_field_id'  => null,
-			'choice_field_ids' => false
+			'choice_field_ids' => false,
 		) );
 
-		if( isset( $this->_args['choice_field_id'] ) ) {
+		if ( isset( $this->_args['choice_field_id'] ) ) {
 			$this->_args['choice_field_ids'] = array( $this->_args['choice_field_id'] );
 		}
 
-		add_filter( 'gform_pre_render',            array( $this, 'load_form_script' ), 10, 2 );
+		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
 		add_action( 'gform_register_init_scripts', array( $this, 'add_init_script' ) );
 		//add_action( 'gform_pre_validation',        array( $this, 'override_submitted_value') );
 
@@ -35,7 +35,7 @@ class GW_Choice_Count {
 
 	public function load_form_script( $form, $is_ajax_enabled ) {
 
-		if( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
+		if ( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
 			add_action( 'wp_footer', array( $this, 'output_script' ) );
 			add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
 		}
@@ -124,17 +124,18 @@ class GW_Choice_Count {
 
 	function add_init_script( $form ) {
 
-		if( ! $this->is_applicable_form( $form['id'] ) )
+		if ( ! $this->is_applicable_form( $form['id'] ) ) {
 			return;
+		}
 
 		$args = array(
-			'formId'           => $this->_args['form_id'],
-			'countFieldId'     => $this->_args['count_field_id'],
-			'choiceFieldIds' => $this->_args['choice_field_ids']
+			'formId'         => $this->_args['form_id'],
+			'countFieldId'   => $this->_args['count_field_id'],
+			'choiceFieldIds' => $this->_args['choice_field_ids'],
 		);
 
 		$script = 'new GWChoiceCount( ' . json_encode( $args ) . ' );';
-		$slug = implode( '_', array( 'gw_choice_count', $this->_args['form_id'], $this->_args['count_field_id'] ) );
+		$slug   = implode( '_', array( 'gw_choice_count', $this->_args['form_id'], $this->_args['count_field_id'] ) );
 
 		GFFormDisplay::add_init_script( $this->_args['form_id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
 
@@ -150,7 +151,7 @@ class GW_Choice_Count {
 
 		$form_id = isset( $form['id'] ) ? $form['id'] : $form;
 
-		return empty( $this->_args['form_id'] ) || $form_id == $this->_args['form_id'];
+		return empty( $this->_args['form_id'] ) || intval( $form_id ) === intval( $this->_args['form_id'] );
 	}
 
 	public function is_ajax_submission( $form_id, $is_ajax_enabled ) {
@@ -164,5 +165,5 @@ class GW_Choice_Count {
 new GW_Choice_Count( array(
 	'form_id'          => 123,          // The ID of your form.
 	'count_field_id'   => 4,            // Any Number field on your form in which the number of checked checkboxes should be dynamically populated; you can configure conditional logic based on the value of this field.
-	'choice_field_ids' => array( 5, 6 ) // Any array of Checkbox or Multi-select field IDs which should be counted.
+	'choice_field_ids' => array( 5, 6 ), // Any array of Checkbox or Multi-select field IDs which should be counted.
 ) );
