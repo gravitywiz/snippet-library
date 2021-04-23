@@ -63,25 +63,34 @@ class GW_Choice_Count {
 
 					self.init = function() {
 
+						// Event handler for all listeners to avoid DRY
+						var updateChoiceEventHandler = function() {
+							self.updateChoiceCount( self.formId, self.choiceFieldIds, self.countFieldId );
+						};
+
 						for( var i = 0; i < self.choiceFieldIds.length; i++ ) {
 
-							var choiceFieldId = self.choiceFieldIds[ i ],
-								$choiceField  = $( '#input_' + self.formId + '_' + choiceFieldId );
+							var choiceFieldId       = self.choiceFieldIds[i],
+								choiceFieldSelector = '#input_' + self.formId + '_' + choiceFieldId,
+								$choiceField        = $(choiceFieldSelector),
+								$parentForm         = $choiceField.parents('form');
 
 							if ( self.isCheckboxField( $choiceField ) ) {
-								$choiceField.find( 'input[type="checkbox"]' ).click( function() {
-									self.updateChoiceCount( self.formId, self.choiceFieldIds, self.countFieldId );
-								} );
+								$parentForm.on( 'click', choiceFieldSelector, updateChoiceEventHandler );
 							} else {
-								$choiceField.change( function() {
-									self.updateChoiceCount( self.formId, self.choiceFieldIds, self.countFieldId );
-								} );
+								$parentForm.on( 'change', choiceFieldSelector, updateChoiceEventHandler );
 							}
 
 						}
 
-						self.updateChoiceCount( self.formId, self.choiceFieldIds, self.countFieldId );
+						updateChoiceEventHandler();
 
+						// Listen for `gppa_updated_batch_fields` and update count as GPPA may have re-written choice fields
+						$( document ).on( 'gppa_updated_batch_fields', function( e, formId ) {
+							if ( parseInt( formId ) === self.formId ) {
+								updateChoiceEventHandler();
+							}
+						} );
 					};
 
 					self.isCheckboxField = function( $field ) {
@@ -163,7 +172,7 @@ class GW_Choice_Count {
 # Configuration
 
 new GW_Choice_Count( array(
-	'form_id'          => 123,          // The ID of your form.
-	'count_field_id'   => 4,            // Any Number field on your form in which the number of checked checkboxes should be dynamically populated; you can configure conditional logic based on the value of this field.
+	'form_id'          => 123,           // The ID of your form.
+	'count_field_id'   => 4,             // Any Number field on your form in which the number of checked checkboxes should be dynamically populated; you can configure conditional logic based on the value of this field.
 	'choice_field_ids' => array( 5, 6 ), // Any array of Checkbox or Multi-select field IDs which should be counted.
 ) );
