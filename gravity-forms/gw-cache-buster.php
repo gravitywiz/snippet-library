@@ -184,9 +184,13 @@ class GW_Cache_Buster {
 			$form_id = isset( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : 0;
 		}
 
-		$atts = json_decode( rgpost( 'atts' ), true );
-
-		gravity_form( $form_id, filter_var( rgar( $atts, 'title', true ), FILTER_VALIDATE_BOOLEAN ), filter_var( rgar( $atts, 'description', true ), FILTER_VALIDATE_BOOLEAN ), false, rgar( $atts, 'field_values' ), true /* default to true; add support for non-ajax in the future */, rgar( $atts, 'tabindex' ) );
+		$atts         = json_decode( rgpost( 'atts' ), true );
+		$field_values = rgar( $atts, 'field_values' );
+		// GF expects an associative array for field values. Parse them before passing it on.
+		if ( $field_values ) {
+			parse_str( $field_values, $field_values );
+		}
+		gravity_form( $form_id, filter_var( rgar( $atts, 'title', true ), FILTER_VALIDATE_BOOLEAN ), filter_var( rgar( $atts, 'description', true ), FILTER_VALIDATE_BOOLEAN ), false, $field_values, true /* default to true; add support for non-ajax in the future */, rgar( $atts, 'tabindex' ) );
 
 		die();
 	}
