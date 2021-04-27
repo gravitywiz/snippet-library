@@ -30,6 +30,7 @@ class GW_GPNF_Delay_Child_Notifications {
 
 		add_filter( 'gpnf_should_send_notification', array( $this, 'gpnf_should_send_notification' ), 10, 7 );
 		add_action( 'gform_post_payment_completed', array( $this, 'gform_post_payment_completed' ) );
+		// Removing this filter causes the original issue of double notification to occur, see HS#23899 PR #85
 		remove_filter( 'gform_entry_post_save', array( gpnf_notification_processing(), 'maybe_send_child_notifications' ), 11 );
 
 	}
@@ -38,8 +39,6 @@ class GW_GPNF_Delay_Child_Notifications {
 		if ( $context === 'parent' && $this->is_applicable_form( $parent_form['id'] ) ) {
 			$parent_entry             = GFAPI::get_entry( rgar( $entry, 'gpnf_entry_parent' ) );
 			$should_send_notification = in_array( rgar( $parent_entry, 'payment_status' ), array( 'Paid', 'Active' ), true );
-			// Prevent double notifications for non-delayed payment gateways.
-			remove_filter( 'gform_post_payment_completed', array( $this, 'gpnf_should_send_notification' ) );
 		}
 
 		return $should_send_notification;
