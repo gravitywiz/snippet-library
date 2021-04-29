@@ -4,7 +4,7 @@
  *
  * Update existing post title, content, author and custom fields with values from Gravity Forms.
  *
- * @version 0.3
+ * @version 0.4
  * @author  Scott Buchmann <scott@gravitywiz.com>
  * @license GPL-2.0+
  * @link    http://gravitywiz.com
@@ -17,12 +17,13 @@ class GW_Update_Posts {
 		$this->_args = wp_parse_args(
 			$args,
 			array(
-				'form_id'    => false,
-				'post_id'    => false,
-				'title'      => false,
-				'content'    => false,
-				'author'     => false,
-				'meta' => array()
+				'form_id' => false,
+				'post_id' => false,
+				'title'   => false,
+				'content' => false,
+				'author'  => false,
+				'terms'   => false,
+				'meta'    => array(),
 			)
 		);
 
@@ -34,12 +35,12 @@ class GW_Update_Posts {
 	public function init() {
 
 		// Make sure we're running the required minimum version of Gravity Forms.
-		if ( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=') ) {
+		if ( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=' ) ) {
 			return;
 		}
 
 		if ( ! empty( $this->_args['form_id'] ) ) {
-			add_action( "gform_after_submission_{$this->_args['form_id']}", array( $this, 'set_post_content' ), 10, 2);
+			add_action( "gform_after_submission_{$this->_args['form_id']}", array( $this, 'set_post_content' ), 10, 2 );
 
 		}
 	}
@@ -48,23 +49,43 @@ class GW_Update_Posts {
 
 		// Get the post and, if the current user has capabilities, update post with new content.
 		$post = get_post( rgar( $entry, $this->_args['post_id'] ) );
-
 		if ( ! current_user_can( 'edit_post', $post->ID ) ) {
 			return;
 		}
 
-		$post->post_title = rgar( $entry, $this->_args['title'] );
-		$post->post_content = rgar( $entry, $this->_args['content'] );
-		$post->post_author = (int) rgar( $entry, $this->_args['author'] );
-
-		// Assign custom fields.
-		$meta = $this->_args['meta'];
-
-		foreach ( $meta as $key => $value ) {
-			$meta_input["$key"] = rgar( $entry, $value );
+		if ( $this->_args['title'] ) {
+			$post->post_title = rgar( $entry, $this->_args['title'] );
 		}
 
-		$post->meta_input = $meta_input;
+		if ( $this->_args['content'] ) {
+			$post->post_content = rgar( $entry, $this->_args['content'] );
+		}
+
+		if ( $this->_args['author'] ) {
+			$post->post_author = (int) rgar( $entry, $this->_args['author'] );
+		}
+
+		if ( $this->_args['terms'] ) {
+
+			// Assign custom taxonomies.
+			$term_field = GFAPI::get_field( $form, $this->_args['terms'] );
+			$terms      = array_map( 'intval', explode( ',', is_object( $term_field ) ? $term_field->get_value_export( $entry ) : '' ) );
+			$taxonomy   = is_object( $term_field ) ? $term_field['choices'][0]['object']->taxonomy : '';
+
+			wp_set_post_terms( $post->ID, $terms, $taxonomy );
+
+		}
+
+		if ( $this->_args['meta'] ) {
+
+			// Assign custom fields.
+			foreach ( $this->_args['meta'] as $key => $value ) {
+				$meta_input[ "$key" ] = rgar( $entry, $value );
+			}
+
+			$post->meta_input = $meta_input;
+
+		}
 
 		wp_update_post( $post );
 	}
