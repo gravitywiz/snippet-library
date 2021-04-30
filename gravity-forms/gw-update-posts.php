@@ -40,12 +40,12 @@ class GW_Update_Posts {
 		}
 
 		if ( ! empty( $this->_args['form_id'] ) ) {
-			add_action( "gform_after_submission_{$this->_args['form_id']}", array( $this, 'set_post_content' ), 10, 2 );
-
+			add_action( "gform_after_submission_{$this->_args['form_id']}", array( $this, 'update_post_by_entry' ), 10, 2 );
+			add_filter( 'gppa_process_template', array( $this, 'return_ids_instead_of_names' ), 9, 8 );
 		}
 	}
 
-	public function set_post_content( $entry, $form ) {
+	public function update_post_by_entry( $entry, $form ) {
 
 		// Get the post and, if the current user has capabilities, update post with new content.
 		$post = get_post( rgar( $entry, $this->_args['post_id'] ) );
@@ -88,6 +88,45 @@ class GW_Update_Posts {
 		}
 
 		wp_update_post( $post );
+	}
+
+	/**
+	 * When populating selected terms back into a field using a Field Value Object, the terms are returned as names rather
+	 * than IDs. This function modifies the returned values to be IDs.
+	 *
+	 * @param $value
+	 * @param $field
+	 * @param $template_name
+	 * @param $populate
+	 * @param $object
+	 * @param $object_type
+	 * @param $objects
+	 * @param $template
+	 *
+	 * @return mixed
+	 */
+	public function return_ids_instead_of_names( $value, $field, $template_name, $populate, $object, $object_type, $objects, $template ) {
+		if ( strpos( $template, 'taxonomy_' ) === 0 ) {
+			$taxonomy = preg_replace( '/^taxonomy_/', '', $template );
+			$terms    = wp_get_post_terms( $object->ID, $taxonomy, array( 'fields' => 'ids' ) );
+			remove_filter( 'gppa_process_template', array( $this, 'return_ids_instead_of_names' ), 9 );
+			$value = gf_apply_filters(
+				array(
+					'gppa_process_template',
+					$template_name,
+				),
+				$terms,
+				$field,
+				$template_name,
+				$populate,
+				$object,
+				$object_type,
+				$objects,
+				$template
+			);
+			add_filter( 'gppa_process_template', array( $this, 'return_ids_instead_of_names' ), 9, 8 );
+		}
+		return $value;
 	}
 
 }
