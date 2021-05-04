@@ -2,10 +2,19 @@
 /**
  * Gravity Perks // Nested Forms // Force {Parent} Merge Tag Replacement on Submission
  * http://gravitywiz.com/documentation/gravity-forms-nested-forms/
+ *
+ * Override all {Parent} merge tags when the parent form is submitted or a parent entry is updated.
  */
-add_filter( 'gform_entry_post_save', function( $entry, $form ) {
+add_filter( 'gform_entry_post_save', 'gpnf_override_parent_merge_tags', 11, 2 );
+add_action( 'gform_post_update_entry', 'gpnf_override_parent_merge_tags', 11 );
 
-	foreach( $form['fields'] as &$field ) {
+function gpnf_override_parent_merge_tags( $entry, $form = false ) {
+
+	if ( $form === false ) {
+		$form = GFAPI::get_form( $entry['form_id'] );
+	}
+
+	foreach( $form['fields'] as $field ) {
 		if( $field->get_input_type() == 'form' ) {
 			$child_form_id = $field->gpnfForm;
 			$child_form = GFAPI::get_form( $child_form_id );
