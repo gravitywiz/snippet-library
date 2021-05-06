@@ -22,7 +22,7 @@ class GW_Update_Posts {
 				'title'   => false,
 				'content' => false,
 				'author'  => false,
-				'terms'   => false,
+				'terms'   => array(),
 				'meta'    => array(),
 			)
 		);
@@ -68,11 +68,15 @@ class GW_Update_Posts {
 		if ( $this->_args['terms'] ) {
 
 			// Assign custom taxonomies.
-			$term_field = GFAPI::get_field( $form, $this->_args['terms'] );
-			$terms      = array_map( 'intval', explode( ',', is_object( $term_field ) ? $term_field->get_value_export( $entry ) : '' ) );
-			$taxonomy   = is_object( $term_field ) ? $term_field['choices'][0]['object']->taxonomy : '';
+			$term_fields = $this->_args['terms'];
+			foreach ( $term_fields as $field ) {
+				$term_field = GFAPI::get_field( $form, $field );
+				$terms      = array_map( 'intval', explode( ',', is_object( $term_field ) ? $term_field->get_value_export( $entry ) : '' ) );
+				$taxonomy   = is_object( $term_field ) ? $term_field['choices'][0]['object']->taxonomy : '';
 
-			wp_set_post_terms( $post->ID, $terms, $taxonomy );
+				wp_set_post_terms( $post->ID, $terms, $taxonomy );
+			}
+
 
 		}
 
