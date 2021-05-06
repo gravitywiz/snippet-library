@@ -6,13 +6,12 @@
  * Override all {Parent} merge tags when the parent form is submitted or a parent entry is updated.
  */
 add_filter( 'gform_entry_post_save', 'gpnf_override_parent_merge_tags', 11, 2 );
-add_action( 'gform_post_update_entry', 'gpnf_override_parent_merge_tags', 11 );
+add_action( 'gform_after_update_entry', function( $form, $entry_id ) {
+	$entry = GFAPI::get_entry( $entry_id );
+	gpnf_override_parent_merge_tags( $entry, $form );
+}, 11, 2 );
 
-function gpnf_override_parent_merge_tags( $entry, $form = false ) {
-
-	if ( $form === false ) {
-		$form = GFAPI::get_form( $entry['form_id'] );
-	}
+function gpnf_override_parent_merge_tags( $entry, $form ) {
 
 	foreach ( $form['fields'] as $field ) {
 		if ( $field->get_input_type() === 'form' ) {
