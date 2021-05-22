@@ -478,7 +478,7 @@ class GW_All_Fields_Template {
 			$value = $this->all_fields_extra_options( GFCommon::get_submitted_pricing_fields( $form, $lead, $format, $use_text, $use_admin_label ), $merge_tag, $modifiers, 'order_summary', null );
 			if ( $value !== false ) {
 				$items[] = array(
-					'label' => 'Order Summary',
+					'label' => apply_filters( 'gwaft_order_summary_label', 'Order Summary' ),
 					'value' => $value,
 				);
 			}
