@@ -24,6 +24,16 @@ class GP_Limit_Choices_Field_Group {
 
 		$this->_args['hash'] = hash_hmac( 'sha256', serialize( $this->_args ), 'gplc_field_group' );
 
+		add_action( 'init', array( $this, 'init' ) );
+
+	}
+
+	public function init() {
+
+		if ( ! is_callable( 'gp_limit_choices' ) ) {
+			return;
+		}
+
 		add_filter( 'gwlc_choice_counts_query', array( $this, 'limit_by_field_group' ), 10, 2 );
 
 		add_action( 'wp_ajax_gplcfg_refresh_field', array( $this, 'ajax_refresh' ) );
