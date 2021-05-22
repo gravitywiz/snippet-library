@@ -42,7 +42,7 @@ class GP_Limit_Choices_Field_Group {
 		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
 		add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
 
-		if( isset( $_POST['action'] ) && $_POST['action'] == 'gplcfg_refresh_field' ) {
+		if( isset( $_POST['action'] ) && $_POST['action'] === 'gplcfg_refresh_field' ) {
 			remove_action( 'wp', array( 'GFForms', 'maybe_process_form' ), 9 );
 			remove_action( 'admin_init', array( 'GFForms', 'maybe_process_form' ), 9 );
 		}
