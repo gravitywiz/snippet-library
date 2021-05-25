@@ -68,7 +68,7 @@ class GW_Update_Posts {
 		if ( $this->_args['terms'] ) {
 
 			// Assign custom taxonomies.
-			$term_fields = $this->_args['terms'];
+			$term_fields = is_array( $this->_args['terms'] ) ? $this->_args['terms'] : array( $this->_args['terms'] );
 			foreach ( $term_fields as $field ) {
 				$term_field = GFAPI::get_field( $form, $field );
 				$terms      = array_map( 'intval', explode( ',', is_object( $term_field ) ? $term_field->get_value_export( $entry ) : '' ) );
