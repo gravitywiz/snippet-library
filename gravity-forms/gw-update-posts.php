@@ -76,22 +76,36 @@ class GW_Update_Posts {
 
 				wp_set_post_terms( $post->ID, $terms, $taxonomy );
 			}
-
-
 		}
 
 		if ( $this->_args['meta'] ) {
 
+			$meta_input = array();
+
 			// Assign custom fields.
 			foreach ( $this->_args['meta'] as $key => $value ) {
-				$meta_input[ "$key" ] = rgar( $entry, $value );
+
+				$meta_value = rgar( $entry, $value );
+
+				// Check for ACF image-like custom fields. Integration powered by GP Media Library.
+				$acf_field = is_callable( 'gp_media_library' ) && is_callable( 'acf_get_field' ) ? acf_get_field( $key ) : false;
+				if ( $acf_field && in_array( $acf_field['type'], array( 'image', 'file', 'gallery' ), true ) ) {
+					gp_media_library()->acf_update_field( $post->ID, $key, GFAPI::get_field( $form, $value ), $entry );
+				}
+				// Map all other custom fields generically.
+				else {
+					$meta_input[ $key ] = $meta_value;
+				}
 			}
 
 			$post->meta_input = $meta_input;
 
 		}
 
+
+
 		wp_update_post( $post );
+
 	}
 
 	/**
