@@ -47,18 +47,40 @@ class GW_Manual_Entries {
 
 	public function output_entry_button_script() {
 
-		$button = sprintf( '<a href="%s" class="page-title-action">%s</a>', $this->get_add_entry_url(), __( 'Add New Entry' ) );
+		$button_url   = $this->get_add_entry_url();
+		$button_label = __( 'Add New Entry' );
+		$button       = sprintf( '<a href="%s" class="page-title-action">%s</a>', $button_url, $button_label );
 
 		?>
 
 		<script type="text/javascript">
 
 			var gwmeInterval = setInterval( function() {
-				var header = document.querySelectorAll( 'h1, h2' )[0];
-				if( header ) {
-					clearInterval( gwmeInterval );
-					header.innerHTML = header.innerHTML + '<?php echo $button; ?>';
+
+				var isLegacyUI = document.querySelectorAll( 'body' )[0].classList.contains( 'gf-legacy-ui' );
+
+				if ( isLegacyUI ) {
+					// GF 2.4
+					var header = document.querySelectorAll( 'h1, h2' )[0];
+					if( header ) {
+						clearInterval( gwmeInterval );
+						header.innerHTML = header.innerHTML + '<?php echo $button; ?>';
+					}
+				} else {
+					// GF 2.5+
+					var bulkActions = document.querySelectorAll( '.bulkactions' )[0];
+					if( bulkActions ) {
+						clearInterval( gwmeInterval );
+						var a        = document.createElement( 'a' );
+						var linkText = document.createTextNode( '<?php echo $button_label; ?>' );
+						a.appendChild( linkText );
+						a.title     = '<?php echo $button_label; ?>';
+						a.href      = '<?php echo $button_url; ?>';
+						a.className = 'button';
+						bulkActions.parentNode.insertBefore( a, bulkActions.nextSibling );
+					}
 				}
+
 			}, 100 );
 
 		</script>
