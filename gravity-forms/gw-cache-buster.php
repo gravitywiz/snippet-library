@@ -158,7 +158,8 @@ class GW_Cache_Buster {
 				}, function( response ) {
 					$( '#gf-cache-buster-form-container-<?php echo $form_id; ?>' ).html( response ).fadeIn();
 					<?php
-					// Manually trigger `gform_post_render` on GF 2.5
+					// GF 2.5 doesn't seem to respond to the `gform_post_render` trigger in the response we're injecting
+					// This causes forms with conditional logic to remain hidden. See HS#24394
 					if ( version_compare( GFCommon::$version, '2.5', '>=' ) ) {
 						printf( "$(document).trigger('gform_post_render', [%d, 1]);\n", $form_id );
 					}
