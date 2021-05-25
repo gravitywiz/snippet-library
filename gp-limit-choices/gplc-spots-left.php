@@ -12,7 +12,7 @@ add_filter( 'gplc_remove_choices', '__return_false' );
 add_filter( 'gplc_pre_render_choice', 'my_add_how_many_left_message', 10, 5 );
 function my_add_how_many_left_message( $choice, $exceeded_limit, $field, $form, $count ) {
 
-	$limit         = rgar( $choice, 'limit' );
+	$limit         = is_callable( array( gp_limit_choices(), 'get_choice_limit' ) ) ? gp_limit_choices()->get_choice_limit( $choice, $field->formId, $field->id ) : rgar( $choice, 'limit' );
 	$how_many_left = max( $limit - $count, 0 );
 
 	$message = "($how_many_left spots left)";
