@@ -157,6 +157,12 @@ class GW_Cache_Buster {
 					atts: '<?php echo json_encode( $attributes ); ?>'
 				}, function( response ) {
 					$( '#gf-cache-buster-form-container-<?php echo $form_id; ?>' ).html( response ).fadeIn();
+					<?php
+					// Manually trigger `gform_post_render` on GF 2.5
+					if ( version_compare( GFCommon::$version, '2.5', '>=' ) ) {
+						printf( "$(document).trigger('gform_post_render', [%d, 1]);\n", $form_id );
+					}
+					?>
 					if( window['gformInitDatepicker'] ) {
 						gformInitDatepicker();
 					}
