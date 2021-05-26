@@ -51,8 +51,8 @@ add_filter( 'gform_merge_tag_filter', function ( $value, $merge_tag, $modifiers,
 
 	$value = $template->parse_template(
 		array(
-			sprintf( '%s-%s-%s.php', $args['template'], $nested_form['id'], $field->id ),
-			sprintf( '%s-%s.php', $args['template'], $nested_form['id'] ),
+			sprintf( '%s-%s-%s.php', $args['template'], $field->formId, $field->id ),
+			sprintf( '%s-%s.php', $args['template'], $field->formId ),
 			sprintf( '%s.php', $args['template'] ),
 		), true, false, $args
 	);
