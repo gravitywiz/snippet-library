@@ -178,7 +178,7 @@ class GP_Limit_Choices_Field_Group {
 		} else {
 			$value = rgpost( 'input_' . $field->id );
 			$content = $field->get_field_content( $value, true, $form );
-			$content = str_replace( '{FIELD}', $field->get_field_input( $form, $value, $entry ), $content );
+			$content = str_replace( '{FIELD}', GFCommon::get_field_input( $field, $value, $entry['id'], $form['id'], $form ), $content );
 		}
 
 		wp_send_json_success( $content );
