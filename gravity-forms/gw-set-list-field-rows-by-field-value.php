@@ -46,7 +46,7 @@ class GWAutoListFieldRows {
 
 	public function load_form_script( $form, $is_ajax_enabled ) {
 
-		if ( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
+		if( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
 			add_action( 'wp_footer', array( $this, 'output_script' ) );
 			add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
 		}
@@ -121,7 +121,7 @@ class GWAutoListFieldRows {
 
 	public function add_init_script( $form ) {
 
-		if ( ! $this->is_applicable_form( $form ) ) {
+		if( ! $this->is_applicable_form( $form ) ) {
 			return;
 		}
 
@@ -154,8 +154,9 @@ new GWAutoListFieldRows( array(
 ) );
 
 // EXAMPLE #2: Single Product Field's Quantity input as the "input_html_id"
+// Note: input_html_id has a format of "#ginput_quantity_240_5" if using Gravity Forms <2.5 or if Legacy Markup is enabled
 new GWAutoListFieldRows( array(
 	'form_id'       => 240,
 	'list_field_id' => 6,
-	'input_html_id' => '#ginput_quantity_240_5',
+	'input_html_id' => '#input_240_5_1'
 ) );
