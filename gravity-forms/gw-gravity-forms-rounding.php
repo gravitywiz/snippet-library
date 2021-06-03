@@ -152,8 +152,6 @@ class GW_Rounding {
 
 							var $targets;
 
-							debugger;
-
 							// Attempt to target only the quantity input of a Single Product field.
 							if( $( this ).hasClass( 'gfield_price' ) ) {
 								$targets = $( this ).find( '.ginput_quantity' );
