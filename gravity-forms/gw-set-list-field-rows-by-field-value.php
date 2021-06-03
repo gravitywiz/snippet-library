@@ -62,7 +62,6 @@ class GWAutoListFieldRows {
 			window.gwalfr;
 
 			(function($){
-				var gf25 = <?php echo ( version_compare( GFForms::$version, '2.5.0', '>=' ) ) ? 'true' : 'false'; ?>;
 				gwalfr = function( args ) {
 
 					this.formId      = args.formId,
@@ -88,8 +87,8 @@ class GWAutoListFieldRows {
 
 						var listField = $( '#field_' + formId + '_' + listFieldId ),
 							count = parseInt( elem.val() );
-						// GF 2.5 doesn't use tables by default, look for `gfield_list_group` in that case with GF2.4 fallback
-						rowCount = ( gf25 ) ? listField.find('.gfield_list_group').length : listField.find( 'table.gfield_list tbody tr' ).length,
+						// `gfield_list_group` represents the rows in GF2.4 and 2.5. Use that instead of table markup.
+						rowCount = listField.find('.gfield_list_group').length;
 							diff = count - rowCount;
 
 						if( diff > 0 ) {
