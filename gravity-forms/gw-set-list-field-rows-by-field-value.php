@@ -154,7 +154,7 @@ new GWAutoListFieldRows( array(
 ) );
 
 // EXAMPLE #2: Single Product Field's Quantity input as the "input_html_id"
-// Note: On Gravity Forms versions before 2.5 the input_html_id was in this format "#ginput_quantity_240_5"
+// Note: input_html_id has a format of "#ginput_quantity_240_5" if using Gravity Forms <2.5 or if Legacy Markup is enabled
 new GWAutoListFieldRows( array(
 	'form_id' => 240,
 	'list_field_id' => 6,
