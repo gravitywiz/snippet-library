@@ -50,6 +50,7 @@
 .gpfup-big-images .gpfup__file-actions {
 	top: 0.5rem;
 	right: 0.5rem;
+        position: absolute;
 }
 
 .gpfup-big-images .gpfup__delete {
@@ -68,12 +69,17 @@
 	opacity: 1;
 }
 
+.gpfup-big-images .gpfup--images-only .gpfup__preview {
+        width: auto;
+}
+
 .gpfup-big-images .gpfup__delete:hover svg {
 	filter: drop-shadow( 0 0 4px black );
 }
 
 .gpfup-big-images .gpfup__droparea {
 	border-radius: 4px;
+        border-top: 1px dashed rgba( 0, 0, 0, 0.15 );
 }
 
 .gpfup-big-images .gpfup__edit {
