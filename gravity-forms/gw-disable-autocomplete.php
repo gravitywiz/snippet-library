@@ -11,10 +11,10 @@
  */
 // Disable auto-complete on form.
 add_filter( 'gform_form_tag', function( $form_tag ) {
-	return str_replace( '>', ' autocomplete="password" name="notASearchField">', $form_tag );
+	return str_replace( '>', ' autocomplete="password">', $form_tag );
 }, 11 );
 
 // Diable auto-complete on each field.
 add_filter( 'gform_field_content', function( $input ) {
-	return preg_replace( '/<(input|textarea)/', '<${1} autocomplete="password" name="notASearchField"', $input );
+	return preg_replace( '/<(input|textarea)/', '<${1} autocomplete="password" ', $input );
 }, 11 );
