@@ -9,7 +9,7 @@
  *
  * Configuring:
  *  * Update $parent_form_ids to match the form IDs that need to have their Nested Form field child entries duplicated
- *  * Updated $parent_form_field_ids to include the Nested Form field IDs that should have their child entries duplicated
+ *  * Update $parent_form_field_ids to include the Nested Form field IDs that should have their child entries duplicated
  *
  * As an example, this snippet is configured to duplicate child entries for Nested Form fields 1 and 2 in form 17.
  */
