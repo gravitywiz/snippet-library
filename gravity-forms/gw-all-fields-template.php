@@ -166,6 +166,8 @@ class GW_All_Fields_Template {
 					return '';
 				};
 				add_filter( 'gform_order_summary', $func );
+				// Hide "Order Summary" label if nopricingfields is used
+				add_filter( 'gform_display_product_summary', '__return_false' );
 			}
 
 			/**
