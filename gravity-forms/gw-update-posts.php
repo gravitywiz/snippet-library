@@ -22,6 +22,7 @@ class GW_Update_Posts {
 				'title'   => false,
 				'content' => false,
 				'author'  => false,
+				'status'  => false,
 				'terms'   => array(),
 				'meta'    => array(),
 			)
@@ -63,6 +64,10 @@ class GW_Update_Posts {
 
 		if ( $this->_args['author'] ) {
 			$post->post_author = (int) rgar( $entry, $this->_args['author'] );
+		}
+
+		if ( $this->_args['status'] ) {
+			$post->post_status = rgar( $entry, $this->_args['status'] );
 		}
 
 		if ( $this->_args['terms'] ) {
