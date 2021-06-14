@@ -67,7 +67,11 @@ class GW_Update_Posts {
 		}
 
 		if ( $this->_args['status'] ) {
-			$post->post_status = rgar( $entry, $this->_args['status'] );
+			$stati = get_post_stati();
+			$status = rgar( $entry, $this->_args['status'] );
+			if ( in_array( $status, $stati ) ) {
+				$post->post_status = $status;
+			}
 		}
 
 		if ( $this->_args['terms'] ) {
