@@ -240,7 +240,7 @@ class GW_All_Fields_Template {
 		// $field_id = $field->id;
 		// print_r( compact( 'modifiers', 'field_ids', 'field_id', 'value' ) );
 		// echo '<pre>';
-
+		remove_filter( 'gform_display_product_summary', '__return_false' );
 		return $value;
 	}
 
