@@ -52,6 +52,12 @@ class GW_Rounding {
 		add_action( 'gform_pre_submission', array( $this, 'override_submitted_value' ), 10, 5 );
 		add_filter( 'gform_calculation_result', array( $this, 'override_submitted_calculation_value' ), 10, 5 );
 
+		add_filter( 'gform_product_info', function( $product_info, $form, $lead ) {
+			// TODO: Check total field for rounding classes and then find a sane way to
+			// update $product_info accordingly. We can't manipulate the total directly as this
+			// will break PayPal and other 3rd party payment gateways.
+			return $product_info;
+		}, 10, 3 );
 	}
 
 	public function prepare_form_and_load_script( $form, $is_ajax_enabled ) {
@@ -186,6 +192,15 @@ class GW_Rounding {
 							}
 
 							return result;
+						} );
+
+						// Check for rounding class and apply rounding in total field
+						gform.addFilter( 'gform_product_total', function(total, formId){
+							var $input_total = $('.ginput_total');
+							if ( $input_total.parents( '.gw-rounding').length ) {
+								total = self.getRoundedValue( $input_total, total );
+							}
+							return total;
 						} );
 
 					};
