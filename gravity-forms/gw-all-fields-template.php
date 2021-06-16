@@ -167,7 +167,11 @@ class GW_All_Fields_Template {
 				};
 				add_filter( 'gform_order_summary', $func );
 				// Hide "Order Summary" label if nopricingfields is used
-				add_filter( 'gform_display_product_summary', '__return_false' );
+				$gf_dps_func = function() use ( &$gf_dps_func ) {
+					remove_filter( 'gform_display_product_summary', $gf_dps_func );
+					return false;
+				};
+				add_filter( 'gform_display_product_summary', $gf_dps_func );
 			}
 
 			/**
@@ -240,7 +244,6 @@ class GW_All_Fields_Template {
 		// $field_id = $field->id;
 		// print_r( compact( 'modifiers', 'field_ids', 'field_id', 'value' ) );
 		// echo '<pre>';
-		remove_filter( 'gform_display_product_summary', '__return_false' );
 		return $value;
 	}
 
