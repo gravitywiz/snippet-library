@@ -3,7 +3,7 @@
  * Gravity Perks // GP Unique ID // Retroactively Populate Unique IDs
  * https://gravitywiz.com/documentation/gp-unique-id/
  *
- * 1. Copy and paste this code into your theme's functions.php file.
+ * 1. Install snippet using instructions at https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  * 2. Go to your home page and add the following parameters to the query string:
  *
  *     gpui_retro_pop=1
@@ -14,6 +14,7 @@
  *     http://mysite.com/?gpui_retro_pop=1&form_id=123
  *
  * 3. Submit the updated URL. If everything is correct, you will be greeted with a success message and updated entry count.
+ * 4. Important! Remove snippet after verifying that unique IDs have been generated for previous entries.
  *
  * NOTE: This snippet has a hard-coded limit of 999 entries.
  */
