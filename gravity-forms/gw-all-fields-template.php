@@ -8,7 +8,7 @@
  * Plugin URI:   https://gravitywiz.com/gravity-forms-all-fields-template/
  * Description:  Modify the {all_fields} merge tag output via a template file.
  * Author:       Gravity Wiz
- * Version:      0.9.10
+ * Version:      0.9.11
  * Author URI:   http://gravitywiz.com
  *
  * Usage:
