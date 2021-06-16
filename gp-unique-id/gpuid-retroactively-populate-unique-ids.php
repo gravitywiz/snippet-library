@@ -15,7 +15,6 @@
  *
  * 3. Submit the updated URL. If everything is correct, you will be greeted with a success message and updated entry count.
  * 4. Important! Remove snippet after verifying that unique IDs have been generated for previous entries.
- * 4. Important! Remove snippet after verifying that unique IDs have been generated for previous entries.
  *
  * NOTE: This snippet has a hard-coded limit of 999 entries.
  */
