@@ -97,13 +97,14 @@ class GPPA_Populate_Child_Entries {
 									.val( gpnfCookie.hash )
 									.change();
 							}
-						} );
 
-						for ( var i = 0; i < self.nestedFormFieldIds.length; i++ ) {
-							window[ 'GPNestedForms_{0}_{1}'.format( self.formId, self.nestedFormFieldIds[ i ] ) ].viewModel.entries.subscribe( function( entries ) {
-								self.$peidField.data( 'lastValue', '' ).change();
-							} );
-						}
+							for ( var i = 0; i < self.nestedFormFieldIds.length; i++ ) {
+								window[ 'GPNestedForms_{0}_{1}'.format( self.formId, self.nestedFormFieldIds[ i ] ) ].viewModel.entries.subscribe( function( entries ) {
+									self.$peidField.data( 'lastValue', '' ).change();
+								} );
+							}
+
+						} );
 
 					};
 
@@ -122,7 +123,6 @@ class GPPA_Populate_Child_Entries {
 					}
 
 					self.init();
-
 				}
 
 			} )( jQuery );
