@@ -65,8 +65,8 @@ class GWAutoListFieldRows {
 				gwalfr = function( args ) {
 
 					this.formId      = args.formId,
-						this.listFieldId = args.listFieldId,
-						this.inputHtmlId = args.inputHtmlId;
+					this.listFieldId = args.listFieldId,
+					this.inputHtmlId = args.inputHtmlId;
 
 					this.init = function() {
 
@@ -80,6 +80,9 @@ class GWAutoListFieldRows {
 						triggerInput.change(function(){
 							gwalfr.updateListItems( $(this), gwalfr.listFieldId, gwalfr.formId );
 						});
+
+						// Hide add/remove buttons
+						$("#field_{0}_{1} .gfield_list_icons".format( this.formId, this.listFieldId ) ).css( 'display', 'none' );
 
 					}
 
