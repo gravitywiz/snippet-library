@@ -21,7 +21,7 @@ add_action( 'admin_init', function() {
 	$indexes = array_keys( $indexes );
 	// Clear all indexes
 	foreach ( $indexes as $index ) {
-		$sql = "DROP INDEX `{$index}` ON {$table_name};";
+		$sql = "DROP INDEX `{$index}` ON `{$table_name}`;";
 		$wpdb->query( $sql );
 	}
 	// All done, redirect
