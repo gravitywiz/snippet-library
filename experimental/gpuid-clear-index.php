@@ -7,6 +7,7 @@ add_action( 'admin_init', function() {
 	// Ensure GPUID is disabled
 	if ( class_exists( 'GP_Unique_ID' ) ) {
 		wp_redirect( '/wp-admin/plugins.php?plugin_status=active&guid_clear_indexes_error_active=true' );
+		exit();
 	}
 	global $wpdb;
 	// Get Indexes
@@ -25,6 +26,7 @@ add_action( 'admin_init', function() {
 	}
 	// All done, redirect
 	wp_redirect( '/wp-admin/plugins.php?plugin_status=recently_activated&guid_clear_indexes_success=true' );
+	exit();
 } );
 
 add_action( 'admin_notices', function ( $messages ) {
