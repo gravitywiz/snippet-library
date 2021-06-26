@@ -8,11 +8,10 @@
 *
 * The default merge tag for the multi-file upload field will output the URL for each of the files.
 *
-* @version   1.5
+* @version   1.6
 * @author    David Smith <david@gravitywiz.com>
 * @license   GPL-2.0+
-* @link      http://gravitywiz.com/...
-* @copyright 2018 Gravity Wiz, LLC.
+* @link      https://gravitywiz.com/customizing-multi-file-merge-tag/
 */
 class GW_Multi_File_Merge_Tag {
 
@@ -105,6 +104,25 @@ class GW_Multi_File_Merge_Tag {
 				} else {
 					$value = GFFormsModel::get_lead_field_value( $entry, $field );
 					$files = empty( $value ) ? array() : json_decode( $value, true );
+				}
+
+				$modifiers = $this->parse_modifiers( rgar( $match, 4 ) );
+				$index     = rgar( $modifiers, 'index' );
+
+				if ( ! rgblank( $index ) ) {
+
+					list( $offset, $length ) = $index;
+
+					if ( $offset === null ) {
+						$offset = 0;
+					}
+
+					if ( $length === null ) {
+						$length = 1;
+					}
+
+					$files = array_slice( $files, $offset, $length );
+
 				}
 
 				$value = '';
@@ -246,6 +264,30 @@ class GW_Multi_File_Merge_Tag {
 		$is_multi             = rgar( $field, 'multipleFiles' );
 
 		return $is_valid_form && $is_matching_field_id && $is_file_upload_filed && $is_multi;
+	}
+
+	public function parse_modifiers( $modifiers_str ) {
+
+		preg_match_all( '/([a-z]+)(?:(?:\[(.+?)\])|,?)/i', $modifiers_str, $modifiers, PREG_SET_ORDER );
+		$parsed = array();
+
+		foreach ( $modifiers as $modifier ) {
+
+			list( $match, $modifier, $value ) = array_pad( $modifier, 3, null );
+			if ( $value === null ) {
+				$value = $modifier;
+			}
+
+			// Split '1,2,3' into array( 1, 2, 3 ).
+			if ( strpos( $value, ',' ) !== false ) {
+				$value = array_map( 'trim', explode( ',', $value ) );
+			}
+
+			$parsed[ strtolower( $modifier ) ] = $value;
+
+		}
+
+		return $parsed;
 	}
 
 }
