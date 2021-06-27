@@ -17,14 +17,14 @@ class GW_Update_Posts {
 		$this->_args = wp_parse_args(
 			$args,
 			array(
-				'form_id' => false,
-				'post_id' => false,
-				'title'   => false,
-				'content' => false,
-				'author'  => false,
-				'status'  => false,
-				'terms'   => array(),
-				'meta'    => array(),
+				'form_id'        => false,
+				'post_id'        => false,
+				'title'          => false,
+				'content'        => false,
+				'author'         => false,
+				'status'         => false,
+				'terms'          => array(),
+				'meta'           => array(),
 				'featured_image' => false,
 			)
 		);
@@ -68,9 +68,9 @@ class GW_Update_Posts {
 		}
 
 		if ( $this->_args['status'] ) {
-			$stati = get_post_stati();
+			$stati  = get_post_stati();
 			$status = rgar( $entry, $this->_args['status'] );
-			if ( in_array( $status, $stati ) ) {
+			if ( in_array( $status, $stati, true ) ) {
 				$post->post_status = $status;
 			}
 		}
@@ -118,8 +118,6 @@ class GW_Update_Posts {
 			$post->meta_input = $meta_input;
 
 		}
-
-
 
 		wp_update_post( $post );
 
