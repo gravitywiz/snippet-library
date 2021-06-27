@@ -25,6 +25,7 @@ class GW_Update_Posts {
 				'status'  => false,
 				'terms'   => array(),
 				'meta'    => array(),
+				'featured_image' => false,
 			)
 		);
 
@@ -71,6 +72,13 @@ class GW_Update_Posts {
 			$status = rgar( $entry, $this->_args['status'] );
 			if ( in_array( $status, $stati ) ) {
 				$post->post_status = $status;
+			}
+		}
+
+		if ( $this->_args['featured_image'] && is_callable( 'gp_media_library' ) ) {
+			$image_id = gp_media_library()->get_file_ids( $entry['id'], $this->_args['featured_image'], 0 );
+			if ( $image_id ) {
+				set_post_thumbnail( $post, $image_id );
 			}
 		}
 
