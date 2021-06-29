@@ -82,7 +82,7 @@ class GW_All_Fields_Template {
 	public function init() {
 
 		add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_merge_tags' ), 9, 7 );
-		add_filter( 'gform_merge_tag_filter', array( $this, 'all_fields_extra_options' ), 11, 5 );
+		add_filter( 'gform_merge_tag_filter', array( $this, 'all_fields_extra_options' ), 11, 6 );
 
 	}
 
@@ -99,7 +99,7 @@ class GW_All_Fields_Template {
 	 * example: {all_fields:include[6]}
 	 * example: {all_fields:include[6],exclude[2,3]}
 	 */
-	public function all_fields_extra_options( $value, $merge_tag, $modifiers, $field, $raw_value ) {
+	public function all_fields_extra_options( $value, $merge_tag, $modifiers, $field, $raw_value, $format ) {
 
 		if ( ! is_a( $field, 'GF_Field' ) ) {
 			$field       = new GF_Field();
@@ -387,7 +387,7 @@ class GW_All_Fields_Template {
 						}
 					}
 
-					$field_value = apply_filters( 'gform_merge_tag_filter', $field_value, $merge_tag, $modifiers, $field, $field_label );
+					$field_value = apply_filters( 'gform_merge_tag_filter', $field_value, $merge_tag, $modifiers, $field, $field_label, 'html' );
 
 					//$field_data .= $field_value;
 
@@ -433,7 +433,7 @@ class GW_All_Fields_Template {
 						$field_value = false;
 					}
 
-					$field_value = apply_filters( 'gform_merge_tag_filter', $field_value, $merge_tag, $modifiers, $field, $raw_field_value );
+					$field_value = apply_filters( 'gform_merge_tag_filter', $field_value, $merge_tag, $modifiers, $field, $raw_field_value, 'html' );
 
 					if ( $field_value === false ) {
 						break;
