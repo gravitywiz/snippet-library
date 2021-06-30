@@ -50,6 +50,38 @@ class GPEP_Edit_Entry {
 		if ( is_callable( 'gp_easy_passthrough' ) ) {
 			$session         = gp_easy_passthrough()->session_manager();
 			$update_entry_id = $session[ gp_easy_passthrough()->get_slug() . '_' . $form_id ];
+			// GPEP doesn't check for the user's last entry until the form is being rendered... but GPLS needs to know
+			// if we're updating an entry during validation which happens beforehand. Let's do the same legwork GPEP
+			// will do later to check for the last submitted entry when that option is active.
+			if ( ! $update_entry_id ) {
+				$feeds = gp_easy_passthrough()->get_active_feeds( $form_id );
+				// If no results were found, return false.
+				if ( ! empty( $feeds ) ) {
+					foreach ( $feeds as $feed ) {
+						$source_form_id = $feed['meta']['sourceForm'];
+						if ( rgars( $feed, 'meta/userPassthrough' ) && is_user_logged_in() ) {
+							$last_submitted_entry = GFAPI::get_entries(
+								$source_form_id,
+								array(
+									'field_filters' => array(
+										array(
+											'key'   => 'created_by',
+											'value' => get_current_user_id(),
+										),
+									),
+									'status'        => 'active',
+								),
+								array(
+									'key'       => 'date_created',
+									'direction' => 'DESC',
+								),
+								array( 'page_size' => 1 )
+							);
+							$update_entry_id      = rgars( $last_submitted_entry, '0/id', false );
+						}
+					}
+				}
+			}
 		}
 		return isset( $update_entry_id ) && $update_entry_id ? $update_entry_id : false;
 	}
