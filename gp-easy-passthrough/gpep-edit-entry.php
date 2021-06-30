@@ -18,8 +18,8 @@ class GPEP_Edit_Entry {
 		$this->form_id        = rgar( $options, 'form_id' );
 		$this->delete_partial = rgar( $options, 'delete_partial' );
 
-		add_filter( sprintf( 'gform_entry_id_pre_save_lead_%s', $this->form_id ), array( $this, 'update_entry_id' ), 10, 2 );
-		add_filter( 'gpls_rule_groups', array( $this, 'bypass_limit_submissions' ), 10, 2 );
+		add_filter( "gform_entry_id_pre_save_lead_{$this->form_id}", array( $this, 'update_entry_id' ), 10, 2 );
+		add_filter( "gpls_rule_groups_{$this->form_id}", array( $this, 'bypass_limit_submissions' ), 10, 2 );
 
 	}
 
