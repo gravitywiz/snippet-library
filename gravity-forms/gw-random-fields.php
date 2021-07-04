@@ -22,12 +22,14 @@ class GFRandomFields {
 	public $all_random_field_ids;
 	public $display_count;
 	public $selected_field_ids = array();
+	public $preserve_order;
 
-	public function __construct( $form_id, $display_count = 5, $random_field_ids = false ) {
+	public function __construct( $form_id, $display_count = 5, $random_field_ids = false, $preserve_order = false ) {
 
 		$this->_form_id             = (int) $form_id;
 		$this->all_random_field_ids = array_map( 'intval', array_filter( (array) $random_field_ids ) );
 		$this->display_count        = (int) $display_count;
+		$this->preserve_order       = (bool) $preserve_order;
 
 		add_filter( "gform_pre_render_$form_id", array( $this, 'pre_render' ) );
 		add_filter( "gform_form_tag_$form_id", array( $this, 'store_selected_field_ids' ), 10, 2 );
@@ -78,16 +80,38 @@ class GFRandomFields {
 
 		$filtered_fields = array();
 		$selected_fields = array_map( 'intval', $selected_fields );
+		$random_indexes  = array();
 
 		foreach ( $form['fields'] as $field ) {
 
 			if ( in_array( (int) $field['id'], $this->get_random_field_ids( $form['fields'] ), true ) ) {
 				if ( in_array( (int) $field['id'], $selected_fields, true ) ) {
 					$filtered_fields[] = $field;
+					$random_indexes[]  = count( $filtered_fields ) - 1;
 				}
 			} else {
 				$filtered_fields[] = $field;
 			}
+		}
+
+		if ( ! $this->preserve_order ) {
+
+			$reordered_fields = array();
+			$random_index_key = $random_indexes;
+
+			shuffle( $random_indexes );
+
+			foreach ( $filtered_fields as $index => $field ) {
+				if ( in_array( $index, $random_index_key, true ) ) {
+					$random_index       = array_pop( $random_indexes );
+					$reordered_fields[] = $filtered_fields[ $random_index ];
+				} else {
+					$reordered_fields[] = $filtered_fields[ $index ];
+				}
+			}
+
+			$filtered_fields = $reordered_fields;
+
 		}
 
 		$form['fields'] = $filtered_fields;
