@@ -16,7 +16,7 @@ class GPEP_Edit_Entry {
 	public function __construct( $options ) {
 
 		$this->form_id        = rgar( $options, 'form_id' );
-		$this->delete_partial = rgar( $options, 'delete_partial' );
+		$this->delete_partial = rgar( $options, 'delete_partial', true );
 
 		add_filter( "gform_entry_id_pre_save_lead_{$this->form_id}", array( $this, 'update_entry_id' ), 10, 2 );
 		add_filter( "gpls_rule_groups_{$this->form_id}", array( $this, 'bypass_limit_submissions' ), 10, 2 );
@@ -46,13 +46,13 @@ class GPEP_Edit_Entry {
 		return $rule_groups;
 	}
 
-	public function get_update_entry_id( $form_id ) {
+	public function get_update_entry_id( $target_form_id ) {
 
 		if ( ! is_callable( 'gp_easy_passthrough' ) ) {
 			return false;
 		}
 
-		$feeds = gp_easy_passthrough()->get_active_feeds( $form_id );
+		$feeds = gp_easy_passthrough()->get_active_feeds( $target_form_id );
 		if ( empty( $feeds ) ) {
 			return false;
 		}
@@ -88,8 +88,11 @@ class GPEP_Edit_Entry {
 			}
 		}
 
-		if ( ! $update_entry_id ) {
-			$update_entry_id = $session[ gp_easy_passthrough()->get_slug() . '_' . $form_id ];
+		$has_token           = ! empty( rgget( 'ep_token' ) );
+		$no_token_diff_forms = ! $has_token && (int) $target_form_id !== (int) $source_form_id;
+
+		if ( ! $update_entry_id && ( $has_token || $no_token_diff_forms ) ) {
+			$update_entry_id = $session[ gp_easy_passthrough()->get_slug() . '_' . $target_form_id ];
 		}
 
 		return $update_entry_id ? $update_entry_id : false;
@@ -99,6 +102,6 @@ class GPEP_Edit_Entry {
 
 // Configurations
 new GPEP_Edit_Entry( array(
-	'form_id'        => 123,   // Set this to the form ID
-	'delete_partial' => false, // Set this to true to delete partial entries if enabled
+	'form_id'        => 123,   // Set this to the form ID.
+	'delete_partial' => false, // Set this to false if you wish to preserve partial entries after an edit is submitted.
 ) );
