@@ -212,7 +212,20 @@ class GP_Limit_Choices_Field_Group {
 							}
 						} );
 
-						self.refresh();
+						if ( window.gf_form_conditional_logic && window.gf_form_conditional_logic[ self.formId ] ) {
+							$( document ).on( 'gform_post_conditional_logic.gplcfg', function( event, formId, fields, isInit ) {
+								// GF triggers a "generic" event for the gform_post_conditional_logic after the form has
+								// been displayed. We can identify it by checking for a null fields value.
+								if( fields === null && formId == self.formId ) {
+									// This function will be bound multiple times on AJAX-enabled forms. Let's account
+									// for that by removing it so there will only be one instance bound at a time.
+									$( document ).off( 'gform_post_conditional_logic.gplcfg' );
+									self.refresh();
+								}
+							} );
+						} else {
+							self.refresh();
+						}
 
 					};
 
