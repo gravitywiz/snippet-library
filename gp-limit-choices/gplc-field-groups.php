@@ -179,6 +179,7 @@ class GP_Limit_Choices_Field_Group {
 			$value = rgpost( 'input_' . $field->id );
 			$content = $field->get_field_content( $value, true, $form );
 			$content = str_replace( '{FIELD}', GFCommon::get_field_input( $field, $value, $entry['id'], $form['id'], $form ), $content );
+			$content = gp_limit_choices()->disable_choice( $content, $field );
 		}
 
 		wp_send_json_success( $content );
