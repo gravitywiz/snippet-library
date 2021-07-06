@@ -27,7 +27,7 @@ class GPEP_Edit_Entry {
 
 		$update_entry_id = $this->get_update_entry_id( $form['id'] );
 		if ( $update_entry_id ) {
-			if ( $this->delete_partial ) {
+			if ( $this->delete_partial && $entry_id !== null ) {
 				GFAPI::delete_entry( $entry_id );
 			}
 			return $update_entry_id;
