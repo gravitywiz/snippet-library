@@ -4,8 +4,8 @@
  *
  * Disable browser auto-complete.
  *
- * @version 0.2
- * @author  Scott Buchmann <scott@gravitywiz.com>
+ * @version 0.3
+ * @author  David Smith <david@gravitywiz.com>
  * @license GPL-2.0+
  * @link    http://gravitywiz.com
  */
