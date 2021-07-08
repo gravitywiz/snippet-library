@@ -16,5 +16,24 @@ add_filter( 'gform_form_tag', function( $form_tag ) {
 
 // Diable auto-complete on each field.
 add_filter( 'gform_field_content', function( $input ) {
-	return preg_replace( '/<(input|textarea)/', '<${1} autocomplete="password" ', $input );
+	$autocomplete = gw_get_browser_name( $_SERVER['HTTP_USER_AGENT'] ) === 'Chrome' ? 'password' : 'off';
+	return preg_replace( '/<(input|textarea)/', '<${1} autocomplete="' . $autocomplete . '" ', $input );
 }, 11 );
+
+function gw_get_browser_name( $user_agent ) {
+	if ( strpos( $user_agent, 'Opera' ) || strpos( $user_agent, 'OPR/' ) ) {
+		return 'Opera';
+	} elseif ( strpos( $user_agent, 'Edge' ) ) {
+		return 'Edge';
+	} elseif ( strpos( $user_agent, 'Chrome' ) ) {
+		return 'Chrome';
+	} elseif ( strpos( $user_agent, 'Safari' ) ) {
+		return 'Safari';
+	} elseif ( strpos( $user_agent, 'Firefox' ) ) {
+		return 'Firefox';
+	} elseif ( strpos( $user_agent, 'MSIE' ) || strpos( $user_agent, 'Trident/7' ) ) {
+		return 'Internet Explorer';
+	}
+
+	return 'Other';
+}
