@@ -96,7 +96,7 @@ class GPEP_Edit_Entry {
 		$no_token_diff_forms = ! $has_token && (int) $target_form_id !== (int) $source_form_id;
 
 		if ( ! $update_entry_id && ( $has_token || $no_token_diff_forms ) ) {
-			$update_entry_id = $session[ gp_easy_passthrough()->get_slug() . '_' . $target_form_id ];
+			$update_entry_id = rgar( (array) $session, gp_easy_passthrough()->get_slug() . '_' . $target_form_id );
 		}
 
 		return $update_entry_id ? $update_entry_id : false;
