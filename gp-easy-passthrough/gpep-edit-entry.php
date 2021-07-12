@@ -98,7 +98,11 @@ class GPEP_Edit_Entry {
 		if ( ! $update_entry_id && ( $has_token || $no_token_diff_forms ) ) {
 			$update_entry_id = rgar( (array) $session, gp_easy_passthrough()->get_slug() . '_' . $target_form_id );
 		}
-
+		// Make sure entry is active before returning its ID for updating
+		$entry = GFAPI::get_entry( $update_entry_id );
+		if ( $entry['status'] !== 'active' ) {
+			$update_entry_id = false;
+		}
 		return $update_entry_id ? $update_entry_id : false;
 	}
 
