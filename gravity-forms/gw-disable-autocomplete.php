@@ -20,7 +20,7 @@ add_filter( 'gform_field_content', function( $input ) {
 	return preg_replace( '/<(input|textarea)/', '<${1} autocomplete="' . $autocomplete . '" ', $input );
 }, 11 );
 
-if ( ! function_exists( 'gw_get_browser_name' ) {
+if ( ! function_exists( 'gw_get_browser_name' ) ) {
 	function gw_get_browser_name( $user_agent ) {
 		if ( strpos( $user_agent, 'Opera' ) || strpos( $user_agent, 'OPR/' ) ) {
 			return 'Opera';
