@@ -165,7 +165,8 @@ class GW_Value_Exists_Validation {
 
 	public function load_form_script( $form, $is_ajax_enabled ) {
 
-		if( $this->is_applicable_form( $form ) && ! self::$is_script_output && ! $this->is_ajax_submission( $form['id'], $is_ajax_enabled ) ) {
+		// Do not output main script if AJAX is enabled
+		if( ! $is_ajax_enabled && $this->is_applicable_form( $form ) && ! self::$is_script_output && ! $this->is_ajax_submission( $form['id'], $is_ajax_enabled ) ) {
 			$this->output_script();
 		}
 
@@ -348,7 +349,8 @@ class GW_Value_Exists_Validation {
 	}
 
 	public function is_ajax_submission( $form_id, $is_ajax_enabled ) {
-		return isset( GFFormDisplay::$submission[ $form_id ] ) && $is_ajax_enabled;
+		// Ensure GFFormDisplay is available before continuing to check (edge case with GPPA loading a pseudo form. See HS#25828)
+		return class_exists( 'GFFormDisplay' ) && isset( GFFormDisplay::$submission[ $form_id ] ) && $is_ajax_enabled;
 	}
 
 }
