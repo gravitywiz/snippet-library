@@ -5,7 +5,7 @@
  * Ensure that a value entered in Form A has been previously submitted on Form B. This is useful if you're generating a reference number of some sort
  * on Form B and would like the user to enter it on Form A.
  *
- * @version   1.8
+ * @version   1.8.1
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      https://gravitywiz.com/require-existing-value-submission-gravity-forms/
