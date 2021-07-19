@@ -100,7 +100,7 @@ class GPEP_Edit_Entry {
 		}
 		// Make sure entry is active before returning its ID for updating
 		$entry = GFAPI::get_entry( $update_entry_id );
-		if ( $entry['status'] !== 'active' ) {
+		if ( ! is_wp_error( $entry ) && $entry['status'] !== 'active' ) {
 			$update_entry_id = false;
 		}
 		return $update_entry_id ? $update_entry_id : false;
