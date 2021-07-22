@@ -22,7 +22,7 @@
  */
 add_filter( 'gform_merge_tag_filter', function ( $value, $merge_tag, $modifiers, $field, $raw_value ) {
 
-	if ( ! is_callable( 'gp_nested_forms' ) || $field->type != 'form' || $value === false || strpos( $modifiers, 'gpnf_table' ) === false ) {
+	if ( ! is_callable( 'gp_nested_forms' ) || $field->type !== 'form' || $value === false || strpos( $modifiers, 'gpnf_table' ) === false ) {
 		return $value;
 	}
 	$nested_form = GFAPI::get_form( rgar( $field, 'gpnfForm' ) );
@@ -46,7 +46,7 @@ add_filter( 'gform_merge_tag_filter', function ( $value, $merge_tag, $modifiers,
 		'entries'          => gp_nested_forms()->get_entries( $raw_value ),
 		'actions'          => array(),
 		'nested_field_ids' => $nested_field_ids,
-		'labels'           => array( 'view_entry' => '' )
+		'labels'           => array( 'view_entry' => '' ),
 	);
 
 	$value = $template->parse_template(
