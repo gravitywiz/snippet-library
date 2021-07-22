@@ -4,7 +4,7 @@
  *
  * Create coupons via Gravity Forms submissions. Map the coupon code to a field on the GF form and voila!
  *
- * @version 1.2
+ * @version 1.2.1
  * @author  David Smith <david@gravitywiz.com>
  * @license GPL-2.0+
  * @link    WooCommerce:   http://gravitywiz.com/creating-coupons-woocommerce-gravity-forms/
