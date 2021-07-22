@@ -1,6 +1,7 @@
 <?php
 /**
  * Allow :admin modifier in {all_fields} merge tag to affect displayed nested form.
+ * IMPORTANT: Make sure the file name is "nested-entries-detail.php".
  * Usage: Place this file in your current active theme structure.
  *
  * @var array  $nested_fields    An array of GF_Field objects.
