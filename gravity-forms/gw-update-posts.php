@@ -76,9 +76,13 @@ class GW_Update_Posts {
 		}
 
 		if ( $this->_args['featured_image'] && is_callable( 'gp_media_library' ) ) {
-			$image_id = gp_media_library()->get_file_ids( $entry['id'], $this->_args['featured_image'], 0 );
-			if ( $image_id ) {
-				set_post_thumbnail( $post, $image_id );
+			if ( rgar( $entry, $this->_args['featured_image'] ) ) {
+				$image_id = gp_media_library()->get_file_ids( $entry['id'], $this->_args['featured_image'], 0 );
+				if ( $image_id ) {
+					set_post_thumbnail( $post, $image_id );
+				}
+			} else {
+				delete_post_meta( $post->ID, '_thumbnail_id' );
 			}
 		}
 
