@@ -17,15 +17,17 @@ class GW_Update_Posts {
 		$this->_args = wp_parse_args(
 			$args,
 			array(
-				'form_id'        => false,
-				'post_id'        => false,
-				'title'          => false,
-				'content'        => false,
-				'author'         => false,
-				'status'         => false,
-				'terms'          => array(),
-				'meta'           => array(),
-				'featured_image' => false,
+				'form_id'         => false,
+				'post_id'         => false,
+				'title'           => false,
+				'content'         => false,
+				'author'          => false,
+				'status'          => false,
+				'terms'           => array(),
+				'meta'            => array(),
+				'featured_image'  => false,
+				// If property is mapped but no entry value is submitted, delete the property. Currently only works with 'featured_image'.
+				'delete_if_empty' => false,
 			)
 		);
 
@@ -81,7 +83,7 @@ class GW_Update_Posts {
 				if ( $image_id ) {
 					set_post_thumbnail( $post, $image_id );
 				}
-			} else {
+			} elseif ( $this->_args['delete_if_empty'] ) {
 				delete_post_meta( $post->ID, '_thumbnail_id' );
 			}
 		}
