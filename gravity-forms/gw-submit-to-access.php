@@ -266,11 +266,12 @@ class GW_Submit_Access {
 		}
 
 		$form_ids = $this->get_form_ids( $post_id );
+		$per_page = $this->requires_submission_per_page( $post_id );
 
-		return $this->has_submitted_form( $form_ids );
+		return $this->has_submitted_form( $form_ids, $per_page, $post_id );
 	}
 
-	public function has_submitted_form( $form_ids ) {
+	public function has_submitted_form( $form_ids, $per_page, $post_id ) {
 
 		$submitted_forms = $this->get_submitted_forms();
 
@@ -279,10 +280,29 @@ class GW_Submit_Access {
 			return true;
 		}
 
-		// has specifically required form been submitted?
-		$matching_form_ids = array_intersect( $form_ids, $submitted_forms );
-		if ( ! empty( $matching_form_ids ) ) {
+		if ( ! $per_page ) {
+
+			// has specifically required form been submitted?
+			$matching_form_ids = array_intersect( $form_ids, array_keys( $submitted_forms ) );
+			if ( ! empty( $matching_form_ids ) ) {
+				return true;
+			}
+		} else {
+
+			foreach ( $form_ids as $form_id ) {
+				// If form has never been submitted, access is not granted
+				if ( empty( $submitted_forms[ $form_id ] ) ) {
+					return false;
+				}
+
+				// If current post ID is not in the submitted form's array of post IDs, do not grant access
+				if ( ! in_array( $post_id, $submitted_forms[ $form_id ] ) ) {
+					return false;
+				}
+			}
+
 			return true;
+
 		}
 
 		return false;
@@ -290,6 +310,10 @@ class GW_Submit_Access {
 
 	public function requires_access( $post_id ) {
 		return get_post_meta( $post_id, 'gwsa_require_submission', true ) == true;
+	}
+
+	public function requires_submission_per_page( $post_id ) {
+		return get_post_meta( $post_id, 'gwsa_require_submission', true ) === 'per_page';
 	}
 
 	public function get_submitted_forms() {
@@ -300,7 +324,7 @@ class GW_Submit_Access {
 		// if user meta is enabled, merge forms stored there as well
 		if ( $this->_args['enable_user_meta'] ) {
 			$user_meta_forms = (array) wp_get_current_user()->get( 'gwsa_submitted_forms' );
-			$submitted_forms = array_merge( $submitted_forms, $user_meta_forms );
+			$submitted_forms = array_merge_recursive( $submitted_forms, $user_meta_forms );
 		}
 
 		return array_filter( $submitted_forms );
@@ -311,9 +335,13 @@ class GW_Submit_Access {
 		$submitted_forms = $this->get_submitted_forms();
 		$form_id         = $form['id'];
 
-		if ( ! in_array( $form_id, $submitted_forms ) && ! headers_sent() ) {
+		if ( ! headers_sent() ) {
 
-			$submitted_forms[] = $form_id;
+			if ( ! isset( $submitted_forms[ $form_id ] ) ) {
+				$submitted_forms[ $form_id ] = array();
+			}
+
+			$submitted_forms[ $form_id ][] = url_to_postid( GFFormsModel::get_current_page_url() );
 
 			if ( $this->_args['enable_user_meta'] && is_user_logged_in() ) {
 				update_user_meta( get_current_user_id(), 'gwsa_submitted_forms', $submitted_forms );
