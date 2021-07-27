@@ -4,7 +4,7 @@
  *
  * Bypass your website cache when loading a Gravity Forms form.
  *
- * @version 0.7
+ * @version 0.8
  * @author  David Smith <david@gravitywiz.com>
  * @license GPL-2.0+
  * @link    http://gravitywiz.com/
@@ -13,7 +13,7 @@
  * Plugin URI: http://gravitywiz.com/
  * Description: Bypass your website cache when loading a Gravity Forms form.
  * Author: Gravity Wiz
- * Version: 0.7
+ * Version: 0.8
  * Author URI: http://gravitywiz.com
  *
  */
