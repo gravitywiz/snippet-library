@@ -337,7 +337,7 @@ class GW_Submit_Access {
 
 		if ( ! headers_sent() ) {
 
-			if ( ! isset( $submitted_forms[ $form_id ] ) ) {
+			if ( ! isset( $submitted_forms[ $form_id ] ) || ! is_array( $submitted_forms[ $form_id ] ) ) {
 				$submitted_forms[ $form_id ] = array();
 			}
 
