@@ -5,6 +5,8 @@
  *
  * Capture the file extension of any file uploaded into a File Upload field on submission. 
  * This only works with single File Upload fields.
+ * 
+ * @see https://www.loom.com/share/52b2c139ed42465c9230cf05d9b7fc16
  */
 // Update "123" to your form ID.
 add_action( 'gform_entry_post_save_123', function( $entry, $form ) {
