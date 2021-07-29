@@ -9,10 +9,10 @@
 // Update "123" to your form ID.
 add_action( 'gform_entry_post_save_123', function( $entry, $form ) {
 
-  // Update "4" to the ID of your File Upload field.
+	// Update "4" to the ID of your File Upload field.
 	$file_upload_field_id = 4;
   
-  // Update "5" to the ID of the field in which the file extension should be captured.
+	// Update "5" to the ID of the field in which the file extension should be captured.
 	$ext_field_id = 5;
 
 	$ext                    = pathinfo( rgar( $entry, $file_upload_field_id ), PATHINFO_EXTENSION );
