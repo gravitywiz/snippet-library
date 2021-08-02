@@ -14,7 +14,8 @@ function my_add_how_many_left_message( $choice, $exceeded_limit, $field, $form, 
 	$limit         = method_exists( gp_limit_choices(), 'get_choice_limit' ) ? gp_limit_choices()->get_choice_limit( $choice, $field->formId, $field->id ) : rgar( $choice, 'limit' );
 	$how_many_left = max( $limit - $count, 0 );
 
-	$message = "($how_many_left spots left)";
+	// translators: placeholder is number of remaining spots left
+	$message = sprintf( _n( '(%s spot left)', '(%s spots left)', $count, 'gp-limit-choices' ), number_format_i18n( $how_many_left ) );
 
 	$choice['text'] = $choice['text'] . " $message";
 
