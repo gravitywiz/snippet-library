@@ -26,7 +26,8 @@ class GW_Update_Posts {
 				'terms'           => array(),
 				'meta'            => array(),
 				'featured_image'  => false,
-				// If property is mapped but no entry value is submitted, delete the property. Currently only works with 'featured_image'.
+				// If property is mapped but no entry value is submitted, delete the property.
+				// Currently only works with 'featured_image' and custom fields specified in 'meta'.
 				'delete_if_empty' => false,
 			)
 		);
@@ -114,10 +115,13 @@ class GW_Update_Posts {
 				$acf_field = is_callable( 'gp_media_library' ) && is_callable( 'acf_get_field' ) ? acf_get_field( $key ) : false;
 				if ( $acf_field && in_array( $acf_field['type'], array( 'image', 'file', 'gallery' ), true ) ) {
 					gp_media_library()->acf_update_field( $post->ID, $key, GFAPI::get_field( $form, $value ), $entry );
-				}
-				// Map all other custom fields generically.
-				else {
-					$meta_input[ $key ] = $meta_value;
+				} else {
+					// Map all other custom fields generically.
+					if ( ! rgblank( $meta_value ) ) {
+						$meta_input[ $key ] = $meta_value;
+					} elseif ( $this->_args['delete_if_empty'] ) {
+						delete_post_meta( $post->ID, $key );
+					}
 				}
 			}
 
