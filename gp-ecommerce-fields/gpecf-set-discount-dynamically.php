@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // GP eCommerce Fields // Dynamically Set Discount Amount
  * http://gravitywiz.com/documentation/gravity-forms-ecommerce-fields/
