@@ -1,0 +1,19 @@
+@media only screen and (max-width: 480px) {
+
+	.datepicker {
+		width: 100%;
+	}
+	
+	.ui-datepicker-calendar {
+		display: block;
+	}
+	
+	.gform-theme-datepicker:not(.gform-legacy-datepicker) td, .gform-theme-datepicker:not(.gform-legacy-datepicker) th {
+	    padding: 1px !important;
+	}
+	
+	.gform_wrapper.gravity-theme input[type='submit'] {
+		width: 100%;
+	}
+
+}
