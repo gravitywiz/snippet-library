@@ -143,24 +143,43 @@ class GW_Populate_Date {
 			$raw = array_filter( $raw );
 		}
 
-		list( $format, $divider ) = $field['dateFormat'] ? array_pad( explode( '_', $field['dateFormat'] ), 2, 'slash' ) : array( 'mdy', 'slash' );
-		$dividers                 = array(
-			'slash' => '/',
-			'dot'   => '.',
-			'dash'  => '-',
-		);
+		switch ( $field->type ) {
+			case 'time':
+				list( $hour, $minute, $ampm ) = array_pad( $raw, 3, false );
+				if ( $ampm ) {
+					$ampm = strtolower( $ampm );
+					if ( $ampm === 'pm' ) {
+						$hour -= 12;
+					} elseif ( $ampm === 'am' && (int) $hour === 12 ) {
+						$hour = 0;
+					}
+				}
+				$timestamp = mktime( $hour, $minute );
+				break;
+			case 'date':
+			default:
+				list( $format, $divider ) = $field['dateFormat'] ? array_pad( explode( '_', $field['dateFormat'] ), 2, 'slash' ) : array( 'mdy', 'slash' );
+				$dividers                 = array(
+					'slash' => '/',
+					'dot'   => '.',
+					'dash'  => '-',
+				);
 
-		if ( empty( $raw ) ) {
-			$raw = date( implode( $dividers[ $divider ], str_split( $format ) ) );
+				if ( empty( $raw ) ) {
+					$raw = date( implode( $dividers[ $divider ], str_split( $format ) ) );
+				}
+
+				$date = ! is_array( $raw ) ? explode( $dividers[ $divider ], $raw ) : $raw;
+
+				$month = $date[ strpos( $format, 'm' ) ];
+				$day   = $date[ strpos( $format, 'd' ) ];
+				$year  = $date[ strpos( $format, 'y' ) ];
+
+				$timestamp = mktime( 0, 0, 0, $month, $day, $year );
+
+				break;
 		}
 
-		$date = ! is_array( $raw ) ? explode( $dividers[ $divider ], $raw ) : $raw;
-
-		$month = $date[ strpos( $format, 'm' ) ];
-		$day   = $date[ strpos( $format, 'd' ) ];
-		$year  = $date[ strpos( $format, 'y' ) ];
-
-		$timestamp = mktime( 0, 0, 0, $month, $day, $year );
 
 		return $timestamp;
 	}
@@ -216,7 +235,21 @@ class GW_Populate_Date {
 			}
 		}
 
-		if ( $this->_args['enable_i18n'] ) {
+		if ( $field->get_input_type() === 'time' ) {
+			// This is really a Time value...
+			$hour   = (int) date( 'G', $timestamp );
+			$minute = date( 'i', $timestamp );
+			$ampm   = 'AM';
+			if ( $field->timeFormat === '12' ) {
+				if ( $hour > 12 ) {
+					$hour -= 12;
+					$ampm  = 'PM';
+				} elseif ( $hour === 0 ) {
+					$hour = 12;
+				}
+			}
+			$date = array( $hour, $minute, $ampm );
+		} elseif ( $this->_args['enable_i18n'] ) {
 			$date = strftime( $format, $timestamp );
 		} else {
 			$date = date( $format, $timestamp );
@@ -329,6 +362,10 @@ class GW_Populate_Date {
 							value  = self.getCleanNumber( $input.val(), gformExtractFieldId( inputId ), self.formId );
 
 						value = gform.applyFilters( 'gwpd_get_field_value', value, $input, inputId );
+
+						if ( ! value || isNaN( value ) ) {
+							value = 0;
+						}
 
 						return value;
 					};
@@ -1540,26 +1577,20 @@ class GW_Populate_Date {
 
 								break;
 
-							/* Coming soon...
 							case 'time':
 
-								var timestamp   = moment().format( 'X' ),
-									hour        = $inputs.eq( 0 ).val(),
+								var hour        = $inputs.eq( 0 ).val(),
 									min         = $inputs.eq( 1 ).val(),
 									ampm        = $inputs.eq( 2 ).val(),
-									missingData = ! hour || ! min;
+									missingData = ! hour || ! min,
+									datetime    = missingData ? false : new Date();
 
-								if( ! missingData ) {
+								datetime.setHours( parseInt( hour ) + ( ampm.toLowerCase() === 'pm' ? 12 : 0 ) );
+								datetime.setMinutes( min );
 
-									var timeStr   = ampm ? hour + ':' + min + ' ' + ampm : hour + ':' + min,
-										format    = ampm ? 'h:m a' : 'HH:m',
-										datetime  = moment( timeStr, format );
+								timestamp = datetime.getTime();
 
-									timestamp = datetime.format( 'X' );
-
-								}
-
-								break;*/
+								break;
 
 						}
 
@@ -1636,6 +1667,38 @@ class GW_Populate_Date {
 										break;
 									default:
 										break;
+								}
+
+								// @todo update to work with multi-input date types
+								if( oldValues !== $inputs.val() ) {
+									$inputs.change();
+								}
+
+								break;
+							case 'time':
+								var hours   = isNaN( date.getHours() ) ? '' : date.getHours(),
+									minutes = isNaN( date.getMinutes() )  ? '' : date.getMinutes(),
+									hasAMPM = $inputs.length === 3,
+									isPM    = false;
+
+								if ( hasAMPM ) {
+									if ( hours === 0 ) {
+										hours = 12;
+									} else if ( hours > 12 ) {
+										hours -= 12;
+										isPM   = true;
+									}
+								}
+
+								$inputs.eq( 0 ).val( hours );
+								$inputs.eq( 1 ).val( GWDates.padDateOrMonth( minutes ) );
+
+								if ( hasAMPM ) {
+									if ( isPM ) {
+										$inputs.eq( 2 ).find( 'option:last' ).prop( 'selected', true );
+									} else {
+										$inputs.eq( 2 ).find( 'option:first' ).prop( 'selected', true );
+									}
 								}
 
 								// @todo update to work with multi-input date types
