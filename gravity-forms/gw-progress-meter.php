@@ -8,7 +8,7 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Display a meter indicating your progression towards a set goal based on your Gravity Forms entries.
  * Author:       Gravity Wiz
- * Version:      1.0
+ * Version:      1.1
  * Author URI:   http://gravitywiz.com
  *
  * @todo
@@ -40,8 +40,8 @@ class GW_Progress_Meter {
 			'status'      => 'total', // accepts 'total', 'unread', 'starred', 'trash', 'spam'
 			'goal'        => false,
 			'field'       => false,
-			'count_label' => '%d submissions',
-			'goal_label'  => '%d goal',
+			'count_label' => '%s submissions',
+			'goal_label'  => '%s goal',
 			'name'        => false, // Accepts a string; used via the `shortcode_atts_gf_progress_meter` filter to conditionally filter the $atts.
 		), $atts, 'gf_progress_meter' );
 
@@ -190,8 +190,15 @@ class GW_Progress_Meter {
 		$bits = explode( ' ', $label );
 
 		foreach ( $bits as &$bit ) {
+			// In order to support formatted numbers we needed to move away from use the `%d` placeholder. This code
+			// automatically updates existing uses of the `%d` to `%s`.
 			if ( strpos( $bit, '%d' ) !== false ) {
-				$bit = sprintf( '<span class="gwpm-%s-number">' . $bit . '</span>', $type, $number );
+				$bit = str_replace( '%d', '%s', $bit );
+			}
+			if ( strpos( $bit, '%s' ) !== false ) {
+				$currency      = new RGCurrency( GFCommon::get_currency() );
+				$number_format = rgar( $currency, 'thousand_separator' ) === '.' ? 'decimal_comma' : '';
+				$bit           = sprintf( '<span class="gwpm-%s-number">' . $bit . '</span>', $type, GFCommon::format_number( $number, $number_format, '', true ) );
 			}
 		}
 
