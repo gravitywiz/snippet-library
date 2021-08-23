@@ -26,8 +26,8 @@ function replace_template_sum_merge_tags($template_value, $field, $template, $po
 	if ( $matches ) {
     	foreach ( $matches as $match ) {
     		$full_match = $match[0];
-    		$merge_tag  = $match[1];
-    		$sum = 0;
+		    $merge_tag  = str_replace( $object_type->id . ':', '', $match[1] );
+		    $sum = 0;
     		foreach ($objects as $object_index => $object) {
     		    $value = $object_type->get_object_prop_value( $object, $merge_tag );
     		    if (is_numeric($value)) {
@@ -46,8 +46,8 @@ function replace_template_avg_merge_tags($template_value, $field, $template, $po
 	if ( $matches ) {
     	foreach ( $matches as $match ) {
     		$full_match = $match[0];
-    		$merge_tag  = $match[1];
-    		$sum = 0;
+		    $merge_tag  = str_replace( $object_type->id . ':', '', $match[1] );
+		    $sum = 0;
 			$count = count($objects);
     		foreach ($objects as $object_index => $object) {
     		    $value = $object_type->get_object_prop_value( $object, $merge_tag );
@@ -68,8 +68,8 @@ function replace_template_min_merge_tags($template_value, $field, $template, $po
 	if ( $matches ) {
     	foreach ( $matches as $match ) {
     		$full_match = $match[0];
-    		$merge_tag  = $match[1];
-    		$min = null;
+		    $merge_tag  = str_replace( $object_type->id . ':', '', $match[1] );
+		    $min = null;
     		foreach ($objects as $object_index => $object) {
     		    $value = $object_type->get_object_prop_value( $object, $merge_tag );
     		    if (is_numeric($value)) {
@@ -94,8 +94,8 @@ function replace_template_max_merge_tags($template_value, $field, $template, $po
 	if ( $matches ) {
     	foreach ( $matches as $match ) {
     		$full_match = $match[0];
-    		$merge_tag  = $match[1];
-    		$max = null;
+		    $merge_tag  = str_replace( $object_type->id . ':', '', $match[1] );
+		    $max = null;
     		foreach ($objects as $object_index => $object) {
     		    $value = $object_type->get_object_prop_value( $object, $merge_tag );
     		    if (is_numeric($value)) {
@@ -113,10 +113,10 @@ function replace_template_max_merge_tags($template_value, $field, $template, $po
 	}
 	return $template_value;
 }
- 
+
 add_filter( 'gppa_process_template', 'replace_template_sum_merge_tags', 2, 7 );
 add_filter( 'gppa_process_template', 'replace_template_avg_merge_tags', 2, 7 );
 add_filter( 'gppa_process_template', 'replace_template_min_merge_tags', 2, 7 );
 add_filter( 'gppa_process_template', 'replace_template_max_merge_tags', 2, 7 );
- 
- 
+
+
