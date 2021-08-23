@@ -23,6 +23,7 @@ class GW_Update_Posts {
 				'content'         => false,
 				'author'          => false,
 				'status'          => false,
+				'slug'            => false,
 				'terms'           => array(),
 				'meta'            => array(),
 				'featured_image'  => false,
@@ -76,6 +77,10 @@ class GW_Update_Posts {
 			if ( in_array( $status, $stati, true ) ) {
 				$post->post_status = $status;
 			}
+		}
+		
+		if ( $this->_args['slug'] ) {
+			$post->post_name = rgar( $entry, $this->_args['slug'] );
 		}
 
 		if ( $this->_args['featured_image'] && is_callable( 'gp_media_library' ) ) {
