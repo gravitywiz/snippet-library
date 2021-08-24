@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // Update Perks Tab Field Settings Title
  * https://gravitywiz.com/
