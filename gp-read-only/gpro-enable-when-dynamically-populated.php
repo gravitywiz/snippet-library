@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // Read Only // Readonly When Dynamically Populated
+ * Gravity Perks // Read Only // Enable When Dynamically Populated
  * https://gravitywiz.com/documentation/gravity-forms-read-only/
  *
  * Use this snippet to make fields readonly if they are dynamically populated. You must enable the "Read-only" field
