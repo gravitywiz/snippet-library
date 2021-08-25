@@ -6,7 +6,7 @@
  * Use this snippet to make fields readonly if they are dynamically populated. You must enable the "Read-only" field
  * setting for this functionality to apply.
  * 
- * See video: 
+ * See video: https://www.loom.com/share/7c42fc8c0aef42d990ae600675546774
  */
 add_filter( 'gform_pre_render', function( $form, $ajax, $field_values ) {
 
