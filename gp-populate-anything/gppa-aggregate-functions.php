@@ -29,7 +29,7 @@ function replace_template_sum_merge_tags( $template_value, $field, $template, $p
 			$merge_tag  = str_replace( $object_type->id . ':', '', $match[1] );
 			$sum        = 0;
 			foreach ( $objects as $object_index => $object ) {
-				$value = $object_type->get_object_prop_value( $object, $merge_tag );
+				$value = gppa_aggr_get_value( $merge_tag, $object, $object_type );
 				if ( is_numeric( $value ) ) {
 					$sum += floatval( $value );
 				}
@@ -38,6 +38,19 @@ function replace_template_sum_merge_tags( $template_value, $field, $template, $p
 		}
 	}
 	return $template_value;
+}
+
+function gppa_aggr_get_value( $merge_tag, $object, $object_type ) {
+	$value = $object_type->get_object_prop_value( $object, $merge_tag );
+	// Convert currency values to numbers for Gravity Forms product fields.
+	if ( $object_type->id === 'gf_entry' && strpos( $merge_tag, 'gf_field_' ) !== false ) {
+		$input_id     = str_replace( 'gf_field_', '', $merge_tag );
+		$source_field = GFAPI::get_field( $object->form_id, $input_id );
+		if ( GFCommon::is_product_field( $source_field->type ) ) {
+			$value = GFCommon::to_number( $value, $object->currency );
+		}
+	}
+	return $value;
 }
 
 function replace_template_avg_merge_tags( $template_value, $field, $template, $populate, $object, $object_type, $objects ) {
@@ -50,7 +63,7 @@ function replace_template_avg_merge_tags( $template_value, $field, $template, $p
 			$sum        = 0;
 			$count      = count( $objects );
 			foreach ( $objects as $object_index => $object ) {
-				$value = $object_type->get_object_prop_value( $object, $merge_tag );
+				$value = gppa_aggr_get_value( $merge_tag, $object, $object_type );
 				if ( is_numeric( $value ) ) {
 					$sum += floatval( $value );
 				}
@@ -71,7 +84,7 @@ function replace_template_min_merge_tags( $template_value, $field, $template, $p
 			$merge_tag  = str_replace( $object_type->id . ':', '', $match[1] );
 			$min        = null;
 			foreach ( $objects as $object_index => $object ) {
-				$value = $object_type->get_object_prop_value( $object, $merge_tag );
+				$value = gppa_aggr_get_value( $merge_tag, $object, $object_type );
 				if ( is_numeric( $value ) ) {
 					$value = floatval( $value );
 					if ( is_null( $min ) || ( $value < $min ) ) {
@@ -97,7 +110,7 @@ function replace_template_max_merge_tags( $template_value, $field, $template, $p
 			$merge_tag  = str_replace( $object_type->id . ':', '', $match[1] );
 			$max        = null;
 			foreach ( $objects as $object_index => $object ) {
-				$value = $object_type->get_object_prop_value( $object, $merge_tag );
+				$value = gppa_aggr_get_value( $merge_tag, $object, $object_type );
 				if ( is_numeric( $value ) ) {
 					$value = floatval( $value );
 					if ( is_null( $max ) || ( $value > $max ) ) {
@@ -118,5 +131,3 @@ add_filter( 'gppa_process_template', 'replace_template_sum_merge_tags', 2, 7 );
 add_filter( 'gppa_process_template', 'replace_template_avg_merge_tags', 2, 7 );
 add_filter( 'gppa_process_template', 'replace_template_min_merge_tags', 2, 7 );
 add_filter( 'gppa_process_template', 'replace_template_max_merge_tags', 2, 7 );
-
-
