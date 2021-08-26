@@ -46,7 +46,7 @@ function gppa_aggr_get_value( $merge_tag, $object, $object_type ) {
 	if ( $object_type->id === 'gf_entry' && strpos( $merge_tag, 'gf_field_' ) !== false ) {
 		$input_id     = str_replace( 'gf_field_', '', $merge_tag );
 		$source_field = GFAPI::get_field( $object->form_id, $input_id );
-		if ( GFCommon::is_product_field( $source_field->get_input_type() ) ) {
+		if ( GFCommon::is_product_field( $source_field->type ) ) {
 			$value = GFCommon::to_number( $value, $object->currency );
 		}
 	}
