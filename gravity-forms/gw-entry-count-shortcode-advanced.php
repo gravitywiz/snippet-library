@@ -6,12 +6,13 @@
 add_filter( 'gform_shortcode_entry_count', function( $output, $atts ) {
 
 	$atts = shortcode_atts( array(
-		'id'         => false,
-		'field_id'   => false,
-		'value'      => false,
-		'format'     => false,
-		'start_date' => false,
-		'end_date'   => false,
+		'id'           => false,
+		'field_id'     => false,
+		'value'        => false,
+		'format'       => false,
+		'start_date'   => false,
+		'end_date'     => false,
+		'current_user' => false,
 	), $atts );
 
 	$value = $atts['value'];
@@ -19,7 +20,7 @@ add_filter( 'gform_shortcode_entry_count', function( $output, $atts ) {
 	// Replace true/false string values with their boolean equivalent.
 	if ( strtolower( $value ) === 'true' ) {
 		$value = true;
-	} else if ( strtolower( $value ) === 'false' ) {
+	} elseif ( strtolower( $value ) === 'false' ) {
 		$value = false;
 	}
 
@@ -30,7 +31,7 @@ add_filter( 'gform_shortcode_entry_count', function( $output, $atts ) {
 	if ( $atts['field_id'] ) {
 		$args['field_filters'] = array(
 			array(
-				'key' => $atts['field_id'],
+				'key'   => $atts['field_id'],
 				'value' => $value,
 			),
 		);
@@ -44,6 +45,13 @@ add_filter( 'gform_shortcode_entry_count', function( $output, $atts ) {
 		$args['end_date'] = $atts['end_date'];
 	}
 
+	if ( $atts['current_user'] ) {
+		$args['field_filters'][] = array(
+			'key'   => 'created_by',
+			'value' => get_current_user_id(),
+		);
+	}
+
 	$entries = GFAPI::get_entries(
 		$atts['id'],
 		$args,
@@ -54,8 +62,8 @@ add_filter( 'gform_shortcode_entry_count', function( $output, $atts ) {
 
 	$output = $total_count;
 
-	if( $atts['format'] ) {
-		$format = $atts['format'] == 'decimal' ? '.' : ',';
+	if ( $atts['format'] ) {
+		$format = $atts['format'] === 'decimal' ? '.' : ',';
 		$output = number_format( $output, 0, false, $format );
 	}
 
