@@ -433,7 +433,7 @@ class GW_All_Fields_Template {
 						$field_value = false;
 					}
 
-					$field_value = apply_filters( 'gform_merge_tag_filter', $field_value, $merge_tag, $modifiers, $field, $raw_field_value );
+					$field_value = apply_filters( 'gform_merge_tag_filter', $field_value, $merge_tag, $modifiers, $field, $raw_field_value, 'html' );
 
 					if ( $field_value === false ) {
 						break;
