@@ -387,7 +387,7 @@ class GW_All_Fields_Template {
 						}
 					}
 
-					$field_value = apply_filters( 'gform_merge_tag_filter', $field_value, $merge_tag, $modifiers, $field, $field_label, 'html' );
+					$field_value = apply_filters( 'gform_merge_tag_filter', $field_value, $merge_tag, $modifiers, $field, $field_label, $format );
 
 					//$field_data .= $field_value;
 
@@ -433,7 +433,7 @@ class GW_All_Fields_Template {
 						$field_value = false;
 					}
 
-					$field_value = apply_filters( 'gform_merge_tag_filter', $field_value, $merge_tag, $modifiers, $field, $raw_field_value, 'html' );
+					$field_value = apply_filters( 'gform_merge_tag_filter', $field_value, $merge_tag, $modifiers, $field, $raw_field_value, $format );
 
 					if ( $field_value === false ) {
 						break;
