@@ -5,7 +5,7 @@
  *
  * Allows you to exclude a list of invalid domains or include a list of valid domains for your Gravity Form Email fields.
  *
- * Plugin Name:  Gravity Wiz // Gravity Forms // Email Domain Validator
+ * Plugin Name:  Gravity Forms - Email Domain Validator
  * Plugin URI:   https://gravitywiz.com/banlimit-email-domains-for-gravity-form-email-fields/
  * Description:  Exclude a list of invalid domains or include a list of valid domains for your Gravity Form Email fields.
  * Author:       Gravity Wiz
