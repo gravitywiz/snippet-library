@@ -62,14 +62,23 @@ class GP_Limit_Choices_Field_Group {
 		$field_ids = array_values( $field_ids );
 
 		$form   = GFAPI::get_form( $field->formId );
+        // Capture current form state to parse conditional logic
+        if ( wp_doing_ajax() ) {
+	        $lead = GFFormsModel::get_current_lead();
+	        $form = apply_filters( 'gform_pre_render', $form, true, $lead );
+        }
 		$join   = $where = array();
 		$select = $from = '';
 		$_alias = null;
 
 		foreach( $field_ids as $index => $field_id ) {
-
 			$field  = GFFormsModel::get_field( $form, $field_id );
 			$alias  = sprintf( 'fgem%d', $index + 1 );
+
+			// Do note process field group if any of its fields are hidden
+			if ( wp_doing_ajax() && GFFormsModel::is_field_hidden( $form, $field, $lead ) ) {
+				return $query;
+			}
 
 			if( $index == 0 ) {
 				$_alias  = $alias;
@@ -131,7 +140,7 @@ class GP_Limit_Choices_Field_Group {
 		);
 
 		$script = 'new GPLCFieldGroup( ' . json_encode( $args ) . ' );';
-		$slug   = implode( '_', array( 'gplc_field_group', $this->_args['form_id'], $target_field_id ) );
+		$slug   = implode( '_', array( 'gplc_field_group', $this->_args['form_id'], $this->_args['hash'] ) );
 
 		GFFormDisplay::add_init_script( $this->_args['form_id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
 
