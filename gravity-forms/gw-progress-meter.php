@@ -5,11 +5,11 @@
  * Display a meter indicating your progression towards a set goal based on your Gravity Forms entries.
  *
  * Plugin Name:  GF Progress Meter
- * Plugin URI:   http://gravitywiz.com/
+ * Plugin URI:   https://gravitywiz.com/gravity-forms-progress-meter/
  * Description:  Display a meter indicating your progression towards a set goal based on your Gravity Forms entries.
  * Author:       Gravity Wiz
  * Version:      1.1
- * Author URI:   http://gravitywiz.com
+ * Author URI:   https://gravitywiz.com
  *
  * @todo
  *      - Add support for different colors and themes.
