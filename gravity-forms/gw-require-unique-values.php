@@ -7,7 +7,7 @@
  * collecting a personal phone number and an emergency contact phone number, this functionality can be used to ensure
  * that the same number is not used for both fields.
  *
- * Plugin Name:  Gravity Wiz // Gravity Forms // Require Unique Values Between Fields
+ * Plugin Name:  Gravity Forms - Require Unique Values Between Fields
  * Plugin URI:   https://gravitywiz.com/gravity-forms-require-unique-values-for-different-fields/
  * Description:  Require two or more fields on the same form to be different from each other.
  * Author:       Gravity Wiz
