@@ -4,7 +4,6 @@
  * https://gravitywiz.com/use-list-field-choices-gravity-forms/
  */
 
-
 # Basic Usage
 new GW_List_Field_As_Choices( array(
     'form_id' => 1,
