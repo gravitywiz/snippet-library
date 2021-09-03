@@ -1,6 +1,6 @@
 <?php
 /**
- * GP Limit Choices // Gravity Perks // Display How Many Spots Left to Admins Only
+ * Gravity Perks // Limit Choices // Display How Many Spots Left to Admins Only
  * https://gravitywiz.com/documentation/gravity-forms-limit-choices/
  *
  * (Admin-only) Display how many spots are left in the choice label when using the GP Limit Choices Perk.
