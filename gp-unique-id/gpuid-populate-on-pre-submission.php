@@ -6,9 +6,9 @@
  * Generate the Unique ID before the entry is actually created. This method is slightly less reliable for guaranteeing a truly unique ID;
  * however, in some cases, you may want access to the unique ID prior to the entry creation.
  *
- * Plugin Name:  GP Unique ID - Populate Unique ID on Pre Submission (rather than Post Entry Creation)
+ * Plugin Name:  GP Unique ID - Populate Unique ID on Pre Submission
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-unique-id/
- * Description:  Generate and populate the Unique ID on Pre Submission prior to the entry creation. 
+ * Description:  Generate and populate the Unique ID on pre submission prior to the entry creation. 
  * Author:       Gravity Wiz
  * Version:      0.1
  * Author URI:   https://gravitywiz.com/
