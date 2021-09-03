@@ -1,13 +1,14 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Restrict States in Address Fields
+ * https://gravitywiz.com/
  *
  * Restrict the states that can be selected for Address fields. Either restrict specific fields or restrict all Address
  * fields on the site.
  *
  * See https://gravitywiz.com/documentation/how-do-i-install-a-snippet/ for details on how to install this snippet.
  *
- * @version 1.0
+ * @version 1.1
  * @license GPL-2.0+
  * @link    http://gravitywiz.com
  */
