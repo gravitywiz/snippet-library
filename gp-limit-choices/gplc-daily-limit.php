@@ -1,12 +1,9 @@
 <?php
 /**
- * Gravity Perks // GP Limit Choices // Daily Limit
+ * Gravity Perks // Limit Choices // Daily Limit
  * https://gravitywiz.com/documentation/gravity-forms-limit-choices/
  *
  * By default, GP Limit Choices limits choices forever. This snippet will allow you to make that limit apply only to the current day.
- * 
- * Describe this snippet's purpose and usage. Be generous when describing both. There
- * is no maximum description length.
  *
  * Plugin Name:  GP Limit Choices — Daily Limit
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-limit-choices/
