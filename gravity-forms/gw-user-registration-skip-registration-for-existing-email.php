@@ -1,9 +1,9 @@
 <?php
 /**
- * Gravity Wiz // Gravity Forms // User Registration // Skip Registration if Email Exists
+ * Gravity Wiz // GF User Registration // Skip Registration if Email Exists
  * https://gravitywiz.com/
  *
- * Skip registration if the submitted email addresss, is already registered with a User account. 
+ * Skip registration if the submitted email addresss, is already registered with a user account. 
  *
  * Plugin Name: Gravity Forms - Skip Registration if Email Exists
  * Plugin URI:  https://gravitywiz.com/
