@@ -7,7 +7,7 @@
 * List field. This functionality requires that the form has multiple pages and that the List field must be placed on 
 * a page prior to the choice-based field that it will populate.
 *
-* Plugin Name:  Gravity Forms - Use List Field as Choices for Gravity Forms
+* Plugin Name:  Gravity Forms - Use List Field as Choices
 * Plugin URI:   https://gravitywiz.com/use-list-field-choices-gravity-forms/
 * Description:  Adds support for populating choice-based fields with values entered in a List field.
 * Author:       Gravity Wiz
