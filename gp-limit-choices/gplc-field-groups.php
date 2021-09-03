@@ -18,7 +18,7 @@ class GP_Limit_Choices_Field_Group {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
 		$this->_args = wp_parse_args( $args, array(
-			'form_id'  => false,
+			'form_id'   => false,
 			'field_ids' => array(),
 		) );
 
@@ -42,7 +42,7 @@ class GP_Limit_Choices_Field_Group {
 		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
 		add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
 
-		if( isset( $_POST['action'] ) && $_POST['action'] === 'gplcfg_refresh_field' ) {
+		if ( isset( $_POST['action'] ) && $_POST['action'] === 'gplcfg_refresh_field' ) {
 			remove_action( 'wp', array( 'GFForms', 'maybe_process_form' ), 9 );
 			remove_action( 'admin_init', array( 'GFForms', 'maybe_process_form' ), 9 );
 		}
@@ -54,38 +54,38 @@ class GP_Limit_Choices_Field_Group {
 
 		$field_ids = $this->_args['field_ids'];
 
-		if( ! $this->is_applicable_form( $field->formId ) || ! in_array( $field->id, $field_ids ) ) {
+		if ( ! $this->is_applicable_form( $field->formId ) || ! in_array( $field->id, $field_ids ) ) {
 			return $query;
 		}
 
 		unset( $field_ids[ array_search( $field->id, $field_ids ) ] );
 		$field_ids = array_values( $field_ids );
 
-		$form   = GFAPI::get_form( $field->formId );
-        // Capture current form state to parse conditional logic
-        if ( wp_doing_ajax() ) {
-	        $lead = GFFormsModel::get_current_lead();
-	        $form = apply_filters( 'gform_pre_render', $form, true, $lead );
-        }
+		$form = GFAPI::get_form( $field->formId );
+		// Capture current form state to parse conditional logic
+		if ( wp_doing_ajax() ) {
+			$lead = GFFormsModel::get_current_lead();
+			$form = apply_filters( 'gform_pre_render', $form, true, $lead );
+		}
 		$join   = $where = array();
 		$select = $from = '';
 		$_alias = null;
 
-		foreach( $field_ids as $index => $field_id ) {
-			$field  = GFFormsModel::get_field( $form, $field_id );
-			$alias  = sprintf( 'fgem%d', $index + 1 );
+		foreach ( $field_ids as $index => $field_id ) {
+			$field = GFFormsModel::get_field( $form, $field_id );
+			$alias = sprintf( 'fgem%d', $index + 1 );
 
 			// Do note process field group if any of its fields are hidden
 			if ( wp_doing_ajax() && GFFormsModel::is_field_hidden( $form, $field, $lead ) ) {
 				return $query;
 			}
 
-			if( $index == 0 ) {
-				$_alias  = $alias;
-				$select  = "SELECT DISTINCT {$alias}.entry_id";
-				$from    = "FROM {$wpdb->prefix}gf_entry_meta {$alias}";
+			if ( $index == 0 ) {
+				$_alias = $alias;
+				$select = "SELECT DISTINCT {$alias}.entry_id";
+				$from   = "FROM {$wpdb->prefix}gf_entry_meta {$alias}";
 			} else {
-				$join[]  = "INNER JOIN {$wpdb->prefix}gf_entry_meta {$alias} ON {$_alias}.entry_id = {$alias}.entry_id";
+				$join[] = "INNER JOIN {$wpdb->prefix}gf_entry_meta {$alias} ON {$_alias}.entry_id = {$alias}.entry_id";
 			}
 
 			$value   = $field->get_value_save_entry( GFFormsModel::get_field_value( $field ), $form, null, null, null );
@@ -97,7 +97,7 @@ class GP_Limit_Choices_Field_Group {
 			'select' => $select,
 			'from'   => $from,
 			'join'   => implode( ' ', $join ),
-			'where'  => sprintf( 'WHERE %s', implode( "\nAND ", $where ) )
+			'where'  => sprintf( 'WHERE %s', implode( "\nAND ", $where ) ),
 		);
 
 		$query['where'] .= sprintf( ' AND e.id IN( %s )', implode( "\n", $field_group_query ) );
@@ -115,7 +115,7 @@ class GP_Limit_Choices_Field_Group {
 	public function load_form_script( $form, $is_ajax_enabled ) {
 
 		$func = array( 'GP_Limit_Choices_Field_Group', 'output_script' );
-		if( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', $func ) ) {
+		if ( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', $func ) ) {
 			add_action( 'wp_footer', $func );
 			add_action( 'gform_preview_footer', $func );
 		}
@@ -125,7 +125,7 @@ class GP_Limit_Choices_Field_Group {
 
 	public function add_init_script( $form ) {
 
-		if( ! $this->is_applicable_form( $form ) ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
 			return;
 		}
 
@@ -147,18 +147,20 @@ class GP_Limit_Choices_Field_Group {
 	}
 
 	public function get_target_field_id( $form, $field_ids ) {
-		foreach( $field_ids as $field_id ) {
+		foreach ( $field_ids as $field_id ) {
 			$field = GFAPI::get_field( $form, $field_id );
 			if ( gp_limit_choices()->is_applicable_field( $field ) ) {
 				return $field_id;
 			}
 		}
+
 		return false;
 	}
 
 	public function get_trigger_field_ids( $form, $field_ids ) {
 		$target_field_id = $this->get_target_field_id( $form, $field_ids );
-		return array_values( array_filter( $field_ids, function( $field_id ) use ( $target_field_id ) {
+
+		return array_values( array_filter( $field_ids, function ( $field_id ) use ( $target_field_id ) {
 			return $field_id != $target_field_id;
 		} ) );
 	}
@@ -175,17 +177,20 @@ class GP_Limit_Choices_Field_Group {
 		}
 
 		$entry = GFFormsModel::get_current_lead();
-		if( ! $entry ) {
+		if ( ! $entry ) {
 			wp_send_json_error();
 		}
 
-		$form = gf_apply_filters( array( 'gform_pre_render', $entry['form_id'] ), GFAPI::get_form( $entry['form_id'] ), false, array() );
+		$form  = gf_apply_filters( array(
+			'gform_pre_render',
+			$entry['form_id'],
+		), GFAPI::get_form( $entry['form_id'] ), false, array() );
 		$field = GFFormsModel::get_field( $form, $this->get_target_field_id( $form, $this->_args['field_ids'] ) );
 
-		if( $field->get_input_type() == 'html' ) {
+		if ( $field->get_input_type() == 'html' ) {
 			$content = GWPreviewConfirmation::preview_replace_variables( $field->content, $form );
 		} else {
-			$value = rgpost( 'input_' . $field->id );
+			$value   = rgpost( 'input_' . $field->id );
 			$content = $field->get_field_content( $value, true, $form );
 			$content = str_replace( '{FIELD}', GFCommon::get_field_input( $field, $value, $entry['id'], $form['id'], $form ), $content );
 			$content = gp_limit_choices()->disable_choice( $content, $field );
@@ -199,75 +204,75 @@ class GP_Limit_Choices_Field_Group {
 
 		<script type="text/javascript">
 
-			( function( $ ) {
+			(function ($) {
 
-				window.GPLCFieldGroup = function( args ) {
+				window.GPLCFieldGroup = function (args) {
 
 					var self = this;
 
 					// copy all args to current object: (list expected props)
-					for( prop in args ) {
-						if( args.hasOwnProperty( prop ) )
+					for (prop in args) {
+						if (args.hasOwnProperty(prop))
 							self[prop] = args[prop];
 					}
 
-					self.init = function() {
+					self.init = function () {
 
-						self.$form        = $( '#gform_wrapper_{0}'.format( self.formId ) );
-						self.$targetField = $( '#field_{0}_{1}'.format( self.formId, self.targetFieldId ) );
+						self.$form = $('#gform_wrapper_{0}'.format(self.formId));
+						self.$targetField = $('#field_{0}_{1}'.format(self.formId, self.targetFieldId));
 
-						gform.addAction( 'gform_input_change', function( elem, formId, fieldId ) {
-							if ( $.inArray( parseInt( fieldId ), self.triggerFieldIds ) !== -1 ) {
+						gform.addAction('gform_input_change', function (elem, formId, fieldId) {
+							if ($.inArray(parseInt(fieldId), self.triggerFieldIds) !== -1) {
 								self.refresh();
 							}
-						} );
+						});
 
-						if ( window.gf_form_conditional_logic && window.gf_form_conditional_logic[ self.formId ] ) {
-							$( document ).on( 'gform_post_conditional_logic.gplcfg', function( event, formId, fields, isInit ) {
+						if (window.gf_form_conditional_logic && window.gf_form_conditional_logic[self.formId]) {
+							$(document).on('gform_post_conditional_logic.gplcfg', function (event, formId, fields, isInit) {
 								// GF triggers a "generic" event for the gform_post_conditional_logic after the form has
 								// been displayed. We can identify it by checking for a null fields value.
-								if( fields === null && formId == self.formId ) {
+								if (fields === null && formId == self.formId) {
 									// This function will be bound multiple times on AJAX-enabled forms. Let's account
 									// for that by removing it so there will only be one instance bound at a time.
-									$( document ).off( 'gform_post_conditional_logic.gplcfg' );
+									$(document).off('gform_post_conditional_logic.gplcfg');
 									self.refresh();
 								}
-							} );
+							});
 						} else {
 							self.refresh();
 						}
 
 					};
 
-					self.refresh = function() {
+					self.refresh = function () {
 
-						if( ! self.$targetField.is( ':visible' ) ) {
+						if (!self.$targetField.is(':visible')) {
 							return;
 						}
 
 						var data = {
 							action: 'gplcfg_refresh_field',
-							hash:   self.hash
+							hash: self.hash
 						};
 
-						self.$form.find( 'input, select, textarea' ).each( function() {
-							if ( this.type === 'radio' ) {
-								if ( this.checked ) {
-									data[ $( this ).attr( 'name' ) ] = $( this ).val();
+						self.$form.find('input, select, textarea').each(function () {
+							if (this.type === 'radio') {
+								if (this.checked) {
+									data[$(this).attr('name')] = $(this).val();
 								}
 							} else {
-								data[ $( this ).attr( 'name' ) ] = $( this ).val();
+								data[$(this).attr('name')] = $(this).val();
 							}
-						} );
+						});
 
 						// Prevent AJAX-enabled forms from intercepting our AJAX request.
 						delete data['gform_ajax'];
 
-						$.post( self.ajaxUrl, data, function( response ) {
-							if( response.success ) {
-								self.$targetField.html( response.data );
+						$.post(self.ajaxUrl, data, function (response) {
+							if (response.success) {
+								self.$targetField.html(response.data);
 							}
-						} );
+						});
 
 					};
 
@@ -275,7 +280,7 @@ class GP_Limit_Choices_Field_Group {
 
 				}
 
-			} )( jQuery );
+			})(jQuery);
 
 		</script>
 
@@ -287,6 +292,6 @@ class GP_Limit_Choices_Field_Group {
 # Configuration
 
 new GP_Limit_Choices_Field_Group( array(
-    'form_id'   => 123,
-    'field_ids' => array( 3, 4 )
+	'form_id'   => 123,
+	'field_ids' => array( 3, 4 ),
 ) );
