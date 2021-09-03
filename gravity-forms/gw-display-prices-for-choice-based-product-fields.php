@@ -7,7 +7,7 @@
  *
  * Source: https://www.gravityhelp.com/documentation/article/gform_field_choice_markup_pre_render/#2-include-price-for-product-fields
  *
- * Plugin Name:  Gravity Wiz // Gravity Forms // Display Price for Drop Down and Radio Button Product Fields
+ * Plugin Name:  Gravity Forms — Display Price for Drop Down & Radio Button Products
  * Plugin URI:   https://gravitywiz.com/
  * Description:  Appends the price of a product to the Labels of a Dropdown and Radio Button Product Fields.
  * Author:       Gravity Wiz
