@@ -1,13 +1,13 @@
 <?php
 /**
- * Gravity Perks // GP Nested Forms // Custom Parent Form Merge Tags
+ * Gravity Perks // Nested Forms // Custom Parent Form Merge Tags
  * https://gravitywiz.com/documentation/gravity-forms-nested-form/
  * 
  * Adds support to pass Parent form data to Child form on submission.
  * {parent_form}, {parent_field}, {parent_entry}
  * Example: {parent_form:title} will pass the Parent Form Title to the Child Form.
  *
- * Plugin Name:  GP Nested Forms — Custom Parent Form Merge Tag
+ * Plugin Name:  GP Nested Forms — Custom Parent Form Merge Tags
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-nested-form/
  * Description:  Adds support to pass Parent form data to Child form on submission.
  * Author:       Gravity Wiz
