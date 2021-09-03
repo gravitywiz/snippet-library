@@ -38,7 +38,7 @@ class GPI_Weighted_Inventory {
 	public function init() {
 
 		add_filter( 'gpi_claimed_inventory', array( $this, 'apply_weights_to_claimed_inventory' ), 10, 2 );
-		add_filter( 'gpi_requested_quantity_by_field', array( $this, 'apply_weights_requested_quantity' ), 10, 3 );
+		add_filter( 'gpi_requested_quantity', array( $this, 'apply_weights_requested_quantity' ), 10, 3 );
 		add_filter( 'gpi_is_in_stock', array( $this, 'is_in_stock' ), 10, 3 );
 
 	}
