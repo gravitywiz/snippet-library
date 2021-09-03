@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // GP Populate Anything // Filter Results on Relative Dates
+ * Gravity Perks // Populate Anything // Filter Results on Relative Dates
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/#how-can-i-filter-posts-those-published-in-the-last-month
  * 
  * It adds merge tags that can be used as Custom Values in this format: {INTEGER UNIT ago}, to filter the results on relative dates.
