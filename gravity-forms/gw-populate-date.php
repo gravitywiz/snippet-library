@@ -308,6 +308,15 @@ class GW_Populate_Date {
 							self.populateDate( self.sourceFieldId, self.targetFieldId, self.getModifier(), self.format );
 						} );
 
+						// Listen for GPPA's new `gppa_updated_batch_fields`
+						$( document ).on( 'gppa_updated_batch_fields', function ( e, formId, updatedFieldIDs ) {
+							for ( var i = 0, max = updatedFieldIDs.length; i < max; i ++ ) {
+								if ( self.sourceFieldId === parseInt( updatedFieldIDs[i] ) ) {
+									self.populateDate( self.sourceFieldId, self.targetFieldId, self.getModifier(), self.format );
+								}
+							}
+						} );
+
 						if( typeof self.modifier == 'object' ) {
 							self.$modifierInputs = self.getInputs( self.modifier.inputId );
 							self.$modifierInputs.change( function() {
