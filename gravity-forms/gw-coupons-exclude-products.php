@@ -104,7 +104,7 @@ class GW_Coupons_Exclude_Products {
 						}
 
 						return discount;
-					} );
+					}, 15 );
 
 				}
 
