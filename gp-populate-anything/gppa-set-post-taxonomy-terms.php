@@ -3,9 +3,10 @@
  * Gravity Perks // Populate Anything // Set Post Taxonomy Terms
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  * 
- * When the Term ID is set as the value of a dynamically populated choice-based, 
- * this snippet allows you update the Post that is created with the name of the Taxonomy instead the Term ID. 
- * This applies to forms that have Post Fields.
+ * When the Term ID is set as the value of a dynamically populated choice-based, this snippet allows you 
+ * update the post that is created with the name of the taxonomy instead the term ID. 
+ *
+ * Note: This only applies to forms that have Post Fields.
  */
 add_filter( 'gform_after_create_post', function( $post_id, $entry, $form ) {
 
