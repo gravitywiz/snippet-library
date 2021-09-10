@@ -13,7 +13,7 @@
 * 3. Update the target field ID within the snippet.
 */
 gform.addFilter( 'gppc_copied_value', function( value, $elem, data ) {
-  // Update "1" to the ID of the field being copied to.
+	// Update "1" to the ID of the field being copied to.
 	if( data.target == 1 && value ) {
 		value = value.split( '|' )[0];
 	}
