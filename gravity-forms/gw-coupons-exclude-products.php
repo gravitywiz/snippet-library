@@ -6,7 +6,7 @@
  *
  * Requires Gravity Forms Coupons v1.1
  *
- * @version 1.2
+ * @version 1.2.1
  * @author  David Smith <david@gravitywiz.com>
  * @license GPL-2.0+
  * @link    http://gravitywiz.com/...
