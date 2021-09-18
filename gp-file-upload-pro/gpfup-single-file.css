@@ -26,11 +26,15 @@
 .gpfup-single-file .gpfup__preview {
 	margin-right: 0;
 	width: 100% !important;
+	background-color: rgba( 0, 0, 0, 0.75 );
+	border-radius: 4px;
 }
 .gpfup-single-file .gpfup__preview img {
 	width: auto !important;
 	height: auto !important;
 	max-width: 100%;
+	margin: 0 auto;
+	display: block;
 }
 .gpfup-single-file .gpfup:not(.gpfup--has-error) .gpfup__file-info {
 	position: absolute;
@@ -56,4 +60,13 @@
 }
 .gpfup-single-file .gpfup--has-error .gpfup__preview {
 	display: none;
+}
+
+.gpfup-single-file .gpfup__file-actions {
+    position: absolute;
+    display: block;
+    top: 1rem;
+    right: 1rem;
+    background: white;
+    border-radius: 50%;
 }
