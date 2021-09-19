@@ -57,7 +57,7 @@ class GF_Custom_JS {
 			add_filter( 'gform_noconflict_styles', array( $this, 'noconflict_styles' ) );
 		}
 
-		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
+		add_filter( 'gform_register_init_scripts', array( $this, 'register_init_script' ), 99 );
 
 	}
 
@@ -127,51 +127,25 @@ class GF_Custom_JS {
 		return $form;
 	}
 
-	public function load_form_script( $form, $is_ajax_enabled ) {
+	public function register_init_script( $form ) {
 
-		if( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
-			$this->queue_script( $form['id'], $this->get_custom_js( $form ) );
-			add_action( 'wp_footer', array( $this, 'output_script' ), 99 );
-			add_action( 'gform_preview_footer', array( $this, 'output_script' ), 99 );
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return;
 		}
-
-		return $form;
-	}
-
-	public function queue_script( $form_id, $script ) {
-		$this->scripts[ $form_id ] = $script;
-	}
-
-	public function get_script_queue() {
-		return $this->scripts;
-	}
-
-	public function output_script() {
 
 		$allowed_entities = array(
 			'&#039;' => '\'',
 			'&quot;' => '"',
 		);
 
-		?>
+		$script = html_entity_decode( str_replace( array_keys( $allowed_entities ), $allowed_entities, $this->get_custom_js( $form ) ) );
+		$script = str_replace( 'GFFORMID', $form['id'], $script );
+		$script = '( function( $ ) { ' . $script . ' } )( jQuery );';
 
-		<script type="text/javascript">
+		$slug = "gf_custom_js_{$form['id']}";
 
-			( function( $ ) {
+		GFFormDisplay::add_init_script( $form['id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
 
-				$( document ).bind( 'gform_post_render', function() {
-
-					<?php foreach( $this->get_script_queue() as $script ):
-					echo html_entity_decode( str_replace( array_keys( $allowed_entities ), $allowed_entities, $script ) );
-				endforeach; ?>
-
-				} );
-
-			} )( jQuery );
-
-		</script>
-
-		<?php
 	}
 
 	public function get_custom_js( $form ) {
