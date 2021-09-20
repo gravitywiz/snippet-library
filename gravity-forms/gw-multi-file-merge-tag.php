@@ -1,18 +1,21 @@
 <?php
 /**
-* Gravity Wiz // Multi-File Merge Tag for Post Content Templates
-*
-* Enhance the merge tag for multi-file upload fields by adding support for outputting markup that corresponds to the
-* uploaded file. Example: image files will be wrapped in an <img> tag. Out of the box, this snippet only supports
-* images and is limited to the 'jpg', 'png', and 'gif'.
-*
-* The default merge tag for the multi-file upload field will output the URL for each of the files.
-*
-* @version   1.6
-* @author    David Smith <david@gravitywiz.com>
-* @license   GPL-2.0+
-* @link      https://gravitywiz.com/customizing-multi-file-merge-tag/
-*/
+ * Gravity Wiz // Gravity Forms // Multi-File Merge Tag for Post Content Templates
+ * https://gravitywiz.com/customizing-multi-file-merge-tag/
+ * 
+ * Enhance the merge tag for multi-file upload fields by adding support for outputting markup that corresponds to the
+ * uploaded file. Example: image files will be wrapped in an <img> tag. Out of the box, this snippet only supports
+ * images and is limited to the 'jpg', 'png', and 'gif'.
+ *
+ * The default merge tag for the multi-file upload field will output the URL for each of the files.
+ *
+ * Plugin Name:  GF Multi-file Merge Tag Markup
+ * Plugin URI:   https://gravitywiz.com/customizing-multi-file-merge-tag/
+ * Description:  Enhance the merge tag for multi-file upload fields by adding support for outputting markup that corresponds to the uploaded file.
+ * Author:       Gravity Wiz
+ * Version:      1.6
+ * Author URI:   https://gravitywiz.com
+ */
 class GW_Multi_File_Merge_Tag {
 
 	private static $instance = null;
