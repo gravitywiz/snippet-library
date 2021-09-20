@@ -23,37 +23,37 @@ add_filter( 'gform_pre_render', function ( $form ) {
 
 function gw_first_error_focus_script() {
 	?>
-    <script type="text/javascript">
-        if (window['jQuery']) {
-            (function ($) {
-                $(document).on('gform_post_render', function () {
-                    // AJAX-enabled forms will call gform_post_render again when rendering new pages or validation errors.
-                    // We need to reset our flag so that we can still do our focus action when the form conditional logic
-                    // has been re-evaluated.
-                    window['gwfef'] = false;
-                    gwFirstErrorFocus();
-                });
-                $(document).on('gform_post_conditional_logic', function (event, formId, fields, isInit) {
-                    if (!window['gwfef'] && fields === null && isInit === true) {
-                        gwFirstErrorFocus();
-                        window['gwfef'] = true;
-                    }
-                });
+	<script type="text/javascript">
+		if (window['jQuery']) {
+			(function ($) {
+				$(document).on('gform_post_render', function () {
+					// AJAX-enabled forms will call gform_post_render again when rendering new pages or validation errors.
+					// We need to reset our flag so that we can still do our focus action when the form conditional logic
+					// has been re-evaluated.
+					window['gwfef'] = false;
+					gwFirstErrorFocus();
+				});
+				$(document).on('gform_post_conditional_logic', function (event, formId, fields, isInit) {
+					if (!window['gwfef'] && fields === null && isInit === true) {
+						gwFirstErrorFocus();
+						window['gwfef'] = true;
+					}
+				});
 
-                function gwFirstErrorFocus() {
-                    var $firstError = $('.gfield.gfield_error:first');
-                    if ($firstError.length > 0) {
-                        $firstError.find('input, select, textarea').eq(0).focus();
+				function gwFirstErrorFocus() {
+					var $firstError = $('.gfield.gfield_error:first');
+					if ($firstError.length > 0) {
+						$firstError.find('input, select, textarea').eq(0).focus();
 
-                        // Without setTimeout or requestAnimationFrame, window.scroll/window.scrollTo are not taking
-                        // effect on iOS and Android.
-                        requestAnimationFrame(function () {
-                            window.scrollTo(0, $firstError.offset().top);
-                        });
-                    }
-                }
-            })(jQuery);
-        }
-    </script>
+						// Without setTimeout or requestAnimationFrame, window.scroll/window.scrollTo are not taking
+						// effect on iOS and Android.
+						requestAnimationFrame(function () {
+							window.scrollTo(0, $firstError.offset().top);
+						});
+					}
+				}
+			})(jQuery);
+		}
+	</script>
 	<?php
 }
