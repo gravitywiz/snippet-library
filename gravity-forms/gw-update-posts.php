@@ -4,7 +4,7 @@
  *
  * Update existing post title, content, author and custom fields with values from Gravity Forms.
  *
- * @version 0.4.1
+ * @version 0.4.2
  * @author  Scott Buchmann <scott@gravitywiz.com>
  * @license GPL-2.0+
  * @link    http://gravitywiz.com
@@ -48,6 +48,15 @@ class GW_Update_Posts {
 		if ( ! empty( $this->_args['form_id'] ) ) {
 			add_action( "gform_after_submission_{$this->_args['form_id']}", array( $this, 'update_post_by_entry' ), 10, 2 );
 			add_filter( 'gppa_process_template', array( $this, 'return_ids_instead_of_names' ), 9, 8 );
+			// Update posts after Gravity View updates an entry
+			add_action( 'gravityview/edit_entry/after_update', array( $this, 'gv_entry_after_update' ), 10, 4 );
+		}
+	}
+
+	public function gv_entry_after_update( $form, $entry_id, $gv_object, $gv_data ) {
+		if ( $form['id'] == $this->_args['form_id'] ) {
+			$entry = GFAPI::get_entry( $entry_id );
+			$this->update_post_by_entry( $entry, $form );
 		}
 	}
 
