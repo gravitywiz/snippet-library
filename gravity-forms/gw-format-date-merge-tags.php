@@ -1,7 +1,16 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Format Date Merge Tags
- * http://gravitywiz.com/
+ * https://gravitywiz.com/formatting-dates-captured-in-date-fields/
+ * 
+ * Adds merge tag modifiers for formatting date merge tags using PHP Date Formats.
+ *
+ * Plugin Name:  Gravity Forms — Format Date Merge Tags
+ * Plugin URI:   https://gravitywiz.com/formatting-dates-captured-in-date-fields/
+ * Description:  Adds merge tag modifiers for formatting date merge tags using PHP Date Formats.
+ * Author:       Gravity Wiz
+ * Version:      0.1
+ * Author URI:   https://gravitywiz.com
  */
 add_filter( 'gform_pre_replace_merge_tags', function( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ) {
 
