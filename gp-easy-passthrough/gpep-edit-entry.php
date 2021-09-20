@@ -20,7 +20,8 @@ class GPEP_Edit_Entry {
 
 		add_filter( "gform_entry_id_pre_save_lead_{$this->form_id}", array( $this, 'update_entry_id' ), 10, 2 );
 		add_filter( "gpls_rule_groups_{$this->form_id}", array( $this, 'bypass_limit_submissions' ), 10, 2 );
-
+		// Enable edit view in GP Inventory
+		add_filter( "gpi_is_edit_view_{$this->form_id}", '__return_true' );
 	}
 
 	public function update_entry_id( $entry_id, $form ) {
