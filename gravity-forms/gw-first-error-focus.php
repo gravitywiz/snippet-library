@@ -43,12 +43,11 @@ function gw_first_error_focus_script() {
 				function gwFirstErrorFocus() {
 					var $firstError = $('.gfield.gfield_error:first');
 					if ($firstError.length > 0) {
-						$firstError.find('input, select, textarea').eq(0).focus();
-
 						// Without setTimeout or requestAnimationFrame, window.scroll/window.scrollTo are not taking
 						// effect on iOS and Android.
 						requestAnimationFrame(function () {
 							window.scrollTo(0, $firstError.offset().top);
+							$firstError.find('input, select, textarea').eq(0).focus();
 						});
 					}
 				}
