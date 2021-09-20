@@ -114,7 +114,11 @@ class GW_Multi_File_Merge_Tag {
 
 				if ( ! rgblank( $index ) ) {
 
-					list( $offset, $length ) = $index;
+					if ( ! is_array( $index ) ) {
+						$index = array( $index );
+					}
+
+					list( $offset, $length ) = array_pad( $index, 2, null );
 
 					if ( $offset === null ) {
 						$offset = 0;
