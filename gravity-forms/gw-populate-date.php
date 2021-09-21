@@ -51,7 +51,8 @@ class GW_Populate_Date {
 			add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ) );
 			add_filter( 'gform_enqueue_scripts', array( $this, 'enqueue_form_scripts' ) );
 		} else {
-			add_filter( 'gform_pre_render', array( $this, 'populate_date_on_pre_render' ) );
+			// Populate dates *before* Populate Anything so GPPA can use them in live merge tags and it's own pre render population.
+			add_filter( 'gform_pre_render', array( $this, 'populate_date_on_pre_render' ), 8 );
 		}
 
 		if ( $this->_args['override_on_submission'] ) {
