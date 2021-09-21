@@ -4,7 +4,7 @@
  *
  * Edit entry ID specified in field with current form submission.
  *
- * @version   1.2
+ * @version   1.2.1
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      https://gravitywiz.com/edit-gravity-forms-entries-on-the-front-end/
