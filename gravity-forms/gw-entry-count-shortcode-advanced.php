@@ -6,13 +6,15 @@
 add_filter( 'gform_shortcode_entry_count', function( $output, $atts ) {
 
 	$atts = shortcode_atts( array(
-		'id'           => false,
-		'field_id'     => false,
-		'value'        => false,
-		'format'       => false,
-		'start_date'   => false,
-		'end_date'     => false,
-		'current_user' => false,
+		'id'                   => false,
+		'field_id'             => false,
+		'value'                => false,
+		'format'               => false,
+		'start_date'           => false,
+		'end_date'             => false,
+		'current_user'         => false,
+		'display_min'          => 0,
+		'display_min_alt_text' => '',
 	), $atts );
 
 	$value = $atts['value'];
@@ -62,7 +64,9 @@ add_filter( 'gform_shortcode_entry_count', function( $output, $atts ) {
 
 	$output = $total_count;
 
-	if ( $atts['format'] ) {
+	if ( $atts['display_min'] > 0 && $output < $atts['display_min'] ) {
+		$output = $atts['display_min_alt_text'];
+	} elseif ( $atts['format'] ) {
 		$format = $atts['format'] === 'decimal' ? '.' : ',';
 		$output = number_format( $output, 0, false, $format );
 	}
