@@ -4,7 +4,7 @@
  *
  * Provides the ability to populate a Date field with a modified date based on the current date or a user-submitted date.
  *
- * @version   2.4
+ * @version   2.5
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/populate-dates-gravity-form-fields/
