@@ -385,6 +385,10 @@ class GW_Populate_Date {
 					 * currency text to raw numbers but they are still in numeric format of the specified currency
 					 */
 					self.getCleanNumber = function( value, fieldId, formId ) {
+                        if (typeof value === 'undefined') {
+                            return value;
+                        }
+
 						var numberFormat = gf_get_field_number_format( fieldId, formId );
 						var decimalSep   = gformGetDecimalSeparator( numberFormat ? numberFormat : 'currency' );
 						if ( decimalSep === ',' ) {
