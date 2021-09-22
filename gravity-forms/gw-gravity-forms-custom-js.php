@@ -51,7 +51,11 @@ class GF_Custom_JS {
 
 		if ( current_user_can( 'administrator' ) ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_editor_script' ) );
-			add_filter( 'gform_form_settings', array( $this, 'add_custom_js_setting' ), 10, 2 );
+			if ( version_compare( GFForms::$version, '2.5', '>=' ) ) {
+				add_filter( 'gform_form_settings_fields', array( $this, 'add_custom_js_setting' ), 10, 2 );
+			} else {
+				add_filter( 'gform_form_settings', array( $this, 'add_legacy_custom_js_setting' ), 10, 2 );
+			}
 			add_filter( 'gform_pre_form_settings_save', array( $this, 'save_custom_js_setting' ), 10, 2 );
 			add_filter( 'gform_noconflict_scripts', array( $this, 'noconflict_scripts' ) );
 			add_filter( 'gform_noconflict_styles', array( $this, 'noconflict_styles' ) );
@@ -89,7 +93,35 @@ class GF_Custom_JS {
 		return $scripts;
 	}
 
-	public function add_custom_js_setting( $settings, $form ) {
+	public function add_custom_js_setting( $form_settings, $form ) {
+		$form_settings['Custom Code'] = array(
+			'title'  => esc_html__( 'Custom Code' ),
+			'fields' => array(
+				array(
+					'name'     => 'custom_js',
+					'type'     => 'editor_js',
+					'label'    => __( 'Custom Javascript' ),
+					'tooltip'  => gform_tooltip( 'gf_custom_js', '', true ),
+					'callback' => function ( $setting ) use ( $form ) {
+						return $this->render_custom_js_setting( $form );
+					},
+				),
+			),
+		);
+		return $form_settings;
+	}
+
+	/**
+	 * @param $setting
+	 *
+	 * @return mixed
+	 */
+	public function render_custom_js_setting( $form ) {
+		$settings = $this->add_legacy_custom_js_setting( array(), $form );
+		return $settings[ __( 'Custom Javascript' ) ]['custom_js'];
+	}
+
+	public function add_legacy_custom_js_setting( $settings, $form ) {
 
 		// GF 2.5 may fire `gform_form_settings` before `save_custom_js_setting`
 		$custom_js = rgar( $form, 'customJS' );
@@ -101,7 +133,7 @@ class GF_Custom_JS {
 			'custom_js' => sprintf(
 				'<tr id="custom_js_setting" class="child_setting_row">
 					<td colspan="2">
-						<p style="margin-top:-1rem;">%s</p>
+						<p>%s<br>%s</p>
 						<textarea id="custom_js" name="custom_js" spellcheck="false"
 							style="width:100%%;height:14rem;">%s</textarea>
 					</td>
@@ -115,6 +147,7 @@ class GF_Custom_JS {
 					.CodeMirror-wrap { border: 1px solid #e1e1e1; }
 				</style>',
 				__( 'Include any custom Javascript that you would like to output wherever this form is rendered.' ),
+				__( 'Use <code>GFFORMID</code> to automatically set the current form ID when the code is rendered.' ),
 				$custom_js
 			),
 		);
