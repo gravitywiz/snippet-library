@@ -2,15 +2,6 @@
 /**
  * Gravity Perks // GP Limit Submissions // Apply Limit Feed to Group of Forms
  * https://gravitywiz.com/documentation/gravity-forms-limit-submissions/
- *
- * Apply the same Limit Feed to a group of forms, but each form's limit is applied per form.
- *
- * Plugin Name:  GP Limit Submissions  — Apply Limit Feed to Group of Forms
- * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-limit-submissions/
- * Description:  Apply the same Limit Feed to a group of forms, but each form's limit is applied per form.
- * Author:       Gravity Wiz
- * Version:      0.1
- * Author URI:   https://gravitywiz.com/
  */
 add_filter( 'gpls_rule_groups', function( $rule_groups, $form_id ) {
 

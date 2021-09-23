@@ -2,15 +2,6 @@
 /**
  * Gravity Perks // GP Limit Submissions // Apply Limit Feeds Globally
  * https://gravitywiz.com/documentation/gravity-forms-limit-submissions/
- * 
- * Apply the limit submission feeds on one form to all the other forms on the website.
- *
- * Plugin Name:  GP Limit Submissions — Apply Limit Feeds Globally
- * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-limit-submissions/
- * Description:  Apply the limit submission feeds on one form to all the other forms on the website.
- * Author:       Gravity Wiz
- * Version:      0.1
- * Author URI:   https://gravitywiz.com/
  */
 add_filter( 'gpls_rule_groups', function( $rule_groups, $form_id ) {
 
