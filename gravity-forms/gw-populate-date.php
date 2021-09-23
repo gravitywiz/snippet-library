@@ -46,7 +46,9 @@ class GW_Populate_Date {
 		}
 
 		if ( $this->_args['source_field_id'] ) {
-			add_action( 'gform_pre_submission', array( $this, 'populate_date_on_pre_submission' ) );
+			if ( $this->_args['override_on_submission'] ) {
+				add_action( 'gform_pre_submission', array( $this, 'populate_date_on_pre_submission' ) );
+			}
 			add_filter( 'gform_pre_render', array( $this, 'load_form_script' ) );
 			add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ) );
 			add_filter( 'gform_enqueue_scripts', array( $this, 'enqueue_form_scripts' ) );
