@@ -9,7 +9,7 @@
  * Plugin URI:  http://gravitywiz.com/documentation/gp-limit-choices/
  * Description: Specify a group of fields that should create a unique choice to be limited.
  * Author:      Gravity Wiz
- * Version:     1.6
+ * Version:     1.6.1
  * Author URI:  http://gravitywiz.com
  */
 class GP_Limit_Choices_Field_Group {
@@ -206,6 +206,38 @@ class GP_Limit_Choices_Field_Group {
 
 			(function ($) {
 
+				// Handle conditional logic globally
+				var GPLCFieldGroupConditionalLogic = [];
+				$( document ).off( 'gform_post_conditional_logic.gplcfg' );
+				$( document ).on( 'gform_post_conditional_logic.gplcfg', function ( e, formId, fieldIds, isInit ) {
+					if ( fieldIds ) {
+						// We only need to call refresh once on _any_ group that has the target field or is affected
+						// by the trigger field that was just shown/hidden.
+						var groupsToRefresh = [];
+						for ( var i = 0, max = GPLCFieldGroupConditionalLogic.length; i < max; i ++ ) {
+							var group       = GPLCFieldGroupConditionalLogic[i];
+							var formFieldId = "{0}_{1}".format( group.formId, group.targetFieldId );
+
+							// Skip inapplicable and hidden target fields
+							if ( formId != group.formId || groupsToRefresh[formFieldId] || ! group.$targetField.is( ':visible' ) ) {
+								continue;
+							}
+
+							for ( var j = 0, max = fieldIds.length; j < max; j ++ ) {
+								var fieldId = parseInt( fieldIds[j] );
+								if ( fieldId === group.targetFieldId || $.inArray( fieldId, group.triggerFieldIds ) !== - 1 ) {
+									groupsToRefresh[formFieldId] = group;
+									break;
+								}
+							}
+
+						}
+						for ( var i in groupsToRefresh ) {
+							groupsToRefresh[i].refresh();
+						}
+					}
+				} );
+
 				window.GPLCFieldGroup = function (args) {
 
 					var self = this;
@@ -218,26 +250,17 @@ class GP_Limit_Choices_Field_Group {
 
 					self.init = function () {
 
-						self.$form = $('#gform_wrapper_{0}'.format(self.formId));
-						self.$targetField = $('#field_{0}_{1}'.format(self.formId, self.targetFieldId));
+						self.$form = $( '#gform_wrapper_{0}'.format( self.formId ) );
+						self.$targetField = $( '#field_{0}_{1}'.format( self.formId, self.targetFieldId ) );
 
-						gform.addAction('gform_input_change', function (elem, formId, fieldId) {
-							if ($.inArray(parseInt(fieldId), self.triggerFieldIds) !== -1) {
+						gform.addAction( 'gform_input_change', function ( elem, formId, fieldId ) {
+							if ( $.inArray( parseInt( fieldId ), self.triggerFieldIds ) !== - 1 ) {
 								self.refresh();
 							}
-						});
+						} );
 
-						if (window.gf_form_conditional_logic && window.gf_form_conditional_logic[self.formId]) {
-							$(document).on('gform_post_conditional_logic.gplcfg', function (event, formId, fields, isInit) {
-								// GF triggers a "generic" event for the gform_post_conditional_logic after the form has
-								// been displayed. We can identify it by checking for a null fields value.
-								if (fields === null && formId == self.formId) {
-									// This function will be bound multiple times on AJAX-enabled forms. Let's account
-									// for that by removing it so there will only be one instance bound at a time.
-									$(document).off('gform_post_conditional_logic.gplcfg');
-									self.refresh();
-								}
-							});
+						if ( window.gf_form_conditional_logic && window.gf_form_conditional_logic[self.formId] ) {
+							GPLCFieldGroupConditionalLogic.push(self);
 						} else {
 							self.refresh();
 						}
