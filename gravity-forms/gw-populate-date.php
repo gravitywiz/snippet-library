@@ -46,9 +46,6 @@ class GW_Populate_Date {
 		}
 
 		if ( $this->_args['source_field_id'] ) {
-			if ( $this->_args['override_on_submission'] ) {
-				add_action( 'gform_pre_submission', array( $this, 'populate_date_on_pre_submission' ) );
-			}
 			add_filter( 'gform_pre_render', array( $this, 'load_form_script' ) );
 			add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ) );
 			add_filter( 'gform_enqueue_scripts', array( $this, 'enqueue_form_scripts' ) );
@@ -58,7 +55,7 @@ class GW_Populate_Date {
 		}
 
 		if ( $this->_args['override_on_submission'] ) {
-			add_action( 'gform_pre_submission', array( $this, 'override_on_submission' ) );
+			add_action( 'gform_pre_submission', array( $this, 'populate_date_on_pre_submission' ) );
         }
 
 	}
@@ -114,8 +111,13 @@ class GW_Populate_Date {
 		foreach ( $form['fields'] as &$field ) {
 			if ( $field['id'] == $this->_args['target_field_id'] ) {
 
-				$timestamp = $this->get_source_timestamp( GFFormsModel::get_field( $form, $this->_args['source_field_id'] ) );
-				$value     = $this->get_modified_date( $field, $timestamp );
+				$timestamp = false;
+
+				if ( $this->_args['source_field_id'] ) {
+					$timestamp = $this->get_source_timestamp( GFFormsModel::get_field( $form, $this->_args['source_field_id'] ) );
+				}
+
+				$value = $this->get_modified_date( $field, $timestamp );
 
 				if ( $value ) {
 					$_POST[ "input_{$field['id']}" ] = $value;
@@ -124,20 +126,6 @@ class GW_Populate_Date {
 		}
 
 	}
-
-	public function override_on_submission( $form ) {
-
-		if ( ! $this->is_applicable_form( $form ) ) {
-			return $form;
-		}
-
-		foreach ( $form['fields'] as $field ) {
-			if ( $field['id'] == $this->_args['target_field_id'] ) {
-				$_POST[ "input_{$field['id']}" ] = $this->get_modified_date( $field );
-			}
-		}
-
-    }
 
 	public function get_source_timestamp( $field ) {
 
