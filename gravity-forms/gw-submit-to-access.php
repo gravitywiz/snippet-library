@@ -217,7 +217,12 @@ class GW_Submit_Access {
 
 	public function get_requires_submission_message( $post_id ) {
 
-		$requires_submission_message = get_post_meta( $post_id, 'gwsa_requires_submission_message', true );
+		$requires_submission_message = get_post_meta( $post_id, 'gwsa_requires_submission_message', true );		
+		
+		if ( ! $requires_submission_message ) {
+			$requires_submission_message = $this->_args['requires_submission_message'];
+		}
+		
 		$contains_form_merge_tag     = strpos( $requires_submission_message, '{form}' ) !== false;
 
 		if ( ! $requires_submission_message || $contains_form_merge_tag ) {
@@ -246,10 +251,6 @@ class GW_Submit_Access {
 					$requires_submission_message = str_replace( $search, $replace, $requires_submission_message );
 				}
 			}
-		}
-
-		if ( ! $requires_submission_message ) {
-			$requires_submission_message = $this->_args['requires_submission_message'];
 		}
 
 		return do_shortcode( $requires_submission_message );
