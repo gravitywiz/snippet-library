@@ -217,39 +217,37 @@ class GW_Submit_Access {
 
 	public function get_requires_submission_message( $post_id ) {
 
-		$requires_submission_message = get_post_meta( $post_id, 'gwsa_requires_submission_message', true );		
-		
+		$requires_submission_message = get_post_meta( $post_id, 'gwsa_requires_submission_message', true );
+
 		if ( ! $requires_submission_message ) {
 			$requires_submission_message = $this->_args['requires_submission_message'];
 		}
 		
 		$contains_form_merge_tag     = strpos( $requires_submission_message, '{form}' ) !== false;
 
-		if ( ! $requires_submission_message || $contains_form_merge_tag ) {
+		$form_ids = $this->get_form_ids( $post_id );
 
-			$form_ids = $this->get_form_ids( $post_id );
+		if ( ! empty( $form_ids ) ) {
 
-			if ( ! empty( $form_ids ) ) {
+			ob_start();
+			$form = GFAPI::get_form( $form_ids[0] );
+			require_once( GFCommon::get_base_path() . '/form_display.php' );
+			GFFormDisplay::print_form_scripts( $form, true );
+			gravity_form( $form_ids[0], false, false, false, array(), $this->_args['bypass_cache'] );
+			$form_markup                 = ob_get_clean();
 
-				ob_start();
-				$form = GFAPI::get_form( $form_ids[0] );
-				require_once( GFCommon::get_base_path() . '/form_display.php' );
-				GFFormDisplay::print_form_scripts( $form, true );
-				gravity_form( $form_ids[0], false, false, false, array(), $this->_args['bypass_cache'] );
-				$form_markup                 = ob_get_clean();
-				$requires_submission_message = $contains_form_merge_tag ? str_replace( '{form}', $form_markup, $requires_submission_message ) : $form_markup;
+			$requires_submission_message = $contains_form_merge_tag ? str_replace( '{form}', $form_markup, $requires_submission_message ) : $requires_submission_message . $form_markup;
 
-				// Replace form's action URL.
-				if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-					$search  = remove_query_arg( 'gf_token' );
-					$replace = get_permalink( rgpost( 'post' ) );
-					// get_permalink() defaults to whatever protocol the site url is configured for; we need to be sure
-					// if the form is being loaded on an https page, that our action url is also https.
-					if ( is_ssl() ) {
-						$replace = str_replace( 'http://', 'https://', $replace );
-					}
-					$requires_submission_message = str_replace( $search, $replace, $requires_submission_message );
+			// Replace form's action URL.
+			if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+				$search  = remove_query_arg( 'gf_token' );
+				$replace = get_permalink( rgpost( 'post' ) );
+				// get_permalink() defaults to whatever protocol the site url is configured for; we need to be sure
+				// if the form is being loaded on an https page, that our action url is also https.
+				if ( is_ssl() ) {
+					$replace = str_replace( 'http://', 'https://', $replace );
 				}
+				$requires_submission_message = str_replace( $search, $replace, $requires_submission_message );
 			}
 		}
 
