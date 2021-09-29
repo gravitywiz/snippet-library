@@ -223,7 +223,7 @@ class GP_Limit_Choices_Field_Group {
 								continue;
 							}
 
-							for ( var j = 0, max = fieldIds.length; j < max; j ++ ) {
+							for ( var j = 0, maxJ = fieldIds.length; j < maxJ; j ++ ) {
 								var fieldId = parseInt( fieldIds[j] );
 								if ( fieldId === group.targetFieldId || $.inArray( fieldId, group.triggerFieldIds ) !== - 1 ) {
 									groupsToRefresh[formFieldId] = group;
