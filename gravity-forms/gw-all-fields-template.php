@@ -8,7 +8,7 @@
  * Plugin URI:   https://gravitywiz.com/gravity-forms-all-fields-template/
  * Description:  Modify the {all_fields} merge tag output via a template file.
  * Author:       Gravity Wiz
- * Version:      0.9.11
+ * Version:      0.9.12
  * Author URI:   http://gravitywiz.com
  *
  * Usage:
@@ -597,10 +597,10 @@ class GW_All_Fields_Template {
 
 		$template_dir = $this->get_theme_template_dir_name();
 
-		$file_paths = array(
+		$file_paths = apply_filters( 'gwaft_template_paths', array(
 			1  => trailingslashit( get_stylesheet_directory() ) . $template_dir,
 			10 => trailingslashit( get_template_directory() ) . $template_dir,
-		);
+		) );
 
 		// sort the file paths based on priority
 		ksort( $file_paths, SORT_NUMERIC );
