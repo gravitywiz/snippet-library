@@ -31,6 +31,7 @@ class GW_Multi_File_Merge_Tag {
 	private function __construct() {
 		add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_merge_tag' ), 10, 7 );
 		add_filter( 'gform_advancedpostcreation_post', array( $this, 'modify_apc_post_content' ), 10, 4 );
+		add_filter( 'gform_merge_tag_filter', array( $this, 'process_all_fields_merge_tag' ), 10, 6 );
 	}
 
 	public static function get_instance() {
@@ -81,6 +82,23 @@ class GW_Multi_File_Merge_Tag {
 			$this->_settings[ $args['form_id'] ] = $args;
 		}
 
+	}
+
+	public function process_all_fields_merge_tag( $field_value, $merge_tag, $options, $field, $field_label, $format ) {
+		if ( $merge_tag === 'all_fields' && $this->is_applicable_field( $field ) ) {
+			$entry = GFFormsModel::get_current_lead();
+			$value = GFFormsModel::get_lead_field_value( $entry, $field );
+			$files = empty( $value ) ? array() : json_decode( $value, true );
+			$value = '';
+			if ( $files ) {
+				foreach ( $files as &$file ) {
+					$value .= $this->get_file_markup( $file, $entry['form_id'] );
+					$value  = str_replace( $file, $field->get_download_url( $file, false ), $value );
+				}
+			}
+			$field_value = $value;
+		}
+		return $field_value;
 	}
 
 	public function replace_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ) {
