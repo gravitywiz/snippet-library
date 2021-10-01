@@ -84,15 +84,13 @@ class GW_Multi_File_Merge_Tag {
 
 	}
 
-	public function process_all_fields_merge_tag( $field_value, $merge_tag, $options, $field, $field_label, $format ) {
-		if ( $merge_tag === 'all_fields' && $this->is_applicable_field( $field ) ) {
-			$entry = GFFormsModel::get_current_lead();
-			$value = GFFormsModel::get_lead_field_value( $entry, $field );
-			$files = empty( $value ) ? array() : json_decode( $value, true );
+	public function process_all_fields_merge_tag( $field_value, $merge_tag, $modifiers, $field, $raw_value, $format ) {
+		if ( $merge_tag === 'all_fields' && ! rgblank( $raw_value ) && $this->is_applicable_field( $field ) ) {
+			$files = empty( $raw_value ) ? array() : json_decode( $raw_value, true );
 			$value = '';
 			if ( $files ) {
 				foreach ( $files as &$file ) {
-					$value .= $this->get_file_markup( $file, $entry['form_id'] );
+					$value .= $this->get_file_markup( $file, $field['formId'] );
 					$value  = str_replace( $file, $field->get_download_url( $file, false ), $value );
 				}
 			}
