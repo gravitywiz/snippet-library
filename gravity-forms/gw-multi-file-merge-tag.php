@@ -13,7 +13,7 @@
  * Plugin URI:   https://gravitywiz.com/customizing-multi-file-merge-tag/
  * Description:  Enhance the merge tag for multi-file upload fields by adding support for outputting markup that corresponds to the uploaded file.
  * Author:       Gravity Wiz
- * Version:      1.7
+ * Version:      1.7.1
  * Author URI:   https://gravitywiz.com
  */
 class GW_Multi_File_Merge_Tag {
@@ -31,6 +31,7 @@ class GW_Multi_File_Merge_Tag {
 	private function __construct() {
 		add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_merge_tag' ), 10, 7 );
 		add_filter( 'gform_advancedpostcreation_post', array( $this, 'modify_apc_post_content' ), 10, 4 );
+		add_filter( 'gform_merge_tag_filter', array( $this, 'process_all_fields_merge_tag' ), 10, 6 );
 	}
 
 	public static function get_instance() {
@@ -81,6 +82,21 @@ class GW_Multi_File_Merge_Tag {
 			$this->_settings[ $args['form_id'] ] = $args;
 		}
 
+	}
+
+	public function process_all_fields_merge_tag( $field_value, $merge_tag, $modifiers, $field, $raw_value, $format ) {
+		if ( $merge_tag === 'all_fields' && ! rgblank( $raw_value ) && $this->is_applicable_field( $field ) ) {
+			$files = empty( $raw_value ) ? array() : json_decode( $raw_value, true );
+			$value = '';
+			if ( $files ) {
+				foreach ( $files as &$file ) {
+					$value .= $this->get_file_markup( $file, $field['formId'] );
+					$value  = str_replace( $file, $field->get_download_url( $file, false ), $value );
+				}
+			}
+			$field_value = $value;
+		}
+		return $field_value;
 	}
 
 	public function replace_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ) {
