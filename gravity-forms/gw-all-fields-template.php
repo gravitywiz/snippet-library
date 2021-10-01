@@ -597,6 +597,13 @@ class GW_All_Fields_Template {
 
 		$template_dir = $this->get_theme_template_dir_name();
 
+		/**
+		 * Filter the paths that will be checked for a template file.
+		 *
+		 * @since 0.9.12
+		 *
+		 * @param array $file_paths An array of file paths. Key is the priority of the path. Value is an absolute path to a directory.
+		 */
 		$file_paths = apply_filters( 'gwaft_template_paths', array(
 			1  => trailingslashit( get_stylesheet_directory() ) . $template_dir,
 			10 => trailingslashit( get_template_directory() ) . $template_dir,
