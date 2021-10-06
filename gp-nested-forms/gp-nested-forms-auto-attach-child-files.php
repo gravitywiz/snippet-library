@@ -8,7 +8,8 @@ add_filter( 'gform_notification', function( $notification, $form, $entry ) {
 	// 1) Ensure that the child form's notification has the "Attach uploaded fields to notification" checked.
 	// 2) [Optional] Modify the following array to limit the snippet to specific notification IDs.
 	// The notification ID shows up as a URL parameter when editing a notification: `&nid=xxxxxxxxxxxx`
-	$notification_ids = array( '5daaedb49dc32', '5dbce25cc21c2' );
+	// Example: $notification_ids = array( '5daaedb49dc32', '5dbce25cc21c2' );
+	$notification_ids = array();
 
 	if ( ! class_exists( 'GPNF_Entry' ) ) {
 		return $notification;
@@ -23,7 +24,7 @@ add_filter( 'gform_notification', function( $notification, $form, $entry ) {
 		}
 	} // Otherwise, rely on a manually defined array of notification IDs.
 	else {
-		if ( ! in_array( $notification['id'], $notification_ids ) ) {
+		if ( count( $notification_ids ) > 0 && ! in_array( $notification['id'], $notification_ids ) ) {
 			return $notification;
 		}
 	}
