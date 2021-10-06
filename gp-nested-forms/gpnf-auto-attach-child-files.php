@@ -30,7 +30,7 @@ add_filter( 'gform_notification', function( $notification, $form, $entry ) {
 	}
 	/** 
 	 * Otherwise, rely on a manually defined array of notification IDs. 
-         * Notification IDs can be retrieved from the nid parameter in the URL when editing a notification.
+	 * Notification IDs can be retrieved from the nid parameter in the URL when editing a notification.
 	 * Update the values in the array with the Notification IDs.
 	 */
 	else {
