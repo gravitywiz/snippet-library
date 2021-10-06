@@ -45,10 +45,11 @@ class GW_Multi_File_Merge_Tag {
 
 	public function get_default_args() {
 		return array(
-			'form_id'        => false,
-			'field_ids'      => array(),
-			'exclude_forms'  => array(),
-			'default_markup' => '<li><a href="{url}">{filename}.{ext}</a></li>',
+			'form_id'            => false,
+			'field_ids'          => array(),
+			'exclude_forms'      => array(),
+			'default_markup'     => '<li><a href="{url}">{filename}.{ext}</a></li>',
+			'include_text_feeds' => false,
 			'markup'         => array(
 				array(
 					'file_types' => array( 'jpg', 'png', 'gif' ),
@@ -112,7 +113,9 @@ class GW_Multi_File_Merge_Tag {
 				continue;
 			}
 
-			if ( $format !== 'html' ) {
+			// Parse merge tags for text feeds if the option is set globally or for a specific form.
+			$include_text_feeds = rgar( $this->_settings, 'include_text_feeds' ) || rgar( rgar( $this->_settings, $form['id'] ), 'include_text_feeds' );
+			if ( ! $include_text_feeds && $format !== 'html' ) {
 
 				$value = $this->_merge_tag_args['value'];
 
