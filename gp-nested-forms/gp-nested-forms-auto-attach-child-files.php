@@ -16,12 +16,6 @@ add_filter( 'gform_notification', function( $notification, $form, $entry ) {
 		if ( ! rgar( $notification, 'enableAttachments', false ) ) {
 			return $notification;
 		}
-	} // Otherwise, rely on a manually defined array of notification IDs.
-	else {
-		$notification_ids = array( '5daaedb49dc32', '5dbce25cc21c2' );
-		if ( ! in_array( $notification['id'], $notification_ids ) ) {
-			return $notification;
-		}
 	}
 
 	$attachments  =& $notification['attachments'];
