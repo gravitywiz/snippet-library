@@ -2,6 +2,17 @@
 /**
  * Gravity Perks // Nested Forms // Auto-attach Uploaded Files from Child to Parent Notifications
  * http://gravitywiz.com/documentation/gravity-forms-nested-forms/
+ *
+ * This snippet automatically attaches files uploaded onto the child form to the parent form notifications.
+ * If parent form has any File Upload fields, this snippet will rely on the "Attachments" setting for each parent notification. 
+ * Otherwise, you must specify a list of notifications by ID to which child uploads should be attached.
+ *
+ * Plugin Name:  GP Nested Forms - Auto-attach Uploaded Files from Child to Parent Notifications
+ * Plugin URI:   http://gravitywiz.com/documentation/gravity-forms-nested-forms/
+ * Description:  Auto-attach Uploaded Files from Child to Parent Notifications
+ * Author:       Gravity Wiz
+ * Version:      0.1
+ * Author URI:   https://gravitywiz.com/
  */
 add_filter( 'gform_notification', function( $notification, $form, $entry ) {
 	// Configuration:
@@ -22,7 +33,12 @@ add_filter( 'gform_notification', function( $notification, $form, $entry ) {
 		if ( ! rgar( $notification, 'enableAttachments', false ) ) {
 			return $notification;
 		}
-	} // Otherwise, rely on a manually defined array of notification IDs.
+	} 
+	/** 
+	 * Otherwise, rely on a manually defined array of notification IDs. 
+	 * Notification IDs can be retrieved from the nid parameter in the URL when editing a notification.
+	 * Update the values in the array with the Notification IDs.
+	 */
 	else {
 		if ( count( $notification_ids ) > 0 && ! in_array( $notification['id'], $notification_ids ) ) {
 			return $notification;
