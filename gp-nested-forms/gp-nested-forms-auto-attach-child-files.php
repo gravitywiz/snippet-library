@@ -18,7 +18,7 @@ add_filter( 'gform_notification', function( $notification, $form, $entry ) {
 	// Configuration:
 	// 1) Ensure that the child form's notification has the "Attach uploaded fields to notification" checked.
 	// 2) [Optional] Modify the following array to limit the snippet to specific notification IDs.
-	// The notification ID shows up as a URL parameter when editing a notification: `&nid=xxxxxxxxxxxx`
+	// Notification IDs can be retrieved from the nid parameter in the URL when editing a notification.
 	// Example: $notification_ids = array( '5daaedb49dc32', '5dbce25cc21c2' );
 	$notification_ids = array();
 
@@ -28,20 +28,14 @@ add_filter( 'gform_notification', function( $notification, $form, $entry ) {
 
 	$upload_fields = GFCommon::get_fields_by_type( $form, array( 'fileupload' ) );
 
-	// If parent form has upload fields, rely on the notification's Attachments setting.
-	if ( ! empty( $upload_fields ) ) {
-		if ( ! rgar( $notification, 'enableAttachments', false ) ) {
-			return $notification;
-		}
-	} 
-	/** 
-	 * Otherwise, rely on a manually defined array of notification IDs. 
-	 * Notification IDs can be retrieved from the nid parameter in the URL when editing a notification.
-	 * Update the values in the array with the Notification IDs.
-	 */
-	else {
-		if ( count( $notification_ids ) > 0 && ! in_array( $notification['id'], $notification_ids ) ) {
-			return $notification;
+	if ( count( $notification_ids ) > 0 && ! in_array( $notification['id'], $notification_ids ) ) {
+		return $notification;
+	} else {
+		// If parent form has upload fields, rely on the notification's Attachments setting.
+		if ( ! empty( $upload_fields ) ) {
+			if ( ! rgar( $notification, 'enableAttachments', false ) ) {
+				return $notification;
+			}
 		}
 	}
 
