@@ -13,7 +13,7 @@
  * Plugin URI:   https://gravitywiz.com/customizing-multi-file-merge-tag/
  * Description:  Enhance the merge tag for multi-file upload fields by adding support for outputting markup that corresponds to the uploaded file.
  * Author:       Gravity Wiz
- * Version:      1.7.1
+ * Version:      1.7.2
  * Author URI:   https://gravitywiz.com
  */
 class GW_Multi_File_Merge_Tag {
@@ -45,10 +45,11 @@ class GW_Multi_File_Merge_Tag {
 
 	public function get_default_args() {
 		return array(
-			'form_id'        => false,
-			'field_ids'      => array(),
-			'exclude_forms'  => array(),
-			'default_markup' => '<li><a href="{url}">{filename}.{ext}</a></li>',
+			'form_id'            => false,
+			'field_ids'          => array(),
+			'exclude_forms'      => array(),
+			'default_markup'     => '<li><a href="{url}">{filename}.{ext}</a></li>',
+			'formats'            => array( 'html' ),
 			'markup'         => array(
 				array(
 					'file_types' => array( 'jpg', 'png', 'gif' ),
@@ -112,7 +113,8 @@ class GW_Multi_File_Merge_Tag {
 				continue;
 			}
 
-			if ( $format !== 'html' ) {
+			// Check if the format is valid before parsing the merge tags.
+			if ( ! in_array( $format, rgar( $this->_settings, 'formats' ) ) ) {
 
 				$value = $this->_merge_tag_args['value'];
 
