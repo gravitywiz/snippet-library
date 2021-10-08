@@ -5,12 +5,10 @@
  *
  * Require a field's value to be entered twice to confirm it.
  *
- * Plugin Name: Gravity Forms - Double Confirmation Fields
- * Plugin URI:  https://gravitywiz.com/custom-field-confirmation/
- * Description: Require a field's value to be entered twice to confirm it.
- * Author:      Gravity Wiz
- * Version:     0.3
- * Author URI:  https://gravitywiz.com/
+ * @version 0.3.1
+ * @author  Gravity Wiz
+ * @license GPL-2.0+
+ * @link    http://gravitywiz.com
  */
 add_filter( 'gform_validation', 'gfcf_validation' );
 function gfcf_validation( $validation_result ) {
