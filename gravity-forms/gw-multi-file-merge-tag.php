@@ -113,7 +113,7 @@ class GW_Multi_File_Merge_Tag {
 				continue;
 			}
 
-			// Check if the feed's format is valid before parsing the merge tags.
+			// Check if the format is valid before parsing the merge tags.
 			if ( ! in_array( $format, rgar( $this->_settings, 'formats' ) ) ) {
 
 				$value = $this->_merge_tag_args['value'];
