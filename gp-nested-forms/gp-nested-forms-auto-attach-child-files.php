@@ -15,8 +15,12 @@
  * Author URI:   https://gravitywiz.com/
  */
 add_filter( 'gform_notification', function( $notification, $form, $entry ) {
+	// Notes:
+	// - If notifications IDs are specified this snippet will only work for those specific forms.
+	// - If the parent form has upload fields, they will be attached instead of the child form's fields.
+	// - If neither of these conditions are present, child form uploads will be attached by default.
 	// Configuration:
-	// 1) Ensure that the child form's notification has the "Attach uploaded fields to notification" checked.
+	// 1) Ensure that the parent form's notification has the "Attach uploaded fields to notification" checked.
 	// 2) [Optional] Modify the following array to limit the snippet to specific notification IDs.
 	// Notification IDs can be retrieved from the nid parameter in the URL when editing a notification.
 	// Example: $notification_ids = array( '5daaedb49dc32', '5dbce25cc21c2' );
@@ -28,7 +32,7 @@ add_filter( 'gform_notification', function( $notification, $form, $entry ) {
 
 	$upload_fields = GFCommon::get_fields_by_type( $form, array( 'fileupload' ) );
 
-	if ( count( $notification_ids ) > 0 && ! in_array( $notification['id'], $notification_ids ) ) {
+	if ( ! empty( $notification_ids ) && ! in_array( $notification['id'], $notification_ids ) ) {
 		return $notification;
 	} else {
 		// If parent form has upload fields, rely on the notification's Attachments setting.
