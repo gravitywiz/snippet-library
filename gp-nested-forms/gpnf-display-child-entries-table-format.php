@@ -17,7 +17,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  * Description:  This snippet displays the child entries in a table format when using the {all_fields} merge tag with the gpnf_table modifier.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   https://gravitywiz.com
  */
 add_filter( 'gform_merge_tag_filter', function ( $value, $merge_tag, $modifiers, $field, $raw_value ) {
@@ -34,7 +34,14 @@ add_filter( 'gform_merge_tag_filter', function ( $value, $merge_tag, $modifiers,
 			$nested_field_ids = is_array( $_modifiers['filter'] ) ? $_modifiers['filter'] : array( $_modifiers['filter'] );
 		}
 	}
-
+	$excluded_field_types   = array( 'html', 'section', 'password', 'captcha' );
+	$all_nested_fields      = gp_nested_forms()->get_fields_by_ids( $nested_field_ids, $nested_form );
+	$filtered_nested_fields = array();
+	foreach ( $all_nested_fields as $nested_field ) {
+		if ( ! in_array( $nested_field->type, $excluded_field_types, true ) ) {
+			$filtered_nested_fields[] = $nested_field;
+		}
+	}
 	$template    = new GP_Template( gp_nested_forms() );
 	$nested_form = GFAPI::get_form( rgar( $field, 'gpnfForm' ) );
 	$args        = array(
@@ -42,7 +49,7 @@ add_filter( 'gform_merge_tag_filter', function ( $value, $merge_tag, $modifiers,
 		'field'            => $field,
 		'nested_form'      => GFAPI::get_form( rgar( $field, 'gpnfForm' ) ),
 		'modifiers'        => $modifiers,
-		'nested_fields'    => gp_nested_forms()->get_fields_by_ids( $nested_field_ids, $nested_form ),
+		'nested_fields'    => $filtered_nested_fields,
 		'entries'          => gp_nested_forms()->get_entries( $raw_value ),
 		'actions'          => array(),
 		'nested_field_ids' => $nested_field_ids,
