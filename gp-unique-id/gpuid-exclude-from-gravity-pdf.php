@@ -1,7 +1,7 @@
 <?php
 /**
  * Gravity Perks // Unique ID // Exclude Unique ID Fields from Gravity PDF
- * https://gravityperks.com/
+ * https://gravitywiz.com/documentation/gravity-forms-unique-id/
  */
 add_filter( 'gform_form_post_get_meta', function( $form ) {
 	foreach ( $form['fields'] as &$field ) {
