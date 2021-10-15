@@ -1,13 +1,16 @@
 <?php
 /**
- * Gravity Perks // GP Unique ID // Generate Multiple Unique IDs per Submission (for Gravity Forms)
+ * Gravity Perks // Unique ID // Generate Multiple Unique IDs per Submission (for Gravity Forms)
+ * https://gravitywiz.com/documentation/gravity-forms-unique-id/
  *
- * Generate multiple unique IDs. Does not work with sequential IDs.
+ * Generate multiple unique IDs per submission and store the IDs in another field.
  *
- * @version   1.3
- * @author    David Smith <david@gravitywiz.com>
- * @license   GPL-2.0+
- * @link      http://gravitywiz.com/
+ * Plugin Name:  GP Unique ID - Generate Multiple Unique IDs per Submission (for Gravity Forms)
+ * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-unique-id/
+ * Description:  Generate multiple unique IDs per submission and store the IDs in another field.
+ * Author:       Gravity Wiz
+ * Version:      1.3
+ * Author URI:   https://gravitywiz.com/
  */
 class GPUID_Multiple_IDs {
 
