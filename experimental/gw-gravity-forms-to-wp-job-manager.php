@@ -4,13 +4,6 @@
  * https://gravitywiz.com/
  *
  * Provides support for mapping a GF multiselect field to a WPJM multiselect field.
- *
- * Plugin Name: Gravity Froms to WP Job Manager
- * Plugin URI: https://gravitywiz.com/
- * Description: Provides support for mapping a GF multiselect field to a WPJM multiselect field.
- * Author: Gravity Wiz
- * Version: 0.1
- * Author URI: https://gravitywiz.com/
  */
 class GW_GF_To_WP_Job_Manager {
 
