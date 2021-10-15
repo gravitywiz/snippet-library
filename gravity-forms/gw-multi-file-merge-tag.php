@@ -13,7 +13,7 @@
  * Plugin URI:   https://gravitywiz.com/customizing-multi-file-merge-tag/
  * Description:  Enhance the merge tag for multi-file upload fields by adding support for outputting markup that corresponds to the uploaded file.
  * Author:       Gravity Wiz
- * Version:      1.7.2
+ * Version:      1.7.3
  * Author URI:   https://gravitywiz.com
  */
 class GW_Multi_File_Merge_Tag {
