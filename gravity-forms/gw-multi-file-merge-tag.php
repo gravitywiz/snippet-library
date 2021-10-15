@@ -2,7 +2,7 @@
 /**
  * Gravity Wiz // Gravity Forms // Multi-File Merge Tag for Post Content Templates
  * https://gravitywiz.com/customizing-multi-file-merge-tag/
- * 
+ *
  * Enhance the merge tag for multi-file upload fields by adding support for outputting markup that corresponds to the
  * uploaded file. Example: image files will be wrapped in an <img> tag. Out of the box, this snippet only supports
  * images and is limited to the 'jpg', 'png', and 'gif'.
@@ -113,8 +113,9 @@ class GW_Multi_File_Merge_Tag {
 				continue;
 			}
 
+			$formats_setting = $this->get_formats( $form['id'] );
 			// Check if the format is valid before parsing the merge tags.
-			if ( ! in_array( $format, rgar( $this->_settings, 'formats' ) ) ) {
+			if ( ! in_array( $format, $formats_setting ) ) {
 
 				$value = $this->_merge_tag_args['value'];
 
@@ -256,6 +257,16 @@ class GW_Multi_File_Merge_Tag {
 		$global_markup_settings = rgars( $this->_settings, 'global/markup' ) ? rgars( $this->_settings, 'global/markup' ) : array();
 
 		return array_merge( $form_markup_settings, $global_markup_settings );
+	}
+
+	public function get_formats( $form_id ) {
+
+		$formats = rgars( $this->_settings, "$form_id/formats" );
+		if ( ! $formats ) {
+			$formats = rgars( $this->_settings, 'global/formats' );
+		}
+
+		return $formats;
 	}
 
 	public function get_default_markup( $form_id ) {
