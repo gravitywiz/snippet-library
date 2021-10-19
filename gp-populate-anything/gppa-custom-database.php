@@ -30,5 +30,7 @@ class GPPA_Object_Type_Database_Testing extends GPPA_Object_Type_Database {
 }
 
 add_action('init', function() {
-	gp_populate_anything()->register_object_type( 'database-testing', 'GPPA_Object_Type_Database_Testing' );
+	if ( class_exists( 'GP_Populate_Anything' ) ) {
+		gp_populate_anything()->register_object_type( 'database-testing', 'GPPA_Object_Type_Database_Testing' );
+	}
 });
