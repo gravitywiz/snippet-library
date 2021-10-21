@@ -2,7 +2,7 @@
 /**
  * Gravity Wiz // Gravity Forms // Multi-File Merge Tag for Post Content Templates
  * https://gravitywiz.com/customizing-multi-file-merge-tag/
- * 
+ *
  * Enhance the merge tag for multi-file upload fields by adding support for outputting markup that corresponds to the
  * uploaded file. Example: image files will be wrapped in an <img> tag. Out of the box, this snippet only supports
  * images and is limited to the 'jpg', 'png', and 'gif'.
@@ -13,7 +13,7 @@
  * Plugin URI:   https://gravitywiz.com/customizing-multi-file-merge-tag/
  * Description:  Enhance the merge tag for multi-file upload fields by adding support for outputting markup that corresponds to the uploaded file.
  * Author:       Gravity Wiz
- * Version:      1.7
+ * Version:      1.7.3
  * Author URI:   https://gravitywiz.com
  */
 class GW_Multi_File_Merge_Tag {
@@ -31,6 +31,7 @@ class GW_Multi_File_Merge_Tag {
 	private function __construct() {
 		add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_merge_tag' ), 10, 7 );
 		add_filter( 'gform_advancedpostcreation_post', array( $this, 'modify_apc_post_content' ), 10, 4 );
+		add_filter( 'gform_merge_tag_filter', array( $this, 'process_all_fields_merge_tag' ), 10, 6 );
 	}
 
 	public static function get_instance() {
@@ -44,10 +45,11 @@ class GW_Multi_File_Merge_Tag {
 
 	public function get_default_args() {
 		return array(
-			'form_id'        => false,
-			'field_ids'      => array(),
-			'exclude_forms'  => array(),
-			'default_markup' => '<li><a href="{url}">{filename}.{ext}</a></li>',
+			'form_id'            => false,
+			'field_ids'          => array(),
+			'exclude_forms'      => array(),
+			'default_markup'     => '<li><a href="{url}">{filename}.{ext}</a></li>',
+			'formats'            => array( 'html' ),
 			'markup'         => array(
 				array(
 					'file_types' => array( 'jpg', 'png', 'gif' ),
@@ -83,6 +85,21 @@ class GW_Multi_File_Merge_Tag {
 
 	}
 
+	public function process_all_fields_merge_tag( $field_value, $merge_tag, $modifiers, $field, $raw_value, $format ) {
+		if ( $merge_tag === 'all_fields' && ! rgblank( $raw_value ) && $this->is_applicable_field( $field ) ) {
+			$files = empty( $raw_value ) ? array() : json_decode( $raw_value, true );
+			$value = '';
+			if ( $files ) {
+				foreach ( $files as &$file ) {
+					$value .= $this->get_file_markup( $file, $field['formId'] );
+					$value  = str_replace( $file, $field->get_download_url( $file, false ), $value );
+				}
+			}
+			$field_value = $value;
+		}
+		return $field_value;
+	}
+
 	public function replace_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ) {
 
 		preg_match_all( '/{[^{]*?:(\d+(\.\d+)?)(:(.*?))?}/mi', $text, $matches, PREG_SET_ORDER );
@@ -96,7 +113,9 @@ class GW_Multi_File_Merge_Tag {
 				continue;
 			}
 
-			if ( $format !== 'html' ) {
+			$formats_setting = $this->get_formats( $form['id'] );
+			// Check if the format is valid before parsing the merge tags.
+			if ( ! in_array( $format, $formats_setting ) ) {
 
 				$value = $this->_merge_tag_args['value'];
 
@@ -238,6 +257,16 @@ class GW_Multi_File_Merge_Tag {
 		$global_markup_settings = rgars( $this->_settings, 'global/markup' ) ? rgars( $this->_settings, 'global/markup' ) : array();
 
 		return array_merge( $form_markup_settings, $global_markup_settings );
+	}
+
+	public function get_formats( $form_id ) {
+
+		$formats = rgars( $this->_settings, "$form_id/formats" );
+		if ( ! $formats ) {
+			$formats = rgars( $this->_settings, 'global/formats' );
+		}
+
+		return $formats;
 	}
 
 	public function get_default_markup( $form_id ) {
