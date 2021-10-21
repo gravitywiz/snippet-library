@@ -5,6 +5,9 @@
  *
  * Update "123" to your form ID and "4" to your field ID with inventory.
  * [gravityforms action="inventory" id="123" field="4"]
+ *
+ * @todo
+ * - Add support for excluding field parameter and showing a consolidated list of all inventories.
  */
 add_filter( 'gform_shortcode_inventory', function ( $output, $atts ) {
 
@@ -20,7 +23,7 @@ add_filter( 'gform_shortcode_inventory', function ( $output, $atts ) {
 
 	if ( is_array( $field->choices ) ) {
 		$field->gpiShowAvailableInventory = true;
-		$choices = gp_inventory_type_choices()->apply_choice_limits( $field->choices, $field, $form );
+		$choices                          = gp_inventory_type_choices()->apply_choice_limits( $field->choices, $field, $form );
 		foreach ( $choices as $choice ) {
 			$items[] = $choice['text'];
 		}
@@ -29,7 +32,8 @@ add_filter( 'gform_shortcode_inventory', function ( $output, $atts ) {
 			$form['id'], $field->id, implode( '</li><li>', $items )
 		);
 	} else {
-		$output = 'This field\'s inventory type is not support yet.';
+		$available = gp_inventory_type_simple()->get_available_stock( $field );
+		$output   .= $field->get_field_label( false, '' ) . ': ' . $available;
 	}
 
 	return $output;
