@@ -54,7 +54,7 @@ class GW_Submit_Access {
 
 		// setting later so we can use GFCommon::get_base_url() to get GF's spinner URL
 		if ( empty( $this->_args['loading_message'] ) ) {
-			$this->_args['loading_message'] = '<span class="gwsa-loading">Loading content... <img src="' . GFCommon::get_base_url() . '/images/spinner.svg" /></span>';
+			$this->_args['loading_message'] = '<span class="gwsa-loading">Loading content... <img src="' . GFCommon::gf_global(false, true)['spinnerUrl'] . '" /></span>';
 		}
 
 		add_action( 'wp', array( $this, 'check_global_requirements' ), 5 );
