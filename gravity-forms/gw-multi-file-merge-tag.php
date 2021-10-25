@@ -13,7 +13,7 @@
  * Plugin URI:   https://gravitywiz.com/customizing-multi-file-merge-tag/
  * Description:  Enhance the merge tag for multi-file upload fields by adding support for outputting markup that corresponds to the uploaded file.
  * Author:       Gravity Wiz
- * Version:      1.7.3
+ * Version:      1.7.4
  * Author URI:   https://gravitywiz.com
  */
 class GW_Multi_File_Merge_Tag {
@@ -29,7 +29,7 @@ class GW_Multi_File_Merge_Tag {
 	private $_settings       = array();
 
 	private function __construct() {
-		add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_merge_tag' ), 10, 7 );
+		add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_merge_tag' ), 4, 7 ); // Run before GP Media Library which runs on priority 5.
 		add_filter( 'gform_advancedpostcreation_post', array( $this, 'modify_apc_post_content' ), 10, 4 );
 		add_filter( 'gform_merge_tag_filter', array( $this, 'process_all_fields_merge_tag' ), 10, 6 );
 	}
