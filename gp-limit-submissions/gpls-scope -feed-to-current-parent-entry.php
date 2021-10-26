@@ -4,13 +4,6 @@
  * https://gravitywiz.com/documentation/gravity-forms-limit-submissions/
  *
  * Set GP Limit Submissions feed to only apply to child entries submitted for the same parent entry.
- *
- * Plugin Name:  GP Limit Submissions — Scope Feeds to the Current Nested Forms Parent Entry.
- * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-limit-submissions/
- * Description:  Set GP Limit Submissions feed to only apply to child entries submitted for the same parent entry.
- * Author:       Gravity Wiz
- * Version:      0.1
- * Author URI:   https://gravitywiz.com/
  */
 add_action( 'gpls_before_query', function( $ruletest ) {
 	global $wpdb;
