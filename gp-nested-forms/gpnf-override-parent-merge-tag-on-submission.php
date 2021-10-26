@@ -6,10 +6,16 @@
  * Override all {Parent} merge tags when the parent form is submitted or a parent entry is updated.
  */
 add_filter( 'gform_entry_post_save', 'gpnf_override_parent_merge_tags', 11, 2 );
-add_action( 'gform_after_update_entry', function( $form, $entry_id ) {
+
+add_action( 'gform_after_update_entry', function ( $form, $entry_id ) {
 	$entry = GFAPI::get_entry( $entry_id );
 	gpnf_override_parent_merge_tags( $entry, $form );
 }, 11, 2 );
+
+add_filter( 'gravityview-inline-edit/entry-updated', function( $return, $entry, $form_id, $gf_field, $original_entry ) {
+	gpnf_override_parent_merge_tags( $entry, GFAPI::get_form( $form_id ) );
+	return $return;
+}, 10, 5 );
 
 function gpnf_override_parent_merge_tags( $entry, $form ) {
 
