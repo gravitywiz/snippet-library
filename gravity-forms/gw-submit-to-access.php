@@ -4,7 +4,7 @@
  *
  * Require that a form be submitted before a post or page can be accessed.
  *
- * @version   1.8
+ * @version   1.9
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      https://gravitywiz.com/submit-gravity-form-access-content/
@@ -15,7 +15,7 @@
  * Plugin URI: https://gravitywiz.com/submit-gravity-form-access-content/
  * Description: Require that a form be submitted before a post or page can be accessed.
  * Author: Gravity Wiz
- * Version: 1.8
+ * Version: 1.9
  * Author URI: http://gravitywiz.com
  */
 class GW_Submit_Access {
@@ -48,7 +48,7 @@ class GW_Submit_Access {
 	public function init() {
 
 		// make sure we're running the required minimum version of Gravity Forms
-		if ( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=' ) ) {
+		if ( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '2.4.7', '>=' ) ) {
 			return;
 		}
 
