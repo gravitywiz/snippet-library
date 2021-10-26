@@ -12,10 +12,10 @@ add_action( 'gform_after_update_entry', function ( $form, $entry_id ) {
 	gpnf_override_parent_merge_tags( $entry, $form );
 }, 11, 2 );
 
-add_filter( 'gravityview-inline-edit/entry-updated', function( $return, $entry, $form_id, $gf_field, $original_entry ) {
+add_filter( 'gravityview-inline-edit/entry-updated', function( $return, $entry, $form_id ) {
 	gpnf_override_parent_merge_tags( $entry, GFAPI::get_form( $form_id ) );
 	return $return;
-}, 10, 5 );
+}, 10, 3 );
 
 function gpnf_override_parent_merge_tags( $entry, $form ) {
 
