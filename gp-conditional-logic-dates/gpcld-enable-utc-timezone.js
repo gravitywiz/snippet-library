@@ -1,4 +1,3 @@
-
 /**
  * Gravity Perks // Conditional Logic Dates // Adjust User's Local Time to UTC
  * https://gravitywiz.com/documentation/gravity-forms-conditional-logic-dates/
