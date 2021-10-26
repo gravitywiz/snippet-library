@@ -45,7 +45,7 @@ add_filter( 'gform_merge_tag_filter', function ( $value, $merge_tag, $modifiers,
 	$template    = new GP_Template( gp_nested_forms() );
 	$nested_form = GFAPI::get_form( rgar( $field, 'gpnfForm' ) );
 	$args        = array(
-		'template'         => 'nested-entries-detail',
+		'template'         => 'nested-entries-detail-simple',
 		'field'            => $field,
 		'nested_form'      => GFAPI::get_form( rgar( $field, 'gpnfForm' ) ),
 		'modifiers'        => $modifiers,
