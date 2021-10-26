@@ -8,7 +8,7 @@
  *
  * Plugin Name:  Gravity Forms Coupons - Allow Zero Amount Coupons
  * Plugin URI:   https://gravitywiz.com/
- * Description:  Create Coupons with the amount of zero.
+ * Description:  Create coupons with the amount of zero.
  * Author:       Gravity Wiz
  * Version:      0.1
  * Author URI:   https://gravitywiz.com/
