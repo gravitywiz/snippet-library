@@ -3,7 +3,7 @@
  * Gravity Perks // Populate Anything // Display Post Featured Image
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
- * Display the featured image of a selected post.
+ * Populate post featured image into an HTML field.
  *
  * Usage:
  *
@@ -13,7 +13,7 @@
  *
  * Plugin Name:  GP Populate Anything - Display Post Featured Image
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-populate-anything/
- * Description:  Display the featured image of a selected post.
+ * Description:  Populate post featured image into an HTML field.
  * Author:       Gravity Wiz
  * Version:      0.1
  * Author URI:   https://gravitywiz.com/
