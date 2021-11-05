@@ -25,9 +25,10 @@ add_filter( 'gform_merge_tag_filter', function ( $value, $merge_tag, $modifiers,
 	if ( ! is_callable( 'gp_nested_forms' ) || $field->type !== 'form' || $value === false || strpos( $modifiers, 'gpnf_table' ) === false ) {
 		return $value;
 	}
-	$nested_form = GFAPI::get_form( rgar( $field, 'gpnfForm' ) );
-	// Adds support for :filter modifier on Nested Form field merge tags but not {all_fields}.
+
+	$nested_form      = GFAPI::get_form( rgar( $field, 'gpnfForm' ) );
 	$nested_field_ids = strpos( $modifiers, 'gpnf_all_fields' ) !== false ? wp_list_pluck( $nested_form['fields'], 'id' ) : $field->gpnfFields;
+
 	// Adds support for All Field Template's :filter and :exclude modifiers.
 	if ( function_exists( 'gw_all_fields_template' ) ) {
 		$_modifiers = gw_all_fields_template()->parse_modifiers( $modifiers );
@@ -44,14 +45,17 @@ add_filter( 'gform_merge_tag_filter', function ( $value, $merge_tag, $modifiers,
 			$nested_field_ids = array_diff( $nested_field_ids, $excluded_field_ids );
 		}
 	}
-	$excluded_field_types   = array( 'html', 'section', 'password', 'captcha' );
-	$all_nested_fields      = gp_nested_forms()->get_fields_by_ids( $nested_field_ids, $nested_form );
+
+	$excluded_field_types = array( 'html', 'section', 'password', 'captcha' );
+	$all_nested_fields    = gp_nested_forms()->get_fields_by_ids( $nested_field_ids, $nested_form );
+
 	$filtered_nested_fields = array();
 	foreach ( $all_nested_fields as $nested_field ) {
 		if ( ! in_array( $nested_field->type, $excluded_field_types, true ) ) {
 			$filtered_nested_fields[] = $nested_field;
 		}
 	}
+
 	$template    = new GP_Template( gp_nested_forms() );
 	$nested_form = GFAPI::get_form( rgar( $field, 'gpnfForm' ) );
 	$args        = array(
