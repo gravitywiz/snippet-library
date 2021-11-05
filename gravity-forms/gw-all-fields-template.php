@@ -189,7 +189,7 @@ class GW_All_Fields_Template {
 				foreach ( $mod_values as $field_id ) {
 					if ( intval( $field_id ) == $nested_form_field_id && $field_id !== intval( $field_id ) ) {
 						$field_id_bits = explode( '.', $field_id );
-						$field_ids[]   = array_pop( $field_id_bits );
+						$field_ids[]   = (int) array_pop( $field_id_bits );
 					}
 				}
 
@@ -229,6 +229,12 @@ class GW_All_Fields_Template {
 								}
 							}
 							$value = GFCommon::get_lead_field_display( $field, $values );
+						}
+						// Check for exclusions excluding a specific child field from a Nested Form field.
+						else if ( $field->get_input_type() === 'form' && (int) $mod_value != $mod_value ) {
+							// GPNF assumes Nested Form field should be excluded if $value is false. Prevent this and
+							// allow GPNF to load the {all_fields} markup for its children.
+							$exclude_full_value = false;
 						}
 
 						if ( $exclude_full_value ) {

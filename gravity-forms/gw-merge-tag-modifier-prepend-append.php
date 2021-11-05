@@ -10,6 +10,13 @@
  *
  * 1. The comma (,) is a reserved character of Gravity Forms' merge tags. Use &comma; instead.
  * 2. Gravity Forms lower-cases all modifier values by default. A value of "Hello" will be rendered as "hello".
+ *
+ * Plugin Name:  Gravity Forms Append/Prepend Merge Tag Modifiers
+ * Plugin URI:   https://gravitywiz.com/
+ * Description:  Append or prepend a string to a merge tag's output only when it has a value.
+ * Author:       Gravity Wiz
+ * Version:      0.1
+ * Author URI:   https://gravitywiz.com
  */
 add_filter( 'gform_merge_tag_filter', function( $value, $input_id, $modifier, $field, $raw_values ) {
 
