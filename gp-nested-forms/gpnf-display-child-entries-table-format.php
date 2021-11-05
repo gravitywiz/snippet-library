@@ -17,7 +17,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  * Description:  This snippet displays the child entries in a table format when using the {all_fields} merge tag with the gpnf_table modifier.
  * Author:       Gravity Wiz
- * Version:      0.2
+ * Version:      0.3
  * Author URI:   https://gravitywiz.com
  */
 add_filter( 'gform_merge_tag_filter', function ( $value, $merge_tag, $modifiers, $field, $raw_value ) {
@@ -28,10 +28,20 @@ add_filter( 'gform_merge_tag_filter', function ( $value, $merge_tag, $modifiers,
 	$nested_form = GFAPI::get_form( rgar( $field, 'gpnfForm' ) );
 	// Adds support for :filter modifier on Nested Form field merge tags but not {all_fields}.
 	$nested_field_ids = strpos( $modifiers, 'gpnf_all_fields' ) !== false ? wp_list_pluck( $nested_form['fields'], 'id' ) : $field->gpnfFields;
+	// Adds support for All Field Template's :filter and :exclude modifiers.
 	if ( function_exists( 'gw_all_fields_template' ) ) {
 		$_modifiers = gw_all_fields_template()->parse_modifiers( $modifiers );
 		if ( rgar( $_modifiers, 'filter' ) ) {
 			$nested_field_ids = is_array( $_modifiers['filter'] ) ? $_modifiers['filter'] : array( $_modifiers['filter'] );
+			if ( $merge_tag === 'all_fields' ) {
+				$nested_field_ids = gpnf_parse_input_ids( $nested_field_ids, $field->id );
+			}
+		} elseif ( rgar( $_modifiers, 'exclude' ) ) {
+			$excluded_field_ids = is_array( $_modifiers['exclude'] ) ? $_modifiers['exclude'] : array( $_modifiers['exclude'] );
+			if ( $merge_tag === 'all_fields' ) {
+				$excluded_field_ids = gpnf_parse_input_ids( $excluded_field_ids, $field->id );
+			}
+			$nested_field_ids = array_diff( $nested_field_ids, $excluded_field_ids );
 		}
 	}
 	$excluded_field_types   = array( 'html', 'section', 'password', 'captcha' );
@@ -66,3 +76,13 @@ add_filter( 'gform_merge_tag_filter', function ( $value, $merge_tag, $modifiers,
 
 	return $value;
 }, 12, 5 );
+
+function gpnf_parse_input_ids( $input_ids, $nested_form_field_id ) {
+	foreach ( $input_ids as &$input_id ) {
+		if ( (int) $input_id === (int) $nested_form_field_id ) {
+			$bits     = explode( '.', $input_id );
+			$input_id = array_pop( $bits );
+		}
+	}
+	return $input_ids;
+}
