@@ -9,7 +9,7 @@
  * Plugin URI:   https://gravitywiz.com/formatting-dates-captured-in-date-fields/
  * Description:  Adds merge tag modifiers for formatting date merge tags using PHP Date Formats.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   https://gravitywiz.com
  */
 add_filter( 'gform_pre_replace_merge_tags', function( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ) {
@@ -34,7 +34,10 @@ add_filter( 'gform_pre_replace_merge_tags', function( $text, $form, $entry, $url
 		$value = GFFormsModel::get_lead_field_value( $entry, $field );
 		$value = $field->get_value_merge_tag( $value, $input_id, $entry, $form, $modifier, $value, $url_encode, $esc_html, $format, $nl2br );
 
-		$replace = date( $modifier, strtotime( $value ) );
+		$format      = $field->dateFormat ? $field->dateFormat : 'mdy';
+		$parsed_date = GFCommon::parse_date( $value, $format );
+
+		$replace = date( $modifier, strtotime( sprintf( '%d-%d-%d', $parsed_date['year'], $parsed_date['month'], $parsed_date['day'] ) ) );
 
 		$text = str_replace( $match[0], $replace, $text );
 
