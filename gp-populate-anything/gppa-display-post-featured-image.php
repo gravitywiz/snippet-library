@@ -11,8 +11,7 @@
  * 2. Insert the live merge tag for that field into the content setting of an HTML field.
  * 3. The live merge tag should have the `:featured_image` modifer like so: `@{Field Label:4:featured_image}` (where 4 is the ID of the field).
  */
-// Update 123 to your Form ID
-add_filter( 'gppa_live_merge_tag_value_123', function( $merge_tag_match_value, $merge_tag, $form, $field_id, $entry_values ) {
+add_filter( 'gppa_live_merge_tag_value', function( $merge_tag_match_value, $merge_tag, $form, $field_id, $entry_values ) {
 
 	$bits      = explode( ':', str_replace( array( '{', '}' ), '', $merge_tag ) );
 	$modifiers = explode( ',', array_pop( $bits ) );
