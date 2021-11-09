@@ -1,30 +1,32 @@
 <?php
 /**
  * Gravity Perks // Unique ID // Shared Sequences
- * https://gravitywiz.com/
+ * https://gravitywiz.com/documentation/gravity-forms-unique-id/
  *
  * Share sequences between sequential Unique ID fields; works with fields on different forms as well.
  *
- * To use the snippet, replace the numbers in the array below to match your Form IDs and Field IDs.
- * For example, if Form A has an ID of 123 and its Unique ID field's ID is 1 and Form B has an ID of 456 and its Unique ID field's ID is 2,
- * then you would set up the group like so:
+ * To use the snippet, replace the numbers in the array below to match your form IDs and field IDs.
+ * For example, if Form A has an ID of 123 and its Unique ID field's ID is 1 and Form B has an ID of 
+ * 456 and its Unique ID field's ID is 2, then you would set up the group like so:
+ * 
  * $groups = array(
- * array(
- *     123 => 1,
- *     456 => 2,
- *   )
+ *     array(
+ *         123 => 1,
+ *         456 => 2,
+ *     )
+ * );
  */
 add_filter( 'gpui_unique_id_attributes', 'gwiz_unique_id_global_sequential_index', 10, 3 );
 function gwiz_unique_id_global_sequential_index( $atts, $form_id, $field_id ) {
 
 	$groups = array(
 		array(
-			519  => 3,
-			1410 => 1,
+			123 => 4,
+			456 => 7,
 		),
 		array(
-			1 => 2,
-			2 => 4,
+			124 => 5,
+			125 => 6,
 		),
 	);
 
