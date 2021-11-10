@@ -1,13 +1,16 @@
 <?php
 /**
  * Gravity Perks // Easy Passthrough // Edit Entry
+ * https://gravitywiz.com/edit-gravity-forms-entries-on-the-front-end/
  *
  * Edit entry ID specified in field with current form submission.
  *
- * @version   1.2.1
- * @author    David Smith <david@gravitywiz.com>
- * @license   GPL-2.0+
- * @link      https://gravitywiz.com/edit-gravity-forms-entries-on-the-front-end/
+ * Plugin Name:  GP Easy Passthrough - Set Number of List Field Rows by Field Value
+ * Plugin URI:   https://gravitywiz.com/edit-gravity-forms-entries-on-the-front-end/
+ * Description:  Edit entry ID specified in field with current form submission.
+ * Author:       Gravity Wiz
+ * Version:      1.2.1
+ * Author URI:   https://gravitywiz.com/
  */
 class GPEP_Edit_Entry {
 	private $form_id;
@@ -29,9 +32,9 @@ class GPEP_Edit_Entry {
 		$update_entry_id = $this->get_update_entry_id( $form['id'] );
 		if ( $update_entry_id ) {
 			if ( $this->delete_partial
-			     && is_callable( array( 'GF_Partial_Entries', 'get_instance' ) )
-			     && $entry_id !== null
-			     && ! empty( GF_Partial_Entries::get_instance()->get_active_feeds( $form['id'] ) )
+				&& is_callable( array( 'GF_Partial_Entries', 'get_instance' ) )
+				&& $entry_id !== null
+				&& ! empty( GF_Partial_Entries::get_instance()->get_active_feeds( $form['id'] ) )
 			) {
 				GFAPI::delete_entry( $entry_id );
 			}
