@@ -3,13 +3,20 @@
  * Gravity Wiz // Gravity Forms // Force Default Value
  * https://gravitywiz.com/
  *
- * Force the default value to be captured for fields hidden by conditional logic.
+ * Force the default value to be captured for fields hidden by conditional logic. Also reprocesses default values that
+ * contain merge tags not available for prepopulation.
+ *
+ * The latter functionality is useful when wanting to combine data into specifically formatted values. For example, you
+ * can use "{entry:gpaa_lat_1},{entry:gpaa_lng_1}" to format the latitude and longitude captured by GP Address Autocomplete
+ * into a comma-delimited pair.
+ *
+ * Currently, this will only work with single input fields.
  *
  * Plugin Name:  Gravity Forms - Force Default Value
  * Plugin URI:   https://gravitywiz.com/
  * Description:  Force the default value to be captured for fields hidden by conditional logic.
  * Author:       Gravity Wiz
- * Version:      1.1
+ * Version:      1.2
  * Author URI:   https://gravitywiz.com/
  */
 class GW_Force_Default_Value {
@@ -54,15 +61,24 @@ class GW_Force_Default_Value {
 				continue;
 			}
 
-			if( ! rgar( $entry, $field->id ) && GFFormsModel::is_field_hidden( $form, $field, array(), $entry ) ) {
+			$entry_value = rgar( $entry, $field->id );
 
+			// Get default value if field is hidden.
+			if ( GFFormsModel::is_field_hidden( $form, $field, array(), $entry ) ) {
 				$value = $field->get_value_default_if_empty( $field->get_value_submission( array(), false ) );
+			} else {
+				$value = $entry_value;
+			}
 
-				if( ! rgblank( $value ) ) {
-					$requires_update = true;
-					$entry[ $field->id ] = $value;
-				}
+			if ( rgblank( $value ) ) {
+				continue;
+			}
 
+			$value = GFCommon::replace_variables( $value, $form, $entry );
+
+			if ( $value != $entry_value ) {
+				$requires_update = true;
+				$entry[ $field->id ] = $value;
 			}
 
 		}
