@@ -1,24 +1,26 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Time Sensitive Choices
+ * https://gravitywiz.com/
  *
- * Provide a drop down of times and automatically filter which choices are available based on the current time.
+ * Manually specify available time slots as choices and this snippet will automatically disable choices that are before
+ * the current time. Link this with a Date field to only filter by time when the current date is selected.
  *
- * @version	  1.1
- * @author    David Smith <david@gravitywiz.com>
- * @license   GPL-2.0+
- * @link      http://gravitywiz.com/...
- * @copyright 2015 Gravity Wiz
+ * Current time is based on the configured WordPress timezone.
  *
- * # WordPress Plugin Header
+ * Works well with [GP Limit Dates](https://gravitywiz.com/documentation/gravity-forms-limit-dates/).
+ *
+ * ## Known Limitations
+ *
+ * 1. Date field integration only works with Datepicker Date fields.
+ * 2. Server side validation has not been implemented. A malicious user could submit a choice that is before the current time.
  *
  * Plugin Name: Gravity Forms Time Sensitive Choices
- * Plugin URI: http://ounceoftalent.com
- * Description: Provide a drop down of times and automatically filter which choices are avialable based on the current time.
- * Author: David Smith
- * Version: 1.1
- * Author URI: http://ounceoftalent.com
- *
+ * Plugin URI:  https://gravitywiz.com
+ * Description: Filter time-based choices based on the current time.
+ * Author:      David Smith
+ * Version:     1.2
+ * Author URI:  https://gravitywiz.com
  */
 class GW_Time_Sensitive_Choices {
 
@@ -27,9 +29,10 @@ class GW_Time_Sensitive_Choices {
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
 		$this->_args = wp_parse_args( $args, array(
 			'form_id'       => false,
-			'field_ids'     => array(),
+			'field_id'      => false,
 			'time_mod'      => false,
 			'date_field_id' => false,
+			'buffer'        => 0,
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -39,64 +42,171 @@ class GW_Time_Sensitive_Choices {
 
 	public function init() {
 
-		// make sure we're running the required minimum version of Gravity Forms
-		if( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=' ) ) {
-			return;
-		}
-
-		add_filter( 'gform_pre_render', array( $this, 'filter_form_by_time' ) );
+		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
+		add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
 
 	}
 
-	public function filter_form_by_time( $form ) {
+	public function load_form_script( $form, $is_ajax_enabled ) {
 
-		if( ! $this->is_applicable_form( $form ) ) {
-			return $form;
-		}
-
-		foreach( $form['fields'] as &$field ) {
-			if( $this->is_applicable_field( $field ) ) {
-				$field->choices = $this->filter_choices_by_time( $field->choices );
-			}
+		if ( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
+			add_action( 'wp_footer', array( $this, 'output_script' ) );
+			add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
 		}
 
 		return $form;
 	}
 
-	public function filter_choices_by_time( $choices ) {
+	public function output_script() {
+		?>
 
-		$filtered_choices = array();
+		<script type="text/javascript">
 
-		$current_time = current_time( 'timestamp' );
+			( function( $ ) {
 
-		if ( isset( $this->_args['date_field_id'] ) && ! empty( $this->_args['date_field_id'] ) ) {
-			if ( isset( $_POST[ 'input_' . $this->_args['date_field_id'] ] ) ) {
-				$date_time_field_posted = strtotime( $_POST['input_' . $this->_args['date_field_id'] ] );
-				if ( $date_time_field_posted > $current_time ) {
-					return $choices;
+				window.GWTimeSensitiveChoices = function( args ) {
+
+					var self = this;
+
+					for( var prop in args ) {
+						if( args.hasOwnProperty( prop ) ) {
+							self[ prop ] = args[ prop ];
+						}
+					}
+
+					self.init = function() {
+
+						self.$target = $( '#input_{0}_{1}'.format( self.formId, self.fieldId ) );
+
+						self.evaluateChoices();
+
+						if ( self.dateFieldId ) {
+							self.$date = $( '#input_{0}_{1}'.format( self.formId, self.dateFieldId ) );
+							self.$date.on( 'change', function() {
+								var selectedDate = self.$date.datepicker( 'getDate' );
+								var currentDate  = self.getCurrentServerTime();
+								// Is future date?
+								if ( selectedDate > currentDate && selectedDate.getDate() > currentDate.getDate() ) {
+									self.enableChoices();
+								} else if ( selectedDate < currentDate && selectedDate.getDate() < currentDate.getDate() ) {
+									self.disableChoices();
+								} else {
+									self.evaluateChoices();
+								}
+
+							} );
+						}
+
+					};
+
+					self.evaluateChoices = function( mode ) {
+
+						var isDisabled;
+						var currentTime = self.getCurrentServerTime();
+
+						self.$target.find( 'option' ).each( function() {
+							switch ( mode ) {
+								case 'enable':
+									isDisabled = false;
+									break;
+								case 'disable':
+									isDisabled = true;
+									break;
+								default:
+									isDisabled = self.getChoiceTime( this.value ) < currentTime;
+							}
+							$( this ).prop( 'disabled', isDisabled );
+						} );
+
+					}
+
+					self.enableChoices = function() {
+						self.evaluateChoices( 'enable' );
+					}
+
+					self.disableChoices = function() {
+						self.evaluateChoices( 'disable' );
+					}
+
+					self.getChoiceTime = function( choiceTime ) {
+						var date = self.parseTime( choiceTime );
+						date.setMinutes( date.getMinutes() - self.buffer );
+						return date;
+					}
+
+					/**
+					 * @see https://stackoverflow.com/a/338439/227711
+					 * @param timeString
+					 * @returns {null|Date}
+					 */
+					self.parseTime = function( timeString ) {
+
+						if ( timeString == '' ) {
+							return null;
+						}
+
+						var date = new Date();
+						var time = timeString.match( /(\d+)(:(\d\d))?\s*(p?)/i );
+
+						date.setHours( parseInt( time[1], 10 ) + ( ( parseInt( time[1], 10 ) < 12 && time[4] ) ? 12 : 0 ) );
+						date.setMinutes( parseInt( time[3], 10 ) || 0 );
+						date.setSeconds( 0, 0 );
+
+						return date;
+					}
+
+					self.getCurrentServerTime = function() {
+						var date = new Date();
+						return self.convertTimezone( date, self.serverTimezone );
+					}
+
+					/**
+					 * @see https://stackoverflow.com/a/338439/227711
+					 * @param date
+					 * @param tzString
+					 * @returns {Date}
+					 */
+					self.convertTimezone = function( date, tzString ) {
+						return new Date( ( typeof date === 'string' ? new Date( date ) : date ).toLocaleString( 'en-US', { timeZone: tzString } ) );
+					}
+
+					self.init();
+
 				}
-			}
+
+			} )( jQuery );
+
+		</script>
+
+		<?php
+	}
+
+	public function add_init_script( $form ) {
+
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return;
 		}
 
-		$max_time    = strtotime( '23:59', $current_time );
-		$time_cutoff = strtotime( $this->_args['time_mod'], $current_time );
+		$args = array(
+			'formId'         => $this->_args['form_id'],
+			'fieldId'        => $this->_args['field_id'],
+			'dateFieldId'    => $this->_args['date_field_id'],
+			'serverTimezone' => get_option( 'timezone_string' ),
+			'buffer'         => $this->_args['buffer'],
+		);
 
-		if( $time_cutoff > $max_time ) {
-			$time_cutoff = $max_time;
-		}
+		$script = 'new GWTimeSensitiveChoices( ' . json_encode( $args ) . ' );';
+		$slug   = implode( '_', array( 'gw_time_sensitive_choices', $this->_args['form_id'], $this->_args['field_id'] ) );
 
-		foreach( $choices as $choice ) {
-			$time = strtotime( $choice['value'], $current_time );
-			if( $time > $time_cutoff ) {
-				$filtered_choices[] = $choice;
-			}
-		}
+		GFFormDisplay::add_init_script( $this->_args['form_id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
 
-		return $filtered_choices;
 	}
 
 	public function is_applicable_form( $form ) {
-		return $this->_args['form_id'] == $form['id'];
+
+		$form_id = isset( $form['id'] ) ? $form['id'] : $form;
+
+		return empty( $this->_args['form_id'] ) || (int) $form_id == (int) $this->_args['form_id'];
 	}
 
 	public function is_applicable_field( $field ) {
@@ -106,14 +216,8 @@ class GW_Time_Sensitive_Choices {
 }
 
 new GW_Time_Sensitive_Choices( array(
-	'form_id' => 964,
-	'field_ids' => array( 10, 12, 13 ),
-	'time_mod' => '+1 hours',
-) );
-
-new GW_Time_Sensitive_Choices( array(
-	'form_id' => 964,
-	'field_ids' => array( 10, 12, 13 ),
-	'time_mod' => '+1 hours',
-	'date_field_id' => 1,
+	'form_id'       => 123,
+	'field_id'      => 4,
+	'date_field_id' => 5,
+	'buffer'        => 60,
 ) );
