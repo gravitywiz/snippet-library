@@ -90,7 +90,7 @@ class GW_Email_Domain_Validator {
 	        $_domain = strtolower( $_domain );
 
             $full_match   = $domain == $_domain;
-            $suffix_match = strpos( $_domain, '.' ) === 0 && $this->str_ends_with( $domain, $_domain );
+            $suffix_match = strpos( $_domain, '.' ) === 0 && $this->string_ends_with( $domain, $_domain );
             $has_match    = $full_match || $suffix_match;
 
             if( $mode == 'ban' && $has_match ) {
@@ -104,7 +104,7 @@ class GW_Email_Domain_Validator {
         return $mode == 'limit' ? false : true;
     }
 
-    function str_ends_with( $string, $text ) {
+    function string_ends_with( $string, $text ) {
 
         $length      = strlen( $string );
         $text_length = strlen( $text );
