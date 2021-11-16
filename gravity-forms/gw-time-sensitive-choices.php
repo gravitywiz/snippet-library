@@ -113,7 +113,11 @@ class GW_Time_Sensitive_Choices {
 									isDisabled = true;
 									break;
 								default:
-									isDisabled = self.getChoiceTime( this.value ) < currentTime;
+									isDisabled = this.value && self.getChoiceTime( this.value ) < currentTime;
+							}
+							// This addresses placeholders specifically... not sure what other exceptions we'll need to make.
+							if ( this.value == '' ) {
+								isDisabled = false;
 							}
 							$( this ).prop( 'disabled', isDisabled );
 						} );
