@@ -30,7 +30,6 @@ class GW_Time_Sensitive_Choices {
 		$this->_args = wp_parse_args( $args, array(
 			'form_id'       => false,
 			'field_id'      => false,
-			'time_mod'      => false,
 			'date_field_id' => false,
 			'buffer'        => 0,
 		) );
