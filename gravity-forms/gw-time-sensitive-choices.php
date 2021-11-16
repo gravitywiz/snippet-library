@@ -79,8 +79,7 @@ class GW_Time_Sensitive_Choices {
 						self.$target = $( '#input_{0}_{1}'.format( self.formId, self.fieldId ) );
 
 						self.bindEvents();
-
-						self.evaluateChoices();
+						self.initializeChoices();
 
 						if ( self.dateFieldId ) {
 							self.$date = $( '#input_{0}_{1}'.format( self.formId, self.dateFieldId ) );
@@ -105,7 +104,7 @@ class GW_Time_Sensitive_Choices {
 						gform.addAction( 'gpi_field_refreshed', function( $targetField, $triggerField, initialLoad ) {
 							if ( gf_get_input_id_by_html_id( self.$target.attr( 'id' ) ) == gf_get_input_id_by_html_id( $targetField.attr( 'id' ) ) ) {
 								self.$target = $targetField;
-								self.evaluateChoices();
+								self.initializeChoices();
 							}
 						} );
 					}
@@ -130,6 +129,11 @@ class GW_Time_Sensitive_Choices {
 							if ( this.value == '' ) {
 								isDisabled = false;
 							}
+							// If choice was loaded from PHP disabled, always honor that. For example, GPI will load the
+							// choice as disabled if its inventory is exhausted.
+							if ( $( this ).data( 'gwtsc-disabled' ) ) {
+								isDisabled = true;
+							}
 							$( this ).prop( 'disabled', isDisabled );
 						} );
 
@@ -141,6 +145,15 @@ class GW_Time_Sensitive_Choices {
 
 					self.disableChoices = function() {
 						self.evaluateChoices( 'disable' );
+					}
+
+					self.initializeChoices = function() {
+						self.$target.find( 'option' ).each( function() {
+							if ( $( this ).prop( 'disabled' ) ) {
+								$( this ).data( 'gwtsc-disabled', true );
+							}
+						} );
+						self.evaluateChoices();
 					}
 
 					self.getChoiceTime = function( choiceTime ) {
