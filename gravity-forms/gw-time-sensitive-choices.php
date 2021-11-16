@@ -78,6 +78,8 @@ class GW_Time_Sensitive_Choices {
 
 						self.$target = $( '#input_{0}_{1}'.format( self.formId, self.fieldId ) );
 
+						self.bindEvents();
+
 						self.evaluateChoices();
 
 						if ( self.dateFieldId ) {
@@ -98,6 +100,15 @@ class GW_Time_Sensitive_Choices {
 						}
 
 					};
+
+					self.bindEvents = function() {
+						gform.addAction( 'gpi_field_refreshed', function( $targetField, $triggerField, initialLoad ) {
+							if ( gf_get_input_id_by_html_id( self.$target.attr( 'id' ) ) == gf_get_input_id_by_html_id( $targetField.attr( 'id' ) ) ) {
+								self.$target = $targetField;
+								self.evaluateChoices();
+							}
+						} );
+					}
 
 					self.evaluateChoices = function( mode ) {
 
