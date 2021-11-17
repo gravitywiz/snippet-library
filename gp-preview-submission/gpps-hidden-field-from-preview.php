@@ -1,5 +1,9 @@
 <?php
 /**
+ * This snippet has been superseded by:
+ * https://github.com/gravitywiz/snippet-library/blob/master/gravity-forms/gw-hide-all-non-visible-fields-via-modifier.php
+ */
+/**
  * Gravity Perks // Preview Submission // Hide Hidden-visibility Fields from Preview (when :nohidden modifier is used)
  * https://gravitywiz.com/documentation/gravity-forms-preview-submission/
  *
