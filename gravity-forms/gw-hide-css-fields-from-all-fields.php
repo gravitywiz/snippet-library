@@ -1,5 +1,9 @@
 <?php
 /**
+ * This snippet has been superseded by:
+ * https://github.com/gravitywiz/snippet-library/blob/master/gravity-forms/gw-hide-all-non-visible-fields-via-modifier.php
+ */
+/**
  * Gravity Wiz // Gravity Forms // Hide Fields Hidden via CSS Classes from {all_fields} Merge Tag
  * https://gravitywiz.com
  *
