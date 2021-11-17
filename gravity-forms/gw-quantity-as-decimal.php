@@ -1,15 +1,16 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Accept Decimal Values for Quantity Fields
+ * https://gravitywiz.com/enable-decimal-values-in-quantity-fields/
  *
  * Allows you to accept decimal values in Quantity fields, converting any Quantity field into a weight field.
  *
- * Plugin Name:  Gravity Wiz // Gravity Forms // Accept Decimal Values for Quantity Fields
- * Plugin URI:   http://gravitywiz.com/enable-decimal-values-in-quantity-fields/
- * Description:  Allows you to accept decimal values in Quantity fields, converting any Quantity field into a weight field.
+ * Plugin Name:  Gravity Forms - Accept Decimal Values for Quantity Fields
+ * Plugin URI:   https://gravitywiz.com/enable-decimal-values-in-quantity-fields/
+ * Description:  Allows you to accept decimal values in Quantity fields.
  * Author:       Gravity Wiz
  * Version:      1.3
- * Author URI:   http://gravitywiz.com
+ * Author URI:   https://gravitywiz.com/
  */
 class GW_Quantity_Decimal {
 
