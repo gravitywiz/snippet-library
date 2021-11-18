@@ -109,6 +109,6 @@ class GWCalculatedShipping {
 # Configuration
 
 new GWCalculatedShipping( array(
-	'form_id'  => 1378,
-	'field_id' => 1,
+	'form_id'  => 123,
+	'field_id' => 4,
 ) );
