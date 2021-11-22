@@ -3,18 +3,14 @@
  * Gravity Wiz // Gravity Forms // Manual Entries
  *
  * Create entries manually for Gravity Forms. Adds an "Add New" button next to the page title on all entry-related pages.
- *
- * @version   1.4
- * @author    David Smith <david@gravitywiz.com>
- * @license   GPL-2.0+
- * @link      http://gravitywiz.com/...
- * @copyright 2015 Gravity Wiz
+ * Also integrates with Nested Forms and adds support for adding new child entries to a Nested Form field from the entry
+ * detail view.
  *
  * Plugin Name: Gravity Forms Manual Entries
  * Plugin URI: http://gravitywiz.com
  * Description: Create entries manually for Gravity Forms. Adds an "Add New" button next to the page title on all entry-related pages.
  * Author: Gravity Wiz
- * Version: 1.4
+ * Version: 1.5
  * Author URI: http://gravitywiz.com
  */
 class GW_Manual_Entries {
@@ -114,8 +110,17 @@ class GW_Manual_Entries {
 
 		if ( $this->is_add_entry_request() ) {
 
-			$form_id  = rgget( 'id' ); // @todo add support for id-less entry list page
-			$entry_id = GFAPI::add_entry( array( 'form_id' => $form_id ) );
+			$form_id = rgget( 'id' ); // @todo add support for id-less entry list page
+
+			/**
+			 * Filter the data that will be used to create a new manual entry.
+			 *
+			 * @since 1.5
+			 *
+			 * @param array $data Any array of data that will be used to create a new manual entry.
+			 */
+			$entry    = gf_apply_filters( array( 'gwme_entry_data', $form_id ), array( 'form_id' => $form_id ) );
+			$entry_id = GFAPI::add_entry( $entry );
 
 			/*
 			 * GF will not fetch an entry that does not have any data in the lead detail table.
