@@ -3,13 +3,13 @@
  * Gravity Perks // Easy Passthrough // Edit Entry
  * https://gravitywiz.com/edit-gravity-forms-entries-on-the-front-end/
  *
- * Edit entry ID specified in field with current form submission.
+ * Edit the entry that was passed through via GP Easy Passthrough rather than creating a new entry.
  *
- * Plugin Name:  GP Easy Passthrough - Set Number of List Field Rows by Field Value
+ * Plugin Name:  GP Easy Passthrough — Edit Entry
  * Plugin URI:   https://gravitywiz.com/edit-gravity-forms-entries-on-the-front-end/
- * Description:  Edit entry ID specified in field with current form submission.
+ * Description:  Edit the entry that was passed through via GP Easy Passthrough rather than creating a new entry.
  * Author:       Gravity Wiz
- * Version:      1.2.1
+ * Version:      1.3
  * Author URI:   https://gravitywiz.com/
  */
 class GPEP_Edit_Entry {
@@ -23,13 +23,13 @@ class GPEP_Edit_Entry {
 
 		add_filter( "gform_entry_id_pre_save_lead_{$this->form_id}", array( $this, 'update_entry_id' ), 10, 2 );
 		add_filter( "gpls_rule_groups_{$this->form_id}", array( $this, 'bypass_limit_submissions' ), 10, 2 );
-		// Enable edit view in GP Inventory
+		// Enable edit view in GP Inventory.
 		add_filter( "gpi_is_edit_view_{$this->form_id}", '__return_true' );
 	}
 
 	public function update_entry_id( $entry_id, $form ) {
 
-		$update_entry_id = $this->get_update_entry_id( $form['id'] );
+		$update_entry_id = $this->get_edit_entry_id( $form['id'] );
 		if ( $update_entry_id ) {
 			if ( $this->delete_partial
 				&& is_callable( array( 'GF_Partial_Entries', 'get_instance' ) )
@@ -47,14 +47,26 @@ class GPEP_Edit_Entry {
 	public function bypass_limit_submissions( $rule_groups, $form_id ) {
 
 		// Bypass GPLS if we're updating an entry.
-		if ( $this->get_update_entry_id( $form_id ) ) {
+		if ( $this->get_edit_entry_id( $form_id ) ) {
 			$rule_groups = array();
 		}
 
 		return $rule_groups;
 	}
 
-	public function get_update_entry_id( $target_form_id ) {
+	public function get_edit_entry_id( $form_id ) {
+		/**
+		 * Filter the ID that will be used to fetch assign the entry to be edited.
+		 *
+		 * @since 1.3
+		 *
+		 * @param int|bool $edit_entry_id The ID of the entry to be edited.
+		 * @param int      $form_id       The ID of the form that was submitted.
+		 */
+		return gf_apply_filters( array( 'gpepee_edit_entry_id', $form_id ), $this->get_edit_entry_id_legwork( $form_id ), $form_id );
+	}
+
+	public function get_edit_entry_id_legwork( $target_form_id ) {
 
 		if ( ! is_callable( 'gp_easy_passthrough' ) ) {
 			return false;
@@ -100,14 +112,17 @@ class GPEP_Edit_Entry {
 		$no_token_diff_forms = ! $has_token && (int) $target_form_id !== (int) $source_form_id;
 
 		if ( ! $update_entry_id && ( $has_token || $no_token_diff_forms ) ) {
-			$update_entry_id = isset( $session[ gp_easy_passthrough()->get_slug() . '_' . $target_form_id ] ) ? $session[ gp_easy_passthrough()->get_slug() . '_' . $target_form_id ] : false;
+			$update_entry_id = isset( $session[ gp_easy_passthrough()->get_slug() . '_' . $source_form_id ] ) ? $session[ gp_easy_passthrough()->get_slug() . '_' . $source_form_id ] : false;
 		}
+
 		// Make sure entry is active before returning its ID for updating
 		$entry = GFAPI::get_entry( $update_entry_id );
 		if ( ! is_wp_error( $entry ) && $entry['status'] !== 'active' ) {
 			$update_entry_id = false;
 		}
-		return $update_entry_id ? $update_entry_id : false;
+
+		// phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		return $update_entry_id ?: false;
 	}
 
 }
