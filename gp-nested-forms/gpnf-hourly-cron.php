@@ -59,7 +59,7 @@ new GPNF_Custom_Orphaned_Entry_Expiration();
  * See https://developer.wordpress.org/reference/functions/wp_get_schedules/ for built-in cron intervals/schedules.
  */
 
-// Configure with custom expiration and built-in cron interval (twice daily)
+//// Configure with custom expiration and built-in cron interval (twice daily)
 //new GPNF_Custom_Orphaned_Entry_Expiration( array(
 //	'expiration' => 60 * 60 * 4, // 4 hours
 //	'interval'   => 'twicedaily',
@@ -69,7 +69,7 @@ new GPNF_Custom_Orphaned_Entry_Expiration();
  * Example configuration: configure with custom expiration and custom cron interval
  */
 
-// Add custom cron schedule of every 5 minutes so it can be used by the GPNF_Custom_Orphaned_Entry_Expiration class.
+//// Add custom cron schedule of every 5 minutes so it can be used by the GPNF_Custom_Orphaned_Entry_Expiration class.
 //add_filter( 'cron_schedules', function ( $schedules ) {
 //	// Adds every five minutes to the existing schedules.
 //	$schedules['everyfiveminutes'] = array(
