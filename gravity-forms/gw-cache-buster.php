@@ -4,7 +4,7 @@
  *
  * Bypass your website cache when loading a Gravity Forms form.
  *
- * @version 0.8
+ * @version 0.9
  * @author  David Smith <david@gravitywiz.com>
  * @license GPL-2.0+
  * @link    http://gravitywiz.com/
@@ -43,6 +43,7 @@ class GW_Cache_Buster {
 		}
 
 		add_filter( 'gform_shortcode_form', array( $this, 'shortcode' ), 10, 3 );
+		add_filter( 'gform_save_and_continue_resume_url', array( $this, 'filter_resume_link' ), 15, 4 );
 
 		add_action( 'wp_ajax_nopriv_gfcb_get_form', array( $this, 'ajax_get_form' ) );
 		add_action( 'wp_ajax_gfcb_get_form', array( $this, 'ajax_get_form' ) );
@@ -192,6 +193,31 @@ class GW_Cache_Buster {
 		gravity_form( $form_id, filter_var( rgar( $atts, 'title', true ), FILTER_VALIDATE_BOOLEAN ), filter_var( rgar( $atts, 'description', true ), FILTER_VALIDATE_BOOLEAN ), false, $field_values, true /* default to true; add support for non-ajax in the future */, rgar( $atts, 'tabindex' ) );
 
 		die();
+	}
+
+	/**
+	 * Since the form is loading admin-ajax.php, GFFormsModel::get_current_page_url() will return the wrong URL when
+	 * saving and continuing.
+	 *
+	 * We need to replace the resume link with the page loading the AJAX form.
+	 *
+	 * @param string $resume_url The URL to be used to resume the partial entry.
+	 * @param array $form The Form Object.
+	 * @param string $resume_token The token that is used within the URL.
+	 * @param string $email The email address associated with the partial entry.
+	 */
+	public function filter_resume_link( $resume_url, $form, $resume_token, $email ) {
+		if ( rgar( $_REQUEST, 'action' ) !== 'gfcb_get_form' ) {
+			return $resume_url;
+		}
+
+		$referer = rgar( $_SERVER, 'HTTP_REFERER' );
+
+		if ( ! $referer ) {
+			return $resume_url;
+		}
+
+		return add_query_arg( array( 'gf_token' => $resume_token ), $referer );
 	}
 
 }
