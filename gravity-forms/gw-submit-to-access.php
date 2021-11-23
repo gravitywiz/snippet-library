@@ -130,7 +130,7 @@ class GW_Submit_Access {
 			return;
 		}
 
-		if ( ! $post || ! $this->requires_access( $post->ID ) || $this->has_access( $post->ID ) ) {
+		if ( ! $post || $this->has_access( $post->ID ) ) {
 			return;
 		}
 
@@ -264,10 +264,21 @@ class GW_Submit_Access {
 			return true;
 		}
 
-		$form_ids = $this->get_form_ids( $post_id );
-		$per_page = $this->requires_submission_per_page( $post_id );
+		$form_ids   = $this->get_form_ids( $post_id );
+		$per_page   = $this->requires_submission_per_page( $post_id );
+		$has_access = $this->has_submitted_form( $form_ids, $per_page, $post_id );
 
-		return $this->has_submitted_form( $form_ids, $per_page, $post_id );
+		/**
+		 * Filter whether the current viewer has access to the given post.
+		 *
+		 * @since 1.10
+		 *
+		 * @param bool $has_access Whether the current viewer has access.
+		 * @param int  $post_id    The ID of the post for which access is being assessed.
+		 */
+		$has_access = apply_filters( 'gfsa_has_access', $has_access, $post_id );
+
+		return $has_access;
 	}
 
 	public function has_submitted_form( $form_ids, $per_page, $post_id ) {
