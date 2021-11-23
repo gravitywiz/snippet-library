@@ -184,17 +184,20 @@ class GW_Time_Sensitive_Choices {
 
 					self.getCurrentServerTime = function() {
 						var date = new Date();
-						return self.convertTimezone( date, self.serverTimezone );
+						return self.convertTimezone( date );
 					}
 
-					/**
-					 * @see https://stackoverflow.com/a/338439/227711
-					 * @param date
-					 * @param tzString
-					 * @returns {Date}
-					 */
-					self.convertTimezone = function( date, tzString ) {
-						return new Date( ( typeof date === 'string' ? new Date( date ) : date ).toLocaleString( 'en-US', { timeZone: tzString } ) );
+					self.convertTimezone = function( date ) {
+						if ( $.isNumeric( self.serverTimezone ) ) {
+							// Get the difference between the WP timezone and the user's local time in minutes.
+							var localDiff = date.getTimezoneOffset() + ( self.serverTimezone * 60 );
+							if ( localDiff ) {
+								date.setMinutes( localDiff );
+							}
+						} else {
+							date = new Date( ( typeof date === 'string' ? new Date( date ) : date ).toLocaleString( 'en-US', { timeZone: self.serverTimezone } ) );
+						}
+						return date;
 					}
 
 					self.init();
@@ -218,7 +221,7 @@ class GW_Time_Sensitive_Choices {
 			'formId'         => $this->_args['form_id'],
 			'fieldId'        => $this->_args['field_id'],
 			'dateFieldId'    => $this->_args['date_field_id'],
-			'serverTimezone' => get_option( 'timezone_string' ),
+			'serverTimezone' => get_option( 'timezone_string' ) ?: get_option( 'gmt_offset' ),
 			'buffer'         => $this->_args['buffer'],
 		);
 
