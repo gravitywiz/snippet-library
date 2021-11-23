@@ -4,19 +4,12 @@
  *
  * Require that a form be submitted before a post or page can be accessed.
  *
- * @version   1.9
- * @author    David Smith <david@gravitywiz.com>
- * @license   GPL-2.0+
- * @link      https://gravitywiz.com/submit-gravity-form-access-content/
- *
- * ### WordPress Plugin Headers ###
- *
  * Plugin Name: Gravity Forms Submit to Access
- * Plugin URI: https://gravitywiz.com/submit-gravity-form-access-content/
+ * Plugin URI:  https://gravitywiz.com/submit-gravity-form-access-content/
  * Description: Require that a form be submitted before a post or page can be accessed.
- * Author: Gravity Wiz
- * Version: 1.9
- * Author URI: http://gravitywiz.com
+ * Author:      Gravity Wiz
+ * Version:     1.10
+ * Author URI:  https://gravitywiz.com
  */
 class GW_Submit_Access {
 
