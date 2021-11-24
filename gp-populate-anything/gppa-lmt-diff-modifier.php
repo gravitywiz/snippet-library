@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // Populate Anything // Diff Modifier for Live Merge Tags
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
