@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // Nested Forms // Add Total Entry Count for Nested Form Fields in Entry List View
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
