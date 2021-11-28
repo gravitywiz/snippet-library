@@ -76,42 +76,56 @@ class GW_Time_Sensitive_Choices {
 					self.init = function() {
 
 						self.$target = $( '#input_{0}_{1}'.format( self.formId, self.fieldId ) );
-
-						self.bindEvents();
-						self.initializeChoices();
-
 						if ( self.dateFieldId ) {
 							self.$date = $( '#input_{0}_{1}'.format( self.formId, self.dateFieldId ) );
-							self.$date.on( 'change', function() {
-								var selectedDate = self.$date.datepicker( 'getDate' );
-								var currentDate  = self.getCurrentServerTime();
-								// Is future date?
-								if ( selectedDate > currentDate && selectedDate.getDate() > currentDate.getDate() ) {
-									self.enableChoices();
-								} else if ( selectedDate < currentDate && selectedDate.getDate() < currentDate.getDate() ) {
-									self.disableChoices();
-								} else {
-									self.evaluateChoices();
-								}
-
+							self.bindEvents();
+							setTimeout( function() {
+								self.initializeChoices();
 							} );
+						} else {
+							self.bindEvents();
+							self.initializeChoices();
 						}
 
 					};
 
 					self.bindEvents = function() {
+
 						gform.addAction( 'gpi_field_refreshed', function( $targetField, $triggerField, initialLoad ) {
 							if ( gf_get_input_id_by_html_id( self.$target.attr( 'id' ) ) == gf_get_input_id_by_html_id( $targetField.attr( 'id' ) ) ) {
 								self.$target = $targetField;
 								self.initializeChoices();
 							}
 						} );
+
+						if ( self.$date.length ) {
+							self.$date.on( 'change', function() {
+								self.evaluateChoices();
+							} );
+						}
+
 					}
 
-					self.evaluateChoices = function( mode ) {
+					self.evaluateChoices = function() {
 
 						var isDisabled;
+						var mode;
 						var currentTime = self.getCurrentServerTime();
+
+						if ( self.dateFieldId ) {
+							var selectedDate = self.$date.datepicker( 'getDate' );
+							if ( selectedDate !== null ) {
+								var currentDate = self.getCurrentServerTime();
+								// Is future date?
+								if ( selectedDate > currentDate && selectedDate.getDate() > currentDate.getDate() ) {
+									mode = 'enable';
+								}
+								// Is past date?
+								else if ( selectedDate < currentDate && selectedDate.getDate() < currentDate.getDate() ) {
+									mode = 'disable';
+								}
+							}
+						}
 
 						self.$target.find( 'option' ).each( function() {
 							switch ( mode ) {
@@ -136,14 +150,6 @@ class GW_Time_Sensitive_Choices {
 							$( this ).prop( 'disabled', isDisabled );
 						} );
 
-					}
-
-					self.enableChoices = function() {
-						self.evaluateChoices( 'enable' );
-					}
-
-					self.disableChoices = function() {
-						self.evaluateChoices( 'disable' );
 					}
 
 					self.initializeChoices = function() {
