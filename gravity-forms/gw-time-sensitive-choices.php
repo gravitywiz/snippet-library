@@ -163,8 +163,26 @@ class GW_Time_Sensitive_Choices {
 
 					self.getChoiceTime = function( choiceTime ) {
 						var date = self.parseTime( choiceTime );
+						// Ensure that times are always checked for the selected date. Without this, times will be based
+						// on the user's current date. This is only relevant when the user is in a different timezone
+						// than the server.
+						if ( self.dateFieldId ) {
+							var selectedDate = self.getSelectedDate();
+							if ( selectedDate ) {
+								var isMidnight = date.getDate() === selectedDate.getDate() + 1 && date.getHours() === 0;
+								// We're making an assumption here that if people will want midnight to be a future time
+								// and not midnight from the morning of the current date.
+								if ( ! isMidnight ) {
+									date.setDate( selectedDate.getDate() );
+								}
+							}
+						}
 						date.setMinutes( date.getMinutes() - self.buffer );
 						return date;
+					}
+
+					self.getSelectedDate = function() {
+						return self.$date.datepicker( 'getDate' );
 					}
 
 					/**
