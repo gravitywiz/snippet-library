@@ -109,9 +109,14 @@ class GPEP_Edit_Entry {
 		}
 
 		$has_token           = ! empty( rgget( 'ep_token' ) );
-		$no_token_diff_forms = ! $has_token && (int) $target_form_id !== (int) $source_form_id;
+		$get_id_from_session = ! $has_token;
 
-		if ( ! $update_entry_id && ( $has_token || $no_token_diff_forms ) ) {
+		$allows_same_form_passthrough = ! gf_apply_filters( array( 'gpep_disable_same_form_passthrough', $target_form_id ), false );
+		if ( ! $allows_same_form_passthrough && (int) $target_form_id === (int) $source_form_id ) {
+			$get_id_from_session = false;
+		}
+
+		if ( ! $update_entry_id && $get_id_from_session ) {
 			$update_entry_id = isset( $session[ gp_easy_passthrough()->get_slug() . '_' . $source_form_id ] ) ? $session[ gp_easy_passthrough()->get_slug() . '_' . $source_form_id ] : false;
 		}
 
