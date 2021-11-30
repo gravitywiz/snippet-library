@@ -26,28 +26,33 @@ function gpnf_override_parent_merge_tags( $entry, $form ) {
 			foreach ( $child_form['fields'] as $child_field ) {
 				if ( $child_field->get_entry_inputs() ) {
 					foreach ( $child_field->get_entry_inputs() as $input ) {
-						preg_match( '/{Parent:(.+)}/i', rgar( $input, 'defaultValue' ), $match );
-						if ( $match ) {
-							$value           = rgar( $entry, $match[1] );
-							$child_entry_ids = explode( ',', rgar( $entry, $field->id ) );
-							foreach ( $child_entry_ids as $child_entry_id ) {
-								GFAPI::update_entry_field( $child_entry_id, $input['id'], $value );
-							}
-						}
+						gpnf_override_child_entry_input_value( $entry, $field, $input['id'], rgar( $input, 'defaultValue' ) );
 					}
 				} else {
-					preg_match( '/{Parent:(.+)}/i', $child_field->defaultValue, $match );
-					if ( $match ) {
-						$value           = rgar( $entry, $match[1] );
-						$child_entry_ids = explode( ',', rgar( $entry, $field->id ) );
-						foreach ( $child_entry_ids as $child_entry_id ) {
-							GFAPI::update_entry_field( $child_entry_id, $child_field->id, $value );
-						}
-					}
+					gpnf_override_child_entry_input_value( $entry, $field, $child_field->id, $child_field->defaultValue );
 				}
 			}
 		}
 	}
 
 	return $entry;
+}
+
+function gpnf_override_child_entry_input_value( $entry, $field, $input_id, $default_value ) {
+
+	preg_match_all( '/{Parent:(\d+(\.\d+)?)[^}]*}/i', $default_value, $matches, PREG_SET_ORDER );
+	if ( empty( $matches ) ) {
+		return;
+	}
+
+	$value = $default_value;
+	foreach ( $matches as $match ) {
+		$value = str_replace( $match[0], rgar( $entry, $match[1] ), $value );
+	}
+
+	$child_entry_ids = explode( ',', rgar( $entry, $field->id ) );
+	foreach ( $child_entry_ids as $child_entry_id ) {
+		GFAPI::update_entry_field( $child_entry_id, $input_id, $value );
+	}
+
 }
