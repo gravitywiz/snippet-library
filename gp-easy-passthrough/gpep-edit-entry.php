@@ -21,10 +21,31 @@ class GPEP_Edit_Entry {
 		$this->form_id        = rgar( $options, 'form_id' );
 		$this->delete_partial = rgar( $options, 'delete_partial', true );
 
+		add_filter( "gpep_form_{$this->form_id}", array( $this, 'capture_passed_through_entry_ids' ), 10, 3 );
 		add_filter( "gform_entry_id_pre_save_lead_{$this->form_id}", array( $this, 'update_entry_id' ), 10, 2 );
 		add_filter( "gpls_rule_groups_{$this->form_id}", array( $this, 'bypass_limit_submissions' ), 10, 2 );
+
 		// Enable edit view in GP Inventory.
 		add_filter( "gpi_is_edit_view_{$this->form_id}", '__return_true' );
+
+	}
+
+	public function capture_passed_through_entry_ids( $form, $values, $passed_through_entries ) {
+
+		if ( empty( $passed_through_entries ) ) {
+			return $form;
+		}
+
+		// Add hidden input to capture entry IDs passed through via GPEP.
+
+		add_filter( "gform_form_tag_{$form['id']}", function( $form_tag, $form ) use ( $passed_through_entries ) {
+			$entry_ids = wp_list_pluck( $passed_through_entries, 'entry_id' );
+			$input     = sprintf( '<input type="hidden" name="%s" value="%s">', $this->get_passed_through_entries_input_name( $form['id'] ), implode( ',', $entry_ids ) );
+			$form_tag .= $input;
+			return $form_tag;
+		}, 10, 2 );
+
+		return $form;
 	}
 
 	public function update_entry_id( $entry_id, $form ) {
@@ -44,17 +65,20 @@ class GPEP_Edit_Entry {
 		return $entry_id;
 	}
 
-	public function bypass_limit_submissions( $rule_groups, $form_id ) {
+	public function get_passed_through_entries_input_name( $form_id ) {
+		return "gpepee_passed_through_entries_{$form_id}";
+	}
 
-		// Bypass GPLS if we're updating an entry.
-		if ( $this->get_edit_entry_id( $form_id ) ) {
-			$rule_groups = array();
-		}
-
-		return $rule_groups;
+	public function get_passed_through_entry_ids( $form_id ) {
+		$entry_ids = explode( ',', rgpost( $this->get_passed_through_entries_input_name( $form_id ) ) );
+		return $entry_ids;
 	}
 
 	public function get_edit_entry_id( $form_id ) {
+
+		$entry_ids = $this->get_passed_through_entry_ids( $form_id );
+		$entry_id  = array_shift( $entry_ids );
+
 		/**
 		 * Filter the ID that will be used to fetch assign the entry to be edited.
 		 *
@@ -63,71 +87,17 @@ class GPEP_Edit_Entry {
 		 * @param int|bool $edit_entry_id The ID of the entry to be edited.
 		 * @param int      $form_id       The ID of the form that was submitted.
 		 */
-		return gf_apply_filters( array( 'gpepee_edit_entry_id', $form_id ), $this->get_edit_entry_id_legwork( $form_id ), $form_id );
+		return gf_apply_filters( array( 'gpepee_edit_entry_id', $form_id ), $entry_id, $form_id );
 	}
 
-	public function get_edit_entry_id_legwork( $target_form_id ) {
+	public function bypass_limit_submissions( $rule_groups, $form_id ) {
 
-		if ( ! is_callable( 'gp_easy_passthrough' ) ) {
-			return false;
+		// Bypass GPLS if we're updating an entry.
+		if ( $this->get_edit_entry_id( $form_id ) ) {
+			$rule_groups = array();
 		}
 
-		$feeds = gp_easy_passthrough()->get_active_feeds( $target_form_id );
-		if ( empty( $feeds ) ) {
-			return false;
-		}
-
-		$session         = gp_easy_passthrough()->session_manager();
-		$update_entry_id = false;
-
-		foreach ( $feeds as $feed ) {
-			// @todo evaluate conditional logic before processing feed...
-			$source_form_id = $feed['meta']['sourceForm'];
-			// GPEP doesn't check for the user's last entry until the form is being rendered... but GPLS needs to know
-			// if we're updating an entry during validation which happens beforehand. Let's do the same legwork GPEP
-			// will do later to check for the last submitted entry when that option is active.
-			if ( rgars( $feed, 'meta/userPassthrough' ) && is_user_logged_in() ) {
-				$last_submitted_entry = GFAPI::get_entries(
-					$source_form_id,
-					array(
-						'field_filters' => array(
-							array(
-								'key'   => 'created_by',
-								'value' => get_current_user_id(),
-							),
-						),
-						'status'        => 'active',
-					),
-					array(
-						'key'       => 'date_created',
-						'direction' => 'DESC',
-					),
-					array( 'page_size' => 1 )
-				);
-				$update_entry_id      = rgars( $last_submitted_entry, '0/id', false );
-			}
-		}
-
-		$has_token           = ! empty( rgget( 'ep_token' ) );
-		$get_id_from_session = ! $has_token;
-
-		$allows_same_form_passthrough = ! gf_apply_filters( array( 'gpep_disable_same_form_passthrough', $target_form_id ), false );
-		if ( ! $allows_same_form_passthrough && (int) $target_form_id === (int) $source_form_id ) {
-			$get_id_from_session = false;
-		}
-
-		if ( ! $update_entry_id && $get_id_from_session ) {
-			$update_entry_id = isset( $session[ gp_easy_passthrough()->get_slug() . '_' . $source_form_id ] ) ? $session[ gp_easy_passthrough()->get_slug() . '_' . $source_form_id ] : false;
-		}
-
-		// Make sure entry is active before returning its ID for updating
-		$entry = GFAPI::get_entry( $update_entry_id );
-		if ( ! is_wp_error( $entry ) && $entry['status'] !== 'active' ) {
-			$update_entry_id = false;
-		}
-
-		// phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-		return $update_entry_id ?: false;
+		return $rule_groups;
 	}
 
 }
