@@ -52,7 +52,7 @@ class GW_Multi_File_Merge_Tag {
 			'formats'            => array( 'html' ),
 			'markup'         => array(
 				array(
-					'file_types' => array( 'jpg', 'png', 'gif' ),
+					'file_types' => array( 'jpg', 'jpeg', 'png', 'gif' ),
 					'markup'     => '<img src="{url}" width="33%" />',
 				),
 				array(
