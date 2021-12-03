@@ -39,8 +39,10 @@ class GPEP_Edit_Entry {
 		// Add hidden input to capture entry IDs passed through via GPEP.
 
 		add_filter( "gform_form_tag_{$form['id']}", function( $form_tag, $form ) use ( $passed_through_entries ) {
-			$entry_ids = wp_list_pluck( $passed_through_entries, 'entry_id' );
-			$input     = sprintf( '<input type="hidden" name="%s" value="%s">', $this->get_passed_through_entries_input_name( $form['id'] ), implode( ',', $entry_ids ) );
+			$entry_ids = implode( ',', wp_list_pluck( $passed_through_entries, 'entry_id' ) );
+			$hash      = wp_hash( $entry_ids );
+			$value     = sprintf( '%s|%s', $entry_ids, $hash );
+			$input     = sprintf( '<input type="hidden" name="%s" value="%s">', $this->get_passed_through_entries_input_name( $form['id'] ), $value );
 			$form_tag .= $input;
 			return $form_tag;
 		}, 10, 2 );
@@ -70,7 +72,19 @@ class GPEP_Edit_Entry {
 	}
 
 	public function get_passed_through_entry_ids( $form_id ) {
-		$entry_ids = explode( ',', rgpost( $this->get_passed_through_entries_input_name( $form_id ) ) );
+
+		$posted_value = rgpost( $this->get_passed_through_entries_input_name( $form_id ) );
+		if ( empty( $posted_value ) ) {
+			return array();
+		}
+
+		list( $entry_ids, $hash ) = explode( '|', $posted_value );
+		if ( $hash !== wp_hash( $entry_ids ) ) {
+			return array();
+		}
+
+		$entry_ids = explode( ',', $entry_ids );
+
 		return $entry_ids;
 	}
 
