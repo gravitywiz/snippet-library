@@ -4,7 +4,7 @@
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  */
 add_filter( 'wp_inline_script_attributes', function ( $attributes, $javascript ) {
-	if ( strpos( $javascript, 'gform' ) ) {
+	if ( strpos( $javascript, 'gform.' ) ) {
 		$attributes['data-cfasync'] = 'false';	
 	}
 	return $attributes;
