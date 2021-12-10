@@ -7,6 +7,9 @@
  *
  * This snippet will show a warning that there are unsaved changes if the user attempts to exit the page without
  * updating the parent entry.
+ * 
+ * If you would rather automatically attach child entries to the parent entry on creation, see:
+ * https://github.com/gravitywiz/snippet-library/blob/master/gp-nested-forms/gpnf-gv-auto-attach-child-entries.php
  */
 $( document ).ready( function() {
 
