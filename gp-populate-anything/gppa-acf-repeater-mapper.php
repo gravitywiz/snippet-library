@@ -13,6 +13,11 @@
  * 4. Use the "Choice Template" to match each choice property to a repeater subfield.
  *    For example, if your repeater is labeled "parts" and you want to populate the "name" subfield as the choice label,
  *    select "parts_0_name" for the "Label" template. [Screenshot](https://gwiz.io/3m4Yq0y).
+ * 5. Add the "gppa-acf-repeater-mapper" to the field's CSS Class Name setting.
+ *
+ * Video
+ *
+ * https://www.loom.com/share/a375fd3a5e6a4931a55e50d51eaec951
  *
  * Plugin Name:  GP Populate Anything — ACF Repeater Mapper
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-populate-anything/
