@@ -6,7 +6,7 @@
  * Create multiple by entries based on the rows of a List field. All other field data will be duplicated for each entry.
  * List field inputs are mapped to Admin-only fields on the form.
  *
- * Plugin Name:  Gravity Forms - Email Domain Validator
+ * Plugin Name:  Gravity Forms - Multiple Entries by List Field
  * Plugin URI:   https://gravitywiz.com/
  * Description:  Create multiple by entries based on the rows of a List field.
  * Author:       Gravity Wiz
