@@ -111,21 +111,31 @@ add_filter( 'gform_shortcode_inventory', function ( $output, $atts, $content ) {
 			$available = gp_inventory_type_advanced()->get_available_stock( $field );
 			$limit     = gp_inventory_type_advanced()->get_stock_quantity( $field );
 			$count     = gp_inventory_type_advanced()->get_claimed_inventory( $field );
+
+			/**
+			 * Temporarily remove filter for resources to get the inventory count specific to the field rather than the
+			 * count of all fields using the same resource.
+			 */
+			remove_filter( 'gpi_query', array( gp_inventory_type_advanced(), 'resource_and_properties' ), 9 );
+			$count_current_field = gp_inventory_type_simple()->get_claimed_inventory( $field );
+			add_filter( 'gpi_query', array( gp_inventory_type_advanced(), 'resource_and_properties' ), 9 );
 		} else {
-			$available = gp_inventory_type_simple()->get_available_stock( $field );
-			$limit     = gp_inventory_type_simple()->get_stock_quantity( $field );
-			$count     = gp_inventory_type_simple()->get_claimed_inventory( $field );
+			$available           = gp_inventory_type_simple()->get_available_stock( $field );
+			$limit               = gp_inventory_type_simple()->get_stock_quantity( $field );
+			$count               = gp_inventory_type_simple()->get_claimed_inventory( $field );
+			$count_current_field = $count;
 		}
 
 		$label = $field->get_field_label( false, '' );
 
 		if ( $content ) {
 			$output .= gpis_get_item_markup( $content, array(
-				'limit'     => $limit,
-				'count'     => $count,
-				'available' => $available,
-				'label'     => $label,
-				'value'     => '',
+				'limit'               => $limit,
+				'count'               => $count,
+				'count_current_field' => $count_current_field,
+				'available'           => $available,
+				'label'               => $label,
+				'value'               => '',
 			) );
 		} else {
 			$output .= $label . ': ' . $available;
@@ -143,6 +153,7 @@ function gpis_get_item_markup( $template, $args ) {
 
 	$markup = str_replace( '{limit}', $args['limit'], $markup );
 	$markup = str_replace( '{count}', $args['count'], $markup );
+	$markup = str_replace( '{count_current_field}', $args['count_current_field'], $markup );
 	$markup = str_replace( '{available}', $args['available'], $markup );
 	$markup = str_replace( '{label}', $args['label'], $markup );
 	$markup = str_replace( '{value}', $args['value'], $markup );
