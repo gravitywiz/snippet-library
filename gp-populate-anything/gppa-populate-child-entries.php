@@ -21,6 +21,11 @@
  * 3. Select the desired child form for which you wish to fetch child entries.
  * 4. Add a filter and filter where Parent Entry ID entry meta is equal to the the Hidden field you created in Step 1.
  *
+ * Important Note:
+ *
+ * If you want to use this with GravityView, you must use the Auto Attach Child Entries snippet:
+ * https://github.com/gravitywiz/snippet-library/blob/master/gp-nested-forms/gpnf-gv-auto-attach-child-entries.php
+ *
  * Plugin Name:  GP Populate Anything — Populate Child Entries
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  * Description:  A brief description about this snippet and the functionality it provides. Might also include basic usage instructions if applicable.
@@ -45,17 +50,41 @@ class GPPA_Populate_Child_Entries {
 
 		add_filter( 'gform_field_value_gpnf_parent_entry_id', array( $this, 'populate_parent_entry_id' ), 10, 2 );
 		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
+
 		// Priority 11 so that it will initialize *after* Nested Forms.
 		add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 11, 2 );
+
+		add_action( 'gravityview/edit-entry/render/before', array( $this, 'modify_gv_entry' ) );
 
 	}
 
 	public function populate_parent_entry_id( $value, $field ) {
 
-		$session = new GPNF_Session( $field->formId );
-		$cookie = $session->get_cookie();
+		if ( is_callable( 'gravityview_get_context' ) && gravityview_get_context() === 'edit' ) {
+			$value = GravityView_frontend::is_single_entry();
+		} else {
+			$session = new GPNF_Session( $field->formId );
+			$cookie  = $session->get_cookie();
+			$value   = rgar( $cookie, 'hash', '' );
+		}
 
-		return rgar( $cookie, 'hash', '' );
+		return $value;
+	}
+
+	/**
+	 * GV passes the full parent entry as field values when rendering the entry for editing. Populate Anything honors the
+	 * submitted entry values rather than using the prepopulated values. To avoid this, let's unset those values from the
+	 * entry before GV attempts to render the form.
+	 *
+	 * @param $gv_edit_entry_renderer
+	 */
+	public function modify_gv_entry( $gv_edit_entry_renderer ) {
+
+		$parent_entry_id_field_id = $this->get_parent_entry_id_field( $gv_edit_entry_renderer->form );
+		if ( $parent_entry_id_field_id ) {
+			unset( $gv_edit_entry_renderer->entry[ $parent_entry_id_field_id ] );
+		}
+
 	}
 
 	public function load_form_script( $form, $is_ajax_enabled ) {
