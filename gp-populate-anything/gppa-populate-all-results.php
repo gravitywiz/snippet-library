@@ -6,6 +6,13 @@
  * By default, when populating a field's value, Populate Anything will only populated the first found result. This
  * snippet adds support for populating all found results. Just add the "gppa-populate-all" CSS class to the field's
  * CSS Class Name setting.
+ *
+ * Video
+ *
+ * https://www.loom.com/share/2c90686daf9644e5ac0d7f20e247898a
+ *
+ *
+ *
  */
 add_filter( 'gppa_process_template_value', function( $template_value, $field, $template_name, $populate, $object, $object_type, $objects, $template ) {
 	if ( strpos( $field->cssClass, 'gppa-populate-all' ) !== false ) {
