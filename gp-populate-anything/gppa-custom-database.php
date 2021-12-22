@@ -10,6 +10,13 @@
  *
  * You can add multiple databases by adjusting the class names and adding additional
  * gp_populate_anything()->register_object_type() calls.
+ *
+ *
+ * Video
+ * https://www.loom.com/share/8d1835bde4744d33ac406f4f23e8c82c
+ *
+ *
+ *
  */
 class GPPA_Object_Type_Database_Testing extends GPPA_Object_Type_Database {
 	private const DB_NAME = 'testing';
