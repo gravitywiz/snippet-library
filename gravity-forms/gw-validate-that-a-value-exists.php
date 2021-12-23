@@ -253,7 +253,7 @@ class GW_Value_Exists_Validation {
 
 					self.spinner = function( elem, imageSrc, inlineStyles ) {
 
-						imageSrc     = typeof imageSrc == 'undefined' || ! imageSrc ? self.gfBaseUrl + '/images/spinner.gif': imageSrc;
+						imageSrc     = typeof imageSrc == 'undefined' || ! imageSrc ? window.gf_global.spinnerUrl : imageSrc;
 						inlineStyles = typeof inlineStyles != 'undefined' ? inlineStyles : '';
 
 						this.elem = elem;
