@@ -8,6 +8,9 @@
  * the same session. This snippet will make the session unique to the page the parent form is 
  * embedded on.
  */
-add_filter( 'gpnf_cookie_name', function( $name ) {
-	return $name . md5( $_SERVER['REQUEST_URI'] );
+add_filter( 'gpnf_cookie_name', function ( $name ) {
+	$url  = defined( 'DOING_AJAX' ) && DOING_AJAX ? $_SERVER['HTTP_REFERER'] : $_SERVER['REQUEST_URI'];
+	$bits = parse_url( $url );
+	$mod  = $bits['path'] . '?' . $bits['query'];
+	return $name . md5( $mod );
 } );
