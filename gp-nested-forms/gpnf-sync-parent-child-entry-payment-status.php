@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // Nested Forms // Sync Parent/Child Entry Payment Status
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
