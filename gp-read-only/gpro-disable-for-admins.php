@@ -3,7 +3,9 @@
  * Gravity Perks // GP Read Only // Disable Read Only for Admins
  * https://gravitywiz.com/documentation/gravity-forms-read-only/
  *
- * Disable the Read Only property on fields for Admin users. 
+ * Instruction Video: https://www.loom.com/share/24aaeb27fce44dc98355b78168d6fe5d
+ *
+ * Disable the Read Only property on fields for Admin users.
  * This is useful when wanting to allow administrative users to edit fields that non-admins should not be able to edit.
  *
  * Usage:
