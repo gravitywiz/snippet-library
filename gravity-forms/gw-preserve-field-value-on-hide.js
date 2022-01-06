@@ -9,7 +9,7 @@
  * 3. Update '4' to the ID of the field you want to target.
  */
 gform.addFilter( 'gform_reset_pre_conditional_logic_field_action', function( shouldReset, formId, targetId, defaultValues, isInit ) {
-	if ( formId == GFFORMID && gf_get_input_id_by_html_id( targetId ) == 4) {
+	if ( formId == GFFORMID && gf_get_input_id_by_html_id( targetId ) == 4 ) {
 		shouldReset = false;
 	}
 	return shouldReset;
