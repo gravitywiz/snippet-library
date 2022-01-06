@@ -2,6 +2,8 @@
 /**
  * Gravity Wiz // Gravity Forms // Choice Counter
  *
+ * Instruction Video: https://www.loom.com/share/6e21ea6072a74c4b9d21449d850e2cd1
+ *
  * Get the total number of checkboxes checked or multi-select options selected. Useful when wanting to apply conditional
  * logic based on those totals.
  *
