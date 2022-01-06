@@ -1,5 +1,5 @@
 /**
- * Gravity Wiz // Gravity Forms // Preserve Field Value on Hide
+ * Gravity Wiz // Gravity Forms // Preserve Field Value on Conditional Logic Hide
  * https://gravitywiz.com/
  *
  * Instructions:
