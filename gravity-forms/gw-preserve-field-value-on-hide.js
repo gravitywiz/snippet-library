@@ -3,7 +3,7 @@
  * https://gravitywiz.com/
  *
  * Instructions:
- * 1. Install our free Custom Javascript for Gravity Forms plugin. 
+ * 1. Install our free Gravity Forms Custom Javascript plugin.
  *    https://gravitywiz.com/gravity-forms-custom-javascript/
  * 2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
  * 3. Update '4' to the ID of the field you want to target.
