@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // Inventory // Auto-selections
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
