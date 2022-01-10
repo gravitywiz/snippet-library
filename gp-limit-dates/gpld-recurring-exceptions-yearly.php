@@ -3,6 +3,8 @@
  * Gravity Perks // Limit Dates // Yearly Recurring Exceptions
  * https://gravitywiz.com/documentation/gravity-forms-limit-dates/
  *
+ * Instruction Video: https://www.loom.com/share/8552ee47135c4a8cb78560abeacdb665
+ *
  * This snippet will make all excepted dates recur yearly.
  */
 // Update "123" to your form ID. Update "4" to your Date field ID.
