@@ -10,7 +10,7 @@
  * employees are assigned to the next available shift, and/or balancing the responsibility of any task-oriented
  * submission (e.g. support request, job application, contest entry).
  *
- * @version  1.3
+ * @version  1.4
  * @author   David Smith <david@gravitywiz.com>
  * @license  GPL-2.0+
  * @link     http://gravitywiz.com/
@@ -107,10 +107,14 @@ class GW_Round_Robin {
 			return $fields;
 		}
 
-		$rotation = $this->get_rotation_values( $this->_args['field_id'], $form );
+		$field = GFAPI::get_field( $form, $this->_args['field_id'] );
+		if ( is_callable( 'gp_populate_anything' ) && $field->{'gppa-choices-enabled'} ) {
+			$fields[] = $field;
+		}
 
+		$rotation = $this->get_rotation_values( $this->_args['field_id'], $form );
 		if ( filter_var( $rotation[0], FILTER_VALIDATE_EMAIL ) ) {
-			$fields[] = GFAPI::get_field( $form, $this->_args['field_id'] );
+			$fields[] = $field;
 		}
 
 		return $fields;
