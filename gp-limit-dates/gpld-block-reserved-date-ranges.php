@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // Limit Dates // Block Reserved Date Ranges
  *
+ * Instruction Video: https://www.loom.com/share/8eb1f52a08ef4b87974565d6bd14ee6b
+ *
  * Block date ranges reserved by previous submissions in linked Date fields.
  *
  * For example, if a user selects Nov 5th as their start date and Nov 10th as their end date, prevent those dates and
