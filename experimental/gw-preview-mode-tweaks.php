@@ -1,7 +1,6 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Preview Mode Tweaks
- * http://gravitywiz.com/path/to/snippet/
  *
  * Instruction Video: https://www.loom.com/share/3a42b0ba7452424c8dbde1fc4988a5d0
  *
