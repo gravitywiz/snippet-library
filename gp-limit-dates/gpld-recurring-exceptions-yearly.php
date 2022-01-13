@@ -3,7 +3,7 @@
  * Gravity Perks // Limit Dates // Yearly Recurring Exceptions
  * https://gravitywiz.com/documentation/gravity-forms-limit-dates/
  *
- * Instruction Video: https://www.loom.com/share/8552ee47135c4a8cb78560abeacdb665
+ * Instruction Video: https://www.loom.com/share/9f9fcfa2901d46cabd319ac9ada2d1ca
  *
  * This snippet will make all excepted dates recur yearly.
  */
