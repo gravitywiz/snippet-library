@@ -3,13 +3,16 @@
  * Gravity Perks // Inventory // Auto-selections
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
  */
-$gpias_form_id = 740;
-$gpias_list_field_id = 3;
-$gpias_product_field_id = 2;
+global $gpias_form_id, $gpias_list_field_id, $gpias_product_field_id;
+
+$gpias_form_id = 123;
+$gpias_list_field_id = 4;
+$gpias_product_field_id = 5;
 
 add_filter( "gform_column_input_{$gpias_form_id}_{$gpias_list_field_id}_1", function( $input_info, $field, $column, $value, $form_id ) {
+	global $gpias_product_field_id;
 
-	$source_field = GFAPI::get_field( $form_id, 2 );
+	$source_field = GFAPI::get_field( $form_id, $gpias_product_field_id );
 	$choices      = $source_field->choices;
 
 	foreach ( $choices as &$choice ) {
