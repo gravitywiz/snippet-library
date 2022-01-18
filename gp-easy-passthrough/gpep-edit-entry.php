@@ -27,6 +27,9 @@ class GPEP_Edit_Entry {
 		// Enable edit view in GP Inventory.
 		add_filter( "gpi_is_edit_view_{$this->form_id}", '__return_true' );
 
+		// Bypass limit submissions on validation
+		add_filter( 'gform_validation', array( $this, 'bypass_limit_submission_validation' ) );
+
 	}
 
 	public function capture_passed_through_entry_ids( $form, $values, $passed_through_entries ) {
@@ -48,15 +51,28 @@ class GPEP_Edit_Entry {
 
 		add_filter( "gpls_rule_groups_{$this->form_id}", function( $rule_groups, $form_id ) use ( $passed_through_entries ) {
 			// Bypass GPLS if we're updating an entry.
-			if ( !empty( $passed_through_entries ) ) {
+			if ( ! empty( $passed_through_entries ) ) {
 				$rule_groups = array();
 			}
 
 			return $rule_groups;
 		}, 10, 2 );
 
-
 		return $form;
+	}
+
+	public function bypass_limit_submission_validation( $validation_result ) {
+		$edit_entry_id = $this->get_edit_entry_id( rgars( $validation_result, 'form/id' ) );
+
+		if ( ! $edit_entry_id ) {
+			return $validation_result;
+		}
+
+		add_filter( "gpls_rule_groups_{$this->form_id}", function( $rule_groups, $form_id ) use ( $edit_entry_id ) {
+			return array();
+		}, 10, 2 );
+
+		return $validation_result;
 	}
 
 	public function update_entry_id( $entry_id, $form ) {
