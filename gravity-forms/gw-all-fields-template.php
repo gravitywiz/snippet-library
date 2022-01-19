@@ -8,7 +8,7 @@
  * Plugin URI:   https://gravitywiz.com/gravity-forms-all-fields-template/
  * Description:  Modify the {all_fields} merge tag output via a template file.
  * Author:       Gravity Wiz
- * Version:      0.9.12
+ * Version:      0.9.13
  * Author URI:   http://gravitywiz.com
  *
  * Usage:
@@ -229,6 +229,17 @@ class GW_All_Fields_Template {
 								}
 							}
 							$value = GFCommon::get_lead_field_display( $field, $values );
+
+							// Consent form requires special treatment to remove the description HTML that's output into {all_fields}
+							// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
+							if ( $field->type === 'consent' && in_array( $field->id . '.3', $input_ids ) ) {
+								$revision_id = ! is_array( $value ) || empty( $value[ $input_id ] )
+									? GFFormsModel::get_latest_form_revisions_id( $field['formId'] ) : $value[ $input_id ];
+
+								$consent_description = $field->get_field_description_from_revision( $revision_id );
+								$description_html    = '<br /><div class="gfield_consent_description">' . nl2br( $consent_description ) . '</div>';
+								$value               = str_replace( $description_html, '', $value );
+							}
 						}
 						// Check for exclusions excluding a specific child field from a Nested Form field.
 						else if ( $field->get_input_type() === 'form' && (int) $mod_value != $mod_value ) {
