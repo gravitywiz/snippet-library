@@ -4,7 +4,7 @@
  *
  * Instruction Video: https://www.loom.com/share/680513c2f0dc403aa6a001f9950f4e77
  *
- * This snippet allows you to use other form Fields as input selectors for GP Address Autocomplete
+ * This snippet allows you to use other form fields as input selectors for GP Address Autocomplete
  *
  * Instructions:
  *     1. Install our free Custom Javascript for Gravity Forms plugin.
