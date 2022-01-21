@@ -10,7 +10,7 @@
  * employees are assigned to the next available shift, and/or balancing the responsibility of any task-oriented
  * submission (e.g. support request, job application, contest entry).
  *
- * @version  1.4
+ * @version  1.5
  * @author   David Smith <david@gravitywiz.com>
  * @license  GPL-2.0+
  * @link     http://gravitywiz.com/
@@ -64,21 +64,8 @@ class GW_Round_Robin {
 			return $entry;
 		}
 
-		$rotation = $this->get_rotation_values( $this->_args['field_id'], $form );
-
-		// Get the last submitted entry.
-		$last_entry = rgar(
-			GFAPI::get_entries(
-				$entry['form_id'],
-				array( 'status' => 'active' ),
-				array( 'direction' => 'desc' ),
-				array(
-					'offset'    => 1,
-					'page_size' => 1,
-				)
-			),
-			0
-		);
+		$rotation   = $this->get_rotation_values( $this->_args['field_id'], $form );
+		$last_entry = $this->get_last_entry( $entry, GFAPI::get_field( $entry['form_id'], $this->_args['field_id'] ) );
 
 		// Get the value submitted for our designated field in the last entry.
 		$last_value = rgar( $last_entry, $this->_args['field_id'] );
@@ -99,6 +86,44 @@ class GW_Round_Robin {
 		$entry[ $this->_args['field_id'] ] = $next_value;
 
 		return $entry;
+	}
+
+	public function get_last_entry( $entry, $field ) {
+
+		$field_filters = array();
+
+		// GPPA integration only supports the first group of filters and filters that are field-specific (no custom values).
+		if ( is_callable( 'gp_populate_anything' ) && $field->{'gppa-choices-enabled'} ) {
+			$gppa_filters = rgar( $field->{'gppa-choices-filter-groups'}, 0 );
+			foreach ( $gppa_filters as $gppa_filter ) {
+				if ( strpos( $gppa_filter['value'], 'gf_field:' ) !== false ) {
+					// Extract the field ID from the value property (e.g. `gf_field:3` → `3`).
+					$bits = explode( 'gf_field:', $gppa_filter['value'] );
+					$field_filters[] = array(
+						'key'   => $bits[1],
+						'value' => rgar( $entry, $bits[1] ),
+					);
+				}
+			}
+		}
+
+		$last_entry = rgar(
+			GFAPI::get_entries(
+				$entry['form_id'],
+				array(
+					'status'        => 'active',
+					'field_filters' => $field_filters,
+				),
+				array( 'direction' => 'desc' ),
+				array(
+					'offset'    => 1,
+					'page_size' => 1,
+				)
+			),
+			0
+		);
+
+		return $last_entry;
 	}
 
 	public function add_round_robin_field_to_notification_email_fields( $fields, $form ) {
