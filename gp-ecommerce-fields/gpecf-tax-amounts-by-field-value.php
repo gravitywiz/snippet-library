@@ -69,7 +69,15 @@ class GPECF_Tax_Amounts_By_Field_Value {
 	}
 
 	function get_tax_amount_by_value( $value ) {
-		return rgar( $this->_args['tax_amounts'], $value, 0 );
+
+		$tax_amount = rgar( $this->_args['tax_amounts'], $value, false );
+
+		// Check for catch all amount if there is no tax amount for the given value.
+		if ( $tax_amount === false ) {
+			$tax_amount = rgar( $this->_args['tax_amounts'], '*', 0 );
+		}
+
+		return $tax_amount;
 	}
 
 	public function is_applicable_form( $form ) {
@@ -90,5 +98,7 @@ new GPECF_Tax_Amounts_By_Field_Value( array(
 	'tax_amounts'    => array(
 		'23325' => 10,
 		'23462' => 25,
+		// Provide a catch-all value.
+		'*'     => 50,
 	),
 ) );
