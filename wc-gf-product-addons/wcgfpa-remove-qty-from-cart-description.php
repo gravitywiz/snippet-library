@@ -3,6 +3,8 @@
  * Gravity Forms // WC GF Product Add-ons // Remove Qty from Cart Description
  * https://gravitywiz.com/
  *
+ * Instruction Video: https://www.loom.com/share/00c1d1ec36bb4f1f93fa2d3f823ee264
+ *
  * Add "wcgfpa-remove-qty" to your field's CSS Class Name setting and this snippet will automatically remove the
  * quantity from the product's description in the cart.
  *
