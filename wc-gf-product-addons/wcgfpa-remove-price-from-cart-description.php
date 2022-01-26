@@ -3,6 +3,8 @@
  * Gravity Forms // WC GF Product Add-ons // Remove Price from Cart Description
  * https://gravitywiz.com/
  *
+ * Instruction Video: https://www.loom.com/share/c9ac3ed9e85443e9888b0bfc99889044
+ *
  * Add "wcgfpa-remove-price" to your field's CSS Class Name setting and this snippet will automatically remove the
  * price from the product's description in the cart.
  *
