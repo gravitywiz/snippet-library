@@ -1,6 +1,12 @@
 /**
  * Gravity Wiz // Gravity Forms // Capture Filename from Single File Upload Field
  * https://gravitywiz.com/
+ *
+ * Instruction Video: https://www.loom.com/share/294728eabe244fe8aba72b051155b4d7
+ *
+ *  * Installation:
+ *    1. Install and Activate https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    2. Navigate to Form Settings > Custom JavaScript and add this snippet.
  */
 var uploadFieldId = 4;
 var targetFieldId = 5;
