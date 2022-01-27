@@ -7,6 +7,7 @@
  * The choice will be selectable and submittable.
  */
 add_filter( 'gpi_disable_choices', '__return_false' );
+add_filter( 'gpi_remove_choices', '__return_false' );
 
 add_filter( 'gpi_pre_render_choice', function( $choice, $exceeded_limit, $field, $form, $count ) {
 
