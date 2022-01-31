@@ -17,9 +17,9 @@ class GPAA_Single_Line_Input {
     public function __construct( $args = array() ) {
 
         $this->_args = wp_parse_args( $args, array(
-            'form_id'  => false,
-            'address_field_id' => false,
-            'single_line_field_id'  => false,
+            'form_id'              => false,
+            'address_field_id'     => false,
+            'single_line_field_id' => false,
         ) );
 
         add_action( 'init', array( $this, 'init' ) );
@@ -30,7 +30,7 @@ class GPAA_Single_Line_Input {
 
         add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
         add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
-        add_filter( 'gpaa_init_args_'.$this->_args['form_id'].'_'.$this->_args['address_field_id'], array( $this, 'add_gpaa_init' ), 10, 2 );
+        add_filter( 'gpaa_init_args_' . $this->_args['form_id'] . '_' . $this->_args['address_field_id'], array( $this, 'add_gpaa_init' ), 10, 2 );
 
     }
 
@@ -103,7 +103,7 @@ class GPAA_Single_Line_Input {
 
 // Configuration
 new GPAA_Single_Line_Input ( array(
-    'form_id'          => 123,          // The ID of your form.
-    'address_field_id'   => 4,         // The ID of the Address field.
-    'single_line_field_id' => 5        // The ID of the Single Line Text field..
+    'form_id'              => 123,     // The ID of your form.
+    'address_field_id'     => 4,       // The ID of the Address field.
+    'single_line_field_id' => 5        // The ID of the Single Line Text field.
 ) );
