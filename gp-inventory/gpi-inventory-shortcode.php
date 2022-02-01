@@ -3,6 +3,8 @@
  * Gravity Perks // Inventory // Shortcode: Inventory // Show Available Inventory by Field
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
  *
+ * Instruction Video: https://www.loom.com/share/9d1897075b7b435389479d4f17fc6807
+ *
  * Update "123" to your form ID and "4" to your field ID with inventory.
  * [gravityforms action="inventory" id="123" field="4"]
  *
