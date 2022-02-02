@@ -3,6 +3,8 @@
  * Gravity Perks // Address Autocomplete // Use Single Line Text field as Autocomplete Input
  * https://gravitywiz.com/documentation/gravity-forms-address-autocomplete/
  *
+ * Instruction Video: https://www.loom.com/share/2a8b9d546bf345cfa2e18294af0dbfdb
+ *
  * Use a single line text field as autocomplete input and populate the single line text field with the full address.
  *
  * Plugin Name:  GP Address Autocomplete - Use Single Line Text field as Autocomplete Input
