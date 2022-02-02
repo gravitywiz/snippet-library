@@ -84,9 +84,9 @@ class GPAA_Single_Line_Input {
 
     }
 
-    public function add_gpaa_init(){
+    public function add_gpaa_init( $args ){
 
-        $args['inputSelectors']['autocomplete'] = '#input_'.$this->_args['form_id'].'_'.$this->_args['single_line_field_id'];
+        $args['inputSelectors']['autocomplete'] = '#input_' . $this->_args['form_id'] . '_' . $this->_args['single_line_field_id'];
 
         return $args;
 
