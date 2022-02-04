@@ -16,13 +16,14 @@
  * @todo
  * - Add support for excluding field parameter and showing a consolidated list of all inventories.
  */
-add_filter( 'gform_shortcode_inventory', function ( $output, $atts, $content ) {
+add_filter( 'gform_shortcode_inventory', 'gpi_inventory_shortcode', 10, 3 );
+function gpi_inventory_shortcode( $output, $atts, $content ) {
 
 	$atts = shortcode_atts( array(
 		'id'           => false,
 		'field'        => false,
 		'scope_values' => false,
-	), $atts );
+	), $atts, 'gpi_inventory' );
 
 	if ( empty( $atts['id'] ) || empty( $atts['field'] ) ) {
 		return $content;
@@ -39,6 +40,46 @@ add_filter( 'gform_shortcode_inventory', function ( $output, $atts, $content ) {
 
 	if ( ! $field ) {
 		return $content;
+	}
+
+	/**
+	 * Some scopes have infinite values (i.e. Date fields). Use the * scope value to look up submitted scope values and
+	 * display the content template for each. Default template when using the * scope is:
+	 *
+	 * {scope}: {count}
+	 *
+	 * NOTE: This only works with non-choice-based inventories with a single scope. Will continue exploring this in the
+	 * future.
+	 */
+	if ( $atts['scope_values'] && $atts['scope_values'] === '*' ) {
+		global $wpdb;
+
+		$resource_field_id = reset( $field->gpiResourcePropertyMap );
+		$sql               = $wpdb->prepare( "SELECT DISTINCT meta_value FROM {$wpdb->prefix}gf_entry_meta WHERE form_id = %d AND meta_key = %d", $form['id'], $resource_field_id );
+		$items             = $wpdb->get_results( $sql );
+
+		if ( empty( $items ) ) {
+			return $content;
+		}
+
+		$output = array();
+
+		if ( ! $content ) {
+			$content = '{scope}: {count}';
+		}
+
+		foreach ( $items as $item ) {
+			$atts['scope_values'] = $item->meta_value;
+			$scope_display_value  = gf_apply_filters( array( 'gpis_scope_display_value', $form['id'], $resource_field_id ), $item->meta_value, $field, $resource_field_id, $atts );
+			$output[]             = str_replace( '{scope}', $scope_display_value, gpi_inventory_shortcode( null, $atts, $content ) );
+		}
+
+		$output = sprintf(
+			'<ul class="gpi-inventory-list gpi-inventory-list-%d-%d"><li>%s</li></ul>',
+			$form['id'], $field->id, implode( '</li><li>', $output )
+		);
+
+		return $output;
 	}
 
 	/**
@@ -90,7 +131,7 @@ add_filter( 'gform_shortcode_inventory', function ( $output, $atts, $content ) {
 
 				$limit     = (int) $choice['inventory_limit'];
 				$count     = (int) rgar( $counts, $choice['value'] );
-				$available = (int) $limit - $count;
+				$available = $limit - $count;
 
 				$items[] = gpis_get_item_markup( $content, array(
 					'limit'     => $limit,
@@ -153,7 +194,7 @@ add_filter( 'gform_shortcode_inventory', function ( $output, $atts, $content ) {
 	remove_filter( 'gpi_property_map_values_' . $form['id'] . '_' . $field->id, $map_property_values );
 
 	return $output;
-}, 10, 3 );
+}
 
 function gpis_get_item_markup( $template, $args ) {
 
