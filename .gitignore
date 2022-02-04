@@ -1,0 +1,30 @@
+# macOS Junk Files
+.DS_Store
+
+# Composer
+/vendor
+
+# NPM/Yarn
+/node_modules
+
+# IDE
+.idea
+
+# Transpiled/Built/Minified Files
+*.js.map
+*.min.js
+*.css.map
+*.min.css
+/dist
+/js/built
+
+# Cypress
+cypress/screenshots
+cypress/videos
+
+# Private Files (Personal or sensitive info to not version control)
+.env
+.envrc
+*.log
+_output
+results.xml
