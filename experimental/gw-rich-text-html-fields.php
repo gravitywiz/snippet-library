@@ -1,11 +1,14 @@
 <?php
 /**
- * Rich Text HTML Fields
+ * Gravity Wiz // Gravity Forms // Rich Text HTML Fields
+ * https://gravitywiz.com/
+ *
+ * Demo Video: https://www.loom.com/share/fc666b9d3e1f48ed9dc21a3fcadef783
  *
  * @todo
- * 1. Make the default height larger.
- * 2. Add support for merge tag selector.
- * 3. Support switching to text mode: window.switchEditors.go( 'rich_field_content', mode )
+ * 1. Add merge tag selector.
+ * 2. Allow switching to text mode: window.switchEditors.go( 'rich_field_content', mode )
+ * 3. Add support for inserting images.
  */
  
 add_action( 'admin_init', function() {
