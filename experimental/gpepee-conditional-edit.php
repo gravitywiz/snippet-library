@@ -2,8 +2,8 @@
 /**
  * Gravity Perks // Easy Passthrough Edit Entry // Conditional Edit
  * https://gravitywiz.com/edit-gravity-forms-entries-on-the-front-end/
- * 
- * Create a field on your form and check for a specific value on that field to determine if the passed 
+ *
+ * Create a field on your form and check for a specific value on that field to determine if the passed
  * through entry should be edited or if a new entry should be created.
  */
 // Update "123" to the form you are using to edit entries.

@@ -20,7 +20,6 @@ function gw_set_discount_amount( $form ) {
 		if ( $field->id == 5 ) {
 			$field->discountAmount = 50;
 		}
-
 	}
 
 	return $form;

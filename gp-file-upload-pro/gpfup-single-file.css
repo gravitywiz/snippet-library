@@ -63,10 +63,10 @@
 }
 
 .gpfup-single-file .gpfup__file-actions {
-    position: absolute;
-    display: block;
-    top: 1rem;
-    right: 1rem;
-    background: white;
-    border-radius: 50%;
+	position: absolute;
+	display: block;
+	top: 1rem;
+	right: 1rem;
+	background: white;
+	border-radius: 50%;
 }

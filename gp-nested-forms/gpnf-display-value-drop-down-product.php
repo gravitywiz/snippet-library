@@ -6,9 +6,9 @@
  * "My Product Choice ($10.00)" => "My Product Choice"
  */
 add_filter( 'gpnf_select_display_value', function( $value, $field ) {
-	if( $field->type == 'product' ) {
+	if ( $field->type == 'product' ) {
 		$index = strpos( $value['label'], '(' );
-		if( $index !== false ) {
+		if ( $index !== false ) {
 			$value['label'] = substr( $value['label'], 0, $index );
 		}
 	}

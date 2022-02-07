@@ -12,9 +12,10 @@ add_filter( 'gform_field_choice_markup_pre_render', function ( $choice_markup, $
 
 	// No need to edit below.
 	if ( $field->type === 'product' ) {
-		$template = str_replace( '{label}', $choice['text'], $template );
-		$replace = sprintf( ' data-gpcp-template="%s">%s<', $template, str_replace( '{price}', GFCommon::to_money( $choice['price'] ), $template ) );
-		$choice_markup = str_replace( ">{$choice['text']}<", $replace, $choice_markup );;
+		$template      = str_replace( '{label}', $choice['text'], $template );
+		$replace       = sprintf( ' data-gpcp-template="%s">%s<', $template, str_replace( '{price}', GFCommon::to_money( $choice['price'] ), $template ) );
+		$choice_markup = str_replace( ">{$choice['text']}<", $replace, $choice_markup );
+
 	}
 
 	return $choice_markup;

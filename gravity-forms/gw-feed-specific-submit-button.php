@@ -23,20 +23,20 @@
  */
 class GW_Feed_Specific_Submit_Button {
 
-    private static $instance = null;
+	private static $instance = null;
 
-    public static function get_instance() {
-        if ( self::$instance === null ) {
+	public static function get_instance() {
+		if ( self::$instance === null ) {
 			self::$instance = new self;
 		}
-        return self::$instance;
-    }
+		return self::$instance;
+	}
 
-    private function __construct() {
+	private function __construct() {
 
 		add_action( 'init', array( $this, 'init' ) );
 
-    }
+	}
 
 	public function init() {
 
@@ -55,7 +55,7 @@ class GW_Feed_Specific_Submit_Button {
 			'tooltip' => '<h6>' . esc_html__( 'Submit Button Label' ) . '</h6>' . esc_html__( 'Specify a custom label for the submit button that will be used if this feed will be used to process the payment.' ),
 		);
 
-		$stripe = GFStripe::get_instance();
+		$stripe   = GFStripe::get_instance();
 		$settings = $stripe->add_field_after( 'conditionalLogic', $submit_button_setting, $settings );
 
 		return $settings;
@@ -68,7 +68,7 @@ class GW_Feed_Specific_Submit_Button {
 
 	public function load_form_script( $form, $is_ajax_enabled ) {
 
-		if( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
+		if ( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
 			add_action( 'wp_footer', array( $this, 'output_script' ), 99 );
 			add_action( 'gform_preview_footer', array( $this, 'output_script' ), 99 );
 		}
@@ -119,7 +119,7 @@ class GW_Feed_Specific_Submit_Button {
 }
 
 function gw_feed_specific_submit_button() {
-    return GW_Feed_Specific_Submit_Button::get_instance();
+	return GW_Feed_Specific_Submit_Button::get_instance();
 }
 
 gw_feed_specific_submit_button();

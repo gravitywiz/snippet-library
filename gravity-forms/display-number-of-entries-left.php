@@ -11,7 +11,7 @@ add_filter( 'gform_shortcode_entries_left', 'gwiz_entries_left_shortcode', 10, 2
 function gwiz_entries_left_shortcode( $output, $atts ) {
 	extract( shortcode_atts( array(
 		'id'     => false,
-		'format' => false // should be 'comma', 'decimal'
+		'format' => false, // should be 'comma', 'decimal'
 	), $atts ) );
 
 	if ( ! $id ) {
@@ -23,8 +23,8 @@ function gwiz_entries_left_shortcode( $output, $atts ) {
 		return '';
 	}
 
-	$entry_count  = GFAPI::count_entries( $form['id'], array(
-		'status' => 'active'
+	$entry_count = GFAPI::count_entries( $form['id'], array(
+		'status' => 'active',
 	) );
 
 	$entries_left = rgar( $form, 'limitEntriesCount' ) - $entry_count;

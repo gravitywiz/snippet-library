@@ -24,11 +24,11 @@ class GW_Value_Exists_Validation {
 			'source_field_id'         => false,
 			'validation_message'      => __( 'Please enter a valid value.' ),
 			'field_map'               => array(),
-			'disable_ajax_validation' => false
+			'disable_ajax_validation' => false,
 		) );
 
 		// Map source and target fields to field map if field map is not set.
-		if( empty( $this->_args['field_map'] ) ) {
+		if ( empty( $this->_args['field_map'] ) ) {
 			$this->_args['field_map'] = array( $this->_args['source_field_id'] => $this->_args['target_field_id'] );
 		}
 
@@ -40,19 +40,19 @@ class GW_Value_Exists_Validation {
 	public function init() {
 
 		// make sure we're running the required minimum version of Gravity Forms
-		if( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=' ) ) {
+		if ( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=' ) ) {
 			return;
 		}
 
 		add_filter( 'gform_validation', array( $this, 'validation' ) );
 
-		if( ! $this->_args['disable_ajax_validation'] ) {
+		if ( ! $this->_args['disable_ajax_validation'] ) {
 
-			add_action( 'gform_enqueue_scripts',       array( $this, 'enqueue_form_script' ) );
-			add_filter( 'gform_pre_render',            array( $this, 'load_form_script' ), 10, 2 );
+			add_action( 'gform_enqueue_scripts', array( $this, 'enqueue_form_script' ) );
+			add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
 			add_action( 'gform_register_init_scripts', array( $this, 'add_init_script' ) );
 
-			add_action( 'wp_ajax_gwvev_does_value_exist',        array( $this, 'ajax_does_value_exist' ) );
+			add_action( 'wp_ajax_gwvev_does_value_exist', array( $this, 'ajax_does_value_exist' ) );
 			add_action( 'wp_ajax_nopriv_gwvev_does_value_exist', array( $this, 'ajax_does_value_exist' ) );
 
 		}
@@ -60,7 +60,7 @@ class GW_Value_Exists_Validation {
 	}
 
 	public function enqueue_form_script( $form ) {
-		if( $this->is_applicable_form( $form ) ) {
+		if ( $this->is_applicable_form( $form ) ) {
 			wp_enqueue_script( 'gform_gravityforms' );
 		}
 		return $form;
@@ -68,21 +68,20 @@ class GW_Value_Exists_Validation {
 
 	public function validation( $result ) {
 
-		if( ! $this->is_applicable_form( $result['form'] ) ) {
+		if ( ! $this->is_applicable_form( $result['form'] ) ) {
 			return $result;
 		}
 
-		foreach( $result['form']['fields'] as &$field ) {
+		foreach ( $result['form']['fields'] as &$field ) {
 
-			if( $this->is_applicable_field( $field ) && ! GFFormsModel::is_field_hidden( $result['form'], $field, array() ) ) {
+			if ( $this->is_applicable_field( $field ) && ! GFFormsModel::is_field_hidden( $result['form'], $field, array() ) ) {
 
-				if( ! $this->do_values_exists( $this->get_values(), $this->_args['source_form_id'] ) ) {
-					$field['failed_validation'] = true;
+				if ( ! $this->do_values_exists( $this->get_values(), $this->_args['source_form_id'] ) ) {
+					$field['failed_validation']  = true;
 					$field['validation_message'] = $this->_args['validation_message'];
-					$result['is_valid'] = false;
+					$result['is_valid']          = false;
 				}
 			}
-
 		}
 
 		return $result;
@@ -90,7 +89,7 @@ class GW_Value_Exists_Validation {
 
 	public function ajax_does_value_exist() {
 
-		if( ! wp_verify_nonce( rgpost( 'nonce' ), 'gwvev_does_value_exist' ) ) {
+		if ( ! wp_verify_nonce( rgpost( 'nonce' ), 'gwvev_does_value_exist' ) ) {
 			die( __( 'Invalid nonce.' ) );
 		}
 
@@ -125,21 +124,24 @@ class GW_Value_Exists_Validation {
 
 		$field_filters = array();
 
-		foreach( $values as $field_id => $value ) {
+		foreach ( $values as $field_id => $value ) {
 			$field_filters[] = array(
 				'key'   => $field_id,
-				'value' => $value
+				'value' => $value,
 			);
 		}
 
-		$entries = GFAPI::get_entries( $form_id, array( 'status' => 'active', 'field_filters' => $field_filters ) );
+		$entries = GFAPI::get_entries( $form_id, array(
+			'status'        => 'active',
+			'field_filters' => $field_filters,
+		) );
 
 		return reset( $entries );
 	}
 
 	public function get_field_map() {
 
-		if( ! empty( $this->_args['field_map'] ) ) {
+		if ( ! empty( $this->_args['field_map'] ) ) {
 			$field_map = $this->_args['field_map'];
 		} else {
 			$field_map = array( $this->_args['target_field_id'] => $this->_args['source_field_id'] );
@@ -151,11 +153,11 @@ class GW_Value_Exists_Validation {
 	public function get_values() {
 
 		$field_map = $this->get_field_map();
-		$values = array();
+		$values    = array();
 
-		foreach( $field_map as $source_field_id => $target_field_id ) {
+		foreach ( $field_map as $source_field_id => $target_field_id ) {
 			$value = rgpost( 'input_' . $target_field_id );
-			if( $value ) {
+			if ( $value ) {
 				$values[ $source_field_id ] = $value;
 			}
 		}
@@ -166,7 +168,7 @@ class GW_Value_Exists_Validation {
 	public function load_form_script( $form, $is_ajax_enabled ) {
 
 		// Do not output main script if AJAX is enabled
-		if( ! $is_ajax_enabled && $this->is_applicable_form( $form ) && ! self::$is_script_output && ! $this->is_ajax_submission( $form['id'], $is_ajax_enabled ) ) {
+		if ( ! $is_ajax_enabled && $this->is_applicable_form( $form ) && ! self::$is_script_output && ! $this->is_ajax_submission( $form['id'], $is_ajax_enabled ) ) {
 			$this->output_script();
 		}
 
@@ -288,18 +290,18 @@ class GW_Value_Exists_Validation {
 
 	public function add_init_script( $form ) {
 
-		if( ! $this->is_applicable_form( $form ) ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
 			return;
 		}
 
 		$args = array(
-			'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
-			'nonce'         => wp_create_nonce( 'gwvev_does_value_exist' ),
-			'targetFormId'  => $this->_args['target_form_id'],
-			'sourceFormId'  => $this->_args['source_form_id'],
-			'selectors'     => $this->get_selectors( $form ),
-			'fieldMap'      => $this->get_field_map(),
-			'gfBaseUrl'     => GFCommon::get_base_url(),
+			'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
+			'nonce'        => wp_create_nonce( 'gwvev_does_value_exist' ),
+			'targetFormId' => $this->_args['target_form_id'],
+			'sourceFormId' => $this->_args['source_form_id'],
+			'selectors'    => $this->get_selectors( $form ),
+			'fieldMap'     => $this->get_field_map(),
+			'gfBaseUrl'    => GFCommon::get_base_url(),
 		);
 
 		$script = 'new GWValueExistsValidation( ' . json_encode( $args ) . ' );';
@@ -313,24 +315,23 @@ class GW_Value_Exists_Validation {
 
 		$selectors = array();
 
-		foreach( $form['fields'] as $field ) {
+		foreach ( $form['fields'] as $field ) {
 
-			if( ! $this->is_applicable_field( $field ) ) {
+			if ( ! $this->is_applicable_field( $field ) ) {
 				continue;
 			}
 
 			$prefix = sprintf( '#input_%d_%d', $form['id'], $field->id );
 
-			if( is_array( $field->inputs ) ) {
-				foreach( $field->inputs as $input ) {
-					$bits = explode( '.', $input['id'] );
-					$input_id = $bits[1];
+			if ( is_array( $field->inputs ) ) {
+				foreach ( $field->inputs as $input ) {
+					$bits        = explode( '.', $input['id'] );
+					$input_id    = $bits[1];
 					$selectors[] = "{$prefix}_{$input_id}";
 				}
 			} else {
 				$selectors[] = $prefix;
 			}
-
 		}
 
 		return $selectors;
@@ -358,9 +359,9 @@ class GW_Value_Exists_Validation {
 # Configuration
 
 new GW_Value_Exists_Validation( array(
-	'target_form_id'  => 123,
-	'target_field_id' => 1,
-	'source_form_id'  => 124,
-	'source_field_id' => 1,
-	'validation_message' => 'Hey! This isn\'t a valid reference number.'
+	'target_form_id'     => 123,
+	'target_field_id'    => 1,
+	'source_form_id'     => 124,
+	'source_field_id'    => 1,
+	'validation_message' => 'Hey! This isn\'t a valid reference number.',
 ) );

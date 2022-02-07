@@ -14,8 +14,8 @@
 	margin: 0 0.5rem 1rem !important;
 	background: rgba( 0, 0, 0, 0.9 );
 	border-radius: 4px;
-        overflow: hidden;
-        min-height: 100px;
+		overflow: hidden;
+		min-height: 100px;
 }
 
 .gpfup-big-images .gpfup__preview {
@@ -28,7 +28,7 @@
 	height: auto !important;
 	display: block;
 	margin: auto;
-        border-radius: 0;
+		border-radius: 0;
 }
 
 .gpfup-big-images .gpfup__file-info {
@@ -50,7 +50,7 @@
 .gpfup-big-images .gpfup__file-actions {
 	top: 0.5rem;
 	right: 0.5rem;
-        position: absolute;
+		position: absolute;
 }
 
 .gpfup-big-images .gpfup__delete {
@@ -70,7 +70,7 @@
 }
 
 .gpfup-big-images .gpfup--images-only .gpfup__preview {
-        width: auto;
+		width: auto;
 }
 
 .gpfup-big-images .gpfup__delete:hover svg {
@@ -79,11 +79,11 @@
 
 .gpfup-big-images .gpfup__droparea {
 	border-radius: 4px;
-        border-top: 1px dashed rgba( 0, 0, 0, 0.15 );
+		border-top: 1px dashed rgba( 0, 0, 0, 0.15 );
 }
 
 .gpfup-big-images .gpfup__edit {
 	width: 2.6rem;
 	height: 2.6rem;
-        line-height: 1;
+		line-height: 1;
 }

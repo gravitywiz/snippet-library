@@ -89,7 +89,7 @@ class GPPA_Populate_Child_Entries {
 
 	public function load_form_script( $form, $is_ajax_enabled ) {
 
-		if( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
+		if ( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
 			add_action( 'wp_footer', array( $this, 'output_script' ) );
 			add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
 		}
@@ -163,7 +163,7 @@ class GPPA_Populate_Child_Entries {
 
 	public function add_init_script( $form ) {
 
-		if( ! $this->is_applicable_form( $form ) ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
 			return;
 		}
 
@@ -185,7 +185,7 @@ class GPPA_Populate_Child_Entries {
 	}
 
 	public function get_parent_entry_id_field( $form ) {
-		foreach( $form['fields'] as $field ) {
+		foreach ( $form['fields'] as $field ) {
 			if ( $field->inputName === 'gpnf_parent_entry_id' ) {
 				return $field->id;
 			}

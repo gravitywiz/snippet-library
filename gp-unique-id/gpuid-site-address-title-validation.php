@@ -19,12 +19,11 @@ function gp_unique_id_for_site_validation( $form, $feed ) {
 	$site_address_field_id = rgars( $feed, 'meta/multisite_options/site_address' );
 	$site_name_field_id    = rgars( $feed, 'meta/multisite_options/site_title' );
 
-	foreach( $form['fields'] as &$field ) {
+	foreach ( $form['fields'] as &$field ) {
 
-		if( $field['type'] == 'uid' && in_array( $field['id'], array( $site_address_field_id, $site_name_field_id ) ) ) {
+		if ( $field['type'] == 'uid' && in_array( $field['id'], array( $site_address_field_id, $site_name_field_id ) ) ) {
 			$field['failed_validation'] = false;
 		}
-
 	}
 
 	return $form;

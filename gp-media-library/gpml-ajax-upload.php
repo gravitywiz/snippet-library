@@ -14,68 +14,68 @@
  */
 class GPML_Ajax_Upload {
 
-    public function __construct( $args = array() ) {
+	public function __construct( $args = array() ) {
 
-        $this->_args = wp_parse_args( $args, array(
-            'default_entry_id' => 1,
-        ) );
+		$this->_args = wp_parse_args( $args, array(
+			'default_entry_id' => 1,
+		) );
 
-        add_action( 'init', array( $this, 'init' ), 11 );
+		add_action( 'init', array( $this, 'init' ), 11 );
 
-    }
+	}
 
-    public function init() {
+	public function init() {
 
-	    if( ! is_callable( 'gp_media_library' ) ) {
-		    return;
-	    }
+		if ( ! is_callable( 'gp_media_library' ) ) {
+			return;
+		}
 
-	    add_action( 'gform_post_multifile_upload', array( $this, 'upload' ), 10, 5 );
+		add_action( 'gform_post_multifile_upload', array( $this, 'upload' ), 10, 5 );
 
-	    remove_action( 'gform_entry_post_save', array( gp_media_library(), 'maybe_upload_to_media_library' ) );
-	    add_filter( 'gform_entry_post_save', array( $this, 'update_entry_field_values' ), 10, 2 );
+		remove_action( 'gform_entry_post_save', array( gp_media_library(), 'maybe_upload_to_media_library' ) );
+		add_filter( 'gform_entry_post_save', array( $this, 'update_entry_field_values' ), 10, 2 );
 
-	    // This filter ensures that this snippet is called on Gravity Flow inbox pages which do not
-	    // seem to trigger `gform_entry_post_save` when updating entries.
-	    add_filter( 'gravityflow_next_step', array( $this, 'gpml_gflow_next_step' ), 10, 4 );
+		// This filter ensures that this snippet is called on Gravity Flow inbox pages which do not
+		// seem to trigger `gform_entry_post_save` when updating entries.
+		add_filter( 'gravityflow_next_step', array( $this, 'gpml_gflow_next_step' ), 10, 4 );
 
-    }
-	
-    public function gpml_gflow_next_step( $step, $current_step, $entry, $steps ) {
-		$form = GFAPI::get_form( $entry[ 'form_id' ] );
+	}
+
+	public function gpml_gflow_next_step( $step, $current_step, $entry, $steps ) {
+		$form = GFAPI::get_form( $entry['form_id'] );
 		$this->update_entry_field_values( $entry, $form );
 		return $step;
-    }
+	}
 
-    public function upload( $form, $field, $uploaded_filename, $tmp_file_name, $file_path ) {
+	public function upload( $form, $field, $uploaded_filename, $tmp_file_name, $file_path ) {
 
-	    if( ! gp_media_library()->is_applicable_field( $field ) ) {
-		    return;
-	    }
+		if ( ! gp_media_library()->is_applicable_field( $field ) ) {
+			return;
+		}
 
-	    $field_uid = implode( '_', array( rgpost( 'gform_unique_id' ), $field->id ) );
+		$field_uid = implode( '_', array( rgpost( 'gform_unique_id' ), $field->id ) );
 
-	    $renamed_file_path = str_replace( basename( $file_path ), $uploaded_filename, $file_path );
+		$renamed_file_path = str_replace( basename( $file_path ), $uploaded_filename, $file_path );
 		rename( $file_path, $renamed_file_path );
 
-	    $id = gp_media_library()->upload_to_media_library( $renamed_file_path, $field, array( 'id' => $this->_args['default_entry_id'] ) );
-	    if( is_wp_error( $id ) ) {
-		    return;
-	    }
+		$id = gp_media_library()->upload_to_media_library( $renamed_file_path, $field, array( 'id' => $this->_args['default_entry_id'] ) );
+		if ( is_wp_error( $id ) ) {
+			return;
+		}
 
 		$key = sprintf( 'gpml_ids_%s', $field_uid );
 
-	    // Get file IDs.
-	    $ids = gform_get_meta( $this->_args['default_entry_id'], $key );
+		// Get file IDs.
+		$ids = gform_get_meta( $this->_args['default_entry_id'], $key );
 
-	    if( ! is_array( $ids ) ) {
-		    $ids = array();
-	    }
+		if ( ! is_array( $ids ) ) {
+			$ids = array();
+		}
 
-	    $ids[] = $id[0];
+		$ids[] = $id[0];
 
-	    // Update file IDs.
-	    gform_update_meta( $this->_args['default_entry_id'], $key, $ids, $form['id'] );
+		// Update file IDs.
+		gform_update_meta( $this->_args['default_entry_id'], $key, $ids, $form['id'] );
 
 		$output = array(
 			'status' => 'ok',
@@ -83,58 +83,58 @@ class GPML_Ajax_Upload {
 				'temp_filename'     => $tmp_file_name,
 				'uploaded_filename' => str_replace( "\\'", "'", urldecode( $uploaded_filename ) ), //Decoding filename to prevent file name mismatch.
 				'url'               => wp_get_attachment_image_url( $id[0] ),
-			)
+			),
 		);
 
 		$output = json_encode( $output );
 
 		die( $output );
 
-    }
+	}
 
-    public function update_entry_field_values( $entry, $form ) {
+	public function update_entry_field_values( $entry, $form ) {
 
-	    foreach( $form['fields'] as $field ) {
+		foreach ( $form['fields'] as $field ) {
 
-		    if( $field->get_input_type() != 'fileupload' || ! $field->multipleFiles ) {
-			    continue;
-		    }
+			if ( $field->get_input_type() != 'fileupload' || ! $field->multipleFiles ) {
+				continue;
+			}
 
-		    $field_uid = implode( '_', array( rgpost( 'gform_unique_id' ), $field->id ) );
-		    $ids = gform_get_meta( $this->_args['default_entry_id'], sprintf( 'gpml_ids_%s', $field_uid ) );
-		    if( empty( $ids ) ) {
-		    	continue;
-		    }
+			$field_uid = implode( '_', array( rgpost( 'gform_unique_id' ), $field->id ) );
+			$ids       = gform_get_meta( $this->_args['default_entry_id'], sprintf( 'gpml_ids_%s', $field_uid ) );
+			if ( empty( $ids ) ) {
+				continue;
+			}
 
-		    $new_value = array();
+			$new_value = array();
 
-		    foreach( $ids as $id ) {
-			    if( ! is_wp_error( $id ) ) {
-				    $new_value[] = wp_get_attachment_url( $id );
-			    }
-		    }
-		    // Append to current value if present
-		    $current_value = rgar( $entry, $field->id, false );
-		    if ( $current_value ) {
-		    	$new_value = array_merge( json_decode( $current_value ), $new_value );
-		    }
-		    $entry[ $field->id ] = json_encode( $new_value );
+			foreach ( $ids as $id ) {
+				if ( ! is_wp_error( $id ) ) {
+					$new_value[] = wp_get_attachment_url( $id );
+				}
+			}
+			// Append to current value if present
+			$current_value = rgar( $entry, $field->id, false );
+			if ( $current_value ) {
+				$new_value = array_merge( json_decode( $current_value ), $new_value );
+			}
+			$entry[ $field->id ] = json_encode( $new_value );
 
-		    $entry[ $field->id ] = json_encode( $new_value );
+			$entry[ $field->id ] = json_encode( $new_value );
 
-		    // Save our changes to the DB for this entry.
-		    GFAPI::update_entry_field( $entry['id'], $field->id, $entry[ $field->id ] );
+			// Save our changes to the DB for this entry.
+			GFAPI::update_entry_field( $entry['id'], $field->id, $entry[ $field->id ] );
 
-		    // Delete temporary file ID meta.
-		    gform_delete_meta( $this->_args['default_entry_id'], sprintf( 'gpml_ids_%s', $field_uid ) );
+			// Delete temporary file ID meta.
+			gform_delete_meta( $this->_args['default_entry_id'], sprintf( 'gpml_ids_%s', $field_uid ) );
 
-		    // Save the file ID meta to the actual entry/field.
-		    gp_media_library()->update_file_ids( $entry['id'], $field->id, $ids );
+			// Save the file ID meta to the actual entry/field.
+			gp_media_library()->update_file_ids( $entry['id'], $field->id, $ids );
 
-	    }
+		}
 
-	    return $entry;
-    }
+		return $entry;
+	}
 
 }
 

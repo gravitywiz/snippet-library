@@ -58,8 +58,8 @@ class GF_Field_To_Field_Conditional_Logic {
 				// If this is not a <select> return the markup unmodified.
 				var match = markup.match( /(<select.+?>)((?:.|\n)+?)(<\/select>)/ );
 				if ( ! match ) {
-				    return markup;
-                }
+					return markup;
+				}
 
 				var choiceOptions = match ? match[2] : markup;
 				var fieldOptions  = [];

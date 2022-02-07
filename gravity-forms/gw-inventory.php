@@ -500,12 +500,12 @@ class GW_Inventory {
 class GWLimitBySum extends GW_Inventory { }
 
 new GW_Inventory( array(
-    'form_id'                  => 123,
-    'field_id'                 => 4.3,
-    'stock_qty'                => 20,
-    'out_of_stock_message'     => 'Sorry, there are no more tickets!',
-    'not_enough_stock_message' => 'You ordered %1$s tickets. There are only %2$s tickets left.',
-    'approved_payments_only'   => false,
-    'hide_form'                => false,
-    'enable_notifications'     => true
+	'form_id'                  => 123,
+	'field_id'                 => 4.3,
+	'stock_qty'                => 20,
+	'out_of_stock_message'     => 'Sorry, there are no more tickets!',
+	'not_enough_stock_message' => 'You ordered %1$s tickets. There are only %2$s tickets left.',
+	'approved_payments_only'   => false,
+	'hide_form'                => false,
+	'enable_notifications'     => true,
 ) );

@@ -19,45 +19,44 @@
  */
 add_filter( 'gform_shortcode_conditional', function( $result, $atts, $content ) {
 
-	if( ! isset( $atts['value'] ) || isset( $atts['merge_tag'] ) ) {
+	if ( ! isset( $atts['value'] ) || isset( $atts['merge_tag'] ) ) {
 		return $result;
 	}
 
 	$relation   = strtolower( rgar( $atts, 'relation', 'all' ) ); // or 'any'
 	$conditions = array();
 
-	foreach( $atts as $key => $prop ) {
+	foreach ( $atts as $key => $prop ) {
 
 		preg_match( '|value(\d*)$|', $key, $match );
-		if( ! empty( $match ) ) {
+		if ( ! empty( $match ) ) {
 			list( , $index ) = $match;
-			$conditions[] = array(
+			$conditions[]    = array(
 				'value'    => rgar( $atts, sprintf( 'value%s', $index ) ),
 				'operator' => rgar( $atts, sprintf( 'operator%s', $index ) ),
 				'compare'  => rgar( $atts, sprintf( 'compare%s', $index ) ),
 			);
 		}
-
 	}
 
 	$conditional_met = $relation == 'all';
 
-	foreach( $conditions as $condition ) {
+	foreach ( $conditions as $condition ) {
 		$is_match = GFFormsModel::matches_operation( $condition['value'], $condition['compare'], $condition['operator'] );
-		if( $relation == 'any' && $is_match ) {
+		if ( $relation == 'any' && $is_match ) {
 			$conditional_met = true;
 			break;
-		} else if( $relation == 'all' && ! $is_match ) {
+		} elseif ( $relation == 'all' && ! $is_match ) {
 			$conditional_met = false;
 		}
 	}
 
-	if( ! $conditional_met ) {
+	if ( ! $conditional_met ) {
 		return '';
 	}
 
 	// find and remove any starting/closing <br> tags
-	if( rgar( $atts, 'format' ) != 'raw' ) {
+	if ( rgar( $atts, 'format' ) != 'raw' ) {
 		$content = preg_replace( '/^<br(?: *\/)?>|<br(?: *\/)?>$/', '', $content );
 	}
 

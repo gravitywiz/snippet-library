@@ -9,7 +9,7 @@
 // Update "123" to your form ID.
 add_filter( 'gpml_media_data_123', function( $return, $field, $entry ) {
 	$modify_upload_dir = function( $upload_dir ) use ( $entry ) {
-		// Update the path and URL as desired. 
+		// Update the path and URL as desired.
 		// You can use values from the entry to create a custom folder.
 		$upload_dir['path'] = WP_CONTENT_DIR . "/uploads/{$entry[4]}/my-custom-folder";
 		$upload_dir['url']  = WP_CONTENT_URL . "/uploads/{$entry[4]}/my-custom-folder";

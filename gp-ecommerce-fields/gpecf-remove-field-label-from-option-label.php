@@ -2,10 +2,10 @@
 /**
  * Gravity Perks // eCommerce Fields // Remove Field Label from Option Label in Order Summary
  * https://gravitywiz.com/documentation/gravity-forms-ecommerce-fields/
- * 
+ *
  * By default, Gravity Forms displays options in order summary like so:
  * Field Label: Option Label
- * 
+ *
  * With this snippet in place, options will be displayed as:
  * Option Label
  */

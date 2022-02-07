@@ -11,7 +11,7 @@ add_filter( 'gform_form_post_get_meta', function( $form ) {
 		return $form;
 	}
 
-	foreach( $form['fields'] as &$field ) {
+	foreach ( $form['fields'] as &$field ) {
 
 		if ( $field->get_input_type() !== 'form' ) {
 			continue;

@@ -15,21 +15,22 @@
  */
 class GW_Manual_Notifications {
 
-    private static $instance = null;
+	private static $instance = null;
 
-    public static function get_instance() {
-        if( null == self::$instance )
-            self::$instance = new self;
-        return self::$instance;
-    }
+	public static function get_instance() {
+		if ( null == self::$instance ) {
+			self::$instance = new self;
+		}
+		return self::$instance;
+	}
 
-    private function __construct() {
+	private function __construct() {
 
-	    add_filter( 'gform_notification_events', array( $this, 'add_manual_notification_event' ) );
+		add_filter( 'gform_notification_events', array( $this, 'add_manual_notification_event' ) );
 
-	    add_filter( 'gform_before_resend_notifications', array( $this, 'add_notification_filter' ) );
+		add_filter( 'gform_before_resend_notifications', array( $this, 'add_notification_filter' ) );
 
-    }
+	}
 
 	public function add_notification_filter( $form ) {
 		add_filter( 'gform_notification', array( $this, 'evaluate_notification_conditional_logic' ), 10, 3 );
@@ -44,7 +45,7 @@ class GW_Manual_Notifications {
 	public function evaluate_notification_conditional_logic( $notification, $form, $entry ) {
 
 		// if it fails conditional logic, suppress it
-		if( $notification['event'] == 'manual' && ! GFCommon::evaluate_conditional_logic( rgar( $notification, 'conditionalLogic' ), $form, $entry ) ) {
+		if ( $notification['event'] == 'manual' && ! GFCommon::evaluate_conditional_logic( rgar( $notification, 'conditionalLogic' ), $form, $entry ) ) {
 			add_filter( 'gform_pre_send_email', array( $this, 'abort_next_notification' ) );
 		}
 
@@ -60,7 +61,7 @@ class GW_Manual_Notifications {
 }
 
 function gw_manual_notifications() {
-    return GW_Manual_Notifications::get_instance();
+	return GW_Manual_Notifications::get_instance();
 }
 
 gw_manual_notifications();

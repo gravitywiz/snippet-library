@@ -10,12 +10,12 @@
 add_filter( 'gpnf_template_args_123_4', function( $args ) {
 	if ( $args['template'] === 'nested-entries' ) {
 		foreach ( $args['nested_fields'] as &$nested_field ) {
-			switch( $nested_field->id ) {
+			switch ( $nested_field->id ) {
 				// Update "1" to the field ID on your child form for which you would like to provide a shorter label.
 				case 1:
 					$nested_field->label = 'Choice';
 					break;
-				// Add a new "case" statement for each field you need to customize. 
+				// Add a new "case" statement for each field you need to customize.
 				case 2:
 					$nested_field->label = 'Text';
 					break;

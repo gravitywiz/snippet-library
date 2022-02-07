@@ -11,7 +11,7 @@ add_filter( 'gform_notification', function ( $notification, $form, $entry ) {
 
 	// Initialize attachments array.
 	if ( ! isset( $notification['attachments'] ) ) {
-		$notification['attachments'] = [];
+		$notification['attachments'] = array();
 	}
 
 	$attachments  =& $notification['attachments'];
@@ -54,9 +54,7 @@ add_filter( 'gform_notification', function ( $notification, $form, $entry ) {
 				$attachments[] = fg_fillablepdfs()->get_physical_file_path( $entry_pdf );
 
 			}
-
 		}
-
 	}
 
 	return $notification;

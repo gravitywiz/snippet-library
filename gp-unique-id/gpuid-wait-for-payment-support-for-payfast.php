@@ -2,7 +2,7 @@
 /**
  * Gravity Perks // GP Unique ID // Add Wait-for-payment Support for PayFast
  * https://gravitywiz.com/documentation/gp-unique-id/
- *  
+ *
  * Capture a payment made via PayFast before generating the Unique ID.
  *
  * Plugin Name:  GP Unique ID — Add Wait-for-payment Support for PayFast
@@ -14,18 +14,18 @@
  */
 // 1 - Indicate that waiting for payments is enabled.
 add_filter( 'gpui_wait_for_payment', '__return_true' );
- 
+
 // 2 - Fetch the applicable payment feed for your gateway.
 add_filter( 'gpui_wait_for_payment_feed', function ( $return_feed, $form, $entry ) {
-	$entry['id'] = null;
-	$feed = gf_payfast()->get_payment_feed( $entry, $form );
+	$entry['id']     = null;
+	$feed            = gf_payfast()->get_payment_feed( $entry, $form );
 	$submission_data = gf_payfast()->get_submission_data( $feed, $form, $entry );
 	if ( $feed && ! empty( $submission_data['payment_amount'] ) ) {
 		$return_feed = $feed;
 	}
 	return $return_feed;
 }, 10, 3 );
- 
+
 // 3 - Call populate_field_value() with the $fulfilled flag set to true when the payment is completed.
 // This example is how it works with the Gravity Forms PayPal add-on. When the payment is fulfilled,
 // PayPal triggers the gform_paypal_fulfillment action. We bind to that action and call the

@@ -23,7 +23,7 @@ class GPLD_Block_Reserved_Date_Ranges {
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
 		$this->_args = wp_parse_args( $args, array(
 			'form_id'  => false,
-			'field_id' => false
+			'field_id' => false,
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded

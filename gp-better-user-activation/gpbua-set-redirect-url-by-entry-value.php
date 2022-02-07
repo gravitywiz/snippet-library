@@ -11,7 +11,7 @@ add_filter( 'gpbua_activation_redirect_url', function( $url, $activation ) {
 	$entry = $activation->get_signup()->lead;
 
 	// Update "123" to your target form ID.
-	if( $entry['form_id'] == 123 ) {
+	if ( $entry['form_id'] == 123 ) {
 		// Update "1" to the field ID containing the page ID to which you would like to redirect.
 		$url = get_permalink( $entry[1] );
 	}

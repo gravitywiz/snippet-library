@@ -21,8 +21,8 @@ function gp_unique_id_for_username_validation( $form, $feed ) {
 	$username_field_id     = rgars( $feed, 'meta/username' );
 	$site_address_field_id = rgars( $feed, 'meta/multisite_options/site_address' );
 
-	foreach( $form['fields'] as &$field ) {
-		if( in_array( $field['id'], array( $username_field_id, $site_address_field_id ) ) && $field['type'] == 'uid' ) {
+	foreach ( $form['fields'] as &$field ) {
+		if ( in_array( $field['id'], array( $username_field_id, $site_address_field_id ) ) && $field['type'] == 'uid' ) {
 			$field['failed_validation'] = false;
 		}
 	}

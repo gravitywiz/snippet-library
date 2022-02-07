@@ -11,7 +11,7 @@ add_filter( 'gravityview/edit_entry/field_value', function( $field_value, $field
 	if ( $field->formId == 123 && $field->id == 4 ) {
 		if ( isset( $GLOBALS['gppa-field-values'] ) ) {
 			$hydrated_field = gp_populate_anything()->hydrate_field( $field, GFAPI::get_form( $field->formId ), array(), null, false );
-			$field_value = $hydrated_field['field_value'];
+			$field_value    = $hydrated_field['field_value'];
 		}
 	}
 	return $field_value;

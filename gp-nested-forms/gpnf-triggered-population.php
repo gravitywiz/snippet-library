@@ -21,10 +21,10 @@ class GPNF_Triggered_Population {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
 		$this->_args = wp_parse_args( $args, array(
-			'form_id' => 0,
-			'trigger_field_id' => 0,
+			'form_id'             => 0,
+			'trigger_field_id'    => 0,
 			'trigger_field_value' => true,
-			'field_map' => array(),
+			'field_map'           => array(),
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -44,7 +44,7 @@ class GPNF_Triggered_Population {
 
 	public function load_form_script( $form, $is_ajax_enabled ) {
 
-		if( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
+		if ( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
 			add_action( 'wp_footer', array( $this, 'output_script' ) );
 			add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
 		}
@@ -121,19 +121,19 @@ class GPNF_Triggered_Population {
 
 	public function add_init_script( $form ) {
 
-		if( ! $this->is_applicable_form( $form ) ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
 			return;
 		}
 
 		$args = array(
-			'formId' => $this->_args['form_id'],
-			'triggerFieldId' => $this->_args['trigger_field_id'],
+			'formId'            => $this->_args['form_id'],
+			'triggerFieldId'    => $this->_args['trigger_field_id'],
 			'triggerFieldValue' => $this->_args['trigger_field_value'],
 			'nestedFormFieldId' => $this->_args['nested_form_field_id'],
-			'fieldMap' => $this->_args['field_map'],
-			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-			'nonce' => wp_create_nonce( 'gpnf_triggered_population_add_child_entry' ),
-			'hash' => $this->get_instance_hash(),
+			'fieldMap'          => $this->_args['field_map'],
+			'ajaxUrl'           => admin_url( 'admin-ajax.php' ),
+			'nonce'             => wp_create_nonce( 'gpnf_triggered_population_add_child_entry' ),
+			'hash'              => $this->get_instance_hash(),
 		);
 
 		$script = 'new GPNFTriggeredPopulation( ' . json_encode( $args ) . ' );';
@@ -162,14 +162,14 @@ class GPNF_Triggered_Population {
 		}
 
 		$nested_form_field = GFAPI::get_field( $this->_args['form_id'], $this->_args['nested_form_field_id'] );
-		$child_form_id = $nested_form_field->gpnfForm;
+		$child_form_id     = $nested_form_field->gpnfForm;
 
 		parse_str( rgpost( 'data' ), $data );
 
 		$entry_data = array();
 
-		foreach( $this->_args['field_map'] as $source_field_id => $target_field_id ) {
-			foreach( $data as $key => $value ) {
+		foreach ( $this->_args['field_map'] as $source_field_id => $target_field_id ) {
+			foreach ( $data as $key => $value ) {
 				if ( sprintf( 'input_%s', str_replace( '.', '_', $source_field_id ) ) === $key ) {
 					$entry_data[ $target_field_id ] = $value;
 				}
@@ -183,8 +183,8 @@ class GPNF_Triggered_Population {
 		$entry_data['form_id'] = $child_form_id;
 
 		$child_entry_id = GFAPI::add_entry( $entry_data );
-		$child_entry = GFAPI::get_entry( $child_entry_id );
-		$field_values = gp_nested_forms()->get_entry_display_values( $child_entry, GFAPI::get_form( $child_form_id ) );
+		$child_entry    = GFAPI::get_entry( $child_entry_id );
+		$field_values   = gp_nested_forms()->get_entry_display_values( $child_entry, GFAPI::get_form( $child_form_id ) );
 
 		$child_entry = new GPNF_Entry( GFAPI::get_entry( $child_entry_id ) );
 		$child_entry->set_parent_form( $this->_args['form_id'] );
@@ -218,15 +218,15 @@ class GPNF_Triggered_Population {
 # Configuration
 
 new GPNF_Triggered_Population( array(
-	'form_id' => 123,
-	'trigger_field_id' => 4,
-	'trigger_field_value' => 'Yes',
+	'form_id'              => 123,
+	'trigger_field_id'     => 4,
+	'trigger_field_value'  => 'Yes',
 	'nested_form_field_id' => 5,
-	'field_map' => array(
+	'field_map'            => array(
 		// source field ID => target field ID
 		'6.3' => '3.3',
 		'6.6' => '3.6',
 		'7'   => '4',
 		'8'   => '5',
-	)
+	),
 ) );

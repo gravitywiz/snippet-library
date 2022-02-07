@@ -14,7 +14,7 @@
 class GW_Coupons_Exclude_Products {
 
 	protected static $is_script_output = false;
-	public static $excluded_total = null;
+	public static $excluded_total      = null;
 
 	public $_args = array();
 
@@ -23,7 +23,7 @@ class GW_Coupons_Exclude_Products {
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
 		$this->_args = wp_parse_args( $args, array(
 			'form_id'        => false,
-			'exclude_fields' => array()
+			'exclude_fields' => array(),
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -34,10 +34,10 @@ class GW_Coupons_Exclude_Products {
 	function init() {
 
 		$has_gravity_forms = property_exists( 'GFCommon', 'version' ) && version_compare( GFCommon::$version, '1.8', '>=' );
-		$has_gf_coupons = class_exists( 'GFCoupons' );
+		$has_gf_coupons    = class_exists( 'GFCoupons' );
 
 		// make sure we're running the required minimum version of Gravity Forms and GF Coupons
-		if( ! $has_gravity_forms || ! $has_gf_coupons ) {
+		if ( ! $has_gravity_forms || ! $has_gf_coupons ) {
 			return;
 		}
 
@@ -53,7 +53,7 @@ class GW_Coupons_Exclude_Products {
 
 	function load_form_script( $form ) {
 
-		if( $this->is_applicable_form( $form ) && ! self::$is_script_output ) {
+		if ( $this->is_applicable_form( $form ) && ! self::$is_script_output ) {
 			$this->output_script();
 		}
 
@@ -137,7 +137,7 @@ class GW_Coupons_Exclude_Products {
 
 	function add_init_script( $form ) {
 
-		if( ! $this->is_applicable_form( $form ) ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
 			return;
 		}
 
@@ -156,14 +156,14 @@ class GW_Coupons_Exclude_Products {
 
 	function stash_excluded_total( $product_data, $form ) {
 
-		if( ! $this->is_applicable_form( $form ) ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
 			return $product_data;
 		}
 
 		self::$excluded_total = 0;
 
-		foreach( $product_data['products'] as $field_id => $data ) {
-			if( in_array( $field_id, $this->_args['exclude_fields'] ) ) {
+		foreach ( $product_data['products'] as $field_id => $data ) {
+			if ( in_array( $field_id, $this->_args['exclude_fields'] ) ) {
 				self::$excluded_total += GFCommon::to_number( $data['price'] );
 			}
 		}
@@ -173,7 +173,7 @@ class GW_Coupons_Exclude_Products {
 
 	function modify_coupon_discount_amount( $discount, $coupon, $price ) {
 
-		if( ! self::$excluded_total ) {
+		if ( ! self::$excluded_total ) {
 			return $discount;
 		}
 
@@ -181,11 +181,11 @@ class GW_Coupons_Exclude_Products {
 		$currency = new RGCurrency( GFCommon::get_currency() );
 		$amount   = $currency->to_number( $coupon['amount'] );
 
-		if( $coupon['type'] == 'percentage' ) {
+		if ( $coupon['type'] == 'percentage' ) {
 			$discount = $price * ( $amount / 100 );
-		} else if( $coupon['type'] == 'flat' ) {
+		} elseif ( $coupon['type'] == 'flat' ) {
 			$discount = $amount;
-			if( $discount > $price ) {
+			if ( $discount > $price ) {
 				$discount = $price;
 			}
 		}
@@ -206,6 +206,6 @@ class GW_Coupons_Exclude_Products {
 # Configuration
 
 new GW_Coupons_Exclude_Products( array(
-	'form_id' => 123,
-	'exclude_fields' => array( 4, 5 )
+	'form_id'        => 123,
+	'exclude_fields' => array( 4, 5 ),
 ) );

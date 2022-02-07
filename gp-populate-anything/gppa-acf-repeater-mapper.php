@@ -38,7 +38,7 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 		// Look for ACF repeater meta: repeater_name_0_subfield_name
 		if ( preg_match( '/meta_([^0-9]+)_([0-9]+)_(.+)/', $key, $matches ) ) {
 			list( , $repeater, $index, $subfield ) = $matches;
-			$map[ $template ] = $subfield;
+			$map[ $template ]                      = $subfield;
 		}
 	}
 
@@ -51,7 +51,7 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 	foreach ( $objects as $object ) {
 		$rows = get_field( $repeater, $object->ID );
 		if ( $rows ) {
-			foreach( $rows as $row ) {
+			foreach ( $rows as $row ) {
 				$choices[] = array(
 					'value' => rgar( $row, $map['value'] ),
 					'text'  => rgar( $row, $map['label'] ),

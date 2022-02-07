@@ -2,8 +2,8 @@
 /**
  * Gravity Perks // Media Library // Merge Tag for Media Library IDs
  * https://gravitywiz.com/documentation/gravity-forms-media-library/
- * 
- * Adds support for fetching a comma-delimited list of attachment IDs after GPML has imported the files into the 
+ *
+ * Adds support for fetching a comma-delimited list of attachment IDs after GPML has imported the files into the
  * Media Library. Use the {entry:gpml_ids_FIELDID} merge tag.
  */
 add_filter( 'gform_merge_tag_data', function( $data, $text, $form ) {

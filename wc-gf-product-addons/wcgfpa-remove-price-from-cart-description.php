@@ -17,7 +17,7 @@
 add_filter( 'woocommerce_gforms_field_display_text', function( $display_text, $display_value, $field ) {
 	if ( strpos( $field->cssClass, 'wcgfpa-remove-price' ) !== false ) {
 		preg_match_all( '/\(.+?\)/', $display_text, $matches, PREG_SET_ORDER );
-		$match = array_pop( $matches );
+		$match        = array_pop( $matches );
 		$display_text = str_replace( $match[0], '', $display_text );
 	}
 	return $display_text;

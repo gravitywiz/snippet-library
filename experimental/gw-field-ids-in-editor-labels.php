@@ -14,7 +14,7 @@ add_filter( 'gform_field_content', function( $content, $field ) {
 
 	static $_gw_inline_field_id_style;
 	if ( ! $_gw_inline_field_id_style ) {
-		$content .= '
+		$content                  .= '
 			<style>
 				.gw-inline-field-id {
 				    background-color: #ecedf8;

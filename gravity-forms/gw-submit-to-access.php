@@ -47,7 +47,7 @@ class GW_Submit_Access {
 
 		// setting later so we can use GFCommon::get_base_url() to get GF's spinner URL
 		if ( empty( $this->_args['loading_message'] ) ) {
-			$this->_args['loading_message'] = '<span class="gwsa-loading">Loading content... <img src="' . GFCommon::gf_global(false, true)['spinnerUrl'] . '" /></span>';
+			$this->_args['loading_message'] = '<span class="gwsa-loading">Loading content... <img src="' . GFCommon::gf_global( false, true )['spinnerUrl'] . '" /></span>';
 		}
 
 		add_action( 'wp', array( $this, 'check_global_requirements' ), 5 );
@@ -215,8 +215,8 @@ class GW_Submit_Access {
 		if ( ! $requires_submission_message ) {
 			$requires_submission_message = $this->_args['requires_submission_message'];
 		}
-		
-		$contains_form_merge_tag     = strpos( $requires_submission_message, '{form}' ) !== false;
+
+		$contains_form_merge_tag = strpos( $requires_submission_message, '{form}' ) !== false;
 
 		$form_ids = $this->get_form_ids( $post_id );
 
@@ -227,7 +227,7 @@ class GW_Submit_Access {
 			require_once( GFCommon::get_base_path() . '/form_display.php' );
 			GFFormDisplay::print_form_scripts( $form, true );
 			gravity_form( $form_ids[0], false, false, false, array(), $this->_args['bypass_cache'] );
-			$form_markup                 = ob_get_clean();
+			$form_markup = ob_get_clean();
 
 			$requires_submission_message = $contains_form_merge_tag ? str_replace( '{form}', $form_markup, $requires_submission_message ) : $requires_submission_message . $form_markup;
 

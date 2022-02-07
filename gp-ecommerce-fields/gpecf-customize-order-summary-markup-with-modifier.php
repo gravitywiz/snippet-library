@@ -17,7 +17,8 @@ function get_custom_order_summary_markup( $markup, $order, $form, $entry, $order
 		</tr>
 		</thead>
 		<tbody>
-		<?php foreach ( $order['products'] as $product ):
+		<?php
+		foreach ( $order['products'] as $product ) :
 			if ( empty( $product['name'] ) || gp_ecommerce_fields()->is_ecommerce_product( $product ) ) {
 				continue;
 			}
@@ -30,13 +31,13 @@ function get_custom_order_summary_markup( $markup, $order, $form, $entry, $order
 					<ul style="<?php gp_ecommerce_fields()->style( '.order-summary/.product-options' ); ?>">
 						<?php
 						$price = GFCommon::to_number( $product['price'] );
-						if ( is_array( rgar( $product, 'options' ) ) ):
-							foreach ( $product['options'] as $index => $option ):
+						if ( is_array( rgar( $product, 'options' ) ) ) :
+							foreach ( $product['options'] as $index => $option ) :
 								$price += GFCommon::to_number( $option['price'] );
-								$class = $index == count( $product['options'] ) - 1 ? '.last-child' : '';
+								$class  = $index == count( $product['options'] ) - 1 ? '.last-child' : '';
 								?>
-								<li style="<?php gp_ecommerce_fields()->style( ".order-summary/.product-options/li{$class}" ); ?>"><?php echo $option['option_label'] ?></li>
-							<?php
+								<li style="<?php gp_ecommerce_fields()->style( ".order-summary/.product-options/li{$class}" ); ?>"><?php echo $option['option_label']; ?></li>
+								<?php
 							endforeach;
 						endif;
 						$field_total = floatval( $product['quantity'] ) * $price;
@@ -44,24 +45,25 @@ function get_custom_order_summary_markup( $markup, $order, $form, $entry, $order
 					</ul>
 				</td>
 				<td style="<?php gp_ecommerce_fields()->style( '.order-summary/tbody/tr/td.column-2' ); ?>"><?php echo esc_html( $product['quantity'] ); ?></td>
-				<td style="<?php gp_ecommerce_fields()->style( '.order-summary/tbody/tr/td.column-3' ); ?>"><?php echo GFCommon::to_money( $price, $entry['currency'] ) ?></td>
-				<td style="<?php gp_ecommerce_fields()->style( '.order-summary/tbody/tr/td.column-4' ); ?>"><?php echo GFCommon::to_money( $field_total, $entry['currency'] ) ?></td>
+				<td style="<?php gp_ecommerce_fields()->style( '.order-summary/tbody/tr/td.column-3' ); ?>"><?php echo GFCommon::to_money( $price, $entry['currency'] ); ?></td>
+				<td style="<?php gp_ecommerce_fields()->style( '.order-summary/tbody/tr/td.column-4' ); ?>"><?php echo GFCommon::to_money( $field_total, $entry['currency'] ); ?></td>
 			</tr>
-		<?php
+			<?php
 		endforeach;
 		?>
 		</tbody>
 		<tfoot style="<?php gp_ecommerce_fields()->style( '.order-summary/tfoot' ); ?>">
-		<?php foreach( gp_ecommerce_fields()->get_order_summary( $order, $form, $entry ) as $index => $group ): ?>
-			<?php foreach( $group as $item ):
+		<?php foreach ( gp_ecommerce_fields()->get_order_summary( $order, $form, $entry ) as $index => $group ) : ?>
+			<?php
+			foreach ( $group as $item ) :
 				$class = rgar( $item, 'class' ) ? '.' . rgar( $item, 'class' ) : '';
 				?>
 				<tr style="<?php gp_ecommerce_fields()->style( '.order-summary/tfoot/tr' . $class ); ?>">
-					<?php if( $index === 0 ): ?>
+					<?php if ( $index === 0 ) : ?>
 						<td style="<?php gp_ecommerce_fields()->style( '.order-summary/tfoot/tr/td.empty' ); ?>" colspan="2" rowspan="<?php echo gp_ecommerce_fields()->get_order_summary_item_count( $order_summary ); ?>"></td>
 					<?php endif; ?>
 					<td style="<?php gp_ecommerce_fields()->style( ".order-summary/tfoot/{$class}/td.column-3" ); ?>"><?php echo $item['name']; ?></td>
-					<td style="<?php gp_ecommerce_fields()->style( ".order-summary/tfoot/{$class}/td.column-4" ); ?>"><?php echo GFCommon::to_money( $item['price'], $entry['currency'] ) ?></td>
+					<td style="<?php gp_ecommerce_fields()->style( ".order-summary/tfoot/{$class}/td.column-4" ); ?>"><?php echo GFCommon::to_money( $item['price'], $entry['currency'] ); ?></td>
 				</tr>
 			<?php endforeach; ?>
 		<?php endforeach; ?>

@@ -45,11 +45,11 @@ class GW_Multi_File_Merge_Tag {
 
 	public function get_default_args() {
 		return array(
-			'form_id'            => false,
-			'field_ids'          => array(),
-			'exclude_forms'      => array(),
-			'default_markup'     => '<li><a href="{url}">{filename}.{ext}</a></li>',
-			'formats'            => array( 'html' ),
+			'form_id'        => false,
+			'field_ids'      => array(),
+			'exclude_forms'  => array(),
+			'default_markup' => '<li><a href="{url}">{filename}.{ext}</a></li>',
+			'formats'        => array( 'html' ),
 			'markup'         => array(
 				array(
 					'file_types' => array( 'jpg', 'jpeg', 'png', 'gif' ),

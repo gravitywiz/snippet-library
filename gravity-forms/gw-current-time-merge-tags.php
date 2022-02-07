@@ -21,24 +21,23 @@
  * Version:      0.1
  * Author URI:   https://gravitywiz.com/
  */
-add_filter('gform_replace_merge_tags', 'gwiz_current_time_merge_tags', 10);
+add_filter( 'gform_replace_merge_tags', 'gwiz_current_time_merge_tags', 10 );
 
-function gwiz_current_time_merge_tags($text)
-{
+function gwiz_current_time_merge_tags( $text ) {
 
-    $local_timestamp = GFCommon::get_local_timestamp(time());
+	$local_timestamp = GFCommon::get_local_timestamp( time() );
 
-    $time_hh = date('h', $local_timestamp);
-    $time_hh_24 = date('H', $local_timestamp);
-    $time_mm = date('i', $local_timestamp);
-    $time_am_pm = date('A', $local_timestamp);
+	$time_hh    = date( 'h', $local_timestamp );
+	$time_hh_24 = date( 'H', $local_timestamp );
+	$time_mm    = date( 'i', $local_timestamp );
+	$time_am_pm = date( 'A', $local_timestamp );
 
-    $text = str_replace('{time_hh}', $time_hh, $text);
-    $text = str_replace('{time_hh:12}', $time_hh, $text);
-    $text = str_replace('{time_hh:24}', $time_hh_24, $text);
-    $text = str_replace('{time_mm}', $time_mm, $text);
-    $text = str_replace('{time_am_pm}', $time_am_pm, $text);
+	$text = str_replace( '{time_hh}', $time_hh, $text );
+	$text = str_replace( '{time_hh:12}', $time_hh, $text );
+	$text = str_replace( '{time_hh:24}', $time_hh_24, $text );
+	$text = str_replace( '{time_mm}', $time_mm, $text );
+	$text = str_replace( '{time_am_pm}', $time_am_pm, $text );
 
-    return $text;
+	return $text;
 
 }

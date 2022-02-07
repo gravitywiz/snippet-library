@@ -151,7 +151,7 @@ class GW_Cache_Buster {
 		?>
 		<script type="text/javascript">
 			( function ( $ ) {
-				var formId = '<?php echo $form_id ?>';
+				var formId = '<?php echo $form_id; ?>';
 				$.post( '<?php echo admin_url( 'admin-ajax.php' ); ?>?action=gfcb_get_form&form_id=<?php echo $form_id, $params; ?>', {
 					action: 'gfcb_get_form',
 					form_id: '<?php echo $form_id; ?>',

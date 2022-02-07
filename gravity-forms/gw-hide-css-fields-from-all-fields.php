@@ -20,9 +20,9 @@
 add_filter( 'gform_merge_tag_filter', function( $value, $merge_tag, $modifier, $field ) {
 
 	if ( $merge_tag == 'all_fields' && $modifier == 'nohidden' ) {
-		$css_classes = explode( ' ', $field->cssClass );
+		$css_classes      = explode( ' ', $field->cssClass );
 		$matching_classes = array_intersect( array( 'gf_hidden', 'gf_invisible' ), $css_classes );
-		if( ! empty( $matching_classes ) ) {
+		if ( ! empty( $matching_classes ) ) {
 			return false;
 		}
 	}

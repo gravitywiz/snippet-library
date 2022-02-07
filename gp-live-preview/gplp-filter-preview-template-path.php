@@ -6,5 +6,5 @@
  * Change the page template used to render the live preview.
  */
 add_filter( 'gplp_preview_template', function( $template ) {
-    return get_stylesheet_directory() . '/custom-template.php';
+	return get_stylesheet_directory() . '/custom-template.php';
 } );

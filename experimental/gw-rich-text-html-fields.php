@@ -10,7 +10,7 @@
  * 2. Allow switching to text mode: window.switchEditors.go( 'rich_field_content', mode )
  * 3. Add support for inserting images.
  */
- 
+
 add_action( 'admin_init', function() {
 	if ( GFForms::get_page() === 'form_editor' ) {
 		wp_enqueue_editor();
