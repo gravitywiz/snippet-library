@@ -56,7 +56,7 @@ class GW_Populate_Date {
 
 		if ( $this->_args['override_on_submission'] ) {
 			add_action( 'gform_pre_submission', array( $this, 'populate_date_on_pre_submission' ) );
-        }
+		}
 
 	}
 
@@ -170,7 +170,6 @@ class GW_Populate_Date {
 
 				break;
 		}
-
 
 		return $timestamp;
 	}
@@ -375,9 +374,9 @@ class GW_Populate_Date {
 					 * currency text to raw numbers but they are still in numeric format of the specified currency
 					 */
 					self.getCleanNumber = function( value, fieldId, formId ) {
-                        if (typeof value === 'undefined') {
-                            return value;
-                        }
+						if (typeof value === 'undefined') {
+							return value;
+						}
 
 						var numberFormat = gf_get_field_number_format( fieldId, formId );
 						var decimalSep   = gformGetDecimalSeparator( numberFormat ? numberFormat : 'currency' );

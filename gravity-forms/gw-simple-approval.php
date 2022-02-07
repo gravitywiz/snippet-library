@@ -15,43 +15,43 @@
  */
 class GW_Simple_Approval {
 
-    protected static $is_script_output = false;
+	protected static $is_script_output = false;
 
-    public function __construct( $args = array() ) {
+	public function __construct( $args = array() ) {
 
-        // set our default arguments, parse against the provided arguments, and store for use throughout the class
-        $this->_args = wp_parse_args( $args, array(
-            'form_id'              => false,
-            'approve_button_label' => __( 'Approve' ),
-            'approval_read_only'   => false
-        ) );
+		// set our default arguments, parse against the provided arguments, and store for use throughout the class
+		$this->_args = wp_parse_args( $args, array(
+			'form_id'              => false,
+			'approve_button_label' => __( 'Approve' ),
+			'approval_read_only'   => false,
+		) );
 
-        // do version check in the init to make sure if GF is going to be loaded, it is already loaded
-        add_action( 'init', array( $this, 'init' ) );
+		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
+		add_action( 'init', array( $this, 'init' ) );
 
-    }
+	}
 
-    function init() {
+	function init() {
 
-        // make sure we're running the required minimum version of Gravity Forms
-        if( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.9', '>=' ) ) {
-            return;
-        }
+		// make sure we're running the required minimum version of Gravity Forms
+		if ( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.9', '>=' ) ) {
+			return;
+		}
 
-        // time for hooks
-        add_filter( 'gform_register_init_scripts',        array( $this, 'add_init_script' ) );
-        add_filter( 'gform_save_and_continue_resume_url', array( $this, 'add_approval_query_arg' ), 10, 4 );
-        add_filter( 'gform_pre_render',                   array( $this, 'modify_frontend_form_object_for_approval' ) );
+		// time for hooks
+		add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ) );
+		add_filter( 'gform_save_and_continue_resume_url', array( $this, 'add_approval_query_arg' ), 10, 4 );
+		add_filter( 'gform_pre_render', array( $this, 'modify_frontend_form_object_for_approval' ) );
 
-    }
+	}
 
-    function add_init_script( $form ) {
+	function add_init_script( $form ) {
 
-        if( ! $this->is_applicable_form( $form ) ) {
-            return;
-        }
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return;
+		}
 
-        $script = '
+		$script = '
             ( function( $ ) {
                 var $submitButton       = $( "#gform_submit_button_" + formId ),
                     $saveContinueButton = $( "#gform_save_" + formId + "_link" );
@@ -69,73 +69,74 @@ class GW_Simple_Approval {
                 }
             } )( jQuery );';
 
-        $slug = 'gw_simple_approval';
+		$slug = 'gw_simple_approval';
 
-        GFFormDisplay::add_init_script( $this->_args['form_id'], $slug, GFFormDisplay::ON_CONDITIONAL_LOGIC, $script );
+		GFFormDisplay::add_init_script( $this->_args['form_id'], $slug, GFFormDisplay::ON_CONDITIONAL_LOGIC, $script );
 
-    }
+	}
 
-    function is_applicable_form( $form ) {
+	function is_applicable_form( $form ) {
 
-        $form_id = isset( $form['id'] ) ? $form['id'] : $form;
+		$form_id = isset( $form['id'] ) ? $form['id'] : $form;
 
-        return $form_id == $this->_args['form_id'];
-    }
+		return $form_id == $this->_args['form_id'];
+	}
 
-    function add_approval_query_arg( $resume_url, $form, $token, $email ) {
+	function add_approval_query_arg( $resume_url, $form, $token, $email ) {
 
-        if( ! $this->is_applicable_form( $form ) ) {
-            return $resume_url;
-        }
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $resume_url;
+		}
 
-        // add query arg
-        $resume_url = add_query_arg( array( 'gf_token' => $token, 'is_approval' => 1 ), $resume_url );
+		// add query arg
+		$resume_url = add_query_arg( array(
+			'gf_token'    => $token,
+			'is_approval' => 1,
+		), $resume_url );
 
-        return $resume_url;
-    }
+		return $resume_url;
+	}
 
-    function modify_frontend_form_object_for_approval( $form ) {
+	function modify_frontend_form_object_for_approval( $form ) {
 
-        if( ! $this->is_applicable_form( $form ) ) {
-            return $form;
-        }
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $form;
+		}
 
-        if( rgget( 'is_approval' ) ) {
-            ?>
+		if ( rgget( 'is_approval' ) ) {
+			?>
 
-            <style type="text/css">
-                form.gw-approval-mode .hide-in-approval-mode { display: none; }
-            </style>
+			<style type="text/css">
+				form.gw-approval-mode .hide-in-approval-mode { display: none; }
+			</style>
 
-            <?php
+			<?php
 
-            $form['cssClass'] .= 'gw-approval-mode';
-            $form['save']['enabled'] = false;
-            $form['button']['text'] = $this->_args['approve_button_label'];
+			$form['cssClass']       .= 'gw-approval-mode';
+			$form['save']['enabled'] = false;
+			$form['button']['text']  = $this->_args['approve_button_label'];
 
-            foreach( $form['fields'] as &$field ) {
+			foreach ( $form['fields'] as &$field ) {
 
-                if( $field->inputName == 'is_approval' ) {
-                    $field->defaultValue = 1;
-                }
+				if ( $field->inputName == 'is_approval' ) {
+					$field->defaultValue = 1;
+				}
 
-                if( $this->_args['approval_read_only'] ) {
-                    $field->gwreadonly_enable = true;
-                }
+				if ( $this->_args['approval_read_only'] ) {
+					$field->gwreadonly_enable = true;
+				}
+			}
+		}
 
-            }
-
-        }
-
-        return $form;
-    }
+		return $form;
+	}
 
 }
 
 # Configuration
 
 new GW_Simple_Approval( array(
-    'form_id'              => 59,
-    'approve_button_label' => 'Approve Prayer Request',
-    'approval_read_only'   => true // requires GP Read Only
+	'form_id'              => 59,
+	'approve_button_label' => 'Approve Prayer Request',
+	'approval_read_only'   => true, // requires GP Read Only
 ) );

@@ -9,15 +9,15 @@
 // Update "123" to your form ID - or - remove "_123" to apply to all forms.
 add_filter( 'gpecf_order_summary_123', function( $summary ) {
 
-	if( empty( $summary['discounts'] ) ) {
+	if ( empty( $summary['discounts'] ) ) {
 		return $summary;
 	}
 
-	$consolidated_discount = $summary['discounts'][0];
-	$consolidated_discount['name'] = 'Discounts';
+	$consolidated_discount          = $summary['discounts'][0];
+	$consolidated_discount['name']  = 'Discounts';
 	$consolidated_discount['price'] = 0;
 
-	foreach( $summary['discounts'] as $discount ) {
+	foreach ( $summary['discounts'] as $discount ) {
 		$consolidated_discount['price'] += $discount['price'];
 	}
 

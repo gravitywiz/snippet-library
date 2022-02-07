@@ -5,7 +5,7 @@
  */
 add_filter( 'gform_user_registration_meta_value', function( $value, $meta_key ) {
 	// Update "checkboxes" to your custom field's name.
-	if( $meta_key === 'checkboxes' ) {
+	if ( $meta_key === 'checkboxes' ) {
 		$value = array_map( 'trim', explode( ',', $value ) );
 	}
 	return $value;

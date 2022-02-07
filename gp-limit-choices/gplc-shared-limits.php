@@ -21,7 +21,7 @@ class GPLS_Shared_Limits {
 		$this->_args = wp_parse_args( $args, array(
 			'form_id'      => false,
 			'field_groups' => array(),
-			'form_groups'  => array()
+			'form_groups'  => array(),
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -31,7 +31,7 @@ class GPLS_Shared_Limits {
 
 	public function init() {
 
-		if( ! is_callable( array( 'GFFormsModel', 'get_database_version' ) ) ) {
+		if ( ! is_callable( array( 'GFFormsModel', 'get_database_version' ) ) ) {
 			return;
 		}
 
@@ -42,15 +42,15 @@ class GPLS_Shared_Limits {
 
 	public function modify_choice_counts_query( $query, $field ) {
 
-		if( ! $this->is_applicable_form( $field->formId ) ) {
+		if ( ! $this->is_applicable_form( $field->formId ) ) {
 			return $query;
 		}
 
-		if( ! empty( $this->_args['form_groups'] ) ) {
+		if ( ! empty( $this->_args['form_groups'] ) ) {
 			$query = $this->modify_query_for_form_groups( $query, $field );
 		}
 
-		if( ! empty( $this->_args['field_groups'] ) ) {
+		if ( ! empty( $this->_args['field_groups'] ) ) {
 			$query = $this->modify_query_for_field_groups( $query, $field );
 		}
 
@@ -60,23 +60,22 @@ class GPLS_Shared_Limits {
 	public function modify_query_for_field_groups( $query, $field ) {
 		global $wpdb;
 
-		$from_search = $wpdb->prepare( "(em.meta_key = %s OR em.meta_key LIKE %s)", $field['id'], $wpdb->esc_like( $field['id'] ) . '.%' );
+		$from_search  = $wpdb->prepare( '(em.meta_key = %s OR em.meta_key LIKE %s)', $field['id'], $wpdb->esc_like( $field['id'] ) . '.%' );
 		$from_replace = array();
 
-		foreach( $this->_args['field_groups'] as $field_group ) {
+		foreach ( $this->_args['field_groups'] as $field_group ) {
 
-			if( ! in_array( $field['id'], $field_group ) ) {
+			if ( ! in_array( $field['id'], $field_group ) ) {
 				continue;
 			}
 
-			foreach( $field_group as $field_id ) {
-				$from_replace[] = $wpdb->prepare( "em.meta_key = %s OR em.meta_key LIKE %s", $field_id, $wpdb->esc_like( $field_id ) . '.%' );
+			foreach ( $field_group as $field_id ) {
+				$from_replace[] = $wpdb->prepare( 'em.meta_key = %s OR em.meta_key LIKE %s', $field_id, $wpdb->esc_like( $field_id ) . '.%' );
 			}
-
 		}
 
-		if( ! empty( $from_replace ) ) {
-			$from_replace = sprintf( '( %s )', implode( ' OR ', $from_replace ) );
+		if ( ! empty( $from_replace ) ) {
+			$from_replace  = sprintf( '( %s )', implode( ' OR ', $from_replace ) );
 			$query['from'] = str_replace( $from_search, $from_replace, $query['from'] );
 		}
 
@@ -86,16 +85,16 @@ class GPLS_Shared_Limits {
 	public function modify_query_for_form_groups( $query, $field ) {
 		global $wpdb;
 
-		foreach( $this->_args['form_groups'] as $form_group ) {
+		foreach ( $this->_args['form_groups'] as $form_group ) {
 
-			if( ! $this->is_form_group_field( $field, $form_group ) ) {
+			if ( ! $this->is_form_group_field( $field, $form_group ) ) {
 				continue;
 			}
 
 			$query['where'] = str_replace( sprintf( 'AND em.form_id = %d', $field->formId ), '', $query['where'] );
 
 			$join_conditions = array();
-			foreach( $form_group as $form_id => $field_ids ) {
+			foreach ( $form_group as $form_id => $field_ids ) {
 				$field_clauses = array();
 				if ( ! is_array( $field_ids ) ) {
 					$field_ids = array( $field_ids );
@@ -103,7 +102,7 @@ class GPLS_Shared_Limits {
 				foreach ( $field_ids as $field_id ) {
 					$field_clauses[] = "em.meta_key = '{$field_id}' OR em.meta_key LIKE '{$field_id}%'";
 				}
-				$join_conditions[] = "( em.form_id = {$form_id} AND ( " . implode( " OR ", $field_clauses ) . " ) )";
+				$join_conditions[] = "( em.form_id = {$form_id} AND ( " . implode( ' OR ', $field_clauses ) . ' ) )';
 			}
 
 			$query['from'] = sprintf( "FROM {$wpdb->prefix}gf_entry e INNER JOIN {$wpdb->prefix}gf_entry_meta em ON em.entry_id = e.id AND ( %s )", implode( "\nOR\n", $join_conditions ) );
@@ -115,13 +114,13 @@ class GPLS_Shared_Limits {
 
 	public function modify_requested_count( $requested_count, $field ) {
 
-		if( ! $this->is_applicable_form( $field['formId'] ) ) {
+		if ( ! $this->is_applicable_form( $field['formId'] ) ) {
 			return $requested_count;
 		}
 
-		foreach( $this->_args['field_groups'] as $field_group ) {
+		foreach ( $this->_args['field_groups'] as $field_group ) {
 
-			if( ! in_array( $field->id, $field_group ) ) {
+			if ( ! in_array( $field->id, $field_group ) ) {
 				continue;
 			}
 
@@ -131,7 +130,7 @@ class GPLS_Shared_Limits {
 
 			remove_filter( 'gplc_requested_count', array( $this, 'modify_requested_count' ) );
 
-			foreach( $field_group as $field_id ) {
+			foreach ( $field_group as $field_id ) {
 
 				$form        = GFAPI::get_form( $field->formId );
 				$group_field = GFFormsModel::get_field( $form, $field_id );
@@ -139,10 +138,9 @@ class GPLS_Shared_Limits {
 				$selected_choices = gp_limit_choices()->get_selected_choices( $group_field );
 				$selected_choice  = reset( $selected_choices );
 
-				if( $selected_choice['value'] == $primary_choice['value'] ) {
+				if ( $selected_choice['value'] == $primary_choice['value'] ) {
 					$shared_requested_count += gp_limit_choices()->get_requested_count( $group_field );
 				}
-
 			}
 
 			add_filter( 'gplc_requested_count', array( $this, 'modify_requested_count' ), 10, 2 );
@@ -160,9 +158,9 @@ class GPLS_Shared_Limits {
 		$is_applicable_form = false;
 
 		if ( ! empty( $this->_args['form_groups'] ) ) {
-			foreach( $this->_args['form_groups'] as $form_group ) {
+			foreach ( $this->_args['form_groups'] as $form_group ) {
 				$is_applicable_form = $this->is_form_group_form( $form, $form_group );
-				if( $is_applicable_form ) {
+				if ( $is_applicable_form ) {
 					break;
 				}
 			}
@@ -184,7 +182,7 @@ class GPLS_Shared_Limits {
 
 	public function get_form_group_fields( $form_group ) {
 		$form_group_fields = array();
-		foreach( $form_group as $form_id => $field_ids ) {
+		foreach ( $form_group as $form_id => $field_ids ) {
 			if ( ! is_array( $field_ids ) ) {
 				$field_ids = array( $field_ids );
 			}
@@ -198,7 +196,7 @@ class GPLS_Shared_Limits {
 # Configuration
 
 new GPLS_Shared_Limits( array(
-	'form_id' => 123,
+	'form_id'      => 123,
 	'field_groups' => array(
 		array( 1, 2 ),
 	),
@@ -214,13 +212,13 @@ new GPLS_Shared_Limits( array(
 	'form_groups' => array(
 		array(
 			123 => 3,
-			124 => 4
+			124 => 4,
 		),
 		array(
 			123 => 5,
-			124 => 6
+			124 => 6,
 		),
-	)
+	),
 ) );
 
 /**
@@ -231,7 +229,7 @@ new GPLS_Shared_Limits( array(
 	'form_groups' => array(
 		array(
 			123 => array( 1, 2 ),
-			124 => array( 3, 4 )
+			124 => array( 3, 4 ),
 		),
 	),
 ) );

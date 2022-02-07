@@ -17,8 +17,8 @@ class GWLimitChoicesDailyLimit {
 	function __construct( $args ) {
 
 		$this->_args = wp_parse_args( $args, array(
-			'form_id' => false,
-			'field_ids' => array()
+			'form_id'   => false,
+			'field_ids' => array(),
 		) );
 
 		add_filter( "gwlc_choice_counts_query_{$this->_args['form_id']}", array( $this, 'modify_choice_counts_query' ), 10, 2 );
@@ -29,9 +29,9 @@ class GWLimitChoicesDailyLimit {
 
 		$form = GFAPI::get_form( $field['formId'] );
 
-		foreach( $form['fields'] as $field ) {
+		foreach ( $form['fields'] as $field ) {
 
-			if( ! in_array( $field['id'], $this->_args['field_ids'] ) ) {
+			if ( ! in_array( $field['id'], $this->_args['field_ids'] ) ) {
 				continue;
 			}
 
@@ -46,6 +46,6 @@ class GWLimitChoicesDailyLimit {
 }
 
 new GWLimitChoicesDailyLimit( array(
-	'form_id' => 436,
-	'field_ids' => array( 4 )
+	'form_id'   => 436,
+	'field_ids' => array( 4 ),
 ) );

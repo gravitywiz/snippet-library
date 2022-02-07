@@ -50,8 +50,8 @@ add_filter( 'gform_merge_tag_filter', function( $value, $input_id, $modifier, $f
 
 	$modifiers = $parse_modifiers( $modifier );
 
-	foreach( $modifiers as $modifier => $modifier_value ) {
-		switch( $modifier ) {
+	foreach ( $modifiers as $modifier => $modifier_value ) {
+		switch ( $modifier ) {
 			case 'append':
 				$value .= $modifier_value;
 				break;

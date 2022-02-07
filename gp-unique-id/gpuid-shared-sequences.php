@@ -6,9 +6,9 @@
  * Share sequences between sequential Unique ID fields; works with fields on different forms as well.
  *
  * To use the snippet, replace the numbers in the array below to match your form IDs and field IDs.
- * For example, if Form A has an ID of 123 and its Unique ID field's ID is 1 and Form B has an ID of 
+ * For example, if Form A has an ID of 123 and its Unique ID field's ID is 1 and Form B has an ID of
  * 456 and its Unique ID field's ID is 2, then you would set up the group like so:
- * 
+ *
  * $groups = array(
  *     array(
  *         123 => 1,

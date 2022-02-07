@@ -45,12 +45,12 @@ class GW_Save_Continue_Auto_Load {
 	public function maybe_resume( $args ) {
 
 		$is_submitting = rgpost( "is_submit_{$args['form_id']}" );
-		if( ! $this->is_applicable_form( $args['form_id'] ) || ! is_user_logged_in() || $is_submitting ) {
+		if ( ! $this->is_applicable_form( $args['form_id'] ) || ! is_user_logged_in() || $is_submitting ) {
 			return $args;
 		}
 
 		$token = $this->get_resume_token( get_current_user_id(), $args['form_id'] );
-		if( empty( $token ) ) {
+		if ( empty( $token ) ) {
 			return $args;
 		}
 
@@ -62,18 +62,18 @@ class GW_Save_Continue_Auto_Load {
 
 	public function handle_token_storage( $form, $page_number ) {
 
-		if( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() ) {
 			return;
 		}
 
-		$submission = GFFormDisplay::$submission[ $form['id'] ];
+		$submission               = GFFormDisplay::$submission[ $form['id'] ];
 		$is_successful_submission = $page_number == 0 && $submission['is_valid'];
 
-		if( $is_successful_submission ) {
+		if ( $is_successful_submission ) {
 			$this->delete_resume_token( get_current_user_id(), $form['id'] );
-		} else if( rgar( $submission, 'saved_for_later' ) ) {
+		} elseif ( rgar( $submission, 'saved_for_later' ) ) {
 			$this->save_resume_token( get_current_user_id(), $form['id'], $submission['resume_token'] );
-		} else if( $this->_args['auto_save'] ) {
+		} elseif ( $this->_args['auto_save'] ) {
 			$resume_token = $this->auto_save( $form, $page_number );
 			$this->save_resume_token( get_current_user_id(), $form['id'], $resume_token );
 		}
@@ -105,7 +105,7 @@ class GW_Save_Continue_Auto_Load {
 	}
 
 	public function maybe_display_inline_confirmation( $args ) {
-		if( $this->_args['enable_inline_confirmation'] && rgars( GFFormDisplay::$submission, "{$args['form_id']}/saved_for_later" ) ) {
+		if ( $this->_args['enable_inline_confirmation'] && rgars( GFFormDisplay::$submission, "{$args['form_id']}/saved_for_later" ) ) {
 			unset( GFFormDisplay::$submission[ $args['form_id'] ] );
 			add_filter( 'gform_get_form_filter_' . $args['form_id'], array( $this, 'prepend_inline_confirmation' ), 10, 2 );
 		}

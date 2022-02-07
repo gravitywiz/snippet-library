@@ -32,17 +32,17 @@ add_filter( 'gppa_live_merge_tag_value', function( $merge_tag_match_value, $merg
 		function gw_parse_modifiers( $modifiers_str ) {
 
 			preg_match_all( '/([a-z]+)(?:(?:\[(.+?)\])|,?)/i', $modifiers_str, $modifiers, PREG_SET_ORDER );
-			$parsed  = array();
+			$parsed = array();
 
-			foreach( $modifiers as $modifier ) {
+			foreach ( $modifiers as $modifier ) {
 
 				list( $match, $modifier, $value ) = array_pad( $modifier, 3, null );
-				if( $value === null ) {
+				if ( $value === null ) {
 					$value = $modifier;
 				}
 
 				// Split '1,2,3' into array( 1, 2, 3 ).
-				if( strpos( $value, ',' ) !== false ) {
+				if ( strpos( $value, ',' ) !== false ) {
 					$value = array_map( 'trim', explode( ',', $value ) );
 				}
 

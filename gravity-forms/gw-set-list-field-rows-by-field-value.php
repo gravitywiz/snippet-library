@@ -46,7 +46,7 @@ class GWAutoListFieldRows {
 
 	public function load_form_script( $form, $is_ajax_enabled ) {
 
-		if( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
+		if ( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
 			add_action( 'wp_footer', array( $this, 'output_script' ) );
 			add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
 		}
@@ -124,7 +124,7 @@ class GWAutoListFieldRows {
 
 	public function add_init_script( $form ) {
 
-		if( ! $this->is_applicable_form( $form ) ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
 			return;
 		}
 
@@ -161,5 +161,5 @@ new GWAutoListFieldRows( array(
 new GWAutoListFieldRows( array(
 	'form_id'       => 240,
 	'list_field_id' => 6,
-	'input_html_id' => '#input_240_5_1'
+	'input_html_id' => '#input_240_5_1',
 ) );

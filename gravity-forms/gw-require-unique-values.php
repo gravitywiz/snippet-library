@@ -24,7 +24,7 @@ class GW_Require_Unique_Values {
 			'field_ids'           => false,
 			'validation_message'  => __( 'Please enter a unique value.' ),
 			'validate_all_fields' => false,
-			'mode'                => 'collective' // 'collective' or 'individual' (experimental)
+			'mode'                => 'collective', // 'collective' or 'individual' (experimental)
 		) );
 
 		$this->_args['master_field_id'] = array_shift( $this->_args['field_ids'] );
@@ -37,7 +37,7 @@ class GW_Require_Unique_Values {
 	public function init() {
 
 		// make sure we're running the required minimum version of Gravity Forms
-		if( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.9', '>=' ) ) {
+		if ( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.9', '>=' ) ) {
 			return;
 		}
 
@@ -47,37 +47,34 @@ class GW_Require_Unique_Values {
 
 	public function validate( $result, $value, $form, $field ) {
 
-		if( ! $this->is_applicable_field( $field ) ) {
+		if ( ! $this->is_applicable_field( $field ) ) {
 			return $result;
 		}
 
 		$value = $this->get_filtered_value( $field );
-		if( empty( $value ) ) {
+		if ( empty( $value ) ) {
 			return $result;
 		}
 
-		if( $this->_args['mode'] === 'individual' ) {
+		if ( $this->_args['mode'] === 'individual' ) {
 
-			$groups = $this->get_group_values( $form, $field->id, false );
+			$groups    = $this->get_group_values( $form, $field->id, false );
 			$is_unique = true;
 
-			foreach( $value as $target ) {
-				foreach( $groups as $group ) {
-					if( in_array( $target, $group ) ) {
+			foreach ( $value as $target ) {
+				foreach ( $groups as $group ) {
+					if ( in_array( $target, $group ) ) {
 						$is_unique = false;
 						break 2;
 					}
 				}
 			}
-
 		} else {
 
-			$values = $this->get_group_values( $form, $field->id );
+			$values    = $this->get_group_values( $form, $field->id );
 			$is_unique = ! in_array( $this->get_value_hash( $value ), $values );
 
 		}
-
-
 
 		if ( $result['is_valid'] && ! $is_unique ) {
 			$result['is_valid'] = false;
@@ -94,19 +91,18 @@ class GW_Require_Unique_Values {
 
 		$values = array();
 
-		foreach( $field_ids as $field_id ) {
+		foreach ( $field_ids as $field_id ) {
 
-			if( $field_id == $exclude_field_id ) {
+			if ( $field_id == $exclude_field_id ) {
 				continue;
 			}
 
 			$field = GFFormsModel::get_field( $form, $field_id );
 			$value = $this->get_filtered_value( $field );
 
-			if( ! empty( $value ) ) {
+			if ( ! empty( $value ) ) {
 				$values[ $field->id ] = $do_hash ? $this->get_value_hash( $value ) : $value;
 			}
-
 		}
 
 		return $values;
@@ -119,7 +115,7 @@ class GW_Require_Unique_Values {
 	 */
 	public function get_filtered_value( $field ) {
 
-		if( $field->get_input_type() == 'fileupload' && ! $field->multipleFiles ) {
+		if ( $field->get_input_type() == 'fileupload' && ! $field->multipleFiles ) {
 			/** @var GF_Field_FileUpload $field */
 			$value = basename( rgars( $_FILES, sprintf( 'input_%d/name', $field->id ) ) );
 		} else {
@@ -135,11 +131,11 @@ class GW_Require_Unique_Values {
 	public function get_value_hash( $value ) {
 
 		// Replace values like "1.1" with "x.1" to make it generic for comparison.
-		if( is_array( $value ) ) {
+		if ( is_array( $value ) ) {
 			$old = $value;
-			foreach( $old as $key => $_value ) {
+			foreach ( $old as $key => $_value ) {
 				$ids = explode( '.', $key );
-				if( count( $ids ) > 1 ) {
+				if ( count( $ids ) > 1 ) {
 					$ids[0] = 'x';
 				}
 				unset( $value[ $key ] );
@@ -152,11 +148,11 @@ class GW_Require_Unique_Values {
 
 	public function is_applicable_field( $field ) {
 
-		if( ! $this->_args['field_ids']  ) {
+		if ( ! $this->_args['field_ids'] ) {
 			return false;
-		} else if( $this->_args['validate_all_fields'] && $field->id == $this->_args['master_field_id'] ) {
+		} elseif ( $this->_args['validate_all_fields'] && $field->id == $this->_args['master_field_id'] ) {
 			return true;
-		} else if( ! in_array( $field->id, $this->_args['field_ids'] ) ) {
+		} elseif ( ! in_array( $field->id, $this->_args['field_ids'] ) ) {
 			return false;
 		}
 
@@ -168,6 +164,6 @@ class GW_Require_Unique_Values {
 # Configuration
 
 new GW_Require_Unique_Values( array(
-	'form_id' => 123,
-	'field_ids' => array( 4, 5 )
+	'form_id'   => 123,
+	'field_ids' => array( 4, 5 ),
 ) );

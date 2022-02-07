@@ -21,10 +21,10 @@
  * Author URI:   https://gravitywiz.com/
  */
 add_filter( 'gform_pre_render', function( $form ) {
-    foreach( $form['fields'] as $field ) {
-        if( strpos( $field->cssClass, "gp-read-only-except-admin" ) !== false && current_user_can( 'administrator' ) ) {
-            $field->gwreadonly_enable = false;
-        }
-    }
-    return $form;
+	foreach ( $form['fields'] as $field ) {
+		if ( strpos( $field->cssClass, 'gp-read-only-except-admin' ) !== false && current_user_can( 'administrator' ) ) {
+			$field->gwreadonly_enable = false;
+		}
+	}
+	return $form;
 } );

@@ -6,15 +6,15 @@
  * types we should support [via support](https://gravitywiz.com/support/)!
  */
 .gpfup__file-icon svg {
-    visibility: hidden;
+	visibility: hidden;
 }
 .gpfup__file[data-file-ext="zip"] .gpfup__file-icon {
-    background: url( https://cdn.jsdelivr.net/npm/pretty-file-icons@2.2.1/svg/zip.svg );
+	background: url( https://cdn.jsdelivr.net/npm/pretty-file-icons@2.2.1/svg/zip.svg );
 }
 .gpfup__file[data-file-ext="doc"] .gpfup__file-icon,
 .gpfup__file[data-file-ext="docx"] .gpfup__file-icon {
-    background: url( https://cdn.jsdelivr.net/npm/pretty-file-icons@2.2.1/svg/doc.svg );
+	background: url( https://cdn.jsdelivr.net/npm/pretty-file-icons@2.2.1/svg/doc.svg );
 }
 .gpfup__file[data-file-ext="pdf"] .gpfup__file-icon {
-    background: url( https://cdn.jsdelivr.net/npm/pretty-file-icons@2.2.1/svg/pdf.svg );
+	background: url( https://cdn.jsdelivr.net/npm/pretty-file-icons@2.2.1/svg/pdf.svg );
 }

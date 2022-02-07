@@ -12,7 +12,7 @@ add_filter( 'gform_entry_post_save_123', function( $entry, $form ) {
 	// Update "4" to the ID of the field you woule like to populate with the EP token.
 	$target_field_id = 4;
 
-	if( is_callable( 'gp_easy_passthrough' ) ) {
+	if ( is_callable( 'gp_easy_passthrough' ) ) {
 		$token = gp_easy_passthrough()->get_entry_token( $entry );
 		GFAPI::update_entry_field( $entry['id'], $target_field_id, $token );
 		$entry[ $target_field_id ] = $token;

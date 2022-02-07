@@ -21,7 +21,7 @@ class GPECF_Tax_Amounts_By_Field_Value {
 			'form_id'        => false,
 			'value_field_id' => false,
 			'tax_field_id'   => false,
-			'tax_amounts'    => array()
+			'tax_amounts'    => array(),
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded

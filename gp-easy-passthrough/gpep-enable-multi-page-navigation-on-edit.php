@@ -14,7 +14,7 @@ add_filter( 'gform_pre_render_123', function( $form ) {
 	if ( is_callable( 'gp_easy_passthrough' ) ) {
 		$session         = gp_easy_passthrough()->session_manager();
 		$update_entry_id = $session[ gp_easy_passthrough()->get_slug() . '_' . $form['id'] ];
-		if( $update_entry_id ) {
+		if ( $update_entry_id ) {
 			$_POST['gw_page_progression'] = GFFormDisplay::get_max_page_number( $form );
 		}
 	}

@@ -16,96 +16,96 @@
  */
 class GPAA_Single_Line_Input {
 
-    public function __construct( $args = array() ) {
+	public function __construct( $args = array() ) {
 
-        $this->_args = wp_parse_args( $args, array(
-            'form_id'              => false,
-            'address_field_id'     => false,
-            'single_line_field_id' => false,
-        ) );
+		$this->_args = wp_parse_args( $args, array(
+			'form_id'              => false,
+			'address_field_id'     => false,
+			'single_line_field_id' => false,
+		) );
 
-        add_action( 'init', array( $this, 'init' ) );
+		add_action( 'init', array( $this, 'init' ) );
 
-    }
+	}
 
-    public function init() {
+	public function init() {
 
-        add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
-        add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
-        add_filter( 'gpaa_init_args_' . $this->_args['form_id'] . '_' . $this->_args['address_field_id'], array( $this, 'add_gpaa_init' ), 10, 2 );
+		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
+		add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
+		add_filter( 'gpaa_init_args_' . $this->_args['form_id'] . '_' . $this->_args['address_field_id'], array( $this, 'add_gpaa_init' ), 10, 2 );
 
-    }
+	}
 
-    public function load_form_script( $form, $is_ajax_enabled ) {
+	public function load_form_script( $form, $is_ajax_enabled ) {
 
-        if ( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
-            add_action( 'wp_footer', array( $this, 'output_script' ) );
-            add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
-        }
+		if ( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
+			add_action( 'wp_footer', array( $this, 'output_script' ) );
+			add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
+		}
 
-        return $form;
-    }
+		return $form;
+	}
 
-    public function output_script() {
-        ?>
+	public function output_script() {
+		?>
 
-        <script type="text/javascript">
+		<script type="text/javascript">
 
-            ( function( $ ) {
-                window.GPAASingleLineInput = function( args ) {
+			( function( $ ) {
+				window.GPAASingleLineInput = function( args ) {
 
-                    gform.addFilter('gpaa_values', function (values, place) {
-                        values.autocomplete = place.formatted_address;
+					gform.addFilter('gpaa_values', function (values, place) {
+						values.autocomplete = place.formatted_address;
 
-                        return values;
-                    });
-                }
-            } )( jQuery );
+						return values;
+					});
+				}
+			} )( jQuery );
 
-        </script>
+		</script>
 
-        <?php
-    }
+		<?php
+	}
 
-    public function add_init_script( $form ) {
+	public function add_init_script( $form ) {
 
-        if ( ! $this->is_applicable_form( $form ) ) {
-            return;
-        }
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return;
+		}
 
-        $args = array(
-            'formId'  => $this->_args['form_id'],
-            'addressFieldId' => $this->_args['address_field_id'],
-            'singleLineFieldId' => $this->_args['single_line_field_id'],
-        );
+		$args = array(
+			'formId'            => $this->_args['form_id'],
+			'addressFieldId'    => $this->_args['address_field_id'],
+			'singleLineFieldId' => $this->_args['single_line_field_id'],
+		);
 
-        $script = 'new GPAASingleLineInput( ' . json_encode( $args ) . ' );';
-        $slug   = implode( '_', array( 'gw_js_snippet_template', $this->_args['form_id'], $this->_args['address_field_id'] ) );
+		$script = 'new GPAASingleLineInput( ' . json_encode( $args ) . ' );';
+		$slug   = implode( '_', array( 'gw_js_snippet_template', $this->_args['form_id'], $this->_args['address_field_id'] ) );
 
-        GFFormDisplay::add_init_script( $this->_args['form_id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
+		GFFormDisplay::add_init_script( $this->_args['form_id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
 
-    }
+	}
 
-    public function add_gpaa_init( $args ){
+	public function add_gpaa_init( $args ) {
 
-        $args['inputSelectors']['autocomplete'] = '#input_' . $this->_args['form_id'] . '_' . $this->_args['single_line_field_id'];
+		$args['inputSelectors']['autocomplete'] = '#input_' . $this->_args['form_id'] . '_' . $this->_args['single_line_field_id'];
 
-        return $args;
+		return $args;
 
-    }
+	}
 
-    public function is_applicable_form( $form ) {
+	public function is_applicable_form( $form ) {
 
-        $form_id = isset( $form['id'] ) ? $form['id'] : $form;
+		$form_id = isset( $form['id'] ) ? $form['id'] : $form;
 
-        return empty( $this->_args['form_id'] ) || (int) $form_id == (int) $this->_args['form_id'];
-    }
+		return empty( $this->_args['form_id'] ) || (int) $form_id == (int) $this->_args['form_id'];
+	}
 
 }
 
 // Configuration
-new GPAA_Single_Line_Input ( array(
-    'form_id'              => 123,     // The ID of your form.
-    'address_field_id'     => 4,       // The ID of the Address field.
-    'single_line_field_id' => 5        // The ID of the Single Line Text field.
+new GPAA_Single_Line_Input( array(
+	'form_id'              => 123,     // The ID of your form.
+	'address_field_id'     => 4,       // The ID of the Address field.
+	'single_line_field_id' => 5,        // The ID of the Single Line Text field.
 ) );

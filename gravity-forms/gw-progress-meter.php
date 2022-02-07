@@ -115,7 +115,6 @@ class GW_Progress_Meter {
 				if ( class_exists( 'GF_Partial_Entries' ) ) {
 					$query['where'] .= "and em.entry_id NOT IN( SELECT entry_id FROM {$wpdb->prefix}gf_entry_meta WHERE meta_key = 'partial_entry_id' )";
 				}
-
 			}
 
 			$sql   = implode( "\n", $query );

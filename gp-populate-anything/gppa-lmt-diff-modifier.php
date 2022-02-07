@@ -28,7 +28,7 @@ add_filter( 'gppa_live_merge_tag_value', function( $merge_tag_match_value, $merg
 
 	$format = rgar( $modifiers, 'format', 'y' );
 
-	return $diff->format("%{$format}" );
+	return $diff->format( "%{$format}" );
 }, 10, 5 );
 
 if ( ! function_exists( 'gw_parse_modifiers' ) ) {

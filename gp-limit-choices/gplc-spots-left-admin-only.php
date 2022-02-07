@@ -7,17 +7,17 @@
  */
 add_filter( 'gplc_pre_render_choice', 'my_add_how_many_left_message', 10, 4 );
 function my_add_how_many_left_message( $choice, $exceeded_limit, $field, $form ) {
-    
-    if( ! current_user_can( 'administrator' ) ) {
-      return $choice;
-    }
 
-    $limit         = method_exists( gp_limit_choices(), 'get_choice_limit' ) ? gp_limit_choices()->get_choice_limit( $choice, $field->formId, $field->id ) : rgar( $choice, 'limit' );
-    $how_many_left = max( $limit - $count, 0 );
+	if ( ! current_user_can( 'administrator' ) ) {
+		return $choice;
+	}
 
-    $message = "($how_many_left spots left)";
+	$limit         = method_exists( gp_limit_choices(), 'get_choice_limit' ) ? gp_limit_choices()->get_choice_limit( $choice, $field->formId, $field->id ) : rgar( $choice, 'limit' );
+	$how_many_left = max( $limit - $count, 0 );
 
-    $choice['text'] = $choice['text'] . " $message";
+	$message = "($how_many_left spots left)";
 
-    return $choice;
+	$choice['text'] = $choice['text'] . " $message";
+
+	return $choice;
 }

@@ -192,7 +192,6 @@ class GW_All_Fields_Template {
 						$field_ids[]   = (int) array_pop( $field_id_bits );
 					}
 				}
-
 			} else {
 
 				$input_ids = $mod_values;
@@ -242,7 +241,7 @@ class GW_All_Fields_Template {
 							}
 						}
 						// Check for exclusions excluding a specific child field from a Nested Form field.
-						else if ( $field->get_input_type() === 'form' && (int) $mod_value != $mod_value ) {
+						elseif ( $field->get_input_type() === 'form' && (int) $mod_value != $mod_value ) {
 							// GPNF assumes Nested Form field should be excluded if $value is false. Prevent this and
 							// allow GPNF to load the {all_fields} markup for its children.
 							$exclude_full_value = false;
@@ -251,7 +250,6 @@ class GW_All_Fields_Template {
 						if ( $exclude_full_value ) {
 							$value = false;
 						}
-
 					}
 					break;
 			}

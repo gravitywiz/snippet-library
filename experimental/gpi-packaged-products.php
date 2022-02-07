@@ -46,17 +46,17 @@ class GP_Inventory_Packaged_Products {
 	public function init() {
 		add_filter( 'gpi_claimed_inventory_' . $this->form_id, array(
 			$this,
-			'package_field_claimed_inventory'
+			'package_field_claimed_inventory',
 		), 10, 2 );
 
 		add_filter( 'gpi_claimed_inventory_' . $this->form_id, array(
 			$this,
-			'add_claimed_package_inventory_to_individual_products'
+			'add_claimed_package_inventory_to_individual_products',
 		), 10, 2 );
 
 		add_filter( 'gpi_requested_quantity_' . $this->form_id, array(
 			$this,
-			'add_requested_packages_to_individual_products'
+			'add_requested_packages_to_individual_products',
 		), 10, 2 );
 	}
 
@@ -70,7 +70,7 @@ class GP_Inventory_Packaged_Products {
 
 		remove_filter( 'gpi_claimed_inventory_' . $this->form_id, array(
 			$this,
-			'add_claimed_package_inventory_to_individual_products'
+			'add_claimed_package_inventory_to_individual_products',
 		) );
 
 		$inventory_limit                 = gp_inventory_type_advanced()->get_stock_quantity( $this->package_field );
@@ -92,7 +92,7 @@ class GP_Inventory_Packaged_Products {
 
 		add_filter( 'gpi_claimed_inventory_' . $this->form_id, array(
 			$this,
-			'add_claimed_package_inventory_to_individual_products'
+			'add_claimed_package_inventory_to_individual_products',
 		), 10, 2 );
 
 		return $package_claimed_inventory;
@@ -108,14 +108,14 @@ class GP_Inventory_Packaged_Products {
 
 		remove_filter( 'gpi_claimed_inventory_' . $this->form_id, array(
 			$this,
-			'package_field_claimed_inventory'
+			'package_field_claimed_inventory',
 		) );
 
 		$claimed_packages_inventory = gp_inventory_type_advanced()->get_claimed_inventory( $this->package_field );
 
 		add_filter( 'gpi_claimed_inventory_' . $this->form_id, array(
 			$this,
-			'package_field_claimed_inventory'
+			'package_field_claimed_inventory',
 		), 10, 2 );
 
 		return (int) $claimed_inventory + (int) $claimed_packages_inventory;
@@ -142,5 +142,5 @@ class GP_Inventory_Packaged_Products {
 new GP_Inventory_Packaged_Products( array(
 	'form_id'              => 2,
 	'package_field_id'     => 4,
-	'field_ids_in_package' => array( 1, 2 )
+	'field_ids_in_package' => array( 1, 2 ),
 ) );

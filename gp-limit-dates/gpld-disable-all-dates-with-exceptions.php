@@ -6,7 +6,7 @@
 add_filter( 'gpld_limit_dates_options_123_1', function( $options, $form, $field ) {
 
 	$options['exceptionMode'] = 'enable';
-	$options['disableAll'] = true;
+	$options['disableAll']    = true;
 
 	return $options;
 }, 10, 3 );

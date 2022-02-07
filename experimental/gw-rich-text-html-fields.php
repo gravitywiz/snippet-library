@@ -7,7 +7,7 @@
  * 2. Add support for merge tag selector.
  * 3. Support switching to text mode: window.switchEditors.go( 'rich_field_content', mode )
  */
- 
+
 add_action( 'admin_init', function() {
 	if ( GFForms::get_page() === 'form_editor' ) {
 		wp_enqueue_editor();

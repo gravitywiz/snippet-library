@@ -6,7 +6,7 @@
  * Sync the payment status of child entries with their parent's. This is useful with GP Limit Choices and GP Inventory
  * to ensure that limits/inventories applied to child field's will not include child entries where payment has not been
  * collected for their parent entry.
- * 
+ *
  * Plugin Name:  GP Nested Forms — Sync Parent/Child Entry Payment Status
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  * Description:  Sync the payment status of child entries with their parent's.

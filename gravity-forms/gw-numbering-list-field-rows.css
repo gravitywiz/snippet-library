@@ -2,40 +2,40 @@
  * Gravity Wiz // Gravity Forms // Numbering List Field Rows
  * https://gravitywiz.com/numbering-gravity-forms-list-field-rows/
  *
- * Automatically number your Gravity Forms List field rows. 
+ * Automatically number your Gravity Forms List field rows.
  *
  * To use the CSS, add the 'gw-number-rows' class to the List field's "Custom CSS Class" property.
  */
 .gw-number-rows .gfield_list,
 body .gw-number-rows table.gfield_list {
-    counter-reset: gflistrowcounter;
-    margin-left: -24px;
+	counter-reset: gflistrowcounter;
+	margin-left: -24px;
 }
- 
+
 .gw-number-rows .gfield_list {
-    margin-left: -2rem;
+	margin-left: -2rem;
 }
- 
+
 .gw-number-rows .gfield_list thead tr:before {
-    content:'';
+	content:'';
 }
- 
+
 .gw-number-rows .gfield_list_group:before,
 .gw-number-rows .gfield_list tbody tr:before {
-    content: counter(gflistrowcounter);
-    counter-increment: gflistrowcounter;
+	content: counter(gflistrowcounter);
+	counter-increment: gflistrowcounter;
 }
- 
+
 .gw-number-rows .gfield_list_group:before,
 .gw-number-rows .gfield_list thead tr:before,
 .gw-number-rows .gfield_list tbody tr:before {
-    display: table-cell;
-    width: 18px;
-    text-align: right;
-    padding-right: 6px;
+	display: table-cell;
+	width: 18px;
+	text-align: right;
+	padding-right: 6px;
 }
- 
+
 .gw-number-rows .gfield_list_group:before {
-    width: 2rem;
-    padding-right: 0.5rem;
+	width: 2rem;
+	padding-right: 0.5rem;
 }

@@ -87,7 +87,7 @@ class GW_Update_Posts {
 				$post->post_status = $status;
 			}
 		}
-		
+
 		if ( $this->_args['slug'] ) {
 			$post->post_name = rgar( $entry, $this->_args['slug'] );
 		}

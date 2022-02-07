@@ -7,7 +7,7 @@
  * Advanced Custom Fields. For more on Options Pages, see https://www.advancedcustomfields.com/resources/options-page/
  *
  * Installation: https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
- * 
+ *
  * Known Limitations:
  *  * Filtering is not supported with this Object Type
  */
@@ -29,24 +29,24 @@ class GPPA_Object_Type_ACF_Options_Page extends GPPA_Object_Type {
 	}
 
 	public function get_properties( $options_page = null ) {
-	    $field_groups = acf_get_field_groups(array(
-		    'options_page' => $options_page
-	    ));
+		$field_groups = acf_get_field_groups(array(
+			'options_page' => $options_page,
+		));
 
-	    $properties = array();
+		$properties = array();
 
-	    foreach ( $field_groups as $field_group ) {
-		    $fields = acf_get_fields( $field_group );
+		foreach ( $field_groups as $field_group ) {
+			$fields = acf_get_fields( $field_group );
 
-		    foreach ( $fields as $field ) {
-			    $properties[ $field['name'] ] = array(
-				    'value'    => $field['name'],
-				    'label'    => $field['label'],
-				    'callable' => '__return_false',
-				    'orderby'  => false,
-			    );
-            }
-	    }
+			foreach ( $fields as $field ) {
+				$properties[ $field['name'] ] = array(
+					'value'    => $field['name'],
+					'label'    => $field['label'],
+					'callable' => '__return_false',
+					'orderby'  => false,
+				);
+			}
+		}
 
 		return $properties;
 	}

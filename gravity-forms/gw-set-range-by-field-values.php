@@ -12,9 +12,9 @@ add_filter( 'gform_pre_render_123', 'gw_set_range', 10, 3 );
 add_filter( 'gform_pre_process_123', 'gw_set_range', 10, 3 );
 function gw_set_range( $form, $ajax, $field_values ) {
 
-	foreach( $form['fields'] as &$field ) {
+	foreach ( $form['fields'] as &$field ) {
 		// Update "4" to the ID of the field that should have its range modified.
-		if( $field->id == 4 ) {
+		if ( $field->id == 4 ) {
 			// Update "5" to the ID of the field whose value should be used for the minimum range.
 			$min_field       = GFAPI::get_field( $form, 5 );
 			$field->rangeMin = GFFormsModel::get_field_value( $min_field, $field_values );

@@ -13,12 +13,12 @@ add_filter( 'gpls_rule_groups', function( $rule_groups, $form_id ) {
 
 	// STOP! No need to edit below this line.
 	$applicable_forms = array_merge( array( $primary_form_id ), $group_form_ids );
-	if( ! in_array( $form_id, $applicable_forms ) ) {
+	if ( ! in_array( $form_id, $applicable_forms ) ) {
 		return $rule_groups;
 	}
 
 	$rule_groups = array_merge( $rule_groups, GPLS_RuleGroup::load_by_form( $primary_form_id ) );
-	foreach( $rule_groups as $rule_group ) {
+	foreach ( $rule_groups as $rule_group ) {
 		$rule_group->applicable_forms = $applicable_forms;
 	}
 

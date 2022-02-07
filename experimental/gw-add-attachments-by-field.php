@@ -30,7 +30,7 @@ function gw_add_attachments_by_field( $notification, $form, $entry, $notificatio
 	}
 
 	$notification['attachments'] = rgar( $notification, 'attachments', array() );
-	$upload_root = RGFormsModel::get_upload_root();
+	$upload_root                 = RGFormsModel::get_upload_root();
 
 	$field = GFAPI::get_field( $form, $upload_field_id );
 	$url   = rgar( $entry, $field->id );
@@ -42,11 +42,11 @@ function gw_add_attachments_by_field( $notification, $form, $entry, $notificatio
 	if ( $field->multipleFiles ) {
 		$uploaded_files = json_decode( stripslashes( $url ), true );
 		foreach ( $uploaded_files as $uploaded_file ) {
-			$attachment = preg_replace( '|^(.*?)/gravity_forms/|', $upload_root, $uploaded_file );
+			$attachment                    = preg_replace( '|^(.*?)/gravity_forms/|', $upload_root, $uploaded_file );
 			$notification['attachments'][] = $attachment;
 		}
 	} else {
-		$attachment = preg_replace( '|^(.*?)/gravity_forms/|', $upload_root, $url );
+		$attachment                    = preg_replace( '|^(.*?)/gravity_forms/|', $upload_root, $url );
 		$notification['attachments'][] = $attachment;
 	}
 

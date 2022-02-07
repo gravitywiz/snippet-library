@@ -8,14 +8,14 @@
  *
  * Plugin Name:  GP Unique ID - Populate Unique ID on Pre Submission
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-unique-id/
- * Description:  Generate and populate the Unique ID on pre submission prior to the entry creation. 
+ * Description:  Generate and populate the Unique ID on pre submission prior to the entry creation.
  * Author:       Gravity Wiz
  * Version:      0.1
  * Author URI:   https://gravitywiz.com/
  */
 add_action( 'gform_pre_submission', function( $form ) {
 
-	if( ! function_exists( 'gp_unique_id' ) ) {
+	if ( ! function_exists( 'gp_unique_id' ) ) {
 		return;
 	}
 
@@ -26,8 +26,8 @@ add_action( 'gform_pre_submission', function( $form ) {
 	remove_filter( 'gform_entry_post_save', array( $gpui_field, 'populate_field_value' ) );
 
 	// loop through the submitted form object for Unique ID fields
-	foreach( $form['fields'] as $field ) {
-		if( $field->get_input_type() == 'uid' && ! GFFormsModel::is_field_hidden( $form, $field, array() ) ) {
+	foreach ( $form['fields'] as $field ) {
+		if ( $field->get_input_type() == 'uid' && ! GFFormsModel::is_field_hidden( $form, $field, array() ) ) {
 
 			// generate a unique ID
 			$value = gp_unique_id()->get_unique( $form['id'], $field );
@@ -36,7 +36,7 @@ add_action( 'gform_pre_submission', function( $form ) {
 			$_POST[ sprintf( 'input_%s', $field['id'] ) ] = $value;
 
 			// since the "current entry" is already set, we need to update it manually so other plugins will have access to the unique ID
-			$entry = GFFormsModel::get_current_lead();
+			$entry                 = GFFormsModel::get_current_lead();
 			$entry[ $field['id'] ] = $value;
 			GFFormsModel::set_current_lead( $entry );
 

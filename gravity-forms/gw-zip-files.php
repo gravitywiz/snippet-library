@@ -21,12 +21,12 @@ class GW_Zip_Files {
 	public function __construct( $args = array() ) {
 
 		// make sure we're running the required minimum version of Gravity Forms
-		if ( !property_exists( 'GFCommon', 'version' ) || !version_compare( GFCommon::$version, '1.8', '>=' ) ) {
+		if ( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=' ) ) {
 			return;
 		}
 
 		// ZipArchive must be installed for PHP
-		if ( !class_exists( 'ZipArchive' ) ) {
+		if ( ! class_exists( 'ZipArchive' ) ) {
 			return;
 		}
 
@@ -35,7 +35,7 @@ class GW_Zip_Files {
 			$args, array(
 				'form_id'   => false,
 				'field_ids' => false,
-				'zip_name'  => 'gf-uploads'
+				'zip_name'  => 'gf-uploads',
 			)
 		);
 
@@ -57,7 +57,7 @@ class GW_Zip_Files {
 		foreach ( $parent_form['fields'] as $field ) {
 			if ( $field instanceof GP_Field_Nested_Form ) {
 				$_entries = explode( ',', $entry[ $field->id ] );
-				$entries = array_merge( $entries, $_entries );
+				$entries  = array_merge( $entries, $_entries );
 			}
 		}
 
@@ -70,16 +70,16 @@ class GW_Zip_Files {
 			return;
 		}
 
-		$nested_entries = $this->get_nested_entries( $entry, $form );
+		$nested_entries       = $this->get_nested_entries( $entry, $form );
 		$nested_archive_files = array();
 
-		if ( !empty( $nested_entries ) ) {
+		if ( ! empty( $nested_entries ) ) {
 			foreach ( $nested_entries as $nested_entry_id ) {
 				$nested_entry = GFAPI::get_entry( $nested_entry_id );
 				if ( is_wp_error( $nested_entry ) ) {
 					continue;
 				}
-				$nested_form = GFAPI::get_form( $nested_entry['form_id'] );
+				$nested_form          = GFAPI::get_form( $nested_entry['form_id'] );
 				$nested_archive_files = array_merge( $nested_archive_files, $this->get_entry_files( $nested_entry, $nested_form ) );
 			}
 		}
@@ -125,7 +125,7 @@ class GW_Zip_Files {
 
 		foreach ( $form['fields'] as $field ) {
 
-			if ( !$this->is_applicable_field( $field ) ) {
+			if ( ! $this->is_applicable_field( $field ) ) {
 				continue;
 			}
 
@@ -138,7 +138,7 @@ class GW_Zip_Files {
 				continue;
 			}
 
-			if ( !is_array( $files ) ) {
+			if ( ! is_array( $files ) ) {
 				$files = array( $files );
 			}
 
@@ -156,12 +156,11 @@ class GW_Zip_Files {
 
 					$archive_files[ $id ] = array(
 						'path' => $file_path,
-						'url'  => $file
+						'url'  => $file,
 					);
 
 				}
 			}
-
 		}
 
 		return $archive_files;
@@ -173,10 +172,10 @@ class GW_Zip_Files {
 			return $entry_meta;
 		}
 
-		$entry_meta[$this->get_meta_key()] = array(
+		$entry_meta[ $this->get_meta_key() ] = array(
 			'label'             => __( 'Form Uploads Archive', 'gravityforms' ),
 			'is_numeric'        => false,
-			'is_default_column' => false
+			'is_default_column' => false,
 		);
 
 		return $entry_meta;
@@ -198,8 +197,8 @@ class GW_Zip_Files {
 	}
 
 	public function is_applicable_form( $form ) {
-		if ( isset( $_POST['gpnf_parent_form_id'] ) && !empty( $_POST['gpnf_parent_form_id'] ) ) {
-			return !$this->_args['form_id'] || intval( $_POST['gpnf_parent_form_id'] ) == $this->_args['form_id'];
+		if ( isset( $_POST['gpnf_parent_form_id'] ) && ! empty( $_POST['gpnf_parent_form_id'] ) ) {
+			return ! $this->_args['form_id'] || intval( $_POST['gpnf_parent_form_id'] ) == $this->_args['form_id'];
 		}
 
 		if ( is_int( $form ) ) {
@@ -208,7 +207,7 @@ class GW_Zip_Files {
 			$form_id = $form['id'];
 		}
 
-		return !$this->_args['form_id'] || $form_id == $this->_args['form_id'];
+		return ! $this->_args['form_id'] || $form_id == $this->_args['form_id'];
 	}
 
 	public function has_applicable_field( $form ) {
@@ -245,7 +244,7 @@ class GW_Zip_Files {
 
 		$bits = explode( '|:|', $url );
 		$url  = array_shift( $bits );
-		if ( !$url ) {
+		if ( ! $url ) {
 			return false;
 		}
 
@@ -260,11 +259,11 @@ class GW_Zip_Files {
 
 	public function create_zip( $files = array(), $destination = '', $overwrite = false ) {
 
-		if ( !is_array( $files ) ) {
+		if ( ! is_array( $files ) ) {
 			return false;
 		}
 
-		if ( file_exists( $destination ) && !$overwrite ) {
+		if ( file_exists( $destination ) && ! $overwrite ) {
 			return false;
 		}
 
@@ -323,7 +322,7 @@ class GW_Zip_Files {
 			$bits[] = $entry_id;
 		}
 
-		if ( !empty( $field_ids ) ) {
+		if ( ! empty( $field_ids ) ) {
 			$bits[] = md5( implode( $field_ids ) );
 		}
 
@@ -396,15 +395,15 @@ class GW_Zip_Files {
 	}
 
 	public function is_applicable_notification( $notification ) {
-		if ( !isset( $this->_args['notifications'] ) ) {
+		if ( ! isset( $this->_args['notifications'] ) ) {
 			return true;
 		}
 
-		if ( isset( $this->_args["notifications"] ) && empty( $this->_args["notifications"] ) ) {
+		if ( isset( $this->_args['notifications'] ) && empty( $this->_args['notifications'] ) ) {
 			return true;
 		}
 
-		if ( isset( $this->_args["notifications"] ) && !empty( $this->_args["notifications"] ) ) {
+		if ( isset( $this->_args['notifications'] ) && ! empty( $this->_args['notifications'] ) ) {
 			return in_array( $notification['id'], $this->_args['notifications'] );
 		}
 
@@ -417,7 +416,7 @@ class GW_Zip_Files {
 			if ( $field instanceof GP_Field_Nested_Form ) {
 				$value = RGFormsModel::get_lead_field_value( $entry, $field );
 
-				if ( !empty( $value ) ) {
+				if ( ! empty( $value ) ) {
 					foreach ( explode( ',', $value ) as $nested_entry_id ) {
 						$nested_entry = GFAPI::get_entry( (int) $nested_entry_id );
 
@@ -440,7 +439,7 @@ class GW_Zip_Files {
 	}
 
 	public function add_zip_as_attachment( $notification, $form, $entry ) {
-		if ( !$this->is_applicable_notification( $notification ) ) {
+		if ( ! $this->is_applicable_notification( $notification ) ) {
 			return $notification;
 		}
 

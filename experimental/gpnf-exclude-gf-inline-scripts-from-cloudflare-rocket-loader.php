@@ -5,7 +5,7 @@
  */
 add_filter( 'wp_inline_script_attributes', function ( $attributes, $javascript ) {
 	if ( strpos( $javascript, 'gform.' ) ) {
-		$attributes['data-cfasync'] = 'false';	
+		$attributes['data-cfasync'] = 'false';
 	}
 	return $attributes;
 }, 10, 2 );

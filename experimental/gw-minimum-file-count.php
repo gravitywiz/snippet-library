@@ -35,7 +35,6 @@ add_filter( 'gform_validation', function ( $result ) {
 			$field['validation_message'] = $validation_message;
 			$result['is_valid']          = false;
 		}
-
 	}
 
 	$result['form'] = $form;

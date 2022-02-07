@@ -25,7 +25,7 @@ class GPLCB_Conditional_Limits {
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
 		$this->_args = wp_parse_args( $args, array(
 			'form_id'  => false,
-			'field_id' => false
+			'field_id' => false,
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -36,7 +36,7 @@ class GPLCB_Conditional_Limits {
 	public function init() {
 
 		// make sure we're running the required minimum version of Gravity Forms
-		if( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=' ) ) {
+		if ( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=' ) ) {
 			return;
 		}
 
@@ -50,21 +50,21 @@ class GPLCB_Conditional_Limits {
 	}
 
 	public function add_trigger_class( $form ) {
-		foreach( $form['fields'] as &$field ) {
+		foreach ( $form['fields'] as &$field ) {
 			$field->cssClass .= ' gfield_trigger_change';
 		}
 		return $form;
 	}
 
 	public function enqueue_form_scripts( $form ) {
-		if( $this->is_applicable_form( $form ) ) {
+		if ( $this->is_applicable_form( $form ) ) {
 			wp_enqueue_script( 'gform_conditional_logic' );
 		}
 	}
 
 	public function load_form_script( $form, $is_ajax_enabled ) {
 
-		if( $this->is_applicable_form( $form ) && ! self::$is_script_output && ! $this->is_ajax_submission( $form['id'], $is_ajax_enabled ) ) {
+		if ( $this->is_applicable_form( $form ) && ! self::$is_script_output && ! $this->is_ajax_submission( $form['id'], $is_ajax_enabled ) ) {
 			$this->output_script();
 		}
 
@@ -160,7 +160,7 @@ class GPLCB_Conditional_Limits {
 
 	public function add_init_script( $form ) {
 
-		if( ! $this->is_applicable_form( $form ) ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
 			return;
 		}
 
@@ -179,12 +179,12 @@ class GPLCB_Conditional_Limits {
 
 	public function handle_conditionals( $group, $form ) {
 
-		if( ! in_array( $this->_args['field_id'], $group['fields'] ) ) {
+		if ( ! in_array( $this->_args['field_id'], $group['fields'] ) ) {
 			return $group;
 		}
 
-		foreach( $this->_args['conditionals'] as $conditional ) {
-			if( GFCommon::evaluate_conditional_logic( $conditional['conditionalLogic'], $form, GFFormsModel::get_current_lead() ) ) {
+		foreach ( $this->_args['conditionals'] as $conditional ) {
+			if ( GFCommon::evaluate_conditional_logic( $conditional['conditionalLogic'], $form, GFFormsModel::get_current_lead() ) ) {
 				$group['min'] = $conditional['min'];
 				$group['max'] = $conditional['max'];
 				break;
@@ -206,38 +206,38 @@ class GPLCB_Conditional_Limits {
 # Configuration
 
 new GPLCB_Conditional_Limits( array(
-    'form_id' => 1654,
-    'field_id' => 7,
-    'conditionals' => array(
-        array(
-            'min' => 2,
-            'max' => 2,
-            'conditionalLogic' => array(
-                'logicType' => 'all',
-                'actionType' => 'show',
-	            'rules' => array(
-                    array(
-                        'fieldId'  => 2,
-                        'operator' => 'is',
-                        'value'    => 'MX250-2'
-                    )
-	            )
-            )
-        ),
-	    array(
-		    'min' => 3,
-		    'max' => 3,
-		    'conditionalLogic' => array(
-			    'logicType' => 'all',
-                'actionType' => 'show',
-			    'rules' => array(
-				    array(
-					    'fieldId'  => 2,
-					    'operator' => 'is',
-					    'value'    => 'MX 250-3'
-				    )
-			    )
-		    )
-	    )
-    )
+	'form_id'      => 1654,
+	'field_id'     => 7,
+	'conditionals' => array(
+		array(
+			'min'              => 2,
+			'max'              => 2,
+			'conditionalLogic' => array(
+				'logicType'  => 'all',
+				'actionType' => 'show',
+				'rules'      => array(
+					array(
+						'fieldId'  => 2,
+						'operator' => 'is',
+						'value'    => 'MX250-2',
+					),
+				),
+			),
+		),
+		array(
+			'min'              => 3,
+			'max'              => 3,
+			'conditionalLogic' => array(
+				'logicType'  => 'all',
+				'actionType' => 'show',
+				'rules'      => array(
+					array(
+						'fieldId'  => 2,
+						'operator' => 'is',
+						'value'    => 'MX 250-3',
+					),
+				),
+			),
+		),
+	),
 ) );

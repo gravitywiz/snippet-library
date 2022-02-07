@@ -9,7 +9,7 @@
  *
  * Use this snippet to automatically attach the child entry to the parent as soon as the child form is submitted.
  *
- * To preserve the default behavior but warn users that newly added child entries have not been attached to the parent, see: 
+ * To preserve the default behavior but warn users that newly added child entries have not been attached to the parent, see:
  * https://github.com/gravitywiz/snippet-library/blob/master/gp-nested-forms/gpnf-gv-unsaved-child-entries-warning.js
  */
 add_filter( 'gpnf_set_parent_entry_id', function( $parent_entry_id ) {

@@ -7,7 +7,7 @@ add_filter( 'gform_entry_field_value', function( $display_value, $field, $entry,
 
 	// Update "123" to your form ID. Update to "4", "5", and "6" to your field IDs.
 	$targets = array(
-		123 => array( 4, 5, 6 )
+		123 => array( 4, 5, 6 ),
 	);
 
 	if ( ! function_exists( 'gravityview' ) || ! gravityview()->request->is_view() ) {

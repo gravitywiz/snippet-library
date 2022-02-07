@@ -18,13 +18,13 @@ class GW_Quantity_Decimal {
 
 	function __construct( $form_id, $field_ids = array(), $global = false ) {
 
-		if( ! is_array( $field_ids ) ) {
+		if ( ! is_array( $field_ids ) ) {
 			$field_ids = array( $field_ids );
 		}
 
-		$this->form_id = ( ! $global ) ? $form_id : null;
+		$this->form_id   = ( ! $global ) ? $form_id : null;
 		$this->field_ids = $field_ids;
-		$this->global = $global;
+		$this->global    = $global;
 
 		add_action( 'init', array( $this, 'init' ) );
 
@@ -33,7 +33,7 @@ class GW_Quantity_Decimal {
 	function init() {
 
 		// make sure Gravity Forms is loaded
-		if( ! class_exists( 'GFForms' ) ) {
+		if ( ! class_exists( 'GFForms' ) ) {
 			return;
 		}
 
@@ -43,11 +43,10 @@ class GW_Quantity_Decimal {
 			add_filter( 'gform_field_validation_' . $this->form_id, array( $this, 'allow_quantity_float' ), 10, 4 );
 		}
 
-		if( GFFormsModel::is_html5_enabled() ) {
+		if ( GFFormsModel::is_html5_enabled() ) {
 			add_filter( 'gform_pre_render', array( $this, 'stash_current_form' ) );
 			add_filter( 'gform_field_input', array( $this, 'modify_quantity_input_tag' ), 10, 5 );
 		}
-
 
 	}
 
@@ -55,13 +54,11 @@ class GW_Quantity_Decimal {
 		if (
 			$this->is_enabled_field( $field ) &&
 			in_array( $field->type, array( 'product', 'quantity' ) ) &&
-			in_array( $field->validation_message, array( __( 'Please enter a valid quantity. Quantity cannot contain decimals.', 'gravityforms'), __( 'Please enter a valid quantity', 'gravityforms' ) ) ) )
-		{
-			$is_numeric = $field->type == 'product' ? GFCommon::is_numeric( rgpost( "input_{$field['id']}_3" ), 'decimal_dot' ) : GFCommon::is_numeric( rgpost( "input_{$field['id']}"), 'decimal_dot' );
-			if( $is_numeric ) {
+			in_array( $field->validation_message, array( __( 'Please enter a valid quantity. Quantity cannot contain decimals.', 'gravityforms' ), __( 'Please enter a valid quantity', 'gravityforms' ) ) ) ) {
+			$is_numeric = $field->type == 'product' ? GFCommon::is_numeric( rgpost( "input_{$field['id']}_3" ), 'decimal_dot' ) : GFCommon::is_numeric( rgpost( "input_{$field['id']}" ), 'decimal_dot' );
+			if ( $is_numeric ) {
 				$result['is_valid'] = true;
 			}
-
 		}
 		return $result;
 	}
@@ -76,7 +73,7 @@ class GW_Quantity_Decimal {
 		$is_correct_form         = $this->form_id == $form_id || $this->global;
 		$is_correct_stashed_form = self::$_current_form && self::$_current_form['id'] == $form_id;
 
-		if( ! $is_correct_form || ! $is_correct_stashed_form || ! $this->is_enabled_field( $field ) ) {
+		if ( ! $is_correct_form || ! $is_correct_stashed_form || ! $this->is_enabled_field( $field ) ) {
 			return $markup;
 		}
 

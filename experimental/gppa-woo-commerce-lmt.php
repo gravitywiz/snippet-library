@@ -4,11 +4,13 @@
  * See: https://secure.helpscout.net/conversation/1520295750/24633?folderId=3808239
  */
 add_action( 'wp', function() {
-	if ( ! function_exists('WC' ) || ( ! is_cart() && ! is_checkout() ) ) return;
+	if ( ! function_exists( 'WC' ) || ( ! is_cart() && ! is_checkout() ) ) {
+		return;
+	}
 	foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
-		add_filter( 'gform_pre_render', function( $form ) use ($cart_item) {
+		add_filter( 'gform_pre_render', function( $form ) use ( $cart_item ) {
 			$gravity_form_data = $cart_item['_gravity_form_data'];
-			$form_meta = RGFormsModel::get_form_meta( $gravity_form_data['id'] );
+			$form_meta         = RGFormsModel::get_form_meta( $gravity_form_data['id'] );
 			foreach ( $form_meta['fields'] as $field_index => $field ) {
 				if ( ! $field['choices'] ) {
 					continue;
