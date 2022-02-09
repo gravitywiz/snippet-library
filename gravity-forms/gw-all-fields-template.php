@@ -524,8 +524,10 @@ class GW_All_Fields_Template {
 	                                                   ', $field->description );
 				break;
 			case 'signature':
-				$url   = is_callable( 'gf_signature' ) ? gf_signature()->get_signature_url( $value ) : $value;
-				$value = "<img alt='signature' src='{$url}' />";
+				if ( version_compare( GF_SIGNATURE_VERSION, '4.0', '<' ) ) {
+					$url   = is_callable( 'gf_signature' ) ? gf_signature()->get_url( $value ) : $value;
+					$value = "<img alt='signature' src='{$url}' />";
+				}
 				break;
 		}
 
