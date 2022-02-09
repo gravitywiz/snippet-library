@@ -3,6 +3,8 @@
  * Gravity Wiz // Gravity Forms // Calculated Shipping
  * https://gravitywiz.com/
  *
+ * Instruction Video: https://www.loom.com/share/aa10e3aceb4247528a27d1b27cc50516
+ *
  * A simple method for using a calculated product field as a shipping field. This provides the ability to use
  * calculations when determining a shipping price.
  *
