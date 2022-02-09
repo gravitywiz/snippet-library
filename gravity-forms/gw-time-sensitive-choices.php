@@ -28,10 +28,11 @@ class GW_Time_Sensitive_Choices {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
 		$this->_args = wp_parse_args( $args, array(
-			'form_id'       => false,
-			'field_id'      => false,
-			'date_field_id' => false,
-			'buffer'        => 0,
+			'form_id'        => false,
+			'field_id'       => false,
+			'date_field_id'  => false,
+			'remove_choices' => false,
+			'buffer'         => 0,
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -148,8 +149,21 @@ class GW_Time_Sensitive_Choices {
 								isDisabled = true;
 							}
 							$( this ).prop( 'disabled', isDisabled );
+							$( this ).attr( 'hidden', false );
+
+							if ( self.removeChoices && isDisabled ) {
+								$( this ).attr( 'hidden', true );
+							}
 						} );
 
+						if ( self.$target.find( 'option:not([hidden])' ).length === 0 ) {
+							self.$target.append( '<option value="" disabled selected class="gwtsc-no-times-available">&ndash; No times available &ndash;</option>' );
+						} else {
+							self.$target.find( '.gwtsc-no-times-available' ).remove();
+						}
+
+						/* Force selection of first time available */
+						self.$target.val( self.$target.find( 'option:not([hidden])' ).first().val() );
 					}
 
 					self.initializeChoices = function() {
@@ -247,6 +261,7 @@ class GW_Time_Sensitive_Choices {
 			'dateFieldId'    => $this->_args['date_field_id'],
 			'serverTimezone' => get_option( 'timezone_string' ) ?: get_option( 'gmt_offset' ),
 			'buffer'         => $this->_args['buffer'],
+            'removeChoices'  => $this->_args['remove_choices'],
 		);
 
 		$script = 'new GWTimeSensitiveChoices( ' . json_encode( $args ) . ' );';
@@ -270,8 +285,9 @@ class GW_Time_Sensitive_Choices {
 }
 
 new GW_Time_Sensitive_Choices( array(
-	'form_id'       => 123,
-	'field_id'      => 4,
-	'date_field_id' => 5,
-	'buffer'        => 60,
+	'form_id'        => 123,
+	'field_id'       => 4,
+	'date_field_id'  => 5,
+	'buffer'         => 60,
+	'remove_choices' => false,
 ) );
