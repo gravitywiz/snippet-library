@@ -6,6 +6,8 @@
  * Convert the submitted state to its 2-letter abbreviation on submission (e.g. Virginia → VA). Invalid states will
  * return a validation error.
  *
+ * Instruction Video: https://www.loom.com/share/28ec68e9a627493191c2fbd4882f53a5
+ *
  * Instructions:
  *
  *  1. Update the "form_id" parameter to your form ID.
