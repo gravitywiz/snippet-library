@@ -37,7 +37,7 @@ class GW_Convert_State_to_Abbr {
 
 	public function validate_state( $result, $value, $form, $field ) {
 
-		if ( ! $this->is_applicable_form( $field->formId ) && (int) $field->id === (int) $this->_args['field_id'] ) {
+		if ( ! $this->is_applicable_form( $field->formId ) || (int) $field->id !== (int) $this->_args['field_id'] ) {
 			return $result;
 		}
 
