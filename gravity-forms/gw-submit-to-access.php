@@ -8,7 +8,7 @@
  * Plugin URI:  https://gravitywiz.com/submit-gravity-form-access-content/
  * Description: Require that a form be submitted before a post or page can be accessed.
  * Author:      Gravity Wiz
- * Version:     1.10
+ * Version:     1.11
  * Author URI:  https://gravitywiz.com
  */
 class GW_Submit_Access {
@@ -154,6 +154,12 @@ class GW_Submit_Access {
 		global $post;
 
 		ob_start();
+
+        // Output the form scripts (including jQuery), otherwise submission may not work.
+		$form_ids = $this->get_form_ids( $post->ID );
+		$form     = GFAPI::get_form( $form_ids[0] );
+		require_once( GFCommon::get_base_path() . '/form_display.php' );
+		GFFormDisplay::print_form_scripts( $form, true );
 		?>
 
 		<div id="gwsa-content">
@@ -362,8 +368,8 @@ class GW_Submit_Access {
 
 }
 
-function gw_submit_to_access() {
-	return GW_Submit_Access::get_instance();
+function gw_submit_to_access( $args = array() ) {
+	return GW_Submit_Access::get_instance( $args );
 }
 
 gw_submit_to_access();
