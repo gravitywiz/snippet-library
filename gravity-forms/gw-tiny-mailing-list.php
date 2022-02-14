@@ -1,4 +1,4 @@
-</php
+<?php
 /**
  * Gravity Wiz // Gravity Forms // Tiny Mailing List
  * http://gravitywiz.com/
