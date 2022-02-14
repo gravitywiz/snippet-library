@@ -3,9 +3,14 @@
  * Gravity Wiz // Gravity Forms // Tiny Mailing List
  * http://gravitywiz.com/
  *
- * Send a notification to multiple recipients individually. Recipients should be specified in a Checkbox or Multi-select
- * field or as a comma-delimited list in any text-based input type. This *should not* be used to large numbers of notifications.
+ * Send a notification to multiple recipients individually.
  *
+ * Recipients should be specified in a Checkbox or Multi-select field or as a comma-delimited list in any text-based
+ * input type. Use the populated field's merge tag in the notification's "Send To Email" setting. Use the :value
+ * modifier with the merge tag if you are populating the email address as the value rather than the label.
+ *
+ * Note: This *should not* be used to large numbers of notifications.
+ * 
  * Plugin Name:  Gravity Forms Tiny Mailing List
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Send a notification to multiple recipients individually.
