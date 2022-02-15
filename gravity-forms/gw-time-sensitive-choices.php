@@ -28,11 +28,12 @@ class GW_Time_Sensitive_Choices {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
 		$this->_args = wp_parse_args( $args, array(
-			'form_id'        => false,
-			'field_id'       => false,
-			'date_field_id'  => false,
-			'remove_choices' => false,
-			'buffer'         => 0,
+			'form_id'                  => false,
+			'field_id'                 => false,
+			'date_field_id'            => false,
+			'buffer'                   => 0,
+			'remove_choices'           => false,
+			'no_times_available_label' => '&ndash; No times available &ndash;', // Only used if remove_choices is set to true
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -157,7 +158,7 @@ class GW_Time_Sensitive_Choices {
 						} );
 
 						if ( self.$target.find( 'option:not([hidden])' ).length === 0 ) {
-							self.$target.append( '<option value="" disabled selected class="gwtsc-no-times-available">&ndash; No times available &ndash;</option>' );
+							self.$target.append( '<option value="" disabled selected class="gwtsc-no-times-available"><?php echo $this->_args['no_times_available_label']; ?></option>' );
 						} else {
 							self.$target.find( '.gwtsc-no-times-available' ).remove();
 						}
@@ -261,7 +262,7 @@ class GW_Time_Sensitive_Choices {
 			'dateFieldId'    => $this->_args['date_field_id'],
 			'serverTimezone' => get_option( 'timezone_string' ) ?: get_option( 'gmt_offset' ),
 			'buffer'         => $this->_args['buffer'],
-            'removeChoices'  => $this->_args['remove_choices'],
+			'removeChoices'  => $this->_args['remove_choices'],
 		);
 
 		$script = 'new GWTimeSensitiveChoices( ' . json_encode( $args ) . ' );';
