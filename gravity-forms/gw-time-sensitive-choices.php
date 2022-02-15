@@ -94,7 +94,7 @@ class GW_Time_Sensitive_Choices {
 
 						gform.addAction( 'gpi_field_refreshed', function( $targetField, $triggerField, initialLoad ) {
 							if ( gf_get_input_id_by_html_id( self.$target.attr( 'id' ) ) == gf_get_input_id_by_html_id( $targetField.attr( 'id' ) ) ) {
-								self.$target = $targetField;
+								self.$target = $targetField.find( '#input_{0}_{1}'.format( self.formId, self.fieldId ) );
 								self.initializeChoices();
 							}
 						} );
