@@ -1,13 +1,25 @@
 <?php
 /**
+ * Twenty Seventeen functions and definitions
+ *
+ * @link https://developer.wordpress.org/themes/basics/theme-functions/
+ *
+ * @package WordPress
+ * @subpackage Twenty_Seventeen
+ * @since Twenty Seventeen 1.0
+ */
+
+/**
  * Gravity Wiz // Gravity Forms // Tiny Mailing List
  * http://gravitywiz.com/
  *
  * Send a notification to multiple recipients individually.
  *
  * Recipients should be specified in a Checkbox or Multi-select field or as a comma-delimited list in any text-based
- * input type. Use the populated field's merge tag in the notification's "Send To Email" setting. Use the :value
- * modifier with the merge tag if you are populating the email address as the value rather than the label.
+ * input type. Use the populated field's merge tag in the notification's "Send To Email" setting with the :tinyml
+ * modifier (e.g. {My Field:1:tinyml}).
+ *
+ * Tip: Use the :value modifier with the merge tag if you are populating the email address as the value rather than the label.
  *
  * Note: This *should not* be used to large numbers of notifications.
  *
