@@ -19,7 +19,7 @@
  * Plugin URI:  https://gravitywiz.com
  * Description: Filter time-based choices based on the current time.
  * Author:      David Smith
- * Version:     1.3
+ * Version:     1.3.1
  * Author URI:  https://gravitywiz.com
  */
 class GW_Time_Sensitive_Choices {
@@ -96,6 +96,13 @@ class GW_Time_Sensitive_Choices {
 						gform.addAction( 'gpi_field_refreshed', function( $targetField, $triggerField, initialLoad ) {
 							if ( gf_get_input_id_by_html_id( self.$target.attr( 'id' ) ) == gf_get_input_id_by_html_id( $targetField.attr( 'id' ) ) ) {
 								self.$target = $targetField.find( '#input_{0}_{1}'.format( self.formId, self.fieldId ) );
+								self.initializeChoices();
+							}
+						} );
+
+						$( document ).on( 'gppa_updated_batch_fields', function ( event, formId, updatedFieldIds ) {
+							if ( updatedFieldIds.indexOf( gf_get_input_id_by_html_id( self.$target.attr( 'id' ) ) ) !== - 1 ) {
+								self.$target = $( '#input_{0}_{1}'.format( self.formId, self.fieldId ) );
 								self.initializeChoices();
 							}
 						} );
