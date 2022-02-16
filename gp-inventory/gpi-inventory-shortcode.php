@@ -48,35 +48,50 @@ function gpi_inventory_shortcode( $output, $atts, $content ) {
 	 *
 	 * {scope}: {count}
 	 *
-	 * NOTE: This only works with non-choice-based inventories with a single scope. Will continue exploring this in the
-	 * future.
+	 * NOTE: This only works with inventories with a single scope. Will continue exploring this in the future.
 	 */
 	if ( $atts['scope_values'] && $atts['scope_values'] === '*' ) {
 		global $wpdb;
 
 		$resource_field_id = reset( $field->gpiResourcePropertyMap );
-		$sql               = $wpdb->prepare( "SELECT DISTINCT meta_value FROM {$wpdb->prefix}gf_entry_meta WHERE form_id = %d AND meta_key = %d", $form['id'], $resource_field_id );
+		$sql               = gf_apply_filters( array( 'gpis_scopes_sql', $form['id'], $resource_field_id ), $wpdb->prepare( "SELECT DISTINCT meta_value FROM {$wpdb->prefix}gf_entry_meta WHERE form_id = %d AND meta_key = %d", $form['id'], $resource_field_id ), $form, $field, $resource_field_id );
 		$items             = $wpdb->get_results( $sql );
 
 		if ( empty( $items ) ) {
 			return $content;
 		}
 
-		$output = array();
+		$output          = array();
+		$is_choice_field = ! empty( $field->choices );
 
 		if ( ! $content ) {
-			$content = '{scope}: {count}';
+			if ( $is_choice_field ) {
+				$content = '{label}: {count}';
+			} else {
+				$content = '{scope}: {count}';
+			}
 		}
 
 		foreach ( $items as $item ) {
+
 			$atts['scope_values'] = $item->meta_value;
 			$scope_display_value  = gf_apply_filters( array( 'gpis_scope_display_value', $form['id'], $resource_field_id ), $item->meta_value, $field, $resource_field_id, $atts );
-			$output[]             = str_replace( '{scope}', $scope_display_value, gpi_inventory_shortcode( null, $atts, $content ) );
+
+			$item_output = '';
+			if ( $is_choice_field ) {
+				$item_output = $scope_display_value;
+			}
+
+			$item_output .= str_replace( '{scope}', $scope_display_value, gpi_inventory_shortcode( null, $atts, $content ) );
+			$output[]     = $item_output;
+
 		}
 
+		$label = $field->get_field_label( false, '' );
+
 		$output = sprintf(
-			'<ul class="gpi-inventory-list gpi-inventory-list-%d-%d"><li>%s</li></ul>',
-			$form['id'], $field->id, implode( '</li><li>', $output )
+			'<strong>%s</strong><ul class="gpi-inventory-list gpi-inventory-list-%d-%d"><li>%s</li></ul>',
+			$label, $form['id'], $field->id, implode( '</li><li>', $output )
 		);
 
 		return $output;
@@ -167,7 +182,7 @@ function gpi_inventory_shortcode( $output, $atts, $content ) {
 			 */
 			remove_filter( 'gpi_query', array( gp_inventory_type_advanced(), 'resource_and_properties' ), 9 );
 			$count_current_field = gp_inventory_type_simple()->get_claimed_inventory( $field );
-			add_filter( 'gpi_query', array( gp_inventory_type_advanced(), 'resource_and_properties' ), 9 );
+			add_filter( 'gpi_query', array( gp_inventory_type_advanced(), 'resource_and_properties' ), 9, 2 );
 		} else {
 			$available           = gp_inventory_type_simple()->get_available_stock( $field );
 			$limit               = gp_inventory_type_simple()->get_stock_quantity( $field );
