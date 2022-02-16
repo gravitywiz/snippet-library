@@ -90,8 +90,8 @@ function gpi_inventory_shortcode( $output, $atts, $content ) {
 		$label = $field->get_field_label( false, '' );
 
 		$output = sprintf(
-			'<strong>%s</strong><ul class="gpi-inventory-list gpi-inventory-list-%d-%d"><li>%s</li></ul>',
-			$label, $form['id'], $field->id, implode( '</li><li>', $output )
+			'<ul class="gpi-inventory-list gpi-inventory-list-%d-%d"><li>%s</li></ul>',
+			$form['id'], $field->id, implode( '</li><li>', $output )
 		);
 
 		return $output;
