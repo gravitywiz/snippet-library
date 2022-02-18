@@ -19,6 +19,10 @@
 add_filter( 'gform_shortcode_inventory', 'gpi_inventory_shortcode', 10, 3 );
 function gpi_inventory_shortcode( $output, $atts, $content ) {
 
+	if ( ! is_callable( 'gp_inventory' ) ) {
+		return $output;
+	}
+
 	$atts = shortcode_atts( array(
 		'id'           => false,
 		'field'        => false,
