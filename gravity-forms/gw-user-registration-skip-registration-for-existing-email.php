@@ -9,7 +9,7 @@
  * Plugin URI:  https://gravitywiz.com/
  * Description: If submitted email is already registered, skip registration.
  * Author: Gravity Wiz
- * Version: 0.4
+ * Version: 0.5
  * Author URI: https://gravitywiz.com/
  */
 class GW_GFUR_Skip_Registration_If_Email_Exists {
@@ -51,6 +51,8 @@ class GW_GFUR_Skip_Registration_If_Email_Exists {
 		if ( function_exists( 'gf_user_registration' ) && $this->is_applicable_form( $form ) && ! is_user_logged_in() ) {
 			remove_filter( 'gform_validation', array( gf_user_registration(), 'validate' ) );
 		}
+
+		return $form;
 
 	}
 
