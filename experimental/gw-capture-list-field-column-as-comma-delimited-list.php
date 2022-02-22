@@ -14,9 +14,15 @@ add_action( 'gform_pre_submission_123', function( $form ) {
 	$rows       = $list_field->create_list_array( $_POST["input_{$list_field_id}"] );
 	$values     = array();
 
-	foreach ( $rows as $row ) {
-		$row = array_values( $row );
-		$values[] = $row[ $column_number - 1 ];
+	if ( is_array($rows[0]) ) {
+		foreach ( $rows as $row ) {
+			$row = array_values( $row );
+			$values[] = $row[ $column_number -1 ];
+		}
+	} else {
+		foreach ( $rows as $row ) {
+			$values[] = $row;
+		}
 	}
 
 	$_POST[ "input_{$target_field_id}" ] = implode( ',', $values );
