@@ -28,7 +28,13 @@ add_filter( 'gform_shortcode_inventory', function ( $output, $atts, $content ) {
 		return $content;
 	}
 
-	$form  = GFAPI::get_form( $atts['id'] );
+	$form = GFAPI::get_form( $atts['id'] );
+
+	/* Ensure choices populated by Populate Anything are loaded in. */
+	if ( function_exists( 'gp_populate_anything' ) && is_callable( array( gp_populate_anything(), 'modify_admin_field_choices' ) ) ) {
+		$form = gp_populate_anything()->modify_admin_field_choices( $form );
+	}
+
 	$field = GFAPI::get_field( $form, $atts['field'] );
 
 	if ( ! $field ) {
