@@ -8,7 +8,7 @@
  * Plugin URI:   https://gravitywiz.com/
  * Description:  Check if a source value is in a comma-delimited list of values.
  * Author:       Gravity Wiz
- * Version:      0.9
+ * Version:      1.0
  * Author URI:   https://gravitywiz.com
  */
 class GF_CLO_Is_In {
@@ -36,9 +36,23 @@ class GF_CLO_Is_In {
 	}
 
 	public function output_admin_inline_script() {
+		if ( ! GFForms::get_page() ) {
+			return;
+		}
 		?>
 
 		<script>
+
+			/**
+			 * Gravity Forms handles conditional logic operator labels differently depending on context. In the conditional
+			 * logic flyout, whatever value is passed as the value is used as the label. Everywhere else, the value is
+			 * used as a key to look up the label in the gf_vars variable.
+			 *
+			 * Let's add our property to the gf_vars variable to account for both scenarios.
+			 */
+			if ( window.gf_vars ) {
+				gf_vars['is in'] = '<?php esc_html_e( 'is in' ); ?>';
+			}
 
 			gform.addFilter( 'gform_conditional_logic_operators', function( operators ) {
 				operators.is_in = 'is in';
