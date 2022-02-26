@@ -64,16 +64,18 @@ class GW_Manual_Entries {
 					}
 				} else {
 					// GF 2.5+
-					var bulkActions = document.querySelectorAll( '.bulkactions' )[0];
-					if( bulkActions ) {
+					var tableNavTop = document.querySelectorAll( '.tablenav.top' )[0];
+					if( tableNavTop ) {
 						clearInterval( gwmeInterval );
 						var a        = document.createElement( 'a' );
 						var linkText = document.createTextNode( '<?php echo $button_label; ?>' );
 						a.appendChild( linkText );
 						a.title     = '<?php echo $button_label; ?>';
 						a.href      = '<?php echo $button_url; ?>';
+						var marginLeft = document.querySelectorAll( '.tablenav-pages.no-pages' ).length > 0 ? 'auto' : '0.375rem;'
+						a.style     = 'margin-left:{0};'.format( marginLeft );
 						a.className = 'button';
-						bulkActions.parentNode.insertBefore( a, bulkActions.nextSibling );
+						tableNavTop.appendChild( a );
 					}
 				}
 
