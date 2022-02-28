@@ -13,11 +13,11 @@ class GPPA_Object_Type_JSON_API extends GPPA_Object_Type {
 	public function __construct( $id ) {
 		parent::__construct( $id );
 
-		add_action( 'gppa_pre_object_type_query_json_api', array( $this, 'add_filter_hooks' ) );
+		add_action( 'gppa_pre_object_type_query_' . $this->id, array( $this, 'add_filter_hooks' ) );
 	}
 
 	public function add_filter_hooks() {
-		add_filter( 'gppa_object_type_json_api_filter', array( $this, 'process_filter_default' ), 10, 4 );
+		add_filter( 'gppa_object_type_' . $this->id . '_filter', array( $this, 'process_filter_default' ), 10, 4 );
 	}
 
 	public function get_object_id( $object, $primary_property_value = null ) {
@@ -164,13 +164,16 @@ class GPPA_Object_Type_JSON_API extends GPPA_Object_Type {
 	public function query( $args ) {
 
 		$search_params = $this->process_filter_groups( $args );
+		$results       = $this->fetch();
 
-		$filtered = array_filter( $this->fetch(), function ( $var ) use ( $search_params ) {
-			return $this->search( $var, $search_params );
-		} );
+		if ( ! empty( $search_params ) ) {
+			$results = array_filter( $results, function ( $var ) use ( $search_params ) {
+				return $this->search( $var, $search_params );
+			} );
+		}
 
 		$query_limit   = gp_populate_anything()->get_query_limit( $this, $args['field'] );
-		$query_results = array_slice( $filtered, 0, $query_limit );
+		$query_results = array_slice( $results, 0, $query_limit );
 
 		return $query_results;
 
@@ -178,7 +181,7 @@ class GPPA_Object_Type_JSON_API extends GPPA_Object_Type {
 
 	public function get_object_prop_value( $object, $prop ) {
 
-		if ( ! isset ( $object[ $prop ] ) ) {
+		if ( ! isset( $object[ $prop ] ) ) {
 			return null;
 		}
 
