@@ -3,6 +3,8 @@
  * Gravity Wiz // Gravity Forms // Convert Time Field Inputs to Drop Downs
  * https://gravitywiz.com/
  *
+ * Instruction Video: https://www.loom.com/share/a99d3a1b82b84894a44fe48fc59ea0c6
+ *
  * @see [Screenshot](https://gwiz.io/3AQZKdF)
  */
 // Update "123" to your form ID and "4" to your Time field ID.
