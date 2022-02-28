@@ -3,6 +3,8 @@
  * Gravity Wiz // Gravity Forms // Capitalize Submitted Data
  * https://gravitywiz.com/
  *
+ * Instruction Video: https://www.loom.com/share/dff6d63f5a9c44938fdc0506ce5d4965
+ *
  * Capitializes all words in Single Line Text, Paragraph Text, Address and Name fields.
  */
 // Update "123" to the ID of the Form
