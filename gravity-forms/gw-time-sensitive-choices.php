@@ -19,7 +19,7 @@
  * Plugin URI:  https://gravitywiz.com
  * Description: Filter time-based choices based on the current time.
  * Author:      David Smith
- * Version:     1.3.1
+ * Version:     1.3.2
  * Author URI:  https://gravitywiz.com
  */
 class GW_Time_Sensitive_Choices {
@@ -125,12 +125,17 @@ class GW_Time_Sensitive_Choices {
 							var selectedDate = self.$date.datepicker( 'getDate' );
 							if ( selectedDate !== null ) {
 								var currentDate = self.getCurrentServerTime();
+								currentDate.setHours(0, 0, 0, 0);
+
+								selectedDate = new Date(selectedDate.getTime());
+								selectedDate.setHours(0, 0, 0, 0);
+
 								// Is future date?
-								if ( selectedDate > currentDate && selectedDate.getDate() > currentDate.getDate() ) {
+								if ( selectedDate > currentDate ) {
 									mode = 'enable';
 								}
 								// Is past date?
-								else if ( selectedDate < currentDate && selectedDate.getDate() < currentDate.getDate() ) {
+								else if ( selectedDate < currentDate ) {
 									mode = 'disable';
 								}
 							}
@@ -228,6 +233,9 @@ class GW_Time_Sensitive_Choices {
 						return date;
 					}
 
+					/**
+					 * @returns Date
+					 */
 					self.getCurrentServerTime = function() {
 						var date = new Date();
 						return self.convertTimezone( date );
