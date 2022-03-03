@@ -3,6 +3,8 @@
  * Gravity Wiz // Gravity Forms // Append/Prepend Values to Merge Tags
  * https://gravitywiz.com
  *
+ * Instruction Video: https://www.loom.com/share/9cc6062f43244aaa8a9cab351f1370b3
+ *
  * Use :prepend[value] to prepend a value to the result of a merge tag. Use :append[value] to append a value to the
  * result of a merge tag.
  *
