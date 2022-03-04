@@ -1,14 +1,14 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Save & Continue Auto Load
- * https://gravitywiz.com
+ * https://gravitywiz.com/automatic-save-and-continue-with-gravity-forms/
  *
- * Automatically load previously saved data (via Gravity Forms' Save & Continue functionality) when a logged-in user views a form.
+ * Automatically save users' data as they progress through a form and automatically repopulate that data when they return.
  * This snippet is useful when you want logged in users to continue filling their form without using the Save and Continue link.
  *
  * Plugin Name: Gravity Forms - Save & Continue Auto Load
- * Plugin URI: https://gravitywiz.com
- * Description: Automatically load previously saved data (via Gravity Forms' Save & Continue functionality) when a logged-in user views a form.
+ * Plugin URI: https://gravitywiz.com/automatic-save-and-continue-with-gravity-forms/
+ * Description: Automatically save users' data as they progress through a form and automatically repopulate that data when they return.
  * Author: Gravity Wiz
  * Version: 0.4
  * Author URI: https://gravitywiz.com
@@ -142,3 +142,13 @@ class GW_Save_Continue_Auto_Load {
 # Configuration
 
 new GW_Save_Continue_Auto_Load();
+
+# Advanced Configuration
+
+// if ( class_exists( 'GW_Save_Continue_Auto_Load' ) ) {
+//	new GW_Save_Continue_Auto_Load( array(
+//		'form_ids'                   => array( 1, 2 ),
+//		'enable_inline_confirmation' => false,
+//		'auto_save'                  => true
+//	) );
+//}
