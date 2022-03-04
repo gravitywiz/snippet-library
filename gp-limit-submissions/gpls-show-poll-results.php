@@ -2,6 +2,9 @@
 /**
  * Gravity Perks // GP Limit Submissions // Display Poll Results When Limit Is Reached
  * http://gravitywiz.com/documentaiton/gravity-forms-limit-submissions/
+ *
+ * Instruction Video: https://www.loom.com/share/df98fa2dda97424495eb1757a772f6d0
+ *
  */
 add_action( 'gform_get_form_filter', function( $markup, $form ) {
 
