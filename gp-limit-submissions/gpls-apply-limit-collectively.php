@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // GP Limit Submissions // Apply Limit Collectively to Group of Forms
  * http://gravitywiz.com/documentation/gravity-forms-limit-submissions/
+ *
+ * Instruction Video: https://www.loom.com/share/790781a22ff14d2f8023b7dd1adeb3eb
  */
 add_filter( 'gpls_rule_groups', function( $rule_groups, $form_id ) {
 
