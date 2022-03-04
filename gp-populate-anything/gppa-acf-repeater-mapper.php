@@ -49,14 +49,27 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 	$choices = array();
 
 	foreach ( $objects as $object ) {
-		$rows = get_field( $repeater, $object->ID );
+        if ( get_class($object) == 'WP_User' ){
+            $rows = get_field( $repeater, 'user_'.$object->ID );
+        }
+        else {
+            $rows = get_field( $repeater, $object->ID );
+        }
+
 		if ( $rows ) {
 			foreach ( $rows as $row ) {
-				$choices[] = array(
-					'value' => rgar( $row, $map['value'] ),
-					'text'  => rgar( $row, $map['label'] ),
-					'price' => rgar( $row, $map['price'] ),
-				);
+                if ( isset($map['price'] )){
+                    $choices[] = array(
+                        'value' => rgar( $row, $map['value'] ),
+                        'text'  => rgar( $row, $map['label'] ),
+                        'price' => rgar( $row, $map['price'] ),
+                    );
+                } else {
+                    $choices[] = array(
+                        'value' => rgar( $row, $map['value'] ),
+                        'text'  => rgar( $row, $map['label'] ),
+                    );
+                }
 			}
 		}
 	}
