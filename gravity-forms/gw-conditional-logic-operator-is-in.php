@@ -2,6 +2,8 @@
 /**
  * Gravity Wiz // Gravity Forms // Conditional Logic Operator: "Is In"
  *
+ * Instruction Video: https://www.loom.com/share/671c39116de6480eb34b014c5d2deff4
+ *
  * Check if a source value is in a comma-delimited list of values with the new "is in" conditional logic operator!
  *
  * Plugin Name:  GF Conditional Logic Operator: "Is In"
