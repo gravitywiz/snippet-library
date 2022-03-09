@@ -4,7 +4,7 @@
  *
  * Provides the ability to populate a Date field with a modified date based on the current date or a user-submitted date.
  *
- * @version   2.5.1
+ * @version   2.5.2
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/populate-dates-gravity-form-fields/
@@ -1588,7 +1588,13 @@ class GW_Populate_Date {
 									missingData = ! hour || ! min,
 									datetime    = missingData ? false : new Date();
 
-								datetime.setHours( parseInt( hour ) + ( ampm.toLowerCase() === 'pm' ? 12 : 0 ) );
+
+								if ( $inputs.eq( 2 ).length ) {
+									datetime.setHours( parseInt( hour ) + ( ampm.toLowerCase() === 'pm' ? 12 : 0 ) );
+								} else {
+									datetime.setHours( parseInt( hour ) );
+								}
+
 								datetime.setMinutes( min );
 
 								timestamp = datetime.getTime();
