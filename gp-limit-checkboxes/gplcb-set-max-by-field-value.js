@@ -7,8 +7,8 @@
 gform.addFilter( 'gplc_group', function( group, fieldId, $elem, gplc ) {
 
 	var formId = 123,
-		  checkboxFieldId = 4,
-		  maxFieldId = 5;
+	    checkboxFieldId = 4,
+	    maxFieldId = 5;
 
 	var $maxField = $( '#input_{0}_{1}'.format( formId, maxFieldId ) );
 
