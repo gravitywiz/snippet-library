@@ -2,7 +2,9 @@
 /**
  * Gravity Wiz // Gravity Forms // Conditional Logic Operator: "Is In"
  *
- * Instruction Video: https://www.loom.com/share/671c39116de6480eb34b014c5d2deff4
+
+ * Instruction Video: https://www.loom.com/share/03c2d8bd75ed46b29d66a3c8b44eac8c
+
  *
  * Check if a source value is in a comma-delimited list of values with the new "is in" conditional logic operator!
  *
