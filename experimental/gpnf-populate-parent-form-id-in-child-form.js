@@ -8,6 +8,10 @@ gform.addAction( 'gpnf_init_nested_form', function( childFormId, gpnf ) {
 	// Update "4" to the ID of the child field in which the parent form ID will be populated.
 	var targetChildFieldId = 4;
 	if ( childFormId == targetChildFormId ) {
-		$( '#input_' + targetChildFormId + '_' + targetChildFieldId ).val( gpnf.formId ).change();
+		// Delaying setting value so Populate Anything can pick up the change event. 
+		// Internal: HS#32287.
+		setTimeout( function() {
+			$( '#input_' + targetChildFormId + '_' + targetChildFieldId ).val( gpnf.formId ).change();
+		} );
 	}
 } );

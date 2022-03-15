@@ -13,7 +13,7 @@
  * If you have an array-like value mapped to a choice-based field, Populate Anything does not yet know when it should be
  * converted to choices or imploded into a string so it defaults to the latter.
  *
- * This snippet adds the `gppa-explode-commas-into-choices` designator to all you to specify when array-like values
+ * This snippet adds the `gppa-explode-commas-into-choices` designator to allow you to specify when array-like values
  * should be converted into choices.
  *
  * Usage:

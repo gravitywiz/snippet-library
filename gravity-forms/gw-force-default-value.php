@@ -3,6 +3,8 @@
  * Gravity Wiz // Gravity Forms // Force Default Value
  * https://gravitywiz.com/
  *
+ * Instruction Video: https://www.loom.com/share/ce1cee94063348f09d57b404d26c4e8a
+ *
  * Force the default value to be captured for fields hidden by conditional logic. Also reprocesses default values that
  * contain merge tags not available for prepopulation.
  *
