@@ -10,9 +10,8 @@
  * to an order-of-events issue with GPAA calling the options filter before the Custom Javascript plugin
  * has initialized.
  */
-add_action( 'gform_preview_header', 'gpaa_search_by_place_name' );
-add_action( 'wp_head', 'gpaa_search_by_place_name' );
-function gpaa_search_by_place_name() {
+// Update "123" to your form ID or remove "_123" to apply to all forms.
+add_action( 'gform_pre_enqueue_scripts_123', function() { 
 	?>
 	<script>
 		gform.addFilter( 'gpaa_autocomplete_options', function( options ) {
@@ -21,4 +20,4 @@ function gpaa_search_by_place_name() {
 		} );
 	</script>
 	<?php
-}
+} );
