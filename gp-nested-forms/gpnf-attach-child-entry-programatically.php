@@ -11,7 +11,7 @@ add_action( 'gform_entry_post_save_124', function( $entry ) {
 		// The ID of the parent form.
 		GPNF_Entry::ENTRY_PARENT_FORM_KEY       => 123,
 		// The ID of the Nested Form field on the parent form.
-		GPNF_Entry::ENTRY_NESTED_FORM_FIELD_KEY => 4
+		GPNF_Entry::ENTRY_NESTED_FORM_FIELD_KEY => 4,
 	), $entry );
 	GFAPI::update_entry( $entry );
 	return $entry;
