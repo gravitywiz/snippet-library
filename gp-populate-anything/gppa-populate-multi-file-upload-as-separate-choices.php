@@ -3,6 +3,8 @@
  * Gravity Perks // Populate Anything // Populate Multi-file Upload Images as Separate Choices
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
+ * Instruction Video: https://www.loom.com/share/470b9d0e46f34fc1952135350cffe898
+ *
  * Populate a preview of each image uploaded into a Multi-file Upload field as a separate choice in a Radio or Checkbox field.
  */
 // Update "123" to your form ID; update "4" to the ID the field you're populating via Populate Anything.
