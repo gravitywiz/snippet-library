@@ -3,6 +3,8 @@
  * Gravity Perks // Address Autocomplete // Search by Place Name
  * https://gravitywiz.com/documentation/gravity-forms-address-autocomplete/
  *
+ * Instruction Video: https://www.loom.com/share/8b24df2d7de948b19a64a18d88797442
+ *
  * Find addresses by their name. For example, "Mount Trashmore" in Virginia Beach would resolve to
  * an address of "310 Edwin Drive, Virginia Beach, VA 23462".
  *
@@ -11,7 +13,7 @@
  * has initialized.
  */
 // Update "123" to your form ID or remove "_123" to apply to all forms.
-add_action( 'gform_pre_enqueue_scripts_123', function() { 
+add_action( 'gform_pre_enqueue_scripts_123', function() {
 	?>
 	<script>
 		gform.addFilter( 'gpaa_autocomplete_options', function( options ) {
