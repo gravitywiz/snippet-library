@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // GP Limit Dates // Exclude Blocked Dates from Modifiers
  *
+ * Instruction Video: https://www.loom.com/share/96c7b763529b4947a33c54c6850ee601
+ *
  * Automatically excludes blocked dates from a Date Modifier in GP Limit Dates.
  *
  * @version 0.1
