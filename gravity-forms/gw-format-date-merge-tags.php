@@ -21,8 +21,10 @@ add_filter( 'gform_pre_replace_merge_tags', function( $text, $form, $entry, $url
 		$input_id = $match[1];
 		$field    = GFFormsModel::get_field( $form, $input_id );
 
-		if ( $field->get_input_type() !== 'date' ) {
-			continue;
+		if ( $field ) {
+			if ( $field->get_input_type() !== 'date' ) {
+				continue;
+			}
 		}
 
 		$i        = $match[0][0] === '{' ? 4 : 5;
