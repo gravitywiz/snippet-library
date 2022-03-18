@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // GP Price Range // Modify Validation Messages
  * http://gravitywiz.com/documentation/gp-price-range/
+ *
+ * Instruction Video: https://www.loom.com/share/837c81c308e34858ae693d8a45d79a6e
  */
 add_filter( 'gppr_validation_messages', function( $messages, $min, $max, $form_id, $field_id ) {
 
