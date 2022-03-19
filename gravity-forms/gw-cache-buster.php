@@ -162,9 +162,16 @@ class GW_Cache_Buster {
 						gformInitDatepicker();
 					}
 					// Initialize GPPA
+					// @todo Since we are not triggering the `gform_post_render` below, I'm not certain that we need this.
 					if( response.indexOf('GPPA') > -1 ) {
 						window.gform.doAction('gppa_register_form', formId);
 					}
+					// We probably don't need this since everything else should already be loaded by this point but since
+					// GF is using it as their standard for triggering the `gform_post_render` event, I figured we should follow suit.
+					gform.initializeOnLoaded( function() {
+						// Form has been rendered. Trigger post render to initialize scripts.
+						jQuery( document ).trigger( 'gform_post_render', [ formId, 1 ] );
+					} );
 				} );
 			} ( jQuery ) );
 		</script>
@@ -185,6 +192,17 @@ class GW_Cache_Buster {
 			$form_id = isset( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : 0;
 		}
 
+		/**
+		 * Init scripts are output to the footer by default so they are not needed in the AJAX response. Some plugins
+		 * deliberately output inline scripts alongside the form (see Nested Forms' `gpnf_preload_form` filter) but I
+		 * haven't encountered a scenario where this is ideal when fetching the form via an AJAX request like we do here.
+		 *
+		 * Additionally, to support this change, we manually trigger the `gform_post_render` event after we've loaded
+		 * the form markup from this AJAX response.
+		 *
+		 * Priority of this filter is set aggressively high to ensure it will take priority.
+		 */
+		add_filter( 'gform_init_scripts_footer', '__return_true', 987 );
 		$atts = json_decode( rgpost( 'atts' ), true );
 		// GF expects an associative array for field values. Parse them before passing it on.
 		$field_values = wp_parse_args( rgar( $atts, 'field_values' ) );
