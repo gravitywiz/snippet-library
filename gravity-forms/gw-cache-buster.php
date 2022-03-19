@@ -4,18 +4,12 @@
  *
  * Bypass your website cache when loading a Gravity Forms form.
  *
- * @version 0.9
- * @author  David Smith <david@gravitywiz.com>
- * @license GPL-2.0+
- * @link    http://gravitywiz.com/
- *
  * Plugin Name: Gravity Forms Cache Buster
- * Plugin URI: http://gravitywiz.com/
+ * Plugin URI:  https://gravitywiz.com/
  * Description: Bypass your website cache when loading a Gravity Forms form.
- * Author: Gravity Wiz
- * Version: 0.8
- * Author URI: http://gravitywiz.com
- *
+ * Author:      Gravity Wiz
+ * Version:     0.11
+ * Author URI:  https://gravitywiz.com
  */
 class GW_Cache_Buster {
 
@@ -203,11 +197,15 @@ class GW_Cache_Buster {
 		 * Priority of this filter is set aggressively high to ensure it will take priority.
 		 */
 		add_filter( 'gform_init_scripts_footer', '__return_true', 987 );
+
 		$atts = json_decode( rgpost( 'atts' ), true );
+
 		// GF expects an associative array for field values. Parse them before passing it on.
 		$field_values = wp_parse_args( rgar( $atts, 'field_values' ) );
+
 		// If `$_POST` is not an empty array GF 2.5 fails to select default values for checkbox fields. See HS#26188
 		$_POST = array();
+
 		gravity_form( $form_id, filter_var( rgar( $atts, 'title', true ), FILTER_VALIDATE_BOOLEAN ), filter_var( rgar( $atts, 'description', true ), FILTER_VALIDATE_BOOLEAN ), false, $field_values, true /* default to true; add support for non-ajax in the future */, rgar( $atts, 'tabindex' ) );
 
 		die();
