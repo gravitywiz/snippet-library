@@ -4,7 +4,7 @@
  *
  * Provides the ability to populate a Date field with a modified date based on the current date or a user-submitted date.
  *
- * @version   2.5.2
+ * @version   2.5.3
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/populate-dates-gravity-form-fields/
@@ -210,7 +210,7 @@ class GW_Populate_Date {
 				// Default number format to whatever is set in the currency. This might cause issues if a Number field
 				// is configured to a different number format; however, this matches how the JS works for now.
 				$value    = gf_apply_filters( array( 'gwpd_get_field_value', $this->_args['form_id'], $modifier['inputId'] ), GFCommon::clean_number( rgpost( $key ), $number_format ), $modifier['inputId'] );
-				$modifier = $value > 0 ? sprintf( str_replace( '{0}', '%d', $modifier['modifier'] ), $value ) : false;
+				$modifier = ! rgblank( $value ) ? sprintf( str_replace( '{0}', '%d', $modifier['modifier'] ), $value ) : false;
 			}
 
 			if ( $modifier ) {
@@ -348,7 +348,7 @@ class GW_Populate_Date {
 							case 'field':
 								var inputId  = self.modifier.inputId,
 									value    = self.getFieldValue( inputId ),
-									modifier = value > 0 ? self.modifier.modifier.format( value ) : false;
+									modifier = value !== '' ? self.modifier.modifier.format( value ) : false;
 								break;
 						}
 
