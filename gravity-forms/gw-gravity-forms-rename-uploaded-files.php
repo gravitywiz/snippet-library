@@ -12,7 +12,7 @@
  *  + add a prefix or suffix to file uploads
  *  + include identifying submitted data in the file name like the user's first and last name
  *
- * @version   2.5
+ * @version   2.5.1
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/rename-uploaded-files-for-gravity-form/
@@ -147,12 +147,47 @@ class GW_Rename_Uploaded_Files {
 				continue;
 			}
 
-			$uploaded_files = rgar( $entry, $field->id );
-			gform_update_meta( $entry['id'], 'gprf_stashed_files', $uploaded_files );
+			$uploaded_files         = rgar( $entry, $field->id );
+			$existing_stashed_files = gform_get_meta( $entry['id'], 'gprf_stashed_files' );
+
+			if ( $this->is_json( $uploaded_files ) ) {
+				$uploaded_files = json_decode( $uploaded_files, ARRAY_A );
+			}
+
+			if ( $this->is_json( $existing_stashed_files ) ) {
+				$existing_stashed_files = json_decode( $existing_stashed_files, ARRAY_A );
+			}
+
+			if ( ! empty( $existing_stashed_files ) ) {
+				$uploaded_files = array_merge( $existing_stashed_files, $uploaded_files );
+			}
+
+			gform_update_meta( $entry['id'], 'gprf_stashed_files', json_encode( $uploaded_files ) );
 
 		}
 
 		return $entry;
+	}
+
+	/**
+	 * Check whether a string is JSON or not.
+	 *
+	 * @param $string string String to test.
+	 *
+	 * @return bool Whether the string is JSON.
+	 */
+	function is_json( $string ) {
+		if ( method_exists( 'GFCommon', 'is_json' ) ) {
+			return GFCommon::is_json( $string );
+		}
+
+		// Duplicate contents of GFCommon::is_json() here to supports versions of GF older than GF 2.5.
+		// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
+		if ( is_string( $string ) && in_array( substr( $string, 0, 1 ), array( '{', '[' ) ) && is_array( json_decode( $string, ARRAY_A ) ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	function stash_uploaded_files_after_update( $form, $entry_id ) {
