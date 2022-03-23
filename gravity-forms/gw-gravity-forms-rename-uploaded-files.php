@@ -1,6 +1,7 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Rename Uploaded Files
+ * http://gravitywiz.com/rename-uploaded-files-for-gravity-form/
  *
  * Rename uploaded files for Gravity Forms. You can create a static naming template or using merge tags to base names on user input.
  *
