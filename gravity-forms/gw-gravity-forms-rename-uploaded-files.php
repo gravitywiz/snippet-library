@@ -13,7 +13,7 @@
  *  + add a prefix or suffix to file uploads
  *  + include identifying submitted data in the file name like the user's first and last name
  *
- * @version   2.5.1
+ * @version   2.5.2
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/rename-uploaded-files-for-gravity-form/
@@ -159,6 +159,15 @@ class GW_Rename_Uploaded_Files {
 				$existing_stashed_files = json_decode( $existing_stashed_files, ARRAY_A );
 			}
 
+			/* Convert single files to array of files. */
+			if ( $existing_stashed_files && ! is_array( $existing_stashed_files ) ) {
+				$existing_stashed_files = array( $existing_stashed_files );
+			}
+
+			if ( $uploaded_files && ! is_array( $uploaded_files ) ) {
+				$uploaded_files = array( $uploaded_files );
+			}
+
 			if ( ! empty( $existing_stashed_files ) ) {
 				$uploaded_files = array_merge( $existing_stashed_files, $uploaded_files );
 			}
@@ -293,11 +302,11 @@ class GW_Rename_Uploaded_Files {
 			return array();
 		}
 
-		if ( $field->get_input_type() == 'post_image' ) {
+		if ( $this->is_json( $files ) ) {
+			$files = json_decode( $files );
+		} elseif ( $field->get_input_type() === 'post_image' ) {
 			$file_bits = explode( '|:|', $files );
 			$files     = array( $file_bits[0] );
-		} elseif ( $field->multipleFiles ) {
-			$files = json_decode( $files );
 		} else {
 			$files = array( $files );
 		}
