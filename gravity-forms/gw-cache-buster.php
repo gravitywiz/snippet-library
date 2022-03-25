@@ -39,8 +39,6 @@ class GW_Cache_Buster {
 		add_filter( 'gform_shortcode_form', array( $this, 'shortcode' ), 10, 3 );
 		add_filter( 'gform_save_and_continue_resume_url', array( $this, 'filter_resume_link' ), 15, 4 );
 
-		add_filter( 'gform_footer_init_scripts_filter', array( $this, 'suppress_default_post_render_event' ), 10, 3 );
-
 		add_action( 'wp_ajax_nopriv_gfcb_get_form', array( $this, 'ajax_get_form' ) );
 		add_action( 'wp_ajax_gfcb_get_form', array( $this, 'ajax_get_form' ) );
 
@@ -57,6 +55,8 @@ class GW_Cache_Buster {
 		);
 
 		$form_id = $atts['id'];
+
+		add_filter( "gform_footer_init_scripts_filter_{$form_id}", array( $this, 'suppress_default_post_render_event' ), 10, 3 );
 
 		if ( ! $this->is_cache_busting_applicable() ) {
 			return $markup;
