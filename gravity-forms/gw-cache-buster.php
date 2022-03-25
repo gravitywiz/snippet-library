@@ -8,7 +8,7 @@
  * Plugin URI:  https://gravitywiz.com/
  * Description: Bypass your website cache when loading a Gravity Forms form.
  * Author:      Gravity Wiz
- * Version:     0.11
+ * Version:     0.11b
  * Author URI:  https://gravitywiz.com
  */
 class GW_Cache_Buster {
@@ -38,6 +38,8 @@ class GW_Cache_Buster {
 
 		add_filter( 'gform_shortcode_form', array( $this, 'shortcode' ), 10, 3 );
 		add_filter( 'gform_save_and_continue_resume_url', array( $this, 'filter_resume_link' ), 15, 4 );
+
+		add_filter( 'gform_footer_init_scripts_filter', array( $this, 'suppress_default_post_render_event' ), 10, 3 );
 
 		add_action( 'wp_ajax_nopriv_gfcb_get_form', array( $this, 'ajax_get_form' ) );
 		add_action( 'wp_ajax_gfcb_get_form', array( $this, 'ajax_get_form' ) );
@@ -177,6 +179,16 @@ class GW_Cache_Buster {
 	public function is_cache_busting_applicable() {
 		// POSTED and LOGGED-IN requests are not typically cached
 		return empty( $_POST ) || ! is_user_logged_in();
+	}
+
+	public function suppress_default_post_render_event( $form_string, $form, $current_page ) {
+
+		$footer_script_body = "gform.initializeOnLoaded( function() { jQuery(document).trigger('gform_post_render', [{$form['id']}, {$current_page}]) } );";
+		$search             = GFCommon::get_inline_script_tag( $footer_script_body );
+
+		$form_string = str_replace( $search, '', $form_string );
+
+		return $form_string;
 	}
 
 	public function ajax_get_form() {
