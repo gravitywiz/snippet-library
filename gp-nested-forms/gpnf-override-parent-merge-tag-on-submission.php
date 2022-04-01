@@ -20,12 +20,24 @@ add_filter( 'gravityview-inline-edit/entry-updated', function( $return, $entry, 
 }, 10, 3 );
 
 function gpnf_override_parent_merge_tags( $entry, $form ) {
+	// Update '123' to the ID of the Child form. Set as false to apply to all child forms.
+	$id_of_child_form = 123;
+	// Updated '4, 5, 6' with the IDs of the fields you want to skip. Leave blank to apply to all fields.
+	$exclude_field_ids = array( 4, 5, 6 );
 
 	foreach ( $form['fields'] as $field ) {
 		if ( $field->get_input_type() === 'form' ) {
 			$child_form_id = $field->gpnfForm;
-			$child_form    = GFAPI::get_form( $child_form_id );
+			if ( $id_of_child_form ) {
+				if ( $child_form_id != $id_of_child_form ) {
+					return $entry;
+				}
+			}
+			$child_form = GFAPI::get_form( $child_form_id );
 			foreach ( $child_form['fields'] as $child_field ) {
+				if ( in_array( $child_field->id, $exclude_field_ids ) ) {
+					continue;
+				}
 				if ( $child_field->get_entry_inputs() ) {
 					foreach ( $child_field->get_entry_inputs() as $input ) {
 						preg_match( '/{Parent:(.+)}/i', rgar( $input, 'defaultValue' ), $match );
