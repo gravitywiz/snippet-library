@@ -8,4 +8,4 @@ add_filter( 'gform_pre_replace_merge_tags', function( $text, $form, $lead, $url_
 		$text = str_replace( '{blog_id}', get_current_blog_id(), $text );
 	}
 	return $text;
-} );
+}, 10, 7 );
