@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // Entry Blocks // Show Admins All Entries
  * https://gravitywiz.com/documentation/gravity-forms-entry-blocks/
