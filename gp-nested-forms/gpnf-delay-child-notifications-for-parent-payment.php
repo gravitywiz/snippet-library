@@ -1,7 +1,7 @@
 <?php
 /**
  * Gravity Wiz // Nested Forms // Delay Child Notifications for Parent Payment
- * https://github.com/gravitywiz/snippet-library/blob/master/gw-snippet-template.php
+ * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
  * Delay GP Nested Forms child form notification until payment processing is completed.
  *
@@ -32,7 +32,7 @@ class GW_GPNF_Delay_Child_Notifications {
 		add_action( 'gform_post_payment_completed', array( $this, 'gform_post_payment_completed' ) );
 		// Removing this filter causes the original issue of double notification to occur, see HS#23899 PR #85
 		remove_filter( 'gform_entry_post_save', array( gpnf_notification_processing(), 'maybe_send_child_notifications' ), 11 );
-
+		add_filter( 'gform_entry_post_save', array( $this, 'send_notifications_for_non_payment_entries' ), 12, 2 );
 	}
 
 	public function gpnf_should_send_notification( $should_send_notification, $notification, $context, $parent_form, $nested_form_field, $entry, $child_form ) {
@@ -49,7 +49,20 @@ class GW_GPNF_Delay_Child_Notifications {
 		if ( is_callable( 'gpnf_notification_processing' ) && $this->is_applicable_form( $entry['form_id'] ) ) {
 			gpnf_notification_processing()->maybe_send_child_notifications( $entry, GFAPI::get_form( $entry['form_id'] ) );
 		}
+	}
 
+	public function send_notifications_for_non_payment_entries( $entry, $form ) {
+
+		if ( ! $this->is_applicable_form( $form['id'] ) ) {
+			return $entry;
+		}
+
+		$_entry = GFAPI::get_entry( $entry['id'] );
+		if ( ! $_entry['payment_status'] ) {
+			gpnf_notification_processing()->maybe_send_child_notifications( $entry, $form );
+		}
+
+		return $entry;
 	}
 
 	public function is_applicable_form( $form ) {
