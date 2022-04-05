@@ -125,6 +125,19 @@ class GW_Update_Posts {
 
 				$meta_value = rgar( $entry, $value );
 
+				$field = GFAPI::get_field( $form, $value );
+
+				// Support mapping all checkboxes of a Checkbox field to a custom field.
+				if ( $field->get_input_type() === 'checkbox' && $value != (int) $value ) {
+					$meta_value = $field->get_value_export( $entry );
+					if ( is_callable( 'acf_get_field' ) ) {
+						$acf_field = acf_get_field( $key );
+						if ( $acf_field ) {
+							$meta_value = array_map( 'trim', explode( ',', $meta_value ) );
+						}
+					}
+				}
+
 				// Check for ACF image-like custom fields. Integration powered by GP Media Library.
 				$acf_field = is_callable( 'gp_media_library' ) && is_callable( 'acf_get_field' ) ? acf_get_field( $key ) : false;
 				if ( $acf_field && in_array( $acf_field['type'], array( 'image', 'file', 'gallery' ), true ) ) {
