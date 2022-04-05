@@ -8,7 +8,7 @@
  * Plugin URI:   https://gravitywiz.com/gravity-forms-all-fields-template/
  * Description:  Modify the {all_fields} merge tag output via a template file.
  * Author:       Gravity Wiz
- * Version:      0.9.14
+ * Version:      0.9.15
  * Author URI:   http://gravitywiz.com
  *
  * Usage:
@@ -495,7 +495,7 @@ class GW_All_Fields_Template {
 		}
 
 		if ( $display_product_summary ) {
-			$value = $this->all_fields_extra_options( GFCommon::get_submitted_pricing_fields( $form, $lead, $format, $use_text, $use_admin_label ), $merge_tag, $modifiers, 'order_summary', null );
+			$value = $this->all_fields_extra_options( GFCommon::get_submitted_pricing_fields( $form, $lead, $format, $use_text, $use_admin_label ), $merge_tag, $modifiers, 'order_summary', null, $format );
 			if ( $value !== false ) {
 				$items[] = array(
 					'label' => apply_filters( 'gwaft_order_summary_label', 'Order Summary' ),
