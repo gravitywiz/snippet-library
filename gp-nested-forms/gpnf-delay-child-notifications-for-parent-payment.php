@@ -28,6 +28,10 @@ class GW_GPNF_Delay_Child_Notifications {
 
 	public function init() {
 
+		if ( ! is_callable( 'gpnf_notification_processing' ) ) {
+			return;
+		}
+
 		add_filter( 'gpnf_should_send_notification', array( $this, 'gpnf_should_send_notification' ), 10, 7 );
 		add_action( 'gform_post_payment_completed', array( $this, 'gform_post_payment_completed' ) );
 		// Removing this filter causes the original issue of double notification to occur, see HS#23899 PR #85
