@@ -3,13 +3,13 @@
  * Gravity Wiz // GF User Registration // Skip Registration if Email Exists
  * https://gravitywiz.com/
  *
- * Skip registration if the submitted email addresss, is already registered with a user account.
+ * Skip registration if the submitted email address, is already registered with a user account.
  *
  * Plugin Name: Gravity Forms - Skip Registration if Email Exists
  * Plugin URI:  https://gravitywiz.com/
  * Description: If submitted email is already registered, skip registration.
  * Author: Gravity Wiz
- * Version: 0.5
+ * Version: 0.6
  * Author URI: https://gravitywiz.com/
  */
 class GW_GFUR_Skip_Registration_If_Email_Exists {
@@ -39,7 +39,7 @@ class GW_GFUR_Skip_Registration_If_Email_Exists {
 
 	public function maybe_delay_feeds( $is_delayed, $form, $entry, $slug ) {
 		if ( $slug == 'gravityformsuserregistration' && $this->is_applicable_form( $form ) ) {
-			if ( ( $this->does_feed_email_exist( $form, $entry ) || ! $this->is_email_valid( $form, $entry ) ) && ! is_user_logged_in() ) {
+			if ( ( $this->does_feed_email_exist( $form, $entry ) || ! $this->is_email_valid( $form, $entry ) ) ) {
 				return true;
 			}
 		}
@@ -48,7 +48,7 @@ class GW_GFUR_Skip_Registration_If_Email_Exists {
 
 	public function maybe_skip_user_registration_validation( $form ) {
 
-		if ( function_exists( 'gf_user_registration' ) && $this->is_applicable_form( $form ) && ! is_user_logged_in() ) {
+		if ( function_exists( 'gf_user_registration' ) && $this->is_applicable_form( $form ) ) {
 			remove_filter( 'gform_validation', array( gf_user_registration(), 'validate' ) );
 		}
 
