@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // GP Inventory // Disable Inventory Limits for Admins
  * http://gravitywiz.com/
+ *
+ * Instruction Video: https://www.loom.com/share/22501aa4c2b6418db8467b051436f158
  */
 add_action( 'init', function () {
 	if ( is_callable( 'gp_inventory' ) && current_user_can( 'administrator' ) ) {
