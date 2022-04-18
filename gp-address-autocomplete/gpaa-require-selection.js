@@ -2,6 +2,8 @@
  * Gravity Perks // GP Address Autocomplete // Require Place Selection
  * http://gravitywiz.com/documentation/gravity-forms-address-autocomplete
  *
+ * Instruction Video: https://www.loom.com/share/e97dee6de5fa4741a1171f6d6e39b95d
+ * 
  * Instructions:
  *     1. Install our free Custom Javascript for Gravity Forms plugin.
  *        Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
