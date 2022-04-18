@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // GP Inventory // Display Simple Inventory Type Current/Remaining Inventory
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
+ *
+ * Instruction Video: https://www.loom.com/share/1ddb22a2bc584462a83e3158c1a7c64a
  */
 
 add_action( 'gform_pre_entry_list', function ( $form_id ) {
