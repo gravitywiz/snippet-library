@@ -2,6 +2,10 @@
 /**
  * Gravity Perks // Date Time Calculator // Display Time Difference in Hours and Minutes
  *
+ * Instruction Video: https://www.loom.com/share/8498ef1b52334246b654f88d0a3155d4
+ *
+ * This snippet adds the `gpdtc-format-hours-mins` designator class
+ *
  * Plugin Name:  GPDTC Format Results in Hours & Minutes
  * Plugin URI:   http://gravitywiz.com/documentation/gravity-forms-date-time-calculator/
  * Description:  Display calculated time differences in hours & minutes (e.g. 3 hours, 45 minutes).
