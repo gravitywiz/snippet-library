@@ -3,6 +3,8 @@
  * Gravity Perks // Inventory // Waiting List for Exhausted Choices
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
  *
+ * Instruction Video: https://www.loom.com/share/7a5e57ec14404b9080c5e9b9878e2ecc
+ * 
  * Replace the default available inventory message with a waiting list message when a choice's inventory is exhausted.
  * The choice will be selectable and submittable.
  */
