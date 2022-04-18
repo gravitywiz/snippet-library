@@ -2,6 +2,8 @@
 * Gravity Perks // Copy Cat // Copy Label (instead of Value)
 * https://gravitywiz.com/documentation/gravity-forms-copy-cat/
 *
+* Instruction Video: https://www.loom.com/share/00f1287e4a23495aa9aa02ba95f882a5
+*
 * By default, the value of a choice-based field is copied.
 * Use this snippet to copy the label instead of the value.
 *
