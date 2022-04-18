@@ -3,6 +3,8 @@
  * Gravity Wiz // Gravity Forms // Feed-specific Submit Button
  * https://gravitywiz.com/gravity-forms-feed-specific-submit-button/
  *
+ * Instruction Video: https://www.loom.com/share/c75fcfa9e9d2453f839dd483b25147a8
+ *
  * Change the label of the submit button depending on which payment feed will be used to process the order. This can help
  * set user expectation when conditionally redirecting to Stripe Checkout. Currently, this plugin is limited to Stripe.
  *
