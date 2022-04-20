@@ -8,7 +8,7 @@
  * Plugin URI:  https://gravitywiz.com/
  * Description: Bypass your website cache when loading a Gravity Forms form.
  * Author:      Gravity Wiz
- * Version:     0.11b
+ * Version:     0.12
  * Author URI:  https://gravitywiz.com
  */
 class GW_Cache_Buster {
