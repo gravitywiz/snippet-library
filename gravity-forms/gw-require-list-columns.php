@@ -47,18 +47,27 @@ class GWRequireListColumns {
 				continue;
 			}
 
+			/**
+			 * @var \GF_Field_List $field
+			 */
 			$values = rgpost( "input_{$field['id']}" );
 
 			// If we got specific fields, loop through those only
 			if ( count( $this->required_cols ) ) {
 
-				foreach ( $this->required_cols as $required_col ) {
-					if ( empty( $values[ $required_col ] ) ) {
-						$new_validation_error        = true;
-						$field['failed_validation']  = true;
-						$field['validation_message'] = $field['errorMessage'] ? $field['errorMessage'] : 'All inputs must be filled out.';
+				$rows = $field->create_list_array_recursive( $field->get_value_submission( array() ) );
+
+				foreach ( $rows as $row ) {
+					foreach ( $this->required_cols as $required_col ) {
+						$row = array_values( $row );
+						if ( rgblank( $row[ $required_col ] ) ) {
+							$new_validation_error        = true;
+							$field['failed_validation']  = true;
+							$field['validation_message'] = $field['errorMessage'] ? $field['errorMessage'] : 'All required inputs must be filled out.';
+						}
 					}
 				}
+
 			} else {
 
 				// skip fields that have req cols specified by another GWRequireListColumns instance
