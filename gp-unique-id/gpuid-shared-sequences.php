@@ -17,6 +17,7 @@
  * );
  */
 add_filter( 'gpui_unique_id_attributes', 'gwiz_unique_id_global_sequential_index', 10, 3 );
+
 function gwiz_unique_id_global_sequential_index( $atts, $form_id, $field_id ) {
 
 	$groups = array(
@@ -49,9 +50,10 @@ function gwiz_unique_id_global_sequential_index( $atts, $form_id, $field_id ) {
 		return $atts;
 	}
 
-	$atts['starting_number'] = 1;
-	$atts['form_id']         = 0;
-	$atts['field_id']        = $group_number;
+	$atts['starting_number']  = 1;
+	$atts['form_id']          = 0;
+	$atts['original_form_id'] = $form_id;
+	$atts['field_id']         = $group_number;
 
 	return $atts;
 }
