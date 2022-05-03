@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // Nested Forms // Auto-attach Images from Child Form to Parent Post
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
