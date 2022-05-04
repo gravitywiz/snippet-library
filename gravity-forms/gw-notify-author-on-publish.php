@@ -4,13 +4,6 @@
  * https://gravitywiz.com/notify-author-when-post-is-published/
  *
  * Send an email to the post author when the post is published.
- *
- * Plugin Name:  Gravity Forms - Notify Author When Post is Published
- * Plugin URI:   https://gravitywiz.com/notify-author-when-post-is-published/
- * Description:  Send an email to the post author when the post is published.
- * Author:       Gravity Wiz
- * Version:      1.0
- * Author URI:   https://gravitywiz.com/
  */
 add_action( 'publish_post', 'gw_notify_author_on_publish' );
 function gw_notify_author_on_publish( $post_id ) {

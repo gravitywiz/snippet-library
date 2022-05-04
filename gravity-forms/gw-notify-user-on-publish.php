@@ -4,13 +4,6 @@
  * https://gravitywiz.com/notify-user-when-submitted-post-is-published/
  *
  * Send an email to a user when the post they submitted is published.
- *
- * Plugin Name:  Gravity Forms - Notify User When Submitted Post is Published
- * Plugin URI:   https://gravitywiz.com/notify-user-when-submitted-post-is-published/
- * Description:  Send an email to a user when the post they submitted is published.
- * Author:       Gravity Wiz
- * Version:      1.0
- * Author URI:   https://gravitywiz.com/
  */
 add_action( 'publish_post', 'gw_notify_on_publish' );
 function gw_notify_on_publish( $post_id ) {
