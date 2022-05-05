@@ -5,7 +5,7 @@
  */
 add_filter("gform_pre_render", "gform_skip_page");
 function gform_skip_page($form) {
- if(!rgpost("is_submit_{$form['id']}") && rgget('form_page') && is_user_logged_in())
- GFFormDisplay::$submission[$form['id']]["page_number"] = rgget('form_page');
- return $form;
+  if(!rgpost("is_submit_{$form['id']}") && rgget('form_page') && is_user_logged_in())
+    GFFormDisplay::$submission[$form['id']]["page_number"] = rgget('form_page');
+  return $form;
 }
