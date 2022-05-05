@@ -2,6 +2,8 @@
 /**
  * Gravity Wiz // Gravity Forms // Manual Entries
  *
+ * Instruction Video: https://www.loom.com/share/4bafdbc27c7b4478b680a61745ae37c1
+ *
  * Create entries manually for Gravity Forms. Adds an "Add New" button next to the page title on all entry-related pages.
  * Also integrates with Nested Forms and adds support for adding new child entries to a Nested Form field from the entry
  * detail view.
