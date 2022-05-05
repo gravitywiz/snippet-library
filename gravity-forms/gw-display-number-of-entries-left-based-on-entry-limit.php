@@ -11,7 +11,7 @@
  */
 
 // update the "4" to the ID of your form
-add_action('gform_pre_render_1', 'gform_display_limit');
+add_action('gform_pre_render_4', 'gform_display_limit');
 function gform_display_limit($form) {
 
     // put the %s wherever you want the number of entries to display in your message
