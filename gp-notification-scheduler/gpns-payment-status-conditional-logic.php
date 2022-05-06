@@ -3,6 +3,8 @@
  * Gravity Perks // Notification Scheduler // Use Payment Status in Conditional Logic
  * https://gravitywiz.com/documentation/gravity-forms-notification-scheduler/
  *
+ * Requires Gravity Forms 2.6.2.
+ *
  * Plugin Name:  GP Notification Scheduler – Use Payment Status in Conditional Logic
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-notification-scheduler/
  * Description:  Use the entry's payment status in notification conditional logic.
