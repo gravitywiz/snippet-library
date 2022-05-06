@@ -2,18 +2,16 @@
 /**
  * Gravity Wiz // Gravity Forms // Live Preview
  * https://gravitywiz.com/gravity-forms-live-preview/
+ * 
+ * Preview your Gravity forms on the frontend of your website. Adds a "Live Preview" link to the Gravity Forms toolbar .
+ *
+ * Plugin Name:  Gravity Forms // Live Preview
+ * Plugin URI:   https://gravitywiz.com/gravity-forms-live-preview/
+ * Description:  Preview your Gravity Forms on the frontend of your website
+ * Author:       Gravity Wiz
+ * Version:      1.0.1
+ * Author URI:   https://gravitywiz.com
  */
-/**
-* Gravity Wiz // Gravity Forms Live Preview
-*
-* Preview your Gravity forms on the frontend of your website. Adds a "Live Preview" link to the Gravity Forms toolbar.
-*
-* @version   1.0.1
-* @author    David Smith <david@gravitywiz.com>
-* @license   GPL-2.0+
-* @link      http://gravitywiz.com/...
-* @copyright 2013 Gravity Wiz
-*/
 class GWLivePreview {
 
     var $post_type = 'gw_live_preview';
