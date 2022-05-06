@@ -11,7 +11,7 @@
  *
  * This merge tag can only be used within the "Formula" setting of Calculation-enabled fields (i.e. Number, Calculated Product).
  *
- * @version   1.3
+ * @version   1.4
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/subtotal-merge-tag-for-calculations/
@@ -21,7 +21,7 @@
  * Plugin URI:   https://gravitywiz.com/subtotal-merge-tag-for-calculations/
  * Description:  Adds a {subtotal} merge tag which calculates the subtotal of the form.
  * Author:       Gravity Wiz
- * Version:      1.3
+ * Version:      1.4
  * Author URI:   http://gravitywiz.com
  */
 class GWCalcSubtotal {
@@ -29,14 +29,29 @@ class GWCalcSubtotal {
 	public static $merge_tag = '{subtotal}';
 
 	function __construct() {
-
 		// front-end
 		add_filter( 'gform_pre_render', array( $this, 'maybe_replace_subtotal_merge_tag' ) );
 		add_filter( 'gform_pre_validation', array( $this, 'maybe_replace_subtotal_merge_tag_submission' ) );
 
 		// back-end
 		add_filter( 'gform_admin_pre_render', array( $this, 'add_merge_tags' ) );
+		add_filter( 'gform_calculation_formula', array( $this, 'replace_formula_merge_tags' ), 5, 4 );
+	}
 
+	/**
+	 * Replace the {subtotal} merge tag in calculation formulas and anywhere merge tags are supported.
+	 *
+	 * @param        $formula
+	 * @param        $field
+	 * @param        $form
+	 * @param        $entry
+	 *
+	 * @return mixed
+	 */
+	public function replace_formula_merge_tags( $formula, $field, $form, $entry ) {
+		$subtotal_merge_tags = self::get_subtotal_merge_tag_string( $form, $field, true );
+
+		return str_replace( '{subtotal}', $subtotal_merge_tags, $formula );
 	}
 
 	/**
