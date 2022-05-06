@@ -1,21 +1,11 @@
 <?php
 /**
- * --- STOP! ---
- * Get the latest version:
- * https://gravitywiz.com/documentation/gravity-forms-ecommerce-fields/
- * -------------
- *
- * Calculation Subtotal Merge Tag
- *
+ * Gravity Wiz // Gravity Forms // Calculation Subtotal Merge Tag
+ * http://gravitywiz.com/subtotal-merge-tag-for-calculations/
+ * 
  * Adds a {subtotal} merge tag which calculates the subtotal of the form.
  *
  * This merge tag can only be used within the "Formula" setting of Calculation-enabled fields (i.e. Number, Calculated Product).
- *
- * @version   1.3
- * @author    David Smith <david@gravitywiz.com>
- * @license   GPL-2.0+
- * @link      http://gravitywiz.com/subtotal-merge-tag-for-calculations/
- * @copyright 2018 Gravity Wiz
  *
  * Plugin Name:  Gravity Forms Subtotal Merge Tag
  * Plugin URI:   https://gravitywiz.com/subtotal-merge-tag-for-calculations/
