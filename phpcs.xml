@@ -30,5 +30,15 @@
         <exclude name="PEAR.Functions.FunctionCallSignature.MultipleArguments" />
         <exclude name="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket" />
         <exclude name="PEAR.Functions.FunctionCallSignature.CloseBracketLine" />
+
+        <!-- We frequently get form/field IDs back as different types, so sometimes non-strict is needed. -->
+        <exclude name="WordPress.PHP.StrictComparisons" />
+        <exclude name="WordPress.PHP.StrictInArray" />
+        <exclude name="WordPress.PHP.StrictInArray.MissingTrueStrict" />
+    </rule>
+
+    <!-- Change certain errors to warnings -->
+    <rule ref="WordPress.PHP.DontExtract.extract_extract">
+        <type>warning</type>
     </rule>
 </ruleset>
