@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Wiz // Gravity Forms Unrequire Required Fields for Testing
+ * Gravity Wiz // Gravity Forms // Unrequire Required Fields for Testing
  *
  * When bugs pop up on your forms, it can be really annoying to have to fill out all the required fields for every test
  * submission. This snippet saves you that hassle by unrequiring all required fields so you don't have to fill them out.
