@@ -5,6 +5,13 @@
  *
  * If you are automatically publishing user submitted posts, this is helpful for providing
  * a link immediately to the user where they can preview their newly created post.
+ *
+ * Plugin Name:  Post Permalink Merge Tag
+ * Plugin URI:   https://gravitywiz.com/include-post-permalink-gravity-forms-confirmation-notification/
+ * Description:  Provides a link immediately to preview their newly created post.
+ * Author:       Gravity Wiz
+ * Version:      0.1
+ * Author URI:   https://gravitywiz.com
  */
 class GWPostPermalink {
 
