@@ -5,12 +5,10 @@
  *
  * This simple snippet allows you to close comments on posts created via a Gravity Form.
  */
-// Update the '123' to the ID of your form
-add_filter('gform_post_data_123', 'gform_close_comments');
-
-	function gform_close_comments($post_data){
+// Update the '123' to the ID of your form.
+add_filter( 'gform_post_data_123', function( $post_data ) {
 
 	$post_data['comment_status'] = 'closed';
 
 	return $post_data;
-}
+}  );
