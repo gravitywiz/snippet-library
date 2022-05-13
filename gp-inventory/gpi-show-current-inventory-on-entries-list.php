@@ -24,7 +24,7 @@ add_action( 'gform_pre_entry_list', function ( $form_id ) {
 		if ( isset( $inventory_field->choices ) && is_array( $inventory_field->choices ) ) {
 			$message_content .= '<li style="list-style: disc;">' . $inventory_field->get_field_label( false, '' );
 			$message_content .= '<ul style="margin-top: .5rem;padding: 0 0 0 2rem;">';
-			$counts          = gp_inventory_type_choices()->get_choice_counts( $form['id'], $inventory_field );
+			$counts           = gp_inventory_type_choices()->get_choice_counts( $form['id'], $inventory_field );
 
 			foreach ( $inventory_field->choices as $choice ) {
 

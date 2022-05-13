@@ -11,20 +11,20 @@
  */
 
 // update the "4" to the ID of your form
-add_action('gform_pre_render_4', 'gform_display_limit');
-function gform_display_limit($form) {
+add_action( 'gform_pre_render_4', 'gform_display_limit' );
+function gform_display_limit( $form ) {
 
-    // put the %s wherever you want the number of entries to display in your message
-    $entries_left_message = 'Only %s positions left!';
+	// put the %s wherever you want the number of entries to display in your message
+	$entries_left_message = 'Only %s positions left!';
 
-    /* You do not need to edit below this line */
+	/* You do not need to edit below this line */
 
-    $entry_count = RGFormsModel::get_lead_count($form['id'], '');
-    $entries_left = $form["limitEntriesCount"] - $entry_count;
+	$entry_count  = RGFormsModel::get_lead_count( $form['id'], '' );
+	$entries_left = $form['limitEntriesCount'] - $entry_count;
 
-    if($entries_left > 0) {
-        $form['description'] .= sprintf('<div class="entries-left">' . $entries_left_message . '</div>', $entries_left);
-    }
+	if ( $entries_left > 0 ) {
+		$form['description'] .= sprintf( '<div class="entries-left">' . $entries_left_message . '</div>', $entries_left );
+	}
 
-    return $form;
+	return $form;
 }

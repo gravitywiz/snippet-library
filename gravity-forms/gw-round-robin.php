@@ -98,7 +98,7 @@ class GW_Round_Robin {
 			foreach ( $gppa_filters as $gppa_filter ) {
 				if ( strpos( $gppa_filter['value'], 'gf_field:' ) !== false ) {
 					// Extract the field ID from the value property (e.g. `gf_field:3` → `3`).
-					$bits = explode( 'gf_field:', $gppa_filter['value'] );
+					$bits            = explode( 'gf_field:', $gppa_filter['value'] );
 					$field_filters[] = array(
 						'key'   => $bits[1],
 						'value' => rgar( $entry, $bits[1] ),

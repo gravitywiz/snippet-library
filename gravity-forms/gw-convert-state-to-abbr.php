@@ -103,6 +103,6 @@ class GW_Convert_State_to_Abbr {
 # Configuration
 
 new GW_Convert_State_to_Abbr( array(
-	'form_id' => 123,
+	'form_id'  => 123,
 	'field_id' => 4,
 ) );

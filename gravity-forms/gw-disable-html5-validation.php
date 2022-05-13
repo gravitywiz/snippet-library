@@ -14,5 +14,5 @@
  */
 add_filter( 'gform_form_tag', 'add_no_validate_attribute_to_form_tag' );
 function add_no_validate_attribute_to_form_tag( $form_tag ) {
-    return str_replace( '>', ' novalidate="novalidate">', $form_tag );
+	return str_replace( '>', ' novalidate="novalidate">', $form_tag );
 }

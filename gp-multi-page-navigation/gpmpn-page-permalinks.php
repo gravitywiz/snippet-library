@@ -68,12 +68,12 @@ class GPMPN_Page_Permalinks {
 			}
 		}
 
-//		if ( $needs_flush ) {
-//			if ( ! $did_rewrite_rules ) {
-//				$did_rewrite_rules = true;
-//				$this->flush_rewrite_rules();
-//			}
-//		}
+		//      if ( $needs_flush ) {
+		//          if ( ! $did_rewrite_rules ) {
+		//              $did_rewrite_rules = true;
+		//              $this->flush_rewrite_rules();
+		//          }
+		//      }
 
 		return $rules;
 	}
@@ -216,6 +216,6 @@ new GPMPN_Page_Permalinks( array(
 		1 => 'page-one',
 		2 => 'page-two',
 		3 => 'page-three',
-		0 => 'confirmation'
+		0 => 'confirmation',
 	),
 ) );

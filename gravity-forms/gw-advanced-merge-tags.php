@@ -77,7 +77,7 @@ class GW_Advanced_Merge_Tags {
 		}
 
 		$this->_args = wp_parse_args( $args, array(
-			'save_source_post_id' => false
+			'save_source_post_id' => false,
 		) );
 
 		add_action( 'gform_pre_render', array( $this, 'support_default_value_and_html_content_merge_tags' ) );
@@ -101,24 +101,24 @@ class GW_Advanced_Merge_Tags {
 
 		foreach ( $form['fields'] as &$field ) {
 
-//            $default_value = rgar( $field, 'defaultValue' );
-//            preg_match_all( '/{.+}/', $default_value, $matches, PREG_SET_ORDER );
-//            if( ! empty( $matches ) ) {
-//                if( rgar( $field, 'pageNumber' ) != $current_page ) {
-//                    $field['defaultValue'] = '';
-//                } else {
-//                    $field['defaultValue'] = $this->replace_merge_tags( $default_value, $form, null );
-//                }
-//            }
+			//            $default_value = rgar( $field, 'defaultValue' );
+			//            preg_match_all( '/{.+}/', $default_value, $matches, PREG_SET_ORDER );
+			//            if( ! empty( $matches ) ) {
+			//                if( rgar( $field, 'pageNumber' ) != $current_page ) {
+			//                    $field['defaultValue'] = '';
+			//                } else {
+			//                    $field['defaultValue'] = $this->replace_merge_tags( $default_value, $form, null );
+			//                }
+			//            }
 
 			// only run 'content' filter for fields on the current page
-//            if( rgar( $field, 'pageNumber' ) != $current_page )
-//                continue;
-//
-//            $html_content = rgar( $field, 'content' );
-//            preg_match_all( '/{.+}/', $html_content, $matches, PREG_SET_ORDER );
-//            if( ! empty( $matches ) )
-//                $field['content'] = $this->replace_merge_tags( $html_content, $form, null );
+			//            if( rgar( $field, 'pageNumber' ) != $current_page )
+			//                continue;
+			//
+			//            $html_content = rgar( $field, 'content' );
+			//            preg_match_all( '/{.+}/', $html_content, $matches, PREG_SET_ORDER );
+			//            if( ! empty( $matches ) )
+			//                $field['content'] = $this->replace_merge_tags( $html_content, $form, null );
 
 		}
 
@@ -139,13 +139,18 @@ class GW_Advanced_Merge_Tags {
 			if ( is_array( rgar( $field, 'inputs' ) ) && $field['type'] != 'checkbox' ) {
 				foreach ( $field['inputs'] as $input ) {
 					if ( rgar( $input, 'name' ) ) {
-						$filter_names[] = array( 'type' => $field['type'], 'name' => rgar( $input, 'name' ) );
+						$filter_names[] = array(
+							'type' => $field['type'],
+							'name' => rgar( $input, 'name' ),
+						);
 					}
 				}
 			} else {
-				$filter_names[] = array( 'type' => $field['type'], 'name' => rgar( $field, 'inputName' ) );
+				$filter_names[] = array(
+					'type' => $field['type'],
+					'name' => rgar( $field, 'inputName' ),
+				);
 			}
-
 		}
 
 		foreach ( $filter_names as $filter_name ) {
@@ -162,7 +167,7 @@ class GW_Advanced_Merge_Tags {
 				continue;
 			}
 
-			add_filter( "gform_field_value_{$filter_name['name']}", create_function( "", "return '$filtered_name';" ) );
+			add_filter( "gform_field_value_{$filter_name['name']}", create_function( '', "return '$filtered_name';" ) );
 		}
 
 		return $form;
@@ -220,7 +225,6 @@ class GW_Advanced_Merge_Tags {
 				$text = str_replace( $tag, $value, $text );
 
 			}
-
 		}
 
 		return $text;
@@ -246,7 +250,7 @@ class GW_Advanced_Merge_Tags {
 		foreach ( $matches as $match ) {
 
 			list( $tag, $type, $arg ) = array_pad( $match, 3, false );
-			$value = '';
+			$value                    = '';
 
 			switch ( $type ) {
 				case 'get':
@@ -268,7 +272,7 @@ class GW_Advanced_Merge_Tags {
 
 		extract( wp_parse_args( $args, array(
 			'id'   => false,
-			'prop' => false
+			'prop' => false,
 		) ) );
 
 		if ( ! $id || ! $prop ) {
@@ -287,7 +291,7 @@ class GW_Advanced_Merge_Tags {
 
 		extract( wp_parse_args( $args, array(
 			'id'       => false,
-			'meta_key' => false
+			'meta_key' => false,
 		) ) );
 
 		if ( ! $id || ! $meta_key ) {
@@ -304,7 +308,7 @@ class GW_Advanced_Merge_Tags {
 		extract( wp_parse_args( $args, array(
 			'id'    => false,
 			'prop'  => false,
-			'entry' => false
+			'entry' => false,
 		) ) );
 
 		if ( ! $entry ) {
@@ -339,13 +343,13 @@ class GW_Advanced_Merge_Tags {
 		extract( wp_parse_args( $args, array(
 			'id'       => false,
 			'meta_key' => false,
-			'entry'    => false
+			'entry'    => false,
 		) ) );
 
 		if ( ! $id ) {
 			if ( rgget( 'eid' ) ) {
 				$id = rgget( 'eid' );
-			} else if ( isset( $entry['id'] ) ) {
+			} elseif ( isset( $entry['id'] ) ) {
 				$id = $entry['id'];
 			}
 		}
@@ -373,7 +377,7 @@ class GW_Advanced_Merge_Tags {
 		unset( $args['callback'] );
 
 		extract( wp_parse_args( $args, array(
-			'entry' => false
+			'entry' => false,
 		) ) );
 
 		if ( ! is_callable( $callback ) ) {
@@ -399,7 +403,7 @@ class GW_Advanced_Merge_Tags {
 			$get = $_GET;
 		}
 
-		preg_match_all( "/{get:(.*?)}/ism", $text, $matches, PREG_SET_ORDER );
+		preg_match_all( '/{get:(.*?)}/ism', $text, $matches, PREG_SET_ORDER );
 		if ( empty( $matches ) ) {
 			return $text;
 		}
@@ -468,5 +472,5 @@ function gw_advanced_merge_tags( $args = array() ) {
 }
 
 gw_advanced_merge_tags( array(
-	'save_source_post_id' => false
+	'save_source_post_id' => false,
 ) );
