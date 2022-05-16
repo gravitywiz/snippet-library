@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore WordPress.Files.FileName.NotHyphenatedLowercase
 /**
  * Gravity Wiz // Gravity Forms // Get Form ID by Form Title
  * https://gravitywiz.com/

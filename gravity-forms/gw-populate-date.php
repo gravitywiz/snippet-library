@@ -157,6 +157,7 @@ class GW_Populate_Date {
 				);
 
 				if ( empty( $raw ) ) {
+					// phpcs:disable WordPress.DateTime.RestrictedFunctions.date_date
 					$raw = date( implode( $dividers[ $divider ], str_split( $format ) ) );
 				}
 
@@ -177,6 +178,7 @@ class GW_Populate_Date {
 	public function get_modified_date( $field, $timestamp = false ) {
 
 		if ( ! $timestamp ) {
+            // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
 			$timestamp = current_time( 'timestamp' );
 		}
 

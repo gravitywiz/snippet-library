@@ -193,6 +193,7 @@ class GW_Multi_File_Merge_Tag {
 		$value     = str_replace( ' ', '%20', $file );
 		$file_info = pathinfo( $value );
 
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $file_info ); // gives us $dirname, $basename, $extension, $filename
 
 		if ( ! $extension ) {
@@ -231,7 +232,9 @@ class GW_Multi_File_Merge_Tag {
 			break;
 		}
 
-		if ( ! $markup_found && $default_markup = $this->get_default_markup( $form_id ) ) {
+		$default_markup = $this->get_default_markup( $form_id );
+
+		if ( ! $markup_found && $default_markup ) {
 
 			$tags = array(
 				'{url}'      => $file,

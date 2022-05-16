@@ -19,13 +19,13 @@
  *
  */
 class GPPA_Object_Type_Database_Testing extends GPPA_Object_Type_Database {
-	private const DB_NAME = 'testing';
+	const DB_NAME = 'testing';
 
-	private const DB_USER = DB_USER;
+	const DB_USER = DB_USER;
 
-	private const DB_PASSWORD = DB_PASSWORD;
+	const DB_PASSWORD = DB_PASSWORD;
 
-	private const DB_HOST = DB_HOST;
+	const DB_HOST = DB_HOST;
 
 	public function get_label() {
 		return esc_html__( 'Database: ', 'gp-populate-anything' ) . self::DB_NAME;

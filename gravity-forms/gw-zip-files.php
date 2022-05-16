@@ -145,7 +145,9 @@ class GW_Zip_Files {
 			$index = 1;
 
 			foreach ( $files as $file ) {
-				if ( $file_path = $this->convert_url_to_path( $file ) ) {
+				$file_path = $this->convert_url_to_path( $file );
+
+				if ( $file_path ) {
 
 					$id = $field['id'];
 
@@ -419,8 +421,9 @@ class GW_Zip_Files {
 				if ( ! empty( $value ) ) {
 					foreach ( explode( ',', $value ) as $nested_entry_id ) {
 						$nested_entry = GFAPI::get_entry( (int) $nested_entry_id );
+						$zip_path     = $this->get_zip_paths( $nested_entry, 'path' );
 
-						if ( $zip_path = $this->get_zip_paths( $nested_entry, 'path' ) ) {
+						if ( $zip_path ) {
 							if ( isset( $notification['attachments'] ) ) {
 								$notification['attachments'] = is_array( $notification['attachments'] ) ? $notification['attachments'] : array( $notification['attachments'] );
 							} else {
@@ -443,6 +446,7 @@ class GW_Zip_Files {
 			return $notification;
 		}
 
+		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure, WordPress.CodeAnalysis.AssignmentInCondition.Found
 		if ( $this->is_applicable_form( $form ) && $zip_path = $this->get_zip_paths( $entry, 'path' ) ) {
 
 			if ( isset( $notification['attachments'] ) ) {
@@ -467,5 +471,5 @@ new GW_Zip_Files(
 		'form_id'       => 123,
 		'zip_name'      => 'my-sweet-archive',
 		'notifications' => array( '5f4668ec2afbb' ),
-	),
+	)
 );

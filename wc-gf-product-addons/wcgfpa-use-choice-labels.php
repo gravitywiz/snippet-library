@@ -21,5 +21,6 @@ function gw_wcgfpa_get_choice_label( $value, $field ) {
 			}
 		}
 	}
-	 return $value;
+
+	return $value;
 }

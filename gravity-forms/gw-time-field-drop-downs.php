@@ -12,10 +12,11 @@ add_filter( 'gform_field_content_123_4', function( $field_content, $field, $valu
 
 	preg_match_all( '/<input type=\'number\'.+?>/', $field_content, $matches, PREG_SET_ORDER );
 
-	$hours        = range( 1, 12 );
-	$minutes      = range( 0, 45, 15 );
-	$hour_options = $minute_options = array();
-	$template     = '<option value="%1$s">%1$s</option>';
+	$hours          = range( 1, 12 );
+	$minutes        = range( 0, 45, 15 );
+	$hour_options   = array();
+	$minute_options = array();
+	$template       = '<option value="%1$s">%1$s</option>';
 
 	foreach ( $hours as $hour ) {
 		$hour_options[] = sprintf( $template, str_pad( $hour, 2, 0, STR_PAD_LEFT ) );

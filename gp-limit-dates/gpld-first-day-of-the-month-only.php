@@ -11,7 +11,8 @@ add_filter( 'gpld_limit_dates_options_123_4', function( $options, $form, $field 
 		$range_start->modify( 'first day of next month' );
 	}
 
-	$range_end = ( clone $range_start )->add( new DateInterval( 'P1Y' ) );
+	$cloned_date_range = clone $range_start;
+	$range_end         = $cloned_date_range->add( new DateInterval( 'P1Y' ) );
 
 	$period = new DatePeriod( $range_start, new DateInterval( 'P1M' ), $range_end );
 	foreach ( $period as $date ) {

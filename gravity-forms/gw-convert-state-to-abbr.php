@@ -13,7 +13,7 @@
  *  1. Update the "form_id" parameter to your form ID.
  *  2. Update the "field_id" parameter to your Address field ID.
  */
-class GW_Convert_State_to_Abbr {
+class GW_Convert_State_To_Abbr {
 
 	public function __construct( $args = array() ) {
 
@@ -102,7 +102,7 @@ class GW_Convert_State_to_Abbr {
 
 # Configuration
 
-new GW_Convert_State_to_Abbr( array(
+new GW_Convert_State_To_Abbr( array(
 	'form_id'  => 123,
 	'field_id' => 4,
 ) );

@@ -62,12 +62,12 @@ class GPLD_Block_Reserved_Date_Ranges {
 						new GF_Query_Condition(
 							new GF_Query_Column( $this->_args['start_date_field_id'] ),
 							GF_Query_Condition::LTE,
-							new GF_Query_Literal( $date ),
+							new GF_Query_Literal( $date )
 						),
 						new GF_Query_Condition(
 							new GF_Query_Column( $this->_args['end_date_field_id'] ),
 							GF_Query_Condition::GTE,
-							new GF_Query_Literal( $date ),
+							new GF_Query_Literal( $date )
 						)
 					)
 				)

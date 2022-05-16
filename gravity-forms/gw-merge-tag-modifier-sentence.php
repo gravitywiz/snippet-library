@@ -34,12 +34,11 @@ add_filter( 'gform_merge_tag_filter', function( $value, $input_id, $modifier, $f
 
 	$value = implode( ', ', $values );
 
-	// Gives us: First Choice and Second Choice.
 	if ( $count === 2 ) {
+		// Gives us: First Choice and Second Choice.
 		$value .= " and {$last_value}";
-	}
-	// Gives us: First Choice, Second Choice, and Third Choice.
-	elseif ( isset( $last_value ) ) {
+	} elseif ( isset( $last_value ) ) {
+		// Gives us: First Choice, Second Choice, and Third Choice.
 		$value .= ", and {$last_value}";
 	}
 

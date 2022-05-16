@@ -14,8 +14,7 @@ add_action( 'admin_init', function() {
 	global $wpdb;
 	// Get Indexes
 	$table_name    = "{$wpdb->prefix}gpui_sequence";
-	$sql           = "SHOW INDEX FROM `{$table_name}`;";
-	$index_results = $wpdb->get_results( $sql );
+	$index_results = $wpdb->get_results( "SHOW INDEX FROM `{$wpdb->prefix}gpui_sequence`;" );
 	$indexes       = array();
 	foreach ( $index_results as $index_result ) {
 		$indexes[ $index_result->Key_name ] = true;
@@ -23,8 +22,8 @@ add_action( 'admin_init', function() {
 	$indexes = array_keys( $indexes );
 	// Clear all indexes
 	foreach ( $indexes as $index ) {
-		$sql = "DROP INDEX `{$index}` ON `{$table_name}`;";
-		$wpdb->query( $sql );
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$wpdb->query( "DROP INDEX `{$index}` ON `{$wpdb->prefix}gpui_sequence`;" );
 	}
 	// All done, redirect
 	wp_redirect( '/wp-admin/plugins.php?plugin_status=recently_activated&guid_clear_indexes_success=true' );

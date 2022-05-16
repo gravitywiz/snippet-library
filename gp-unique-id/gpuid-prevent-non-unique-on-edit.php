@@ -6,7 +6,7 @@
  * Screenshot: https://gwiz.io/3wjwtYD
  *
  * Plugin Name: GP Unique ID – Prevent Non-Unique Values on Edit
- * Plugin URI:  
+ * Plugin URI:
  * Description: Redirect to a specified URL when the limit is reached (rather than displaying a limit message).
  * Author:      Gravity Wiz
  * Version:     0.1

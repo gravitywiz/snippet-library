@@ -167,7 +167,9 @@ class GW_Advanced_Merge_Tags {
 				continue;
 			}
 
-			add_filter( "gform_field_value_{$filter_name['name']}", create_function( '', "return '$filtered_name';" ) );
+			add_filter( "gform_field_value_{$filter_name['name']}", function() use ( $filtered_name ) {
+				return (string) $filtered_name;
+			} );
 		}
 
 		return $form;
@@ -270,6 +272,7 @@ class GW_Advanced_Merge_Tags {
 
 	public function get_post_merge_tag_value( $args ) {
 
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( wp_parse_args( $args, array(
 			'id'   => false,
 			'prop' => false,
@@ -289,6 +292,7 @@ class GW_Advanced_Merge_Tags {
 
 	public function get_post_meta_merge_tag_value( $args ) {
 
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( wp_parse_args( $args, array(
 			'id'       => false,
 			'meta_key' => false,
@@ -305,6 +309,7 @@ class GW_Advanced_Merge_Tags {
 
 	public function get_entry_merge_tag_value( $args ) {
 
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( wp_parse_args( $args, array(
 			'id'    => false,
 			'prop'  => false,
@@ -340,6 +345,7 @@ class GW_Advanced_Merge_Tags {
 
 	public function get_entry_meta_merge_tag_value( $args ) {
 
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( wp_parse_args( $args, array(
 			'id'       => false,
 			'meta_key' => false,
@@ -376,6 +382,7 @@ class GW_Advanced_Merge_Tags {
 		$callback = $args['callback'];
 		unset( $args['callback'] );
 
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( wp_parse_args( $args, array(
 			'entry' => false,
 		) ) );

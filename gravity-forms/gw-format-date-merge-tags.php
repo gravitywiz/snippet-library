@@ -37,6 +37,7 @@ add_filter( 'gform_pre_replace_merge_tags', function( $text, $form, $entry, $url
 		$format      = $field->dateFormat ? $field->dateFormat : 'mdy';
 		$parsed_date = GFCommon::parse_date( $value, $format );
 
+		// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 		$replace = date( $modifier, strtotime( sprintf( '%d-%d-%d', $parsed_date['year'], $parsed_date['month'], $parsed_date['day'] ) ) );
 
 		$text = str_replace( $match[0], $replace, $text );

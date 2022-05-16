@@ -11,7 +11,22 @@
  */
 add_action( 'deleted_user', function( $deleted_user_id, $reassigned_user_id ) {
 
-	$entries = GFAPI::get_entries( 0, array( 'field_filters' => array(  array( 'key' => 'created_by', 'value' => $deleted_user_id ) ) ), null, array( 'offset' => 0, 'page_size' => 300 ) );
+	$search = array(
+		'field_filters' => array(
+			array(
+				'key'   => 'created_by',
+				'value' => $deleted_user_id,
+			),
+		),
+	);
+
+	$paging = array(
+		'offset'    => 0,
+		'page_size' => 300,
+	);
+
+	$entries = GFAPI::get_entries( 0, $search, null, $paging );
+
 	foreach ( $entries as $entry ) {
 		if ( $reassigned_user_id ) {
 			GFAPI::update_entry_property( $entry['id'], 'created_by', $reassigned_user_id );

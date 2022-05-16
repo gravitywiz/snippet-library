@@ -67,8 +67,11 @@ class GP_Limit_Choices_Field_Group {
 			$lead = GFFormsModel::get_current_lead();
 			$form = apply_filters( 'gform_pre_render', $form, true, $lead );
 		}
-		$join   = $where = array();
-		$select = $from = '';
+
+		$join   = array();
+		$where  = array();
+		$select = '';
+		$from   = '';
 		$_alias = null;
 
 		foreach ( $field_ids as $index => $field_id ) {
@@ -88,7 +91,9 @@ class GP_Limit_Choices_Field_Group {
 				$join[] = "INNER JOIN {$wpdb->prefix}gf_entry_meta {$alias} ON {$_alias}.entry_id = {$alias}.entry_id";
 			}
 
-			$value   = $field->get_value_save_entry( GFFormsModel::get_field_value( $field ), $form, null, null, null );
+			$value = $field->get_value_save_entry( GFFormsModel::get_field_value( $field ), $form, null, null, null );
+
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$where[] = $wpdb->prepare( "( {$alias}.form_id = %d AND {$alias}.meta_key = %s AND {$alias}.meta_value = %s )", $field->formId, $field_id, $value );
 
 		}

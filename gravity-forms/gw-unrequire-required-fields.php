@@ -14,7 +14,7 @@
 
 class GWUnrequire {
 
-	 var $_args = null;
+	var $_args = null;
 
 	public function __construct( $args = array() ) {
 

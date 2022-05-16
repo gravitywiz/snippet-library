@@ -63,6 +63,7 @@ class GPPA_Object_Type_ACF_Options_Page extends GPPA_Object_Type {
 		 * @var $ordering array
 		 * @var $field GF_Field
 		 */
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
 		$all_fields = (object) get_fields( 'option' );

@@ -46,6 +46,7 @@ function gw_daily_form_schedule( $form ) {
 
 	if ( rgar( $form, 'scheduleForm' ) ) {
 
+		// phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
 		$time         = current_time( 'timestamp' );
 		$is_interweek = false;
 
@@ -56,6 +57,8 @@ function gw_daily_form_schedule( $form ) {
 				// Sunday last week, Monday this week.
 				$time = strtotime( "{$days[ $form['scheduleStart'] ]} {$week_phrase}", $time );
 			}
+
+			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 			$form['scheduleStart'] = date( 'm/d/Y', $time );
 		}
 
@@ -64,6 +67,8 @@ function gw_daily_form_schedule( $form ) {
 				$week_phrase = $is_interweek ? 'next week' : 'this week';
 				$time        = strtotime( "{$days[ $form['scheduleEnd'] ]} {$week_phrase}", $time );
 			}
+
+			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 			$form['scheduleEnd'] = date( 'm/d/Y', $time );
 		}
 	}

@@ -28,10 +28,13 @@ class GW_Minimum_Characters {
 			'min_chars'              => 0,
 			'max_chars'              => false,
 			'validation_message'     => false,
+			// translators: placeholder is a number
 			'min_validation_message' => __( 'Please enter at least %s characters.' ),
+			// translators: placeholder is a number
 			'max_validation_message' => __( 'You may only enter %s characters.' ),
 		) );
 
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $this->_args );
 
 		if ( ! $form_id || ! $field_id || ! $min_chars ) {
@@ -96,6 +99,8 @@ new GW_Minimum_Characters( array(
 	'field_id'               => 4,
 	'min_chars'              => 3,
 	'max_chars'              => 5,
+	// translators: placeholder is a number
 	'min_validation_message' => __( 'Oops! You need to enter at least %s characters.' ),
+	// translators: placeholder is a number
 	'max_validation_message' => __( 'Oops! You can only enter %s characters.' ),
 ) );

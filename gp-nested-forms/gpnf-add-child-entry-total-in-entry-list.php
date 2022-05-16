@@ -21,7 +21,7 @@ add_filter( 'gform_form_post_get_meta', function( $form ) {
 		GFAPI::get_entries(
 			$field->gpnfForm,
 			array(
-				'status'        => rgget( 'filter' ) ?: 'active',
+				'status'        => rgget( 'filter' ) ? rgget( 'filter' ) : 'active',
 				'field_filters' => array(
 					'mode' => 'all',
 					array(

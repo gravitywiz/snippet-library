@@ -49,9 +49,11 @@ function gw_schedule_post_by_date_field_multi_form( $post_data, $form, $entry ) 
 			$hour += 12;
 		}
 	} else {
-		$hour = $min = '00';
+		$hour = '00';
+		$min  = '00';
 	}
 
+	// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 	$schedule_date = date( 'Y-m-d H:i:s', strtotime( sprintf( '%s %s:%s:00', $date, $hour, $min ) ) );
 
 	$post_data['post_status']   = 'future';

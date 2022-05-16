@@ -275,7 +275,7 @@ class GW_Time_Sensitive_Choices {
 			'formId'         => $this->_args['form_id'],
 			'fieldId'        => $this->_args['field_id'],
 			'dateFieldId'    => $this->_args['date_field_id'],
-			'serverTimezone' => get_option( 'timezone_string' ) ?: get_option( 'gmt_offset' ),
+			'serverTimezone' => get_option( 'timezone_string' ) ? get_option( 'timezone_string' ) : get_option( 'gmt_offset' ),
 			'buffer'         => $this->_args['buffer'],
 			'removeChoices'  => $this->_args['remove_choices'],
 		);

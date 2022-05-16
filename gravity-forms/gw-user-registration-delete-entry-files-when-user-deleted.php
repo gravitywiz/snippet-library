@@ -8,7 +8,7 @@
  */
 add_action( 'delete_user', function( $id, $reassign, $user ) {
 
-	$entry_id = $user->get( '_gform-entry-id' ) ?: $user->get( '_gform-update-entry-id' );
+	$entry_id = $user->get( '_gform-entry-id' ) ? $user->get( '_gform-entry-id' ) : $user->get( '_gform-update-entry-id' );
 	if ( ! $entry_id ) {
 		return;
 	}

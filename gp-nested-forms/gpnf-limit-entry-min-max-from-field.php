@@ -87,14 +87,16 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 			}
 
 			if ( $min !== null && $min !== '' && $entry_count < $min ) {
-				$field['failed_validation']  = true;
+				$field['failed_validation'] = true;
+				// translators: first placeholder is number, second is a noun
 				$field['validation_message'] = sprintf( __( 'Please enter a minimum of %1$d %2$s', 'gp-nested-forms' ), $min, $min > 1 ? $nested_form_field->get_items_label() : $nested_form_field->get_item_label() );
 
 				$has_validation_error = true;
 			}
 
 			if ( $max !== null && $max !== '' && $entry_count > $max ) {
-				$field['failed_validation']  = true;
+				$field['failed_validation'] = true;
+				// translators: first placeholder is number, second is a noun
 				$field['validation_message'] = sprintf( __( 'Please enter a maximum of %1$d %2$s', 'gp-nested-forms' ), $max, $max > 1 ? $nested_form_field->get_items_label() : $nested_form_field->get_item_label() );
 
 				$has_validation_error = true;

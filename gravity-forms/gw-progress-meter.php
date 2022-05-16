@@ -117,7 +117,9 @@ class GW_Progress_Meter {
 				}
 			}
 
-			$sql   = implode( "\n", $query );
+			$sql = implode( "\n", $query );
+
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$count = intval( $wpdb->get_var( $sql ) );
 
 		} else {

@@ -44,9 +44,8 @@ class GW_Deduct_Deposit {
 		// If we've already deducted deposits, return the order as is.
 		if ( rgar( $order, 'depositsDeducted' ) ) {
 			return $order;
-		}
-		// Make sure we're processing this function only for the current instance of this class.
-		elseif ( (int) $form['id'] !== (int) $this->_args['form_id'] ) {
+			// Make sure we're processing this function only for the current instance of this class.
+		} elseif ( (int) $form['id'] !== (int) $this->_args['form_id'] ) {
 			return gp_ecommerce_fields()->add_ecommerce_fields_to_order( $order, $form, $entry );
 		}
 

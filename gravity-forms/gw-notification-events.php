@@ -80,9 +80,8 @@ class GW_Notification_Event {
 				// if no func is provided, use default naming convention: 'process_trigger_{hook}'
 				if ( ! $func ) {
 					$func = array( $this, "process_trigger_{$hook}" );
-				}
-				// assume that any string-based func is intended to be a function in this class
-				elseif ( ! is_array( $func ) && is_callable( array( $this, $func ) ) ) {
+					// assume that any string-based func is intended to be a function in this class
+				} elseif ( ! is_array( $func ) && is_callable( array( $this, $func ) ) ) {
 					$func = array( $this, $func );
 				}
 

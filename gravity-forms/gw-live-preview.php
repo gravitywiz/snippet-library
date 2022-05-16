@@ -127,9 +127,8 @@ class GWLivePreview {
 				'post_status' => 'publish',
 			) );
 			$preview_post = get_post( $post_id );
-		}
-		// otherwise, use the first preview post (there should only be one)
-		else {
+		} else {
+			// otherwise, use the first preview post (there should only be one)
 			$preview_post = $preview_posts[0];
 		}
 
@@ -183,6 +182,7 @@ class GWLivePreview {
 			$args = $this->get_shortcode_parameters_from_query_string();
 		}
 
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( wp_parse_args( $args, $this->_args ) );
 
 		$title       = $this->is_true_value( $title ) ? 'true' : 'false';
