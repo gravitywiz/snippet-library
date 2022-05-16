@@ -18,7 +18,7 @@ add_action( 'gform_pre_entry_detail', function( $form, $entry ) {
 		if ( $field->get_input_type() === 'uid' ) {
 			$key   = "input_{$field->id}";
 			$value = rgpost( $key );
-			if ( ! gp_unique_id()->check_unique( $value, $form['id'], $field->id ) ) {
+			if ( $value && ! gp_unique_id()->check_unique( $value, $form['id'], $field->id ) ) {
 				$_POST[ $key ] = $entry[ $field->id ];
 				?>
 				<script>
