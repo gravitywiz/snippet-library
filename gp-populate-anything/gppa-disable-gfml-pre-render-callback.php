@@ -14,6 +14,9 @@
  */
 add_action( 'init', function () {
 
+	// Update the form IDs below
+	$form_ids_to_skip_gfml = array( 123, 456 );
+
 	if ( ! isset( $GLOBALS['wpml_gfml_tm_api'] ) || ! wp_doing_ajax() ) {
 		return;
 	}
@@ -27,9 +30,6 @@ add_action( 'init', function () {
 	}
 
 	$data = gp_populate_anything()::maybe_decode_json( WP_REST_Server::get_raw_data() );
-
-	// Update the form IDs below
-	$form_ids_to_skip_gfml = array( 123, 456 );
 
 	if ( ! in_array( rgar( $data, 'form-id' ), $form_ids_to_skip_gfml ) ) {
 		return;
