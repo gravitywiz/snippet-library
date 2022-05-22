@@ -42,9 +42,9 @@ add_filter( 'gpbua_activation_page_id', function( $activation_page_id ) {
 	}
 
 	// Update "5" to the field ID for whose value the conditional will be based.
-	$role = $entry[5];
+	$value = $entry[5];
 
-	switch ( $role ) {
+	switch ( $value ) {
 		// Update "my_custom_value" to the entry value that should trigger the conditional activation page.
 		case 'my_custom_value':
 			$activation_page_id = 3105;
