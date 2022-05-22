@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // Better User Activation // Change Activation Page by User Role
+ * Gravity Perks // Better User Activation // Conditional Activation Pages
  * https://gravitywiz.com/documentation/gravity-forms-better-user-activation/
  *
  * This experimental snippet allows you to load a different activation page depending on a value
