@@ -2,6 +2,8 @@
  * Gravity Perks // GP eCommerce Fields // Conditional Logic Performance Enhancer
  * http://gravitywiz.com/documentation/gravity-forms-ecommerce-fields
  *
+ * Instruction Video: https://www.loom.com/share/8019d8c87bca4d06accc515c4ce8eef3
+ *
  * Instructions:
  *     1. Install our free Custom Javascript for Gravity Forms plugin.
  *        Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
