@@ -11,7 +11,8 @@
  * 
  * Screenshot: https://gwiz.io/3sRAgu4
  */
-add_filter( 'gpnf_display_value_144_3', function( $value, $field, $form, $entry ) {
+// Update "123" to your child form ID and "4" to your child field ID.
+add_filter( 'gpnf_display_value_123_4', function( $value, $field, $form, $entry ) {
 	if ( strtotime( 'midnight' ) < strtotime( 'midnight', strtotime( rgar( $entry, $field->id ) ) ) ) {
 		$value['label'] = '✔';
 	}
