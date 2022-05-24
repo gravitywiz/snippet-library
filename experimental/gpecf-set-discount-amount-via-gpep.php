@@ -16,13 +16,11 @@ function gw_set_discount_amount( $form ) {
 	}
 
 	foreach ( $form['fields'] as &$field ) {
-
 		// Update "5" to your Discount field ID.
 		if ( $field->id == 3 ) {
 			// Update "6" to your
 			$field->discountAmount = gw_get_gpep_value( $form['id'], 6 );
 		}
-
 	}
 
 	return $form;
