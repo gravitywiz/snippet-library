@@ -25,14 +25,15 @@ function gw_dashboard_widget_controls_bootstrap() {
 
 	class GW_Dashboard_Widget_Controls extends GFAddOn {
 
-		protected $_version                  = '0.1';
-		protected $_min_gravityforms_version = '2.4';
-		protected $_slug                     = 'gw-dashboard-widget-controls';
-		protected $_path                     = 'gw-dashboard-widget-controls.php';
-		protected $_full_path                = __FILE__;
-		protected $_url                      = 'https://github.com/gravitywiz/snippet-library/blob/master/gravity-forms/gw-dashboard-widget-controls.php';
-		protected $_title                    = 'Dashboard Widget Controls';
-		protected $_short_title              = 'Dashboard Widget';
+		protected $_version                    = '0.1';
+		protected $_min_gravityforms_version   = '2.4';
+		protected $_slug                       = 'gw-dashboard-widget-controls';
+		protected $_path                       = 'gw-dashboard-widget-controls.php';
+		protected $_full_path                  = __FILE__;
+		protected $_url                        = 'https://github.com/gravitywiz/snippet-library/blob/master/gravity-forms/gw-dashboard-widget-controls.php';
+		protected $_title                      = 'Dashboard Widget Controls';
+		protected $_short_title                = 'Dashboard Widget';
+		protected $_capabilities_settings_page = 'gravityforms_edit_settings';
 
 		private static $_instance = null;
 
