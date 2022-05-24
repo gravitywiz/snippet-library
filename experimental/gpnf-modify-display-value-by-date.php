@@ -8,7 +8,7 @@
  *
  * For example, if today was May 23, 2022 and the field's saved date was May 18, 2022, a "✔" would be displayed. For any
  * date on or after May 23, 2022, the saved date would be displayed.
- * 
+ *
  * Screenshot: https://gwiz.io/3sRAgu4
  */
 // Update "123" to your child form ID and "4" to your child field ID.
