@@ -7,7 +7,7 @@
  * any Help Scout error. By default, this will generate a link to the entry from which the error was
  * generated and also a link to the Help Scout settings.
  *
- * We use this at Gravity Wiz to catch issues where a ticket was not generated after a support form 
+ * We use this at Gravity Wiz to catch issues where a ticket was not generated after a support form
  * submission. We send a message to our Help Scout support email so the team is aware of the issue
  * and can correct it immediately.
  */
