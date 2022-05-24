@@ -25,6 +25,7 @@ add_filter( 'gppa_input_choices_123_4', function( $choices, $field, $objects ) {
 // Update "123" to your form ID.
 add_action( 'gform_after_submission_123', function() {
 	if ( is_callable( 'gf_coupons' ) ) {
-		gf_coupons()->delete_feed( (int) rgpost( 'input_1' ) );
+		// Update "4" to the ID of your coupon-populated field.
+		gf_coupons()->delete_feed( (int) rgpost( 'input_4' ) );
 	}
 } );
