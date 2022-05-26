@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // Inventory // Limit by Scoped Value
+ * Gravity Perks // Inventory // Inventory Limit Exceptions
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
  */
 // Update "123" to your form ID and "4" to your Inventory-enabled field ID.
