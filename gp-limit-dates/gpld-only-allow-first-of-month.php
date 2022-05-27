@@ -3,6 +3,8 @@
  * Gravity Perks // Limit Dates // Only Allow First of the Month
  * https://gravitywiz.com/documentation/gravity-forms-limit-dates/
  *
+ * Instruction Video: https://www.loom.com/share/69ac8a7d77f7439e8f758323b7cfc88d
+ *
  * This snippet will block all dates except the first date of each month.
  */
 // Update "123" to your form ID. Update "4" to your Date field ID.
