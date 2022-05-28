@@ -80,7 +80,7 @@ class GFRandomFields {
 
 		foreach ( $form['fields'] as $field ) {
 
-			if ( $field->type === 'page' ) {
+			if ( $this->restructure_pages && $field->type === 'page' ) {
 				continue;
 			}
 
@@ -133,6 +133,15 @@ class GFRandomFields {
 			}
 		}
 
+		// Remove Section fields if they are the only fields left on a page after randomization.
+		foreach ( $filtered_fields as $index => $field ) {
+			if ( $field->type === 'section' && $this->is_only_field_on_page( $filtered_fields, $field ) ) {
+				unset( $filtered_fields[ $index ] );
+			}
+		}
+
+		$filtered_fields = array_filter( $filtered_fields );
+
 		// Get all the page numbers that exist now that the fields have been filtered.
 		$page_numbers = array_values( array_unique( wp_list_pluck( $filtered_fields, 'pageNumber' ) ) );
 
@@ -154,9 +163,13 @@ class GFRandomFields {
 
 					$field->pageNumber = $new_page_number;
 
-					// Update the page to its new page number and inject it into the filtered fields ahead.
-					$page->pageNumber = $new_page_number;
-					array_splice( $filtered_fields, $index, 0, array( $page ) );
+					// Only inject the page once.
+					if ( isset( $page ) ) {
+						// Update the page to its new page number and inject it into the filtered fields ahead.
+						$page->pageNumber = $new_page_number;
+						array_splice( $filtered_fields, $index, 0, array( $page ) );
+						unset( $page );
+					}
 
 				}
 			}
@@ -165,6 +178,15 @@ class GFRandomFields {
 		unset( $field );
 
 		return $filtered_fields;
+	}
+
+	public function get_page_by_page_number( $form, $page_number ) {
+		foreach ( $form['fields'] as $field ) {
+			if ( $field->type === 'page' && $field->pageNumber == $page_number ) {
+				return $field;
+			}
+		}
+		return false;
 	}
 
 	public function get_random_field_ids( $fields ) {
@@ -225,6 +247,15 @@ class GFRandomFields {
 			$hash = $this->get_selected_field_ids_hash( $form );
 			gform_add_meta( $entry['id'], "_gfrf_field_ids_{$hash}", $this->get_selected_field_ids( false, $form ) );
 		}
+	}
+
+	public function is_only_field_on_page( $fields, $source_field ) {
+		foreach ( $fields as $_field ) {
+			if ( $_field->id != $source_field->id && $_field->pageNumber == $source_field->pageNumber && $_field->type !== 'section' ) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 }
