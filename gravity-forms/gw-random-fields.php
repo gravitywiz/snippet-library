@@ -170,7 +170,6 @@ class GFRandomFields {
 						array_splice( $filtered_fields, $index, 0, array( $page ) );
 						unset( $page );
 					}
-
 				}
 			}
 		}
