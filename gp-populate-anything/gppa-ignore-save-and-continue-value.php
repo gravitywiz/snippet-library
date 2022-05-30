@@ -9,7 +9,7 @@ add_filter( 'gform_incomplete_submission_post_get', function( $submission_json, 
 		$submission = json_decode( $submission_json, ARRAY_A );
 		// Update "4" to the ID of the field that should *not* be repopulated from Save & Continue.
 		$submission['submitted_values'][4] = '';
-		$submission_json = json_encode( $submission );
+		$submission_json                   = json_encode( $submission );
 	}
 	return $submission_json;
 }, 10, 3 );

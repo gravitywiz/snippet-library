@@ -15,7 +15,7 @@ add_filter( 'gpbua_activation_page_id', function( $activation_page_id ) {
 	if ( is_admin() ) {
 		if ( in_array( rgget( 'post' ), $activation_page_ids ) ) {
 			return (int) rgget( 'post' );
-		} else if ( in_array( rgpost( 'post_ID' ), $activation_page_ids ) ) {
+		} elseif ( in_array( rgpost( 'post_ID' ), $activation_page_ids ) ) {
 			return (int) rgpost( 'post_ID' );
 		}
 	}
@@ -35,7 +35,7 @@ add_filter( 'gpbua_activation_page_id', function( $activation_page_id ) {
 		if ( $signup->get_error_code() !== 'already_active' ) {
 			return $activation_page_id;
 		}
-		$meta = unserialize( $signup->error_data['already_active']->meta );
+		$meta  = unserialize( $signup->error_data['already_active']->meta );
 		$entry = GFAPI::get_entry( $meta['lead_id'] );
 	} else {
 		$entry = $signup->lead;

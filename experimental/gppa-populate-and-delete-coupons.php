@@ -12,7 +12,7 @@ add_filter( 'gppa_input_choices_123_4', function( $choices, $field, $objects ) {
 	$choices = array();
 
 	foreach ( $objects as $object ) {
-		$meta = json_decode( $object['meta'], ARRAY_A );
+		$meta      = json_decode( $object['meta'], ARRAY_A );
 		$choices[] = array(
 			'text'  => rgar( $meta, 'coupon_code' ),
 			'value' => $object['id'],
