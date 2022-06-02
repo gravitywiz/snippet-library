@@ -5,7 +5,7 @@
  * Ensure that a value entered in Form A has been previously submitted on Form B. This is useful if you're generating a reference number of some sort
  * on Form B and would like the user to enter it on Form A.
  *
- * @version   1.8.1
+ * @version   1.8.2
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      https://gravitywiz.com/require-existing-value-submission-gravity-forms/
@@ -25,6 +25,7 @@ class GW_Value_Exists_Validation {
 			'validation_message'      => __( 'Please enter a valid value.' ),
 			'field_map'               => array(),
 			'disable_ajax_validation' => false,
+			'validate_blank_values'   => true,
 		) );
 
 		// Map source and target fields to field map if field map is not set.
@@ -157,7 +158,8 @@ class GW_Value_Exists_Validation {
 
 		foreach ( $field_map as $source_field_id => $target_field_id ) {
 			$value = rgpost( 'input_' . $target_field_id );
-			if ( $value ) {
+
+			if ( ! rgblank( $value ) || $this->_args['validate_blank_values'] ) {
 				$values[ $source_field_id ] = $value;
 			}
 		}
@@ -359,9 +361,9 @@ class GW_Value_Exists_Validation {
 # Configuration
 
 new GW_Value_Exists_Validation( array(
-	'target_form_id'     => 123,
+	'target_form_id'     => 15,
 	'target_field_id'    => 1,
-	'source_form_id'     => 124,
+	'source_form_id'     => 14,
 	'source_field_id'    => 1,
 	'validation_message' => 'Hey! This isn\'t a valid reference number.',
 ) );
