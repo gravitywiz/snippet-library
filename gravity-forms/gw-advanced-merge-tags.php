@@ -465,8 +465,8 @@ class GW_Advanced_Merge_Tags {
 			switch ( $modifier ) {
 				case 'wordcount':
 					// Note: str_word_count() is not a great solution as it does not support characters with accents reliably.
-					// Source: https://www.php.net/manual/en/function.str-word-count.php#122242
-					return count( preg_split( '/\W+/u', $value, -1, PREG_SPLIT_NO_EMPTY ) );
+					// Updated to use the same method we use in GP Pay Per Word.
+					return count( array_filter( preg_split( '/[ \n\r]+/', trim( $value ) ) ) );
 					break;
 			}
 		}
