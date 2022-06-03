@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Wiz // Gravity Forms // Filter Out $0.00 Products
  * http://gravitywiz.com/
