@@ -3,6 +3,8 @@
  * Gravity Perks // eCommerce Fields // Consolidate Separate Discount Line Items into a Single Discounts Line Item
  * http://gravitywiz.com/documentation/gravity-forms-ecommerce-fields/
  *
+ * Instruction Video: https://www.loom.com/share/8c00449041864d30833d334274947484
+ *
  * Default:    https://gwiz.io/2IiPALf
  * w/ Snippet: https://gwiz.io/2Itfyfo
  */
