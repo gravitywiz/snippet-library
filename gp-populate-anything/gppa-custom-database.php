@@ -14,9 +14,6 @@
  *
  * Video
  * https://www.loom.com/share/f9bf62e358dd4c54ab346998c5f3b516
- *
- *
- *
  */
 class GPPA_Object_Type_Database_Testing extends GPPA_Object_Type_Database {
 	const DB_NAME = 'testing';
@@ -27,12 +24,18 @@ class GPPA_Object_Type_Database_Testing extends GPPA_Object_Type_Database {
 
 	const DB_HOST = DB_HOST;
 
+	public $wpdb_instance;
+
 	public function get_label() {
 		return esc_html__( 'Database: ', 'gp-populate-anything' ) . self::DB_NAME;
 	}
 
 	public function get_db() {
-		return new wpdb( self::DB_USER, self::DB_PASSWORD, self::DB_NAME, self::DB_HOST );
+		if ( ! isset( $this->wpdb_instance ) ) {
+			$this->wpdb_instance = new wpdb( self::DB_USER, self::DB_PASSWORD, self::DB_NAME, self::DB_HOST );
+		}
+
+		return $this->wpdb_instance;
 	}
 }
 
