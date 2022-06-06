@@ -9,6 +9,8 @@
  * Version:      0.2
  * Author URI:   https://gravitywiz.com
  *
+ * Instruction Video: https://www.loom.com/share/7972077dc1584251b9b9cdd84e49eccb
+ *
  * Instructions
  *
  * 1. Download and install this plugin.
