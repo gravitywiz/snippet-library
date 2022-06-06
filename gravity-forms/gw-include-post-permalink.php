@@ -3,6 +3,8 @@
  * Gravity Wiz // Gravity Forms // Post Permalink Merge Tag
  * https://gravitywiz.com/include-post-permalink-gravity-forms-confirmation-notification/
  *
+ * Instruction Video: https://www.loom.com/share/6eb48c98d7f246cea6af33cedb84a26f
+ *
  * If you are automatically publishing user submitted posts, this is helpful for providing
  * a link immediately to the user where they can preview their newly created post.
  *
