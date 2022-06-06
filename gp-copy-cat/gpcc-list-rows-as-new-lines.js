@@ -11,7 +11,8 @@ gform.addFilter( 'gppc_copied_value', function( value, $targetElem, field, sourc
 	if ( field.sourceFormId != GFFORMID || field.target != 3 ) {
 		return value;
 	}
-  // Update "3" to the number of columns in your List field.
+	sourceValues = structuredClone( sourceValues );
+	// Update "3" to the number of columns in your List field.
 	var columnCount = 3;
 	var lines = [];
 	var line  = [];
