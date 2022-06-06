@@ -4,7 +4,7 @@
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
  * Set a field's dynamic population parameter to "gpnf_session_hash" to populate the current Nested Forms session hash.
- * Works for fields in the parent and child form. 
+ * Works for fields in the parent and child form.
  *
  * Screenshot: https://gwiz.io/3m9YImu
  */
