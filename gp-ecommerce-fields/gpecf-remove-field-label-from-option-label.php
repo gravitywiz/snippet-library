@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // eCommerce Fields // Remove Field Label from Option Label in Order Summary
+ * Gravity Perks // eCommerce Fields // Remove Field Label from Option Fields in Order Summary
  * https://gravitywiz.com/documentation/gravity-forms-ecommerce-fields/
  *
  * Instruction Video: https://www.loom.com/share/87f6010d6e624e4c9433699cabaf846b
