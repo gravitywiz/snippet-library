@@ -20,6 +20,7 @@ class GPEP_Edit_Entry {
 
 		$this->form_id        = rgar( $options, 'form_id' );
 		$this->delete_partial = rgar( $options, 'delete_partial', true );
+		$this->refresh_token  = rgar( $options, 'refresh_token', false );
 
 		add_filter( "gpep_form_{$this->form_id}", array( $this, 'capture_passed_through_entry_ids' ), 10, 3 );
 		add_filter( "gform_entry_id_pre_save_lead_{$this->form_id}", array( $this, 'update_entry_id' ), 10, 2 );
@@ -86,6 +87,14 @@ class GPEP_Edit_Entry {
 			) {
 				GFAPI::delete_entry( $entry_id );
 			}
+			if ( $this->refresh_token ) {
+				gform_delete_meta( $update_entry_id, 'fg_easypassthrough_token' );
+				gp_easy_passthrough()->get_entry_token( $update_entry_id );
+				// Remove entry from the session and prevent Easy Passthrough from resaving it.
+				$session = gp_easy_passthrough()->session_manager();
+				$session[ gp_easy_passthrough()->get_slug() . '_' . $form['id'] ] = null;
+				remove_action( 'gform_after_submission', array( gp_easy_passthrough(), 'store_entry_id' ) );
+			}
 			return $update_entry_id;
 		}
 
@@ -135,4 +144,5 @@ class GPEP_Edit_Entry {
 new GPEP_Edit_Entry( array(
 	'form_id'        => 123,   // Set this to the form ID.
 	'delete_partial' => false, // Set this to false if you wish to preserve partial entries after an edit is submitted.
+	'refresh_token'  => true,  // Set this to true to generate a fresh Easy Passthrough token after updating an entry.
 ) );
