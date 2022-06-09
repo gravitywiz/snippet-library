@@ -3,6 +3,8 @@
  * Gravity Wiz // Gravity Forms // Double Confirmation Fields
  * https://gravitywiz.com/custom-field-confirmation/
  *
+ * Instruction Video: https://www.loom.com/share/1df75e10f7fb404ebbeec37c7d19531e
+ *
  * Require a field's value to be entered twice to confirm it.
  */
 add_filter( 'gform_validation', 'gfcf_validation' );
