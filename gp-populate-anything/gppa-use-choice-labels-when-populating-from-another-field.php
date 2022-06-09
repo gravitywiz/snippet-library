@@ -17,7 +17,7 @@ add_filter( 'gppa_process_template', function ( $template_value, $field, $templa
 		return $template_value;
 	}
 
-	$entry = ( array ) $object;
+	$entry = (array) $object;
 
 	$populating_from_field_id = str_replace( 'gf_field_', '', $template );
 	$populating_from_field    = GFAPI::get_field( $entry['form_id'], $populating_from_field_id );
