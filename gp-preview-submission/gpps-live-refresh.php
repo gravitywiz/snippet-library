@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // GP Preview Submission // Live Refresh
+ * Gravity Perks // Preview Submission // Live Refresh
  * https://gravitywiz.com/documentation/gravity-forms-preview-submission/
  *
  * Live refresh the target field whenever a field changes.
