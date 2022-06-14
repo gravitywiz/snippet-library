@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // Nested Forms // Filter Child Form to Only Show Summary Fields
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
+ *
+ * Instruction Video: https://www.loom.com/share/fa476785344a4bbe9ac377793812f534
  */
 add_filter( 'gform_pre_render', 'gpnf_filter_child_form_by_summary_fields' );
 add_filter( 'gform_pre_process', 'gpnf_filter_child_form_by_summary_fields' );
