@@ -14,12 +14,6 @@
 class GW_Notification_Event {
 
 	public function __construct( $args ) {
-
-		// make sure we're running the required minimum version of Gravity Forms
-		if ( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=' ) ) {
-			return;
-		}
-
 		$this->_args = wp_parse_args( $args, array(
 			'form_id'     => false,
 			'event_name'  => false,
@@ -27,6 +21,15 @@ class GW_Notification_Event {
 			'object_type' => 'entry',
 			'trigger'     => array(),
 		) );
+
+		add_action( 'plugins_loaded', array( $this, 'init' ), 15 );
+	}
+
+	public function init() {
+		// make sure we're running the required minimum version of Gravity Forms
+		if ( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=' ) ) {
+			return;
+		}
 
 		if ( ! $this->_args['event_name'] ) {
 			return;
@@ -36,7 +39,6 @@ class GW_Notification_Event {
 		add_filter( 'gform_notification', array( $this, 'add_notification_sent_entry_meta' ), 10, 3 );
 
 		$this->add_trigger_listeners();
-
 	}
 
 	public function add_notification_event( $events ) {
@@ -74,6 +76,9 @@ class GW_Notification_Event {
 			case 'update_entry':
 				add_action( 'gform_after_update_entry', $func, 10, 2 );
 				break;
+			case 'delete_entry':
+				add_action( 'gform_delete_entry', $func, 10, 2 );
+				break;
 			case 'hook':
 				list( $hook, $func, $priority, $parameter_count ) = array_pad( $this->_args['trigger']['args'], 4, false );
 
@@ -104,6 +109,17 @@ class GW_Notification_Event {
 		}
 
 		$this->maybe_send_notifications( $form, $entry );
+
+	}
+
+	public function process_trigger_delete_entry( $entry_id ) {
+
+		$entry = GFAPI::get_entry( $entry_id );
+		if ( is_wp_error( $entry ) ) {
+			return;
+		}
+
+		$this->maybe_send_notifications( GFAPI::get_form( $entry['form_id'] ), $entry );
 
 	}
 
