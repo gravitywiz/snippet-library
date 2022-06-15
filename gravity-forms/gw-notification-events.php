@@ -169,14 +169,21 @@ class GW_Notification_Event {
 
 # Usage Example
 
-//new GW_Notification_Event( (array(
-//	'event_name'  => 'Entry is updated',
-//	'object_type' => 'entry', // 'entry', 'field', 'form', 'user', etc
-//	'trigger'     => array(
-//		'type' => 'update_entry',
-//		)
-//	)
-//) );
+// new GW_Notification_Event( array(
+// 	'event_name'  => 'Entry is updated',
+// 	'object_type' => 'entry',
+// 	'trigger'     => array(
+// 		'type' => 'update_entry',
+// 	),
+// ) );
+
+// new GW_Notification_Event( array(
+// 	'event_name'  => 'Entry is deleted',
+// 	'object_type' => 'entry',
+// 	'trigger'     => array(
+// 		'type' => 'delete_entry',
+// 	),
+// ) );
 
 //new GW_Notification_Event( array(
 //	'form_id'     => 1,
