@@ -2,7 +2,7 @@
 /**
  * Gravity Perks // Entry Blocks // Update Post on Entry Edit
  * https://gravitywiz.com/documentation/gravity-forms-entry-blocks/
- * 
+ *
  * Use this snippet to update the original post created by an entry when that entry is edited. By default, Gravity Forms
  * would create a new post.
  *
