@@ -45,6 +45,12 @@ function gw_dashboard_widget_controls_bootstrap() {
 			return self::$_instance;
 		}
 
+		public function pre_init() {
+			parent::pre_init();
+
+			add_filter( 'get_user_metadata', array( $this, 'filter_recent_forms' ), 10, 5 ); // init isn't early enough here.
+		}
+
 		public function init_admin() {
 			parent::init_admin();
 			add_filter( 'gform_form_summary', array( $this, 'manage_dashboard_forms' ) );
@@ -85,6 +91,51 @@ function gw_dashboard_widget_controls_bootstrap() {
 			}
 
 			return array_filter( $form_summary );
+		}
+
+		/**
+		 * Filter user meta for recently accessed forms to only include the forms that are to be included (or excluded).
+		 */
+		public function filter_recent_forms( $meta_value, $object_id, $meta_key, $single, $meta_type ) {
+			if ( $meta_key !== 'gform_recent_forms' ) {
+				return $meta_value;
+			}
+
+			/* Prevent filtering while we get the most recent forms. */
+			remove_filter( 'get_user_metadata', array( $this, 'filter_recent_forms' ));
+
+			$recent_form_ids = GFFormsModel::get_recent_forms();
+
+			$specified_form_ids = $this->get_plugin_setting( 'forms' );
+			$behavior           = $this->get_plugin_setting( 'behavior' );
+
+			if ( empty( $specified_form_ids ) || ! is_array( $specified_form_ids ) ) {
+				return $recent_form_ids;
+			}
+
+			/* Behavior defaults to exclude. */
+			if ( ! $behavior ) {
+				$behavior = 'exclude';
+			}
+
+			if ( $behavior === 'include' ) {
+				foreach ( $recent_form_ids as $index => $recent_form_id ) {
+					if ( ! in_array( $recent_form_id, $specified_form_ids ) ) {
+						unset( $recent_form_ids[ $index ] );
+					}
+				}
+			} else {
+				foreach ( $recent_form_ids as $index => $recent_form_id ) {
+					if ( in_array( $recent_form_id, $specified_form_ids ) ) {
+						unset( $recent_form_ids[ $index ] );
+					}
+				}
+			}
+
+			/* Re-add filter. */
+			add_filter( 'get_user_metadata', array( $this, 'filter_recent_forms' ), 10, 5 );
+
+			return array( $recent_form_ids );
 		}
 
 		/**
