@@ -7,7 +7,7 @@
  * Plugin URI:   https://github.com/gravitywiz/snippet-library/blob/master/gravity-forms/gw-dashboard-widget-controls.php
  * Description:  Select which forms you would like to display in the Gravity Forms Dashboard widget.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   https://gravitywiz.com
  */
 
@@ -25,7 +25,7 @@ function gw_dashboard_widget_controls_bootstrap() {
 
 	class GW_Dashboard_Widget_Controls extends GFAddOn {
 
-		protected $_version                    = '0.1';
+		protected $_version                    = '0.2';
 		protected $_min_gravityforms_version   = '2.4';
 		protected $_slug                       = 'gw-dashboard-widget-controls';
 		protected $_path                       = 'gw-dashboard-widget-controls.php';
