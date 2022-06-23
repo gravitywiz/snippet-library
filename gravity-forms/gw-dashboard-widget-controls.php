@@ -7,7 +7,7 @@
  * Plugin URI:   https://github.com/gravitywiz/snippet-library/blob/master/gravity-forms/gw-dashboard-widget-controls.php
  * Description:  Select which forms you would like to display in the Gravity Forms Dashboard widget.
  * Author:       Gravity Wiz
- * Version:      0.2
+ * Version:      0.3
  * Author URI:   https://gravitywiz.com
  */
 
@@ -48,7 +48,9 @@ function gw_dashboard_widget_controls_bootstrap() {
 		public function pre_init() {
 			parent::pre_init();
 
-			add_filter( 'get_user_metadata', array( $this, 'filter_recent_forms' ), 10, 5 ); // init isn't early enough here.
+			if ( $this->get_plugin_setting( 'filter_admin_bar_forms' ) ) {
+				add_filter( 'get_user_metadata', array( $this, 'filter_recent_forms' ), 10, 5 ); // init isn't early enough here.
+			}
 		}
 
 		public function init_admin() {
@@ -64,8 +66,8 @@ function gw_dashboard_widget_controls_bootstrap() {
 		 * @return array
 		 */
 		public function manage_dashboard_forms( $form_summary ) {
-			$form_ids = $this->get_plugin_setting( 'forms' );
-			$behavior = $this->get_plugin_setting( 'behavior' );
+			$form_ids         = $this->get_plugin_setting( 'forms' );
+			$behavior         = $this->get_plugin_setting( 'behavior' );
 
 			if ( empty( $form_ids ) || ! is_array( $form_ids ) ) {
 				return $form_summary;
@@ -106,6 +108,9 @@ function gw_dashboard_widget_controls_bootstrap() {
 
 			$recent_form_ids = GFFormsModel::get_recent_forms();
 
+			/* Re-add filter. */
+			add_filter( 'get_user_metadata', array( $this, 'filter_recent_forms' ), 10, 5 );
+
 			$specified_form_ids = $this->get_plugin_setting( 'forms' );
 			$behavior           = $this->get_plugin_setting( 'behavior' );
 
@@ -119,11 +124,7 @@ function gw_dashboard_widget_controls_bootstrap() {
 			}
 
 			if ( $behavior === 'include' ) {
-				foreach ( $recent_form_ids as $index => $recent_form_id ) {
-					if ( ! in_array( $recent_form_id, $specified_form_ids ) ) {
-						unset( $recent_form_ids[ $index ] );
-					}
-				}
+				return array( $specified_form_ids );
 			} else {
 				foreach ( $recent_form_ids as $index => $recent_form_id ) {
 					if ( in_array( $recent_form_id, $specified_form_ids ) ) {
@@ -131,9 +132,6 @@ function gw_dashboard_widget_controls_bootstrap() {
 					}
 				}
 			}
-
-			/* Re-add filter. */
-			add_filter( 'get_user_metadata', array( $this, 'filter_recent_forms' ), 10, 5 );
 
 			return array( $recent_form_ids );
 		}
@@ -181,6 +179,16 @@ function gw_dashboard_widget_controls_bootstrap() {
 							'enhanced_ui' => true,
 							'multiple'    => true,
 							'choices'     => $form_choices,
+						),
+						array(
+							'label'   => esc_html__( 'Admin Bar', 'gravityforms' ),
+							'type'    => 'checkbox',
+							'choices' => array(
+								array(
+									'label' => esc_html__( 'Apply to "Forms" Menu in Admin Bar', 'gravityforms' ),
+									'name'  => 'filter_admin_bar_forms',
+								),
+							),
 						),
 					),
 				),
