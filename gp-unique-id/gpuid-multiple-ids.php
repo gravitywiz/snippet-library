@@ -97,7 +97,7 @@ class GPUID_Multiple_IDs {
 			$value[] = rgar( $entry, $source_field['id'] );
 
 			for ( $i = 1; $i < $count; $i++ ) {
-				$value[] = gp_unique_id()->get_unique( $form['id'], $source_field );
+				$value[] = gp_unique_id()->get_unique( $form['id'], $source_field, 5, array(), $entry );
 			}
 
 			$entry[ $field['id'] ] = implode( "\n", $value );
