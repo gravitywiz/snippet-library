@@ -5,7 +5,7 @@
  * Ensure that a value entered in Form A has been previously submitted on Form B. This is useful if you're generating a reference number of some sort
  * on Form B and would like the user to enter it on Form A.
  *
- * @version   1.8.2
+ * @version   1.9
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      https://gravitywiz.com/require-existing-value-submission-gravity-forms/
@@ -95,9 +95,8 @@ class GW_Value_Exists_Validation {
 		}
 
 		$form_id  = rgpost( 'form_id' );
-		$input_id = rgpost( 'input_id' );
-		$value    = rgpost( 'value' );
-		$entries  = $this->get_matching_entry( array( $input_id => $value ), $form_id );
+		$values   = rgpost( 'values' );
+		$entries  = $this->get_matching_entry( $values, $form_id );
 
 		echo json_encode( array(
 			'doesValueExist' => ! empty( $entries ),
@@ -197,41 +196,60 @@ class GW_Value_Exists_Validation {
 
 					self.init = function() {
 
-						$( self.selectors.join( ', ' ) ).on( 'change', function() {
+						self.$elems().on( 'change', function() {
 							var inputId = gf_get_input_id_by_html_id( $( this ).attr( 'id' ) );
 							for( var sourceFieldId in self.fieldMap ) {
 								if( self.fieldMap.hasOwnProperty( sourceFieldId ) && sourceFieldId == inputId ) {
 									break;
 								}
 							}
-							self.doesValueExist( inputId, sourceFieldId, $( this ).val(), $( this ) );
+							self.doesValueExist( $( this ) )
 						} );
 
 					};
 
-					self.doesValueExist = function( inputId, sourceFieldId, value, $elem ) {
+					self.getAllValues = function() {
+						var values = {};
+						self.$elems().each( function() {
+							var inputId = gf_get_input_id_by_html_id( $( this ).attr( 'id' ) );
+							for( var sourceFieldId in self.fieldMap ) {
+								if( self.fieldMap.hasOwnProperty( sourceFieldId ) && sourceFieldId == inputId ) {
+									break;
+								}
+							}
+							values[ inputId ] = $( this ).val();
+						} );
+						return values;
+					}
 
-						if( ! value ) {
+					self.doAllFieldsHaveValue = function() {
+						var values = Object.values( self.getAllValues() );
+						return values.length === values.filter( Boolean ).length;
+					}
+
+					self.doesValueExist = function( $elem ) {
+
+						if ( ! self.doAllFieldsHaveValue() ) {
+							self.removeIndicators();
 							return;
 						}
 
-						var spinner        = new self.spinner( $elem, false, 'position:relative;top:2px;left:-25px;' ),
-							responseHtmlId = 'response_{0}_{1}'.format( self.targetFormId, inputId),
-							$buttons       = $( '.gform_button' );
+						self.removeIndicators();
+
+						var spinner  = new self.spinner( $elem, false, 'position:relative;top:2px;left:-25px;' ),
+							$buttons = $( '.gform_button' );
 
 						$buttons.prop( 'disabled', true );
-						$elem.prop( 'disabled', true );
-						$( '#' + responseHtmlId ).remove();
+						self.$elems().prop( 'disabled', true );
 
 						$.post( self.ajaxUrl, {
 							nonce:    self.nonce,
 							action:   'gwvev_does_value_exist',
-							input_id: sourceFieldId,
-							value:    value,
+							values:   self.getAllValues(),
 							form_id:  self.sourceFormId
 						}, function( response ) {
 
-							$elem.prop( 'disabled', false );
+							self.$elems().prop( 'disabled', false );
 							$buttons.prop( 'disabled', false );
 							spinner.destroy();
 
@@ -239,14 +257,12 @@ class GW_Value_Exists_Validation {
 								return;
 							}
 
-							var template = '<span id="{0}" class="gwvev-response {1}">{2}</span>';
-
 							response = $.parseJSON( response );
 
 							if( response.doesValueExist ) {
-								$elem.after( template.format( responseHtmlId, 'gwvev-response-success', '&#10004;' ) );
+								self.addIndicators( 'gwvev-response-success', '&#10004;' );
 							} else {
-								$elem.after( template.format( responseHtmlId, 'gwvev-response-error', '&#10008;' ) );
+								self.addIndicators( 'gwvev-response-error', '&#10008;' )
 							}
 
 							gform.doAction( 'gwvev_post_ajax_validation', self, response );
@@ -254,6 +270,40 @@ class GW_Value_Exists_Validation {
 						} );
 
 					};
+
+					self.$elems = function() {
+						return $( self.selectors.join( ', ' ) );
+					}
+
+					self.getIndicatorId = function( inputId ) {
+						return 'response_{0}_{1}'.format( self.targetFormId, inputId );
+					}
+
+					self.getIndicatorTemplate = function() {
+						return '<span id="{0}" class="gwvev-response {1}">{2}</span>';
+					}
+
+					self.removeIndicators = function() {
+						self.$elems().each( function() {
+							var inputId = gf_get_input_id_by_html_id( $( this ).attr( 'id' ) );
+							self.removeIndicator( inputId );
+						} );
+					}
+
+					self.removeIndicator = function( inputId ) {
+						$( '#' + self.getIndicatorId( inputId ) ).remove();
+					}
+
+					self.addIndicators = function( cssClass, icon ) {
+						self.$elems().each( function() {
+							var inputId = gf_get_input_id_by_html_id( $( this ).attr( 'id' ) );
+							self.addIndicator( $( this ), inputId, cssClass, icon );
+						} );
+					}
+
+					self.addIndicator = function( $elem, inputId, cssClass, icon ) {
+						$elem.after( self.getIndicatorTemplate().format( self.getIndicatorId( inputId ), cssClass, icon ) );
+					}
 
 					self.spinner = function( elem, imageSrc, inlineStyles ) {
 
@@ -361,9 +411,9 @@ class GW_Value_Exists_Validation {
 # Configuration
 
 new GW_Value_Exists_Validation( array(
-	'target_form_id'     => 15,
+	'target_form_id'     => 123,
 	'target_field_id'    => 1,
-	'source_form_id'     => 14,
+	'source_form_id'     => 124,
 	'source_field_id'    => 1,
 	'validation_message' => 'Hey! This isn\'t a valid reference number.',
 ) );
