@@ -40,6 +40,8 @@ class GW_Save_Continue_Auto_Load {
 		// display inline confirmation
 		add_filter( 'gform_form_args', array( $this, 'maybe_display_inline_confirmation' ), 10, 2 );
 
+		add_filter( 'gpnf_save_and_continue_token', array( $this, 'gpnf_get_resume_token' ), 10, 2 );
+
 	}
 
 	public function maybe_resume( $args ) {
@@ -102,6 +104,13 @@ class GW_Save_Continue_Auto_Load {
 
 	public function delete_resume_token( $user_id, $form_id ) {
 		return delete_user_meta( $user_id, sprintf( '_gform-resume-token-%d', $form_id ) );
+	}
+
+	public function gpnf_get_resume_token( $token, $form_id ) {
+		if ( ! $token ) {
+			$token = $this->get_resume_token( get_current_user_id(), $form_id );
+		}
+		return $token;
 	}
 
 	public function maybe_display_inline_confirmation( $args ) {
