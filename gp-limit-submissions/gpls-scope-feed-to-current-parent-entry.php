@@ -8,8 +8,10 @@
 add_action( 'gpls_before_query', function( $ruletest ) {
 	global $wpdb;
 
+	$parent_form_id = rgpost( 'gpnf_parent_form_id' );
+
 	// Update "123" to your child form ID.
-	if ( $ruletest->form_id == 123 && class_exists( 'GPNF_Session' ) && $parent_form_id = rgpost( 'gpnf_parent_form_id' ) ) {
+	if ( $ruletest->form_id == 123 && class_exists( 'GPNF_Session' ) && $parent_form_id ) {
 		$gpnf_session      = new GPNF_Session( $parent_form_id );
 		$ruletest->join[]  = "INNER JOIN {$wpdb->prefix}gf_entry_meta em_gpnf ON em_gpnf.entry_id = e.id";
 		$ruletest->where[] = sprintf( "\n( em_gpnf.meta_key = '%s' AND em_gpnf.meta_value = '%s' )", GPNF_Entry::ENTRY_PARENT_KEY, $gpnf_session->get( 'hash' ) );

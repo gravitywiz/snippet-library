@@ -67,7 +67,6 @@ class GWRequireListColumns {
 						}
 					}
 				}
-
 			} else {
 
 				// skip fields that have req cols specified by another GWRequireListColumns instance

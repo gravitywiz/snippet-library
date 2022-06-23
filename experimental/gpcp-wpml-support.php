@@ -22,8 +22,8 @@ add_filter( 'gpcp_pricing_logic', function( $pricing_logic, $form ) {
 			 * and it needs the "fields" section to look up fields for conditional logic so... we use "notifications".
 			 */
 			$form['notifications'] = $field_pricing_logic;
-			$form = $GLOBALS['wpml_gfml_tm_api']->translate_conditional_logic( $form );
-			$field_pricing_logic = $form['notifications'];
+			$form                  = $GLOBALS['wpml_gfml_tm_api']->translate_conditional_logic( $form );
+			$field_pricing_logic   = $form['notifications'];
 		}
 		$wpml_pricing_logic[ $form['id'] ] = $pricing_logic;
 	}

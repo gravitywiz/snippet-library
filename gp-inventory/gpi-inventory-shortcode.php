@@ -59,7 +59,9 @@ function gpi_inventory_shortcode( $output, $atts, $content ) {
 
 		$resource_field_id = reset( $field->gpiResourcePropertyMap );
 		$sql               = gf_apply_filters( array( 'gpis_scopes_sql', $form['id'], $resource_field_id ), $wpdb->prepare( "SELECT DISTINCT meta_value FROM {$wpdb->prefix}gf_entry_meta WHERE form_id = %d AND meta_key = %d", $form['id'], $resource_field_id ), $form, $field, $resource_field_id );
-		$items             = $wpdb->get_results( $sql );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$items = $wpdb->get_results( $sql );
 
 		if ( empty( $items ) ) {
 			return $content;

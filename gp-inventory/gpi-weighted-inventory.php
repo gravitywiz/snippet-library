@@ -64,6 +64,8 @@ class GPI_Weighted_Inventory {
 			if ( $this->is_applicable_field( $resource_field ) ) {
 				$weight = $this->_args['weight'];
 			}
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$field_sum = (int) $wpdb->get_var( implode( "\n", gp_inventory_type_advanced()->get_claimed_inventory_query( $resource_field ) ) );
 			$claimed  += $field_sum * $weight;
 		}

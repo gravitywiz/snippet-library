@@ -9,6 +9,7 @@
  */
 add_filter( 'gform_shortcode_entries_left', 'gwiz_entries_left_shortcode', 10, 2 );
 function gwiz_entries_left_shortcode( $output, $atts ) {
+	// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 	extract( shortcode_atts( array(
 		'id'     => false,
 		'format' => false, // should be 'comma', 'decimal'

@@ -13,6 +13,7 @@
 add_filter( 'gform_shortcode_entry_count', 'gwiz_entry_count_shortcode', 10, 2 );
 function gwiz_entry_count_shortcode( $output, $atts ) {
 
+	// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 	extract( shortcode_atts( array(
 		'id'     => false,
 		'status' => 'total', // accepts 'total', 'unread', 'starred', 'trash', 'spam'

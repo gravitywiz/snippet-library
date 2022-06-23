@@ -29,6 +29,7 @@ function process_filter_acf_date_picker( $query_builder_args, $args ) {
 	 * @var $property
 	 * @var $property_id
 	 */
+	// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 	extract( $args );
 
 	$object_type   = gp_populate_anything()->get_object_type( 'post' );
@@ -42,6 +43,7 @@ function process_filter_acf_date_picker( $query_builder_args, $args ) {
 	$object_type->acf_meta_query_counter ++;
 	$as_table = 'mq' . $object_type->acf_meta_query_counter;
 
+	// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	$query_builder_args['where'][ $filter_group_index ][] = $wpdb->prepare( "(
 				{$as_table}.meta_key = %s
 				AND

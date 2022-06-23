@@ -12,8 +12,10 @@
 add_filter( 'gpui_sequential_unique_id_pre_insert_519_5', function ( $uid, $form_id, $field_id ) {
 	global $wpdb;
 
-	$sql    = $wpdb->prepare( "select value from {$wpdb->prefix}rg_lead_detail where form_id = %d and field_number = %d", $form_id, $field_id );
-	$result = $wpdb->get_results( $sql );
+	$result = $wpdb->get_results( $wpdb->prepare( "
+		select value 
+		from {$wpdb->prefix}rg_lead_detail 
+		where form_id = %d and field_number = %d", $form_id, $field_id ) );
 
 	if ( empty( $result ) ) {
 		return $uid;

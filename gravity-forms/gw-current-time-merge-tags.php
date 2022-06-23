@@ -27,6 +27,7 @@ function gwiz_current_time_merge_tags( $text ) {
 
 	$local_timestamp = GFCommon::get_local_timestamp( time() );
 
+	// phpcs:disable WordPress.DateTime.RestrictedFunctions.date_date
 	$time_hh    = date( 'h', $local_timestamp );
 	$time_hh_24 = date( 'H', $local_timestamp );
 	$time_mm    = date( 'i', $local_timestamp );

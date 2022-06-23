@@ -28,6 +28,7 @@ function gpld_extend_modifiers_by_blocked_dates( $end_date, $field, $key, $optio
 	$is_field_id = is_numeric( $value ) && $value > 0;
 
 	if ( $value == '{today}' ) {
+        // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
 		$date = strtotime( 'midnight', current_time( 'timestamp' ) );
 		//$date = strtotime( '05/21/2016 midnight' );
 	} elseif ( $is_field_id ) {
@@ -43,9 +44,11 @@ function gpld_extend_modifiers_by_blocked_dates( $end_date, $field, $key, $optio
 	}
 
 	$blocked_count = 0;
-	$begin         = new DateTime( date( 'Y-m-d', $date ) );
-	$end           = new DateTime( date( 'Y-m-d', $end_date ) );
-	$interval      = DateInterval::createFromDateString( '1 day' );
+
+	// phpcs:disable WordPress.DateTime.RestrictedFunctions.date_date
+	$begin    = new DateTime( date( 'Y-m-d', $date ) );
+	$end      = new DateTime( date( 'Y-m-d', $end_date ) );
+	$interval = DateInterval::createFromDateString( '1 day' );
 
 	// period should not include the starting day, should always inlude the very last day
 	$period = new DatePeriod( $begin, $interval, $end->add( $interval ) );

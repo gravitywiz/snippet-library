@@ -13,6 +13,7 @@ add_filter( 'gpld_limit_dates_options_123_1', function( $options, $form, $field 
 	$reserved_dates = wp_list_pluck( $results, 'meta_value' );
 
 	foreach ( $reserved_dates as $reserved_date ) {
+		// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 		$options['exceptions'][] = date( 'm/d/Y', strtotime( $reserved_date ) );
 	}
 

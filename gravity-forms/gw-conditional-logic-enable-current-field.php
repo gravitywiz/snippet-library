@@ -9,7 +9,7 @@
  * This snippet will allow you to create conditional logic rules based on the currently selected field in the form
  * editor. This works with any of Gravity Forms methods for dynamic population including our powerful Populate Anything
  * perk.
- * 
+ *
  * Plugin Name:  Gravity Forms — Enable Current Field in Conditional Logic
  * Plugin URI:   https://gravitywiz.com/
  * Description:  Enable use of the current field when creating conditional logic rules in the form editor.
@@ -18,7 +18,7 @@
  * Author URI:   https://gravitywiz.com
  */
 add_action( 'admin_footer', function() {
-	if ( wp_script_is( 'gform_form_admin' ) ):
+	if ( wp_script_is( 'gform_form_admin' ) ) :
 		?>
 		<script>
 			gform.addFilter( 'gform_is_conditional_logic_field', function( isSupported, field ) {

@@ -30,6 +30,7 @@ class GW_List_Field_As_Choices {
 			$this->_args['choice_field_ids'] = array( $this->_args['choice_field_ids'] );
 		}
 
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $this->_args ); // gives us $form_id, $list_field_id, $choices_field_id
 
 		add_filter( 'gform_pre_render', array( $this, 'populate_choice_fields' ), 9 );
@@ -96,7 +97,9 @@ class GW_List_Field_As_Choices {
 		}
 
 		if ( $this->_args['sort'] == true ) {
-			usort( $choices, create_function( '$a, $b', 'return strnatcasecmp( $a["text"], $b["text"] );' ) );
+			usort( $choices, function( $a, $b ) {
+				return strnatcasecmp( $a['text'], $b['text'] );
+			} );
 		}
 
 		return $choices;

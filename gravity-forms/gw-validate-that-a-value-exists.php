@@ -25,6 +25,7 @@ class GW_Value_Exists_Validation {
 			'validation_message'      => __( 'Please enter a valid value.' ),
 			'field_map'               => array(),
 			'disable_ajax_validation' => false,
+			'validate_blank_values'   => true,
 		) );
 
 		// Map source and target fields to field map if field map is not set.
@@ -156,7 +157,8 @@ class GW_Value_Exists_Validation {
 
 		foreach ( $field_map as $source_field_id => $target_field_id ) {
 			$value = rgpost( 'input_' . $target_field_id );
-			if ( $value ) {
+
+			if ( ! rgblank( $value ) || $this->_args['validate_blank_values'] ) {
 				$values[ $source_field_id ] = $value;
 			}
 		}
@@ -408,10 +410,10 @@ class GW_Value_Exists_Validation {
 
 # Configuration
 
-//new GW_Value_Exists_Validation( array(
-//	'target_form_id'     => 123,
-//	'target_field_id'    => 1,
-//	'source_form_id'     => 124,
-//	'source_field_id'    => 1,
-//	'validation_message' => 'Hey! This isn\'t a valid reference number.',
-//) );
+new GW_Value_Exists_Validation( array(
+	'target_form_id'     => 123,
+	'target_field_id'    => 1,
+	'source_form_id'     => 124,
+	'source_field_id'    => 1,
+	'validation_message' => 'Hey! This isn\'t a valid reference number.',
+) );

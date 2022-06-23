@@ -22,6 +22,7 @@ class GW_Email_Domain_Validator {
 			'form_id'            => false,
 			'field_id'           => false,
 			'domains'            => false,
+			// translators: placeholder is a domain for emails that are not allowed.
 			'validation_message' => __( 'Sorry, <strong>%s</strong> email accounts are not eligible for this form.' ),
 			'mode'               => 'ban', // also accepts "limit"
 		) );
@@ -129,6 +130,7 @@ new GW_Email_Domain_Validator( array(
 	'form_id'            => 326,
 	'field_id'           => 1,
 	'domains'            => array( 'gmail.com', 'hotmail.com', '.co.uk' ),
+	// translators: placeholder is a domain for emails that are not allowed.
 	'validation_message' => __( 'Oh no! <strong>%s</strong> email accounts are not eligible for this form.' ),
 	'mode'               => 'limit',
 ) );

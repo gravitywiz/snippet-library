@@ -36,12 +36,10 @@ add_filter( 'gform_form_post_get_meta', function( $form ) {
 					$rule['gpcldBaseDate'] = 1;
 				}
 				$start_time_rule = null;
-			} else if ( $rule['fieldId'] === '_gpcld_current_time' && $rule['operator'] === '>' ) {
+			} elseif ( $rule['fieldId'] === '_gpcld_current_time' && $rule['operator'] === '>' ) {
 				$start_time_rule = $rule;
 			}
-
 		}
-
 	}
 
 	return $form;

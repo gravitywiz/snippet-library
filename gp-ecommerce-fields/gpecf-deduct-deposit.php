@@ -3,6 +3,8 @@
  * Gravity Perks // GP eCommerce Fields // Deduct Deposit from Order Summary
  * https://gravitywiz.com/documentation/gravity-forms-ecommerce-fields/
  *
+ * Instruction Video: https://www.loom.com/share/303f0d636c964efcb89478ead9e5e3cb
+ *
  * This snippet uses a Product field to create a deposit field and deducts the deposit from Order Summary.
  * To use the snippet, you'll have to update the Form ID and the deposit field ID within the snippet.
  *
@@ -44,9 +46,8 @@ class GW_Deduct_Deposit {
 		// If we've already deducted deposits, return the order as is.
 		if ( rgar( $order, 'depositsDeducted' ) ) {
 			return $order;
-		}
-		// Make sure we're processing this function only for the current instance of this class.
-		elseif ( (int) $form['id'] !== (int) $this->_args['form_id'] ) {
+			// Make sure we're processing this function only for the current instance of this class.
+		} elseif ( (int) $form['id'] !== (int) $this->_args['form_id'] ) {
 			return gp_ecommerce_fields()->add_ecommerce_fields_to_order( $order, $form, $entry );
 		}
 

@@ -59,6 +59,7 @@ class GW_Inventory {
 			'input_id'                 => false,
 			'stock_qty'                => false,
 			'out_of_stock_message'     => __( 'Sorry, this item is out of stock.' ),
+			// translators: placeholders are numbers
 			'not_enough_stock_message' => __( 'You ordered %1$s of this item but there are only %2$s of this item left.' ),
 			'approved_payments_only'   => false,
 			'hide_form'                => false,
@@ -70,6 +71,7 @@ class GW_Inventory {
 		 * @var $stock_qty
 		 * @var $field_group
 		 */
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
 		if ( ! $stock_qty && isset( $limit ) ) {
@@ -196,8 +198,9 @@ class GW_Inventory {
 			return $query;
 		}
 
-		$form = GFAPI::get_form( $form_id );
-		$join = $where = array();
+		$form  = GFAPI::get_form( $form_id );
+		$join  = array();
+		$where = array();
 
 		foreach ( $this->_args['field_group'] as $index => $field_id ) {
 
@@ -211,7 +214,9 @@ class GW_Inventory {
 				$value = $field->get_value_default_if_empty( GFFormsModel::get_parameter_value( $field->inputName, array(), $field ) );
 			}
 
-			$join[]  = "\nINNER JOIN {$wpdb->prefix}gf_entry_meta {$alias} ON em.entry_id = {$alias}.entry_id";
+			$join[] = "\nINNER JOIN {$wpdb->prefix}gf_entry_meta {$alias} ON em.entry_id = {$alias}.entry_id";
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$where[] = $wpdb->prepare( "CAST( {$alias}.meta_key as unsigned ) = %d AND {$alias}.meta_value = %s ", $field_id, $value );
 
 		}
@@ -258,7 +263,9 @@ class GW_Inventory {
 			$query['group_by'] = 'GROUP BY date';
 			$query['having']   = sprintf( 'HAVING total >= %d', $this->get_stock_quantity() );
 
-			$sql     = implode( "\n", $query );
+			$sql = implode( "\n", $query );
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$results = $wpdb->get_results( $sql );
 
 			foreach ( $results as $result ) {
@@ -266,6 +273,8 @@ class GW_Inventory {
 				if ( ! is_array( $options[ $field->id ]['exceptions'] ) ) {
 					$options[ $field->id ]['exceptions'] = array();
 				}
+
+				// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 				$options[ $field->id ]['exceptions'][] = date( 'm/d/Y', strtotime( $result->date ) );
 			}
 		}
@@ -335,6 +344,7 @@ class GW_Inventory {
 		$form  = GFAPI::get_form( $this->_args['form_id'] );
 		$field = GFFormsModel::get_field( $form, $this->_args['input_id'] );
 
+		// translators: placeholder is the field label
 		$event_name = sprintf( __( '%s: Out of Stock' ), GFCommon::get_label( $field ) );
 
 		return $event_name;
@@ -351,6 +361,7 @@ class GW_Inventory {
 		 * @var $id
 		 * @var $input_id
 		 */
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $atts ); // gives us $id, $input_id
 
 		return intval( self::get_field_values_sum( $id, $input_id ) );
@@ -369,6 +380,7 @@ class GW_Inventory {
 			'limit'    => false,
 		), $atts );
 
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $atts ); // gives us $id, $input_id
 
 		if ( $input_id == $this->_args['input_id'] && $id == $this->_args['form_id'] ) {
@@ -444,8 +456,10 @@ class GW_Inventory {
 	public static function get_field_values_sum( $form_id, $input_id ) {
 		global $wpdb;
 
-		$query  = self::get_sum_query( $form_id, $input_id );
-		$sql    = implode( "\n", $query );
+		$query = self::get_sum_query( $form_id, $input_id );
+		$sql   = implode( "\n", $query );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$result = $wpdb->get_var( $sql );
 
 		return intval( $result );

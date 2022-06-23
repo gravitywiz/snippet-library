@@ -183,7 +183,7 @@ class GW_Edit_Products {
 
 		<div class="gwep-payment-detail">
 			<label for="gwep-payment-date"><?php _e( 'Payment Date' ); ?></label>
-			<input id="gwep-payment-date" name="payment_date" type="text" value="<?php echo rgar( $entry, 'payment_date' ); ?>" placeholder="i.e. <?php echo date( 'Y-m-d' ); ?>" />
+			<input id="gwep-payment-date" name="payment_date" type="text" value="<?php echo rgar( $entry, 'payment_date' ); ?>" placeholder="i.e. <?php echo date( 'Y-m-d' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date ?>" />
 		</div>
 
 		<div class="gwep-payment-detail">

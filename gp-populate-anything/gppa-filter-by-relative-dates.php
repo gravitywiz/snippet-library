@@ -38,6 +38,7 @@ add_filter( 'gppa_replace_filter_value_variables_post', function ( $value ) {
 	}
 
 	foreach ( $matches as $match ) {
+		// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 		$value = str_replace( $match[0], date( 'Y-m-d H:i:s', strtotime( '-' . $match[1] . ' ' . $match[2] ) ), $value );
 	}
 

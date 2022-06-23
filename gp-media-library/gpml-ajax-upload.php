@@ -3,6 +3,8 @@
  * Gravity Perks // Media Library // Ajax Upload
  * https://gravitywiz.com/documentation/gravity-forms-media-library/
  *
+ * Instruction Video: https://www.loom.com/share/bed55943a25c44f697530ed79d1d3066
+ *
  * Upload images to the Media Library as they are uploaded via the Gravity Forms Multi-file Upload field.
  *
  * Plugin Name:  GP Media Library - Ajax Upload

@@ -15,20 +15,20 @@
  * Author URI:   https://gravitywiz.com
  */
 add_action( 'admin_footer', function() {
-	if ( wp_script_is( 'gform_form_admin' ) && GFForms::get_page() !== 'form_editor' ):
+	if ( wp_script_is( 'gform_form_admin' ) && GFForms::get_page() !== 'form_editor' ) :
 		$payment_status_choices = array();
 		foreach ( GFCommon::get_entry_payment_statuses() as $text => $value ) {
 			$payment_status_choices[] = compact( 'text', 'value' );
 		}
 		$options = array(
 			'payment_status' => array(
-				'label'   => esc_html__( 'Payment Status', 'gravityforms' ),
-				'value'   => 'payment_status',
-				'choices' => $payment_status_choices,
+				'label'     => esc_html__( 'Payment Status', 'gravityforms' ),
+				'value'     => 'payment_status',
+				'choices'   => $payment_status_choices,
 				'operators' => array(
 					'is'    => 'is',
 					'isnot' => 'isNot',
-				)
+				),
 			),
 		);
 		?>
@@ -60,7 +60,7 @@ add_action( 'admin_footer', function() {
 				return str;
 			} );
 		</script>
-	<?php
+		<?php
 	endif;
 } );
 
@@ -68,7 +68,7 @@ add_filter( 'gform_rule_source_value', function( $source_value, $rule, $form, $l
 	if ( $rule['fieldId'] === 'payment_status' && $entry ) {
 		// Some payment add-ons do not update the runtime entry but do update the entry in the database. Fetch the
 		// latest from the database.
-		$entry = GFAPI::get_entry( $entry['id'] );
+		$entry        = GFAPI::get_entry( $entry['id'] );
 		$source_value = rgar( $entry, 'payment_status' );
 	}
 	return $source_value;

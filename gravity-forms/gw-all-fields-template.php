@@ -239,9 +239,8 @@ class GW_All_Fields_Template {
 								$description_html    = '<br /><div class="gfield_consent_description">' . nl2br( $consent_description ) . '</div>';
 								$value               = str_replace( $description_html, '', $value );
 							}
-						}
-						// Check for exclusions excluding a specific child field from a Nested Form field.
-						elseif ( $field->get_input_type() === 'form' && (int) $mod_value != $mod_value ) {
+							// Check for exclusions excluding a specific child field from a Nested Form field.
+						} elseif ( $field->get_input_type() === 'form' && (int) $mod_value != $mod_value ) {
 							// GPNF assumes Nested Form field should be excluded if $value is false. Prevent this and
 							// allow GPNF to load the {all_fields} markup for its children.
 							$exclude_full_value = false;
@@ -542,6 +541,7 @@ class GW_All_Fields_Template {
 
 	public function load_template( $slug, $name = null, $data = array(), $suffixes = array() ) {
 		ob_start();
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $data );
 		$template = $this->get_template_part( $slug, $name, false, $suffixes );
 		if ( ! empty( $template ) ) {

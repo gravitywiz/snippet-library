@@ -40,7 +40,7 @@ add_filter( 'gform_product_info', function( $product_info, $form, $entry ) {
 					$child_product['name'] = "{$product_info['products'][ $field->id ]['name']} — {$child_product['name']}";
 					$_child_products[ "{$nested_form_field_id}.{$child_entry['id']}.{$child_field_id}" ] = $child_product;
 				}
-				$child_products = array_merge( $child_products, $_child_products );
+				$child_products = $child_products + $_child_products;
 			}
 		}
 
@@ -48,7 +48,16 @@ add_filter( 'gform_product_info', function( $product_info, $form, $entry ) {
 			continue;
 		}
 
-		array_splice( $product_info['products'], array_search( $field->id, $product_info['products'] ), 1, $child_products );
+		$product_keys = array_keys( $product_info['products'] );
+		$products     = array_values( $product_info['products'] );
+
+		// phpcs:ignore WordPress.PHP.StrictInArray.FoundNonStrictFalse
+		$index = array_search( $field->id, $product_keys, false );
+
+		array_splice( $product_keys, $index, 1, array_keys( $child_products ) );
+		array_splice( $products, $index, 1, array_values( $child_products ) );
+
+		$product_info['products'] = array_combine( $product_keys, $products );
 
 	}
 

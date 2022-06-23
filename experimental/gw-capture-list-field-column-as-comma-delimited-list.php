@@ -11,13 +11,13 @@ add_action( 'gform_pre_submission_123', function( $form ) {
 	$target_field_id = 5; // Update to the ID of the field to which you would like to capture values.
 
 	$list_field = GFAPI::get_field( $form, $list_field_id );
-	$rows       = $list_field->create_list_array( $_POST["input_{$list_field_id}"] );
+	$rows       = $list_field->create_list_array( $_POST[ "input_{$list_field_id}" ] );
 	$values     = array();
 
 	if ( is_array( $rows[0] ) ) {
 		foreach ( $rows as $row ) {
-			$row = array_values( $row );
-			$values[] = $row[ $column_number -1 ];
+			$row      = array_values( $row );
+			$values[] = $row[ $column_number - 1 ];
 		}
 	} else {
 		foreach ( $rows as $row ) {
@@ -26,5 +26,5 @@ add_action( 'gform_pre_submission_123', function( $form ) {
 	}
 
 	$_POST[ "input_{$target_field_id}" ] = implode( ',', $values );
-	
+
 } );

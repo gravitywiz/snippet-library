@@ -28,6 +28,7 @@ class GWExcludeUIDChars {
 	 * ) );
 	 */
 	public function __construct( $args ) {
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( wp_parse_args( $args, array(
 			'form_id'  => false,
 			'field_id' => false,

@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore WordPress.Files.FileName.NotHyphenatedLowercase
 /**
  * Gravity Perks // Unique ID // Custom Format: `ABC12345`
  *

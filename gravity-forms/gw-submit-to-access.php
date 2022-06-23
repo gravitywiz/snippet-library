@@ -155,7 +155,7 @@ class GW_Submit_Access {
 
 		ob_start();
 
-        // Output the form scripts (including jQuery), otherwise submission may not work.
+		// Output the form scripts (including jQuery), otherwise submission may not work.
 		$form_ids = $this->get_form_ids( $post->ID );
 		$form     = GFAPI::get_form( $form_ids[0] );
 		require_once( GFCommon::get_base_path() . '/form_display.php' );

@@ -11,9 +11,9 @@
  * @license  GPL-2.0+
  * @link     http://gravitywiz.com/
  */
-add_filter('gform_field_value_user_role', 'gform_populate_user_role');
-function gform_populate_user_role($value){
- 	$user = wp_get_current_user();
- 	$role = $user->roles;
- return reset($role);
+add_filter( 'gform_field_value_user_role', 'gform_populate_user_role' );
+function gform_populate_user_role( $value ) {
+	$user = wp_get_current_user();
+	$role = $user->roles;
+	return reset( $role );
 }

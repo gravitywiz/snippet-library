@@ -82,7 +82,8 @@ class GWAutoListFieldRows {
 						});
 
 						// Hide add/remove buttons
-						$("#field_{0}_{1} .gfield_list_icons".format( this.formId, this.listFieldId ) ).css( 'display', 'none' );
+						// Also align list column title
+						$("#field_{0}_{1}".format( this.formId, this.listFieldId ) ).find( '.gfield_header_item--icons, .gfield_list_icons' ).hide();
 
 					}
 

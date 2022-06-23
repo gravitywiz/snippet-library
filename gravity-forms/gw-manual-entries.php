@@ -192,6 +192,7 @@ class GW_Manual_Entries {
 					'gpnf-field-id'     => $field->id,
 					'gpnf-parent-entry' => rgget( 'lid' ),
 				) ),
+				// translators: placeholder is the item label
 				sprintf( __( 'Add %s', 'gp-nested-forms' ), $field->get_item_label() )
 			);
 		}
@@ -209,6 +210,7 @@ class GW_Manual_Entries {
 					'gpnf-field-id'     => $field->id,
 					'gpnf-parent-entry' => rgget( 'lid' ),
 				) ),
+				// translators: placeholder is the item label
 				sprintf( __( 'Add %s', 'gp-nested-forms' ), $field->get_item_label() )
 			);
 		}

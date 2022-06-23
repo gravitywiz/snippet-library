@@ -11,7 +11,7 @@
 // Update "123" to your parent form ID.
 add_action( 'gform_advancedpostcreation_post_after_creation_123', function( $post_id, $feed, $entry, $form ) {
 
-	$parent_entry = new GPNF_Entry( $entry );
+	$parent_entry  = new GPNF_Entry( $entry );
 	$child_entries = $parent_entry->get_child_entries();
 
 	foreach ( $child_entries as $child_entry ) {

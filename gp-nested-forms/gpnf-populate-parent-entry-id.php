@@ -4,7 +4,7 @@
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
  * Populate the current parent entry ID (or hash) using the "gpnf_parent_entry_id" dynamic population parameter.
- * This parameter can only be used for fields in the parent form. To capture in a child form, you must populate 
+ * This parameter can only be used for fields in the parent form. To capture in a child form, you must populate
  * the parent entry ID in a field on the parent form and then use the {Parent} merge tag to capture the ID in
  * a child field.
  */
@@ -26,7 +26,6 @@ add_filter( 'gform_field_value_gpnf_parent_entry_id', function( $value, $field )
 				$data['hash'] = $value;
 			} );
 		}
-
 	}
 
 	return $value;
