@@ -10,7 +10,7 @@
  * Plugin URI: https://gravitywiz.com/automatic-save-and-continue-with-gravity-forms/
  * Description: Automatically save users' data as they progress through a form and automatically repopulate that data when they return.
  * Author: Gravity Wiz
- * Version: 0.4
+ * Version: 0.5
  * Author URI: https://gravitywiz.com
  */
 class GW_Save_Continue_Auto_Load {
