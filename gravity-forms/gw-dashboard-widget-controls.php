@@ -66,8 +66,8 @@ function gw_dashboard_widget_controls_bootstrap() {
 		 * @return array
 		 */
 		public function manage_dashboard_forms( $form_summary ) {
-			$form_ids         = $this->get_plugin_setting( 'forms' );
-			$behavior         = $this->get_plugin_setting( 'behavior' );
+			$form_ids = $this->get_plugin_setting( 'forms' );
+			$behavior = $this->get_plugin_setting( 'behavior' );
 
 			if ( empty( $form_ids ) || ! is_array( $form_ids ) ) {
 				return $form_summary;
@@ -104,7 +104,7 @@ function gw_dashboard_widget_controls_bootstrap() {
 			}
 
 			/* Prevent filtering while we get the most recent forms. */
-			remove_filter( 'get_user_metadata', array( $this, 'filter_recent_forms' ));
+			remove_filter( 'get_user_metadata', array( $this, 'filter_recent_forms' ) );
 
 			$recent_form_ids = GFFormsModel::get_recent_forms();
 

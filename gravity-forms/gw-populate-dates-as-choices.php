@@ -43,7 +43,7 @@ add_filter( 'gform_pre_render_123', function( $form ) {
 				continue;
 			}
 			$choices[] = array(
-				'text' => $date->format( 'l, F jS' ),
+				'text'  => $date->format( 'l, F jS' ),
 				'value' => $date->format( 'Y-m-d' ),
 			);
 			$i--;

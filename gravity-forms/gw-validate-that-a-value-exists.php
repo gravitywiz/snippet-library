@@ -94,9 +94,9 @@ class GW_Value_Exists_Validation {
 			die( __( 'Invalid nonce.' ) );
 		}
 
-		$form_id  = rgpost( 'form_id' );
-		$values   = rgpost( 'values' );
-		$entries  = $this->get_matching_entry( $values, $form_id );
+		$form_id = rgpost( 'form_id' );
+		$values  = rgpost( 'values' );
+		$entries = $this->get_matching_entry( $values, $form_id );
 
 		echo json_encode( array(
 			'doesValueExist' => ! empty( $entries ),
