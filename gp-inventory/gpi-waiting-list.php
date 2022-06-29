@@ -24,7 +24,6 @@ add_filter( 'gpi_pre_render_choice', function( $choice, $exceeded_limit, $field,
 		} else {
 			$choice['text'] = str_replace( $default_message, $message, $choice['text'] );
 		}
-
 	}
 
 	return $choice;
@@ -37,7 +36,7 @@ add_filter( 'gform_pre_submission_filter', function( $form ) {
 		}
 		$choice_counts = gp_inventory_type_choices()->get_choice_counts( $form['id'], $field );
 		$choices       = $field['choices'];
-		foreach( $choices as &$choice ) {
+		foreach ( $choices as &$choice ) {
 			$value        = $field->sanitize_entry_value( $choice['value'], $form['id'] );
 			$choice_count = intval( rgar( $choice_counts, $value ) );
 			$choice       = gf_apply_filters( array( 'gpi_pre_render_choice', $form['id'], $field->id ), $choice, null, $field, $form, $choice_count );
