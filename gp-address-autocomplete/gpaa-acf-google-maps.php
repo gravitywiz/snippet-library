@@ -5,7 +5,7 @@
  *
  * Map GPPA-enabled Address fields to ACF Google Map fields via the GF Advanced Post Creation add-on.
  *
- * Plugin Name:  GP Address Field — ACF Google Maps Support
+ * Plugin Name:  GP Address Autocomplete — ACF Google Maps Support
  * Plugin URI:   ...
  * Description:  Map GPPA-enabled Address fields to ACF Google Map fields via the GF Advanced Post Creation add-on.
  * Author:       Gravity Wiz
