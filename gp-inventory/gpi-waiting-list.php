@@ -13,7 +13,7 @@ add_filter( 'gpi_remove_choices', '__return_false' );
 
 add_filter( 'gpi_pre_render_choice', function( $choice, $exceeded_limit, $field, $form, $count ) {
 
-	$limit         = rgar( $choice, 'inventory_limit' );
+	$limit         = (int) rgar( $choice, 'inventory_limit' );
 	$how_many_left = max( $limit - $count, 0 );
 
 	if ( $how_many_left <= 0 ) {
