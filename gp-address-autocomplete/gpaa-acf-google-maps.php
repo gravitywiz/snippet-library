@@ -48,3 +48,14 @@ add_action( 'gform_advancedpostcreation_post_after_creation', function( $post_id
 	}
 
 }, 10, 4 );
+
+function gw_get_meta_field_id_by_meta_key( $feed, $field_name, $meta_key ) {
+	$generic_fields = rgar( $feed, 'meta' ) ? rgars( $feed, 'meta/' . $field_name ) : rgar( $feed, $field_name );
+	foreach ( $generic_fields as $generic_field ) {
+		$field_key = 'gf_custom' === $generic_field['key'] ? $generic_field['custom_key'] : $generic_field['key'];
+		if ( $field_key === $meta_key ) {
+			return $generic_field['value'];
+		}
+	}
+	return false;
+}
