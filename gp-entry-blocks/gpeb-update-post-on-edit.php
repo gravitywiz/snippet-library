@@ -13,7 +13,7 @@ add_filter( 'gform_post_data', function( $post_data, $form, $entry ) {
 	if ( $post_id ) {
 		$post_data['ID'] = $post_id;
 		$post = get_post( $post_id );
-		$post_data['post_status'] = $post['post_status'];
+		$post_data['post_status'] = $post->post_status;
 	}
 	return $post_data;
 }, 10, 3 );
