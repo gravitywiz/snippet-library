@@ -26,7 +26,7 @@ add_filter( 'gform_pre_render_123', function( $form ) {
 		'Saturday',
 		'Sunday',
 	);
-	
+
 	$prices = array( 2.33, 1.44, 0.89, 0.55, 0.34, 0.21, 0.13, 0.08, 0.05, 0.03, 0.02, 0.01 );
 
 	foreach ( $form['fields'] as &$field ) {
@@ -44,7 +44,7 @@ add_filter( 'gform_pre_render_123', function( $form ) {
 			if ( in_array( $date->format( 'l' ), $excluded_days_of_week ) ) {
 				continue;
 			}
-			$price = ! empty( $prices ) ? array_shift( $prices ) : 0;
+			$price     = ! empty( $prices ) ? array_shift( $prices ) : 0;
 			$choices[] = array(
 				'text'  => $date->format( 'l, F jS' ),
 				'value' => $date->format( 'Y-m-d' ),
