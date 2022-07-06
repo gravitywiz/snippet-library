@@ -53,6 +53,14 @@ add_filter( 'gform_merge_tag_filter', function( $value, $input_id, $modifier, $f
 	$modifiers = $parse_modifiers( $modifier );
 
 	foreach ( $modifiers as $modifier => $modifier_value ) {
+
+		// Gravity Forms *sometimes* replaces "&" in merge tag modifiers with "&amp;". Let's undo that.
+		$modifier_value = str_replace( '&amp;', '&', $modifier_value );
+
+		// Populate Anything (and sometimes Gravity Forms) choke on "&comma" in merge tag modifiers. Let's replace it
+		// with an actual comma since the merge tag has already been parsed.
+		$modifier_value = str_replace( '&comma;', ',', $modifier_value );
+
 		switch ( $modifier ) {
 			case 'append':
 				$value .= $modifier_value;
