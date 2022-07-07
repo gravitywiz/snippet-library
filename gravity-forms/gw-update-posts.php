@@ -128,7 +128,7 @@ class GW_Update_Posts {
 				$field = GFAPI::get_field( $form, $value );
 
 				// Support mapping all checkboxes of a Checkbox field to a custom field.
-				if ( $field->get_input_type() === 'checkbox' && $value != (int) $value ) {
+				if ( $field->get_input_type() === 'checkbox' ) {
 					$meta_value = $field->get_value_export( $entry );
 					if ( is_callable( 'acf_get_field' ) ) {
 						$acf_field = acf_get_field( $key );
