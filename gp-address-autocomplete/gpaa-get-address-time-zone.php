@@ -10,16 +10,16 @@ add_action( 'gform_pre_submission_filter_123', 'gw_set_timezone', 10, 2 );
 function gw_set_timezone( $entry, $form ) {
 
 	// Update "4" to the Address field ID.
-	$address_field_id = 4; 
-	
+	$address_field_id = 4;
+
 	// Update "5" to the ID of the field in which the time zone should be saved.
 	$timezone_field_id = 5;
 
 	$location_lat  = rgar( $entry, 'gpaa_lat_' . $address_field_id );
 	$location_long = rgar( $entry, 'gpaa_lng_' . $address_field_id );
 	$timezone      = gw_get_nearest_timezone( $location_lat, $location_long );
-	
-	$_POST[ "input_{$time_zone_field_id}" ] = $timezone 
+
+	$_POST[ "input_{$time_zone_field_id}" ] = $timezone;
 
 }
 
