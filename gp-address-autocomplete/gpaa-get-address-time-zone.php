@@ -3,26 +3,29 @@
  * Gravity Perks // Address Autocomplete // Get Address Time Zone
  * https://gravitywiz.com/documentation/gravity-forms-address-autocomplete/
  *
- * Get the Time Zone of the submitted address and save in a User Custom field.
+ * Get the time zone of the submitted address and save it to the entry.
  */
-// Update '123' to the Form ID
-add_action( 'gform_after_submission_123', 'gw_set_timezone', 10, 2 );
+// Update "123" to the form ID.
+add_action( 'gform_pre_submission_filter_123', 'gw_set_timezone', 10, 2 );
 function gw_set_timezone( $entry, $form ) {
 
-	$address_field_id = 4;  // Update '4' to the Address field ID.
-	$user_id          = rgar( $entry, 5 ); // Update '5' to the field with the User ID.
-	$custom_field     = 'time_zone'; // Update 'time_zone' to the custom field meta.
+	// Update "4" to the Address field ID.
+	$address_field_id = 4; 
+	
+	// Update "5" to the ID of the field in which the time zone should be saved.
+	$timezone_field_id = 5;
 
 	$location_lat  = rgar( $entry, 'gpaa_lat_' . $address_field_id );
 	$location_long = rgar( $entry, 'gpaa_lng_' . $address_field_id );
-	$user_timezone = get_nearest_timezone( $location_lat, $location_long, $country_code = '' );
-	update_user_meta( $user_id, $custom_field, $user_timezone );
+	$timezone      = gw_get_nearest_timezone( $location_lat, $location_long );
+	
+	$_POST[ "input_{$time_zone_field_id}" ] = $timezone 
 
 }
 
-function get_nearest_timezone( $cur_lat, $cur_long, $country_code = '' ) {
-	$timezone_ids = ( $country_code ) ? DateTimeZone::listIdentifiers( DateTimeZone::PER_COUNTRY, $country_code )
-		: DateTimeZone::listIdentifiers();
+// Thank you, Bramus! https://www.bram.us/2020/07/10/php-convert-a-geolocation-latitude-longitude-to-timezone/
+function gw_get_nearest_timezone( $cur_lat, $cur_long, $country_code = '' ) {
+	$timezone_ids = ( $country_code ) ? DateTimeZone::listIdentifiers( DateTimeZone::PER_COUNTRY, $country_code ) : DateTimeZone::listIdentifiers();
 
 	if ( $timezone_ids && is_array( $timezone_ids ) && isset( $timezone_ids[0] ) ) {
 
