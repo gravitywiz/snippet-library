@@ -24,11 +24,11 @@ function gw_capitalize_submitted_data( $form ) {
 		if ( isset( $field['inputs'] ) && is_array( $field['inputs'] ) ) {
 			foreach ( $field['inputs'] as $input ) {
 				$input_key           = sprintf( 'input_%s', str_replace( '.', '_', $input['id'] ) );
-				$_POST[ $input_key ] = ucwords( rgpost( $input_key ) );
+				$_POST[ $input_key ] = ucwords( strtolower( rgpost( $input_key ) ) );
 			}
 		} else {
 			$input_key           = sprintf( 'input_%s', $field['id'] );
-			$_POST[ $input_key ] = ucwords( rgpost( $input_key ) );
+			$_POST[ $input_key ] = ucwords( strtolower( rgpost( $input_key ) ) );
 		}
 	}
 
