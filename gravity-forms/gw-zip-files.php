@@ -5,7 +5,7 @@
  * Create a zip file from all uploaded files and attach it to a notification.
  *
  * @todo
- *  - add support for multiple zip files per form (by field)
+ *  - add support for multiple zip files per form (by field, by file type)
  *  - add support for removing file fields from {all_fields}
  *  - add support for linking to specific zip by 'zip_name' (i.e. {gwzip:zip_name}) or zip ID (i.e. gwzip:zipId})
  *  - add UI for naming zips
