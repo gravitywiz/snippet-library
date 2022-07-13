@@ -16,8 +16,8 @@ add_filter( 'gppa_object_type_post_filter', function( $query_builder_args, $args
 	// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 	extract( $args );
 
-	/* Only change behavior for field ID 22 in form ID 217. */
-	if ( $field->id !== 22 || $field->formId !== 217 ) {
+	/* Only change behavior for field ID 4 in form ID 123. */
+	if ( $field->id !== 4 || $field->formId !== 123 ) {
 		return $query_builder_args;
 	}
 
