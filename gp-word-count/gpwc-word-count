@@ -1,0 +1,13 @@
+<?php
+/**
+ * Gravity Perks // Word Count // Change Validation Message for a specific field
+ * https://gravitywiz.com/documentation/gravity-forms-word-count/
+ *
+ * This example prevents GP Word Count from counting words inside parentheses.
+ */
+add_filter( 'gpwc_word_count', function( $word_count, $words ) {
+
+    $words = preg_split( '/[ \n\r]+/', trim( preg_replace( '/\(([^)]+)\)/', '', $words ) ) );
+
+    return count( $words );
+}, 10, 2 );
