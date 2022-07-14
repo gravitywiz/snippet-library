@@ -3,7 +3,8 @@
  * Gravity Perks // Page Transitions // Add a Custom Auto-Progression Condition
  * https://gravitywiz.com/documentation/gravity-forms-page-transitions/
  *
- * Add a custom auto-progression condition for a field.
+ * Use this filter to register a field type and callback function that can check a field's configuration
+ * to determine if it can support auto-progresion.
  */
 add_filter( 'gppt_auto_progress_support_conditions', 'add_custom_auto_progress_condition' );
 function add_custom_auto_progress_condition( $conditions ) {
