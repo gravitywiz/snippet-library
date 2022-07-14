@@ -6,8 +6,8 @@
 add_filter( 'gppa_lmt_whitelist', function() {
 
     $merge_tag = '{ip}';
-    
+
     $whitelist[ $merge_tag ] = wp_create_nonce( 'gppa-lmt-' . $form['id'] . '-' . $merge_tag );
-    
+
     return $whitelist;
 }, 10, 2 );
