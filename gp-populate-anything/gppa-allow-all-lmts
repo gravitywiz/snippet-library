@@ -1,0 +1,7 @@
+/**
+ * Gravity Perks // Populate Anything // Allow all Live Merge Tags for a specific form
+ * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
+ * 
+ * This example sets form 3 to allow and parse all Live Merge Tags.
+ */
+add_filter( 'gppa_allow_all_lmts_3', '__return_true' );
