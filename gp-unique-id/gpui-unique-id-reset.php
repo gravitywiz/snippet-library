@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // Unique ID // Reset Genereated ID when it reaches a number
  * https://gravitywiz.com/documentation/gravity-forms-unique-id/
