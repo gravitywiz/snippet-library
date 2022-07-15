@@ -219,10 +219,7 @@ class GW_Create_Coupon {
 		) );
 
 		foreach ( $meta as $meta_key => $meta_value ) {
-			if ( $meta_value instanceof Closure && is_callable( $meta_value ) ) {
-				$meta[ $meta_key ] = call_user_func( $meta_value, $entry, $form, $this );
-			}
-			update_post_meta( $new_coupon_id, $meta_key, $meta[ $meta_key ] );
+			update_post_meta( $new_coupon_id, $meta_key, $meta_value );
 		}
 
 	}
