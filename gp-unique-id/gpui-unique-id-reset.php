@@ -1,26 +1,25 @@
 <?php
 /**
- * Gravity Perks // Unique ID // Reset Genereated ID when it reaches a number
+ * Gravity Perks // Unique ID // Reset Sequence at Specific Threshold
  * https://gravitywiz.com/documentation/gravity-forms-unique-id/
  *
- * This example shows you how to reset a sequentially generated ID when it reaches a specific number.
- *
+ * Reset the sequence of a Sequential Unique ID field when the sequence reaches a specified number.
  */
 add_filter( 'gpui_unique_id', function( $unique, $form_id, $field_id ) {
 
-    // Update "123" to your form ID and "4" to the ID of your Unique ID field.
+	// Update "123" to your form ID and "4" to the ID of your Unique ID field.
+	if ( $form_id == 123 && $field_id == 4 ) {
 
-    if( $form_id == 123 &amp;&amp; $field_id == 4 ) {
+		// Update "1" to the number the sequence should be reset to when the threshold is reached.
+		$starting_number = 1;
 
-        // This is the number that the sequence will be reset to.
-        $starting_number = 1;
+		// Update "99" to the threshold at which the sequence should be reset.
+		$reset_number = 99;
 
-        // When this number is reached, the unique ID sequence will reset to the starting number.
-	    $reset_number = 2;
-	    if ( $unique == $reset_number ) {
-	        gp_unique_id()->set_sequential_starting_number( $form_id, $field_id, $starting_number - 1 );
-	    } 
-    }
+		if ( $unique == $reset_number ) {
+			gp_unique_id()->set_sequential_starting_number( $form_id, $field_id, $starting_number - 1 );
+		}
+	}
 
-    return $unique;
+	return $unique;
 }, 10, 3 );
