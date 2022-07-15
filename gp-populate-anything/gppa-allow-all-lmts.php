@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // Populate Anything // Allow all Live Merge Tags for a Specific Form
+ * Gravity Perks // Populate Anything // Allow All Live Merge Tags for a Specific Form
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  */
 // Update "123" to your form ID.
