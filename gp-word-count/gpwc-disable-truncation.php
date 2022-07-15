@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // Word Count // Disable truncation
+ * Gravity Perks // Word Count // Disable Truncation
  * https://gravitywiz.com/documentation/gravity-forms-word-count/
  *
  * This will prevent the words in a specific field from being truncated when the limit is reached.
