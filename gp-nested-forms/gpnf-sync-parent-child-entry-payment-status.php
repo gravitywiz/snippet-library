@@ -56,11 +56,11 @@ add_action( 'gform_entry_list_action', function( $action, $entries, $form_id ) {
 if ( ! function_exists( 'gpnf_sync_child_entries_payment_details' ) ) {
 	function gpnf_sync_child_entries_payment_details( $parent_entry ) {
 
-		$parent_entry = new GPNF_Entry( $parent_entry );
-		if ( ! $parent_entry->payment_status ) {
+		if ( ! $parent_entry['payment_status'] ) {
 			return;
 		}
 
+		$parent_entry  = new GPNF_Entry( $parent_entry );
 		$child_entries = $parent_entry->get_child_entries();
 
 		// "payment_amount" is excluded as the parents total is not relevant on the entry level.
