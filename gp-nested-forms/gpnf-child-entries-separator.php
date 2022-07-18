@@ -6,5 +6,5 @@
  * Use “—” to separate child entries rather than the default <hr>.
  */
 add_filter( 'gpnf_child_entries_separator', function() {
-    return '---';
+	return '---';
 } );
