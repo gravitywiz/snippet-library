@@ -5,10 +5,10 @@
  * Specify a total max file size (the maximum size accepted collectively for all files in a given field).
  * If a new file is uploaded that exceeds the collective max file size, a validation error will be displayed for that file.
  *
- * * Instructions:
- *     1. Install our free Custom Javascript for Gravity Forms plugin.
- *        Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
- *     2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
+ * Instructions:
+ *  1. Install our free Custom Javascript for Gravity Forms plugin.
+ *     Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
+ *  2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
  */
 window.gform.addAction( 'gpfup_before_upload', (formId, fieldId, file, up, gpfupInstance) => {
 	// Specify max total size of all files combined in megabytes.
