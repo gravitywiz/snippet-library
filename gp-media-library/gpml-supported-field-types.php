@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // GP Media Library // Filter the supported field types by GP Media Library.
+ * Gravity Perks // GP Media Library // Filter Supported Field Types
  * https://gravitywiz.com/documentation/gravity-forms-media-library/
  */
 add_filter( 'gpml_supported_field_types', function( $supported_field_types ) {
