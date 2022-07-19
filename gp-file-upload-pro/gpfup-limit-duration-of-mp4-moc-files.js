@@ -2,13 +2,13 @@
  * Gravity Perks // File Upload Pro // Limit Duration of MP4/MOV Files
  * https://gravitywiz.com/documentation/gravity-forms-file-upload-pro/
  *
- * * Instructions:
- *     1. Install our free Custom Javascript for Gravity Forms plugin.
- *        Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
- *     2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
+ * Instructions:
+ *   1. Install our free Custom Javascript for Gravity Forms plugin.
+ *      Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
+ *   2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
  */
 window.gform.addAction('gpfup_before_upload', (formId, fieldId, file, up, gpfupInstance) => {
-  // Update "10" to the desired number of seconds.
+	// Update "10" to the desired number of seconds.
 	var maxDurationInSeconds = 10;
 
 	const videoMimeTypes = ['video/mp4', 'video/quicktime'];
