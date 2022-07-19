@@ -3,6 +3,8 @@
  * Gravity Perks // eCommerce Fields // Tax Amount by Field Value
  * https://gravitywiz.com/documentation/gravity-forms-ecommerce-fields/
  *
+ * Instruction Video: https://www.loom.com/share/ca76b1f523f843e4b7d978a9c4877e61
+ *
  * Set the tax amount of a Tax field based on the value of a field on a previous page.
  *
  * Plugin Name:  GP eCommerce Fields — Tax Amount by Field Value
