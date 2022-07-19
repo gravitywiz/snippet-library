@@ -5,15 +5,15 @@
  */
 add_filter( 'gpnf_export_child_field_header', function( $header, $form, $field, $child_field ) {
 
-    $parent_label = $field->get_field_label( false, null );
+	$parent_label = $field->get_field_label( false, null );
 
-    if ( empty( $parent_label ) ) {
+	if ( empty( $parent_label ) ) {
 	
-        $header = $child_field->get_field_label( false, null );
+		$header = $child_field->get_field_label( false, null );
 
-    } else {
+	} else {
 
-        $header = sprintf( '%s / %s', $parent_label, $child_field->get_field_label( false, null ) );
+		$header = sprintf( '%s / %s', $parent_label, $child_field->get_field_label( false, null ) );
 	}
 
 	return $header;
