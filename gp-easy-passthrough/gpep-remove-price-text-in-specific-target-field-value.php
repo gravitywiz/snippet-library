@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // Easy Passthrough // Remove Price at the End of a Specific Target Field’s Value.
+ * Gravity Perks // Easy Passthrough // Remove Price at the End of a Specific Target Field’s Value
  * https://gravitywiz.com/documentation/gravity-forms-easy-passthrough/
  */
  // Update '123' to the Tartget Form ID and '4' to the Target field ID.
