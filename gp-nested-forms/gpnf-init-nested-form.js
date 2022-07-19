@@ -3,6 +3,11 @@
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
  * This is useful if you want to apply conditional to your child form based on the parent form from which the child form is being loaded.
+ * 
+ * Instructions:
+ *     1. Install our free Custom Javascript for Gravity Forms plugin.
+ *        Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
+ *     2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
  */
 gform.addAction( 'gpnf_init_nested_form', function( childFormId, gpnf ) {
 	
