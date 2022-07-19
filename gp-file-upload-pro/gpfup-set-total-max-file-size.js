@@ -3,7 +3,8 @@
  * https://gravitywiz.com/documentation/gravity-forms-file-upload-pro/
  *
  * Specify a total max file size (the maximum size accepted collectively for all files in a given field).
- * If a new file is uploaded that exceeds the collective max file size, a validation error will be displayed for that file.
+ * If a new file is uploaded that exceeds the collective max file size, a validation error will be
+ * displayed for that file.
  *
  * Instructions:
  *  1. Install our free Custom Javascript for Gravity Forms plugin.
