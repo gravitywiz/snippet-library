@@ -5,7 +5,7 @@
  */
 add_filter( 'gpwc_word_count', function( $word_count, $words ) {
 
-    $words = preg_split( '/[ \n\r]+/', trim( preg_replace( '/\(([^)]+)\)/', '', $words ) ) );
+	$words = preg_split( '/[ \n\r]+/', trim( preg_replace( '/\(([^)]+)\)/', '', $words ) ) );
 
-    return count( $words );
+	return count( $words );
 }, 10, 2 );

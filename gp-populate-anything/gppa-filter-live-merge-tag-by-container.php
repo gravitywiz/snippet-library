@@ -12,7 +12,7 @@
 add_filter( 'gppa_hydrated_field_123_4', function( $field ) {
 	// Update "5" to the ID of the field targeted by the live merge tag.
 	$live_merge_tag_field_id = 5;
-	$func = function( $merge_tag_match_value, $merge_tag, $form, $field_id, $entry_values ) use ( &$func, $live_merge_tag_field_id ) {
+	$func                    = function( $merge_tag_match_value, $merge_tag, $form, $field_id, $entry_values ) use ( &$func, $live_merge_tag_field_id ) {
 		remove_filter( "gppa_live_merge_tag_value_{$form['id']}_{$live_merge_tag_field_id}", $func );
 		return $merge_tag_match_value . ' FILTERED!';
 	};

@@ -28,7 +28,7 @@ add_filter( 'gpi_pre_render_choice', function( $choice, $exceeded_limit, $field,
 	$how_many_left = max( $limit - $count, 0 );
 
 	if ( $how_many_left <= 0 ) {
-		$choice = gpiw_apply_waitlist_message( $choice, $field, $form, $how_many_left );
+		$choice                 = gpiw_apply_waitlist_message( $choice, $field, $form, $how_many_left );
 		$choice['isWaitlisted'] = true;
 	}
 
@@ -88,7 +88,7 @@ function gpiw_add_waitlist_message_to_entry_value( $value, $entry, $field, $form
 	}
 
 	foreach ( $field->choices as $choice ) {
-		if( $choice['text'] != $value ) {
+		if ( $choice['text'] != $value ) {
 			continue;
 		}
 		$is_waitlisted = gform_get_meta( $entry['id'], sprintf( 'gpi_is_waitlisted_%d_%s', $field->id, sanitize_title( $choice['value'] ) ) );
