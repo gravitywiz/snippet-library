@@ -8,8 +8,6 @@
  *        Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
  *     2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
  */
- <script>
-    window.gform.addFilter('gpnf_fetch_form_html_after_add', function () {
-        return false;
-    });
-</script>
+window.gform.addFilter( 'gpnf_fetch_form_html_after_add', function () {
+	return false;
+} );
