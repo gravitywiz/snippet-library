@@ -8,7 +8,7 @@
  * Plugin URI:  https://gravitywiz.com/
  * Description: Bypass your website cache when loading a Gravity Forms form.
  * Author:      Gravity Wiz
- * Version:     0.12
+ * Version:     0.13
  * Author URI:  https://gravitywiz.com
  */
 class GW_Cache_Buster {
@@ -144,6 +144,10 @@ class GW_Cache_Buster {
 			}
 		}
 		$params = ( count( $params ) > 0 ) ? '&' . join( '&', $params ) : '';
+		if ( class_exists( 'Gravity_Forms_Multilingual' ) ) {
+			global $sitepress;
+			$lang = $sitepress->get_current_language();
+		}
 		?>
 		<script type="text/javascript">
 			( function ( $ ) {
@@ -151,7 +155,8 @@ class GW_Cache_Buster {
 				$.post( '<?php echo admin_url( 'admin-ajax.php' ); ?>?action=gfcb_get_form&form_id=<?php echo $form_id, $params; ?>', {
 					action: 'gfcb_get_form',
 					form_id: '<?php echo $form_id; ?>',
-					atts: '<?php echo json_encode( $attributes ); ?>'
+					atts: '<?php echo json_encode( $attributes ); ?>',
+					lang: '<?php echo $lang; ?>'
 				}, function( response ) {
 					$( '#gf-cache-buster-form-container-<?php echo $form_id; ?>' ).html( response ).fadeIn();
 					if( window['gformInitDatepicker'] ) {
