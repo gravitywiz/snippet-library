@@ -1,13 +1,10 @@
 <?php
 /**
- * Gravity Perks // Live Preview // Preview Template
+ * Gravity Perks // Live Preview // Set Custom Preview Template Path
  * https://gravitywiz.com/documentation/gravity-forms-live-preview/
- * 
- * The absolute path to the desired template file. 
- * For example, /app/public/wp-content/themes/twentytwenty/page.php.
+ *
+ * Set the path to a custom template with which your forms should be displayed when using Live Preview.
  */
 add_filter( 'gplp_preview_template', function( $template ) {
-
-    return get_stylesheet_directory() . '/custom-template.php';
-
+	return get_stylesheet_directory() . '/custom-template.php';
 } );
