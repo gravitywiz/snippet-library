@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // Limit Submission // Prevent GP Limit Submission Validation Errors From Showing On Fields
+ * Gravity Perks // Limit Submission // Prevent Validation Errors From Showing On Fields
  * https://gravitywiz.com/documentation/gravity-forms-limit-submissions/
  */
 // Update "123" to your form ID.
