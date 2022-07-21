@@ -35,7 +35,7 @@
 
 		<thead>
 		<tr>
-			<?php foreach( $nested_fields as $nested_field  ): ?>
+			<?php foreach ( $nested_fields as $nested_field ): ?>
 				<th class="gpnf-field-<?php echo $nested_field['id']; ?>">
 					<?php echo GFCommon::get_label( $nested_field ); ?>
 				</th>
@@ -46,7 +46,7 @@
 
 		<tbody data-bind="visible: entries().length > 0, foreach: entries">
 		<tr data-bind="attr: { 'data-entryid': id }">
-			<?php foreach( $nested_fields as $nested_field ): ?>
+			<?php foreach ( $nested_fields as $nested_field ): ?>
 				<td class="gpnf-field"
 				    data-bind="html: f<?php echo $nested_field['id']; ?>.label, attr: { 'data-value': f<?php echo $nested_field['id']; ?>.label }"
 				    data-heading="<?php echo GFCommon::get_label( $nested_field ); ?>"
