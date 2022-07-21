@@ -1,11 +1,12 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Cache Buster
+ * https://gravitywiz.com/cache-busting-with-gravity-forms/
  *
  * Bypass your website cache when loading a Gravity Forms form.
  *
  * Plugin Name: Gravity Forms Cache Buster
- * Plugin URI:  https://gravitywiz.com/
+ * Plugin URI:  https://gravitywiz.com/cache-busting-with-gravity-forms/
  * Description: Bypass your website cache when loading a Gravity Forms form.
  * Author:      Gravity Wiz
  * Version:     0.13
