@@ -36,8 +36,8 @@ add_action( 'gform_after_update_entry', function( $entry_id, $original_entry ) {
 add_filter( 'gform_entry_list_bulk_actions', function( $actions, $form_id ) {
 	$form = GFAPI::get_form( $form_id );
 	if ( is_callable( 'gp_nested_forms' )
-	     && gp_nested_forms()->has_nested_form_field( $form )
-	     && gpnf_has_product_field( $form )
+		&& gp_nested_forms()->has_nested_form_field( $form )
+		&& gpnf_has_product_field( $form )
 	) {
 		$actions['gpnf_sync_child_entries'] = 'Sync Child Entry Payment Details';
 	}
