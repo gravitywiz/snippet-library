@@ -1,6 +1,10 @@
 name: "PHP Lint"
 
-on: [pull_request]
+on:
+  pull_request:
+  push:
+    branches:
+      - master
 
 jobs:
   phpcs:
@@ -8,16 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0 # important!
+          fetch-depth: 0
 
+      # PHP 8 will throw PHP Fatal error: Uncaught TypeError: vsprintf(): Argument #2 ($values) must be of type array, string given in ...
       - uses: nanasess/setup-php@v3
         with:
           php-version: '7.4'
-
-      - name: Get versions
-        run: |
-          which php
-          php --version
 
       - name: Install dependencies
         run: composer install --dev --prefer-dist --no-progress --no-suggest
