@@ -6,6 +6,5 @@
  */
 gform.addFilter( 'gpppw_word_count', function( wordCount, text, gwppw, ppwField, formId ) {
 	// Pay per character instead of words.
-	var words = text.split( '' );
-	return words == null ? 0 : words.length;
+	return [...text].length;
 } );
