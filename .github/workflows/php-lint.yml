@@ -1,29 +1,19 @@
-name: PHP Lint
+name: "PHP Lint"
 
 on: [pull_request]
 
 jobs:
-  reviewdog:
-    name: runner / phpcs
+  phpcs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # important!
+
       - name: Install dependencies
         run: composer install --dev --prefer-dist --no-progress --no-suggest
-      - name: phpcs
-        uses: shirobrak/action-phpcs@v1.0.0
+
+      - uses: thenabeel/action-phpcs@v8
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          reporter: github-pr-review  # Change reporter.
-          phpcs_flags: '--standard=phpcs.xml .'
-  PHPCS:
-    name: PHPCS
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install dependencies
-        run: composer install --dev --prefer-dist --no-progress --no-suggest
-      - name: PHPCS check
-        uses: chekalsky/phpcs-action@v1
-        with:
-          phpcs_bin_path: './vendor/bin/phpcs'
+          phpcs_path: phpcs
+          standard: phpcs.xml
