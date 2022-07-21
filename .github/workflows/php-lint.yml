@@ -10,6 +10,11 @@ jobs:
         with:
           fetch-depth: 0 # important!
 
+      - name: Get versions
+        run: |
+          which php
+          php --version
+
       - name: Install dependencies
         run: composer install --dev --prefer-dist --no-progress --no-suggest
 
