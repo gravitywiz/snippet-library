@@ -2,35 +2,35 @@
 /**
  * Gravity Perks // Nested Forms // Hides Nested Entries table if empty
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
- * 
+ *
  * Installation:
- * 1. Place this file in your theme under gp-nested-forms/nested-entries.php. The full path should look something like
+ *  1. Place this file in your theme under gp-nested-forms/nested-entries.php. The full path should look something like
  *    wp-content/themes/YOUR-THEME/gp-nested-forms/nested-entries.php
- * 2. Done!
+ *  2. Done!
  */
 ?>
 <div class="gpnf-nested-entries-container ginput_container">
 
-    <?php
-    /**
-     * Modification 1: Add inline CSS to hide Nested Entries table by default.
-     */
-    ?>
-    <style type="text/css">
-        .gpnf-nested-entries {
-            display: none;
-        }
+	<?php
+	/**
+	 * Modification 1: Add inline CSS to hide Nested Entries table by default.
+	 */
+	?>
+	<style type="text/css">
+		.gpnf-nested-entries {
+			display: none;
+		}
 
-        .gpnf-nested-entries-has-entries {
-            display: table;
-        }
-    </style>
+		.gpnf-nested-entries-has-entries {
+			display: table;
+		}
+	</style>
 
-    <?php
-    /**
-     * Modification 2: Add data-bind attribute to the table element.
-     */
-    ?>
+	<?php
+	/**
+	 * Modification 2: Add data-bind attribute to the table element.
+	 */
+	?>
 	<table class="gpnf-nested-entries" data-bind="css: { 'gpnf-nested-entries-has-entries': entries().length > 0 }">
 
 		<thead>
