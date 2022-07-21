@@ -4,7 +4,7 @@
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
  */
 add_filter( 'gpi_supported_field_types', function( $field_types ) {
-	// Update 'number' to desired field type.
+	// Update "number" to desired field type.
 	$field_types['number'] = true;
 
 	return $field_types;
