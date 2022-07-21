@@ -1,18 +1,15 @@
-name: "PHP Lint"
+name: PHP Lint (PR)
 
-on:
-  pull_request:
-  push:
-    branches:
-      - master
+on: [pull_request]
 
 jobs:
-  phpcs:
+  PHPCS:
+    name: PHPCS (Files Changed)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # The blame will not work without this
 
       # PHP 8 will throw PHP Fatal error: Uncaught TypeError: vsprintf(): Argument #2 ($values) must be of type array, string given in ...
       - uses: nanasess/setup-php@v3
