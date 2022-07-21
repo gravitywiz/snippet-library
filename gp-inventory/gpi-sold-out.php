@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // Inventory // Sold Out Message
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
