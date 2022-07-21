@@ -7,6 +7,5 @@
  */
 add_filter( 'gpppw_word_count', function( $word_count, $words ) {
 	// Pay per character instead of words.
-	$words = str_split( trim( $words ) );
-	return count( $words );
+	return mb_strlen( trim( $words ) );
 }, 10, 2 );
