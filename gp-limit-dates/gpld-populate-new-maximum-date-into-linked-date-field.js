@@ -4,6 +4,11 @@
  *
  * When Field B’s maximum date is dependent on the selected date in Field A, 
  * this snippet will automatically populate the maximum date into Field B.
+ *
+ * Instructions:
+ *   1. Install our free Custom Javascript for Gravity Forms plugin.
+ *      Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
+ *   2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
  */
 if( window.gform ) {
 	gform.addAction( 'gpld_after_set_max_date', function( $input, date ) {
