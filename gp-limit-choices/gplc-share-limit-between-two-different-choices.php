@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // Limit Choices // Share Limit Between two Different Choices on the Same Field
+ * Gravity Perks // Limit Choices // Share Limit Between Two Different Choices on the Same Field
  * https://gravitywiz.com/documentation/gravity-forms-limit-choices/
  */
 // Update the "123" to your form ID and "4" to your field ID.
