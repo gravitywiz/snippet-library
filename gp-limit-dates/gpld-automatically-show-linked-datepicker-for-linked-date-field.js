@@ -11,8 +11,6 @@
  *      Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
  *   2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
  */
- if( window.gform ) {
-	 gform.addAction( 'gpld_after_set_max_date', function( $input, date ) {
-		 $input.datepicker( 'show' );
-	 } );
- }
+gform.addAction( 'gpld_after_set_max_date', function( $input, date ) {
+	$input.datepicker( 'show' );
+} );
