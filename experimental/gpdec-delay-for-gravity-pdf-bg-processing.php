@@ -11,7 +11,7 @@
  *   1. https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  *   2. Update FORMID and $form_id accordingly.
  */
-add_filter( 'gpbua_should_delete_entry_FORMID', '__return_false' );
+add_filter( 'gpdec_should_delete_entry_FORMID', '__return_false' );
 
 add_action( 'gfpdf_post_generate_and_save_pdf_notification', function ( $form, $entry, $settings, $notifications ) {
 	$form_id = 8;
