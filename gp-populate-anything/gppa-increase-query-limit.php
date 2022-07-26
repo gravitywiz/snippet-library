@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // GP Populate Anything // Change The Query Limit
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
