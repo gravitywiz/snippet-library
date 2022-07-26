@@ -7,9 +7,9 @@
  * the date has been selected in Field A.
  *
  * Instructions:
- *   1. Install our free Custom Javascript for Gravity Forms plugin.
- *      Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
- *   2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
+ * 
+ * Use our free Custom JavaScript plugin to install this snippet.
+ * https://gravitywiz.com/gravity-forms-custom-javascript/
  */
 gform.addAction( 'gpld_after_set_min_date', function( $input, date ) { 
 	$input.datepicker( 'show' );
