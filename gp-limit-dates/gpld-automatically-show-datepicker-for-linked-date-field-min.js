@@ -8,8 +8,8 @@
  *
  * Instructions:
  * 
- * Use our free Custom JavaScript plugin to install this snippet.
- * https://gravitywiz.com/gravity-forms-custom-javascript/
+ * 1. Use our free Custom JavaScript plugin to install this snippet.
+ *    https://gravitywiz.com/gravity-forms-custom-javascript/
  */
 gform.addAction( 'gpld_after_set_min_date', function( $input, date ) { 
 	$input.datepicker( 'show' );
