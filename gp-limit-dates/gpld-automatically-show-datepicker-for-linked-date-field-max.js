@@ -1,5 +1,5 @@
 /**
- * Gravity Perks // Limit Dates // Automatically Show Datepicker for Linked Date Field
+ * Gravity Perks // Limit Dates // Automatically Show Datepicker for Linked Date Field (Maximum Date)
  * https://gravitywiz.com/documentation/gravity-forms-limit-dates/
  *
  * When a date selected in Field A modifies the maximum date in Field B,
