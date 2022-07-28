@@ -28,7 +28,7 @@ add_filter( 'gppa_object_type_filter_after_processing', function ( $query_builde
 		return $query_builder_args;
 	}
 
-	if ( ! $filter_value ) {
+	if ( rgblank( $filter_value ) ) {
 		array_pop( $query_builder_args['where'][ $filter_group_index ] );
 	}
 
