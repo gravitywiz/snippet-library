@@ -20,7 +20,7 @@ class GPDEC_GFPDF_Delayed_Deletion {
 			'form_id' => false,
 		) );
 
-		add_action( 'plugins_loaded', array( $this, 'add_hooks' ), 16 );
+		add_action( 'init', array( $this, 'add_hooks' ), 16 ); // Wait for all add-ons
 	}
 
 	public function add_hooks() {
