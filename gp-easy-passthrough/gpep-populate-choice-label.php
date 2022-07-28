@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // Easy Passthrough // Populate Choice Label
  * https://gravitywiz.com/documentation/gravity-forms-easy-passthrough/
