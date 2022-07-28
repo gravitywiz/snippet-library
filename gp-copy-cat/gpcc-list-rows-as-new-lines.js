@@ -6,7 +6,7 @@
  *
  * Screenshot: https://gwiz.io/3wWlUts
  */
-gform.addFilter( 'gppc_copied_value', function( value, $targetElem, field, sourceValues ) {
+gform.addFilter( 'gpcc_copied_value', function( value, $targetElem, field, sourceValues ) {
 	// Update "3" to your Paragraph field ID.
 	if ( field.sourceFormId != GFFORMID || field.target != 3 ) {
 		return value;
