@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // GP Media Library // Set Uploaded Image Data
+ * Gravity Perks // Media Library // Set Uploaded Image Data
  * https://gravitywiz.com/documentation/gravity-forms-media-library/
  */
 add_filter( 'gpml_media_data', function( $media, $field, $entry ) {
