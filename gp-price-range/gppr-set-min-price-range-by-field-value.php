@@ -1,7 +1,7 @@
 <?php
 /**
  * Gravity Perks // GP Price Range // Modify The Minimum Price Range Based On A Field Value
- * http://gravitywiz.com/documentation/gp-price-range/
+ * https://gravitywiz.com/documentation/gravity-forms-price-range/
  */
 // Update "123" to your form ID and "4" to your field ID.
 add_filter( 'gppr_price_range_min_123_4', function( $min ) {
