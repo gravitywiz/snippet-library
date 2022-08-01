@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // Populate Anything // Include All Query Results In Value As Comma-delimited List
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
