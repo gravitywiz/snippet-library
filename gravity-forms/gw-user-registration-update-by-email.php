@@ -10,7 +10,7 @@
  * Plugin URI: https://gravitywiz.com/
  * Description: Create User Registration feeds that will update the user by the submitted email address, allowing non-logged-in users to be targeted by GFUR update feeds.
  * Author: Gravity Wiz
- * Version: 0.6
+ * Version: 0.7
  * Author URI: https://gravitywiz.com/
  */
 class GW_UR_Update_By_Email {
@@ -19,8 +19,22 @@ class GW_UR_Update_By_Email {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
 		$this->_args = wp_parse_args( $args, array(
-			'form_id'  => false,
-			'field_id' => false,
+			'form_id'    => false,
+			'field_id'   => false,
+			/*
+			 * Require that the logged-in user have a specific capability to be able to edit users by email.
+			 *
+			 * Set to `false` to allow all users (including visitors who are logged out) to edit users by email.
+			 * Set to `'read'` (Subscriber role and higher) to allow any logged-in user to edit users by email.
+			 *
+			 * Security Warning: If setting to `false` or a lesser setting, take care in your form's
+			 * User Registration feed to ensure that you are not introducing a security vulnerability on your site
+			 * by allowing user's roles to be escalated or admin users to have their passwords changed.
+			 *
+			 * See https://wordpress.org/support/article/roles-and-capabilities/#capabilities for the capabilities
+			 * that are supported by default in WordPress.
+			 */
+			'capability' => 'edit_users',
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -41,7 +55,7 @@ class GW_UR_Update_By_Email {
 
 		add_filter( 'gform_userregistration_feed_settings_fields', array( $this, 'add_setting' ) );
 
-		if ( ! is_user_logged_in() ) {
+		if ( current_user_can( $this->_args['capability'] ) || $this->_args['capability'] === false ) {
 			add_filter( 'gform_get_form_filter', array( $this, 'remove_hide_form_function' ), 10, 2 );
 			add_action( 'gform_pre_process', array( $this, 'handle_validation' ) );
 			add_filter( 'gform_entry_post_save', array( $this, 'add_created_by_by_email' ), 9, 2 );
