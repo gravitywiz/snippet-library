@@ -2,13 +2,11 @@
 /**
  * Gravity Perks // Notification Scheduler // Send Notification on the Last Day of Every Month
  * https://gravitywiz.com/documentation/gravity-forms-notification-scheduler/
- *
- * This snippet schedules the notification to be sent on the last day of every month.
  */
 add_filter( 'gpns_schedule_timestamp', function ( $timestamp, $notification, $entry, $is_recurring, $current_time ) {
 	// Update "123" to the Form Id/
 	$form_id = 123;
-	// Update this to the Notification ID.
+	// Update "61f43ccb47dfd" to the Notification ID.
 	$notification_id = '61f43ccb47dfd';
 
 	// See https://www.php.net/manual/en/datetime.formats.php for supported date/time formats.
