@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // GP Populate Anything // Hide Post And Taxonomy Term As Options To Populate From
+ * Gravity Perks // GP Populate Anything // Hide Post And Taxonomy Term as Population Options
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  */
 add_filter( 'gppa_autoloaded_object_types', function ( $object_types ) {
