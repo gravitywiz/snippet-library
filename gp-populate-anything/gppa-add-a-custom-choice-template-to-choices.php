@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // Populate Anything // Add A Custom Choice Template To Choices
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
