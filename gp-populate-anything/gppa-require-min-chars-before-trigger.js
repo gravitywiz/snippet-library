@@ -1,5 +1,5 @@
 /**
- * Gravity Perks // Populate Anything // Require Input to Have at Least Four Characters Before Triggering a Change
+ * Gravity Perks // Populate Anything // Require a Minimum Character Count Before Triggering a Change
  * https://gravitywiz.comhttps://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
