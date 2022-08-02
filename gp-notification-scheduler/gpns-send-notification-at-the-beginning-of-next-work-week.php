@@ -4,13 +4,13 @@
  * https://gravitywiz.com/documentation/gravity-forms-notification-scheduler/
  */
 add_filter( 'gpns_schedule_timestamp', function ( $timestamp, $notification, $entry, $is_recurring, $current_time ) {
-	
+
 	// See https://www.php.net/manual/en/datetime.formats.php for supported date/time formats.
-	$desired_time = 'next monday 12:00 PM'; 
-	
+	$desired_time = 'next monday 12:00 PM';
+
 	// Update "123" to the form ID.
 	$form_id = 123;
-	
+
 	// Update "1a23bc456def7" to the notificaiton ID.
 	$notification_id = '1a23bc456def7';
 
