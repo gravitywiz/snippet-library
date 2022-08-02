@@ -18,4 +18,4 @@ add_action( 'admin_print_footer_scripts', function () {
 	});
 	</script>
 	<?php
-} );
+	});
