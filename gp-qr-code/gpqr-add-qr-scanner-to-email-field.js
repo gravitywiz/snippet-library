@@ -1,5 +1,5 @@
 /**
- * Gravity Perks // GP QR Code // Add QR Code Scanner checkbox to Email fields
+ * Gravity Perks // GP QR Code // Add QR Code Scanner Checkbox To Email Fields
  * https://gravitywiz.com/documentation/gravity-forms-qr-code/
  *
  * We recommend installing this snippet with our free Custom Javascript plugin:
