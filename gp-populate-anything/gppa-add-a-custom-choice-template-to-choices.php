@@ -7,15 +7,15 @@ add_action( 'admin_print_footer_scripts', function () {
 		return;
 	}
 	?>
-    <script>
-        window.gform.addFilter('gppa_template_rows', function (templateRows, field, populate) {
-            if (populate !== 'choices') return templateRows;
-				templateRows.push({
-					id: 'image',
-					label: 'Image',
-				})
-            return templateRows;
-        });
-    </script>
+	<script>
+	window.gform.addFilter('gppa_template_rows', function (templateRows, field, populate) {
+		if (populate !== 'choices') return templateRows;
+			templateRows.push({
+			id: 'image',
+			label: 'Image',
+		})
+	return templateRows;
+	});
+	</script>
 	<?php
 } );
