@@ -7,4 +7,4 @@
  */
  add_filter( 'gwaft_modifier_value_persInfoFields', function() {
 	return array( 1, 2, 3 );
-} );
+});
