@@ -3,8 +3,8 @@
  * Gravity Perks // Notification Scheduler // Change Scope and Unsubscribe Success URL
  * https://gravitywiz.com/documentation/gravity-forms-notification-scheduler/
  */
-// Update FORMID to the Form ID and NID to the Notification ID.
-add_filter( 'gpns_unsubscribe_url_args_FORMID_NID', function ( $unsubscribe_info ) {
+// Update "123" to the form ID and "1a23bc456def7" to the notification ID.
+add_filter( 'gpns_unsubscribe_url_args_123_1a23bc456def7', function ( $unsubscribe_info ) {
 	// Only unsubscribe from current notification
 	$unsubscribe_info['scope'] = 'nid';
 
