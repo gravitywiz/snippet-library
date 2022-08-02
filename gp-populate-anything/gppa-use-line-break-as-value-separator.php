@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // GP Populate Anything // Remove Default Behavior Of Using a Comma As A Delimiter
+ * Gravity Perks // GP Populate Anything // Use Line Breaks as Value Separator
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  */
 add_filter( 'gppa_array_value_to_text', function( $text_value, $array_value, $field ) {
