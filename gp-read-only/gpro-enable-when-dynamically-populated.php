@@ -27,7 +27,6 @@ add_filter( 'gform_pre_render', function ( $form, $ajax, $field_values ) {
 					break;
 				}
 			}
-
 		}
 
 		if ( ! $value || ( isset( $has_matching_choice ) && ! $has_matching_choice ) ) {
