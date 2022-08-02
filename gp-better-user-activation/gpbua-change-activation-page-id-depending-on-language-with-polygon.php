@@ -7,7 +7,7 @@ add_filter( 'gpbua_activation_page_id', function( $activation_page_id ) {
 
 	if ( function_exists( 'pll_current_language' ) ) {
 		switch ( pll_current_language() ) {
-			// Update the case with your preferred language code and respective activation page id.
+			// Update the case with your preferred language code and respective activation page ID.
 			case 'en':
 				$activation_page_id = 123;
 				break;
