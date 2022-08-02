@@ -4,10 +4,12 @@
  * https://gravitywiz.com/documentation/gravity-forms-notification-scheduler/
  */
 add_filter( 'gpns_schedule_timestamp', function ( $timestamp, $notification, $entry, $is_recurring, $current_time ) {
-	// Update "123" to the Form Id/
+
+	// Update "123" to the form ID.
 	$form_id = 123;
-	// Update "61f43ccb47dfd" to the Notification ID.
-	$notification_id = '61f43ccb47dfd';
+
+	// Update "1a23bc456def7" to the notification ID.
+	$notification_id = '1a23bc456def7';
 
 	// See https://www.php.net/manual/en/datetime.formats.php for supported date/time formats.
 	if ( $is_recurring ) { // If the notification has just been triggered to send and the next recurring notification is being scheduled (if repeat is enabled)
@@ -20,7 +22,7 @@ add_filter( 'gpns_schedule_timestamp', function ( $timestamp, $notification, $en
 		return $timestamp;
 	}
 
-	$local_timestamp = date( 'Y-m-d H:i:s', strtotime( $desired_time ) );
+	$local_timestamp = gmdate( 'Y-m-d H:i:s', strtotime( $desired_time ) );
 	$utc_timestamp   = strtotime( get_gmt_from_date( $local_timestamp ) );
 
 	return $utc_timestamp;
