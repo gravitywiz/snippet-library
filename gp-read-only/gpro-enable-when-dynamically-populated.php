@@ -11,11 +11,26 @@
 add_filter( 'gform_pre_render', function ( $form, $ajax, $field_values ) {
 
 	foreach ( $form['fields'] as &$field ) {
+
 		if ( $field->gwreadonly_enable ) {
-			$value = GFFormsModel::get_field_value( $field, $field_values, false ) || $field->gppa_hydrated_value;
-			if ( ! $value ) {
+
+			$value               = GFFormsModel::get_field_value( $field, $field_values, false ) || $field->gppa_hydrated_value;
+			$has_matching_choice = false;
+
+			// If we have a value and we're populating a choice-based field, make sure the value matches a choice.
+			if ( $value && ! empty( $field->choices ) ) {
+				foreach ( $field->choices as $choice ) {
+					if ( $choice['value'] == $value ) {
+						$has_matching_choice = true;
+						break;
+					}
+				}
+			}
+
+			if ( ! $value || ! $has_matching_choice ) {
 				$field->gwreadonly_enable = false;
 			}
+
 		}
 	}
 
