@@ -1,11 +1,14 @@
 /**
- * Gravity Perks // Nested Forms // Re-populate Parent Merge Tags When Editing Entries Replacing any Previously Saved Value
+ * Gravity Perks // Nested Forms // Repopulate Parent Merge Tags When Editing Entries
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
+ * Use this snippet to repopulate {Parent} merge tag when editing entries, replacing any previously saved values.
+ *
  * Instructions:
- *     1. Install our free Custom Javascript for Gravity Forms plugin.
- *        Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
+ * 
+ * 1. Install this snippet with our free Custom JavaScript plugin.
+ *    https://gravitywiz.com/gravity-forms-custom-javascript/
  */
-window.gform.addFilter('gpnf_replace_parent_merge_tag_on_edit', function () {
+window.gform.addFilter( 'gpnf_replace_parent_merge_tag_on_edit', function () {
 	 return true;
- });
+} );
