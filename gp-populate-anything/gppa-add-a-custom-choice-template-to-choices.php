@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // Populate Anything // Add A Custom Choice Template To Choices
+ * Gravity Perks // Populate Anything // Add a Custom Template for Choices
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  */
 add_action( 'admin_print_footer_scripts', function () {
