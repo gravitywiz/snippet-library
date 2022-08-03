@@ -34,9 +34,6 @@ add_filter( 'gform_entry_field_value', function ( $display_value, $field, $entry
 		$html .= '<a href="' . esc_url( $file_url ) . '"><img src="' . $file_url . '" style="max-width: 100%"  /></a>';
 	}
 
-	/**
-	 * Strip all HTML except for img, a, ul, li, and br tags.
-	 */
 	return '<style>
 .gpfup-preview-container { display: flex; flex-wrap: wrap; }
 .gpfup-preview-container a {
@@ -53,14 +50,5 @@ add_filter( 'gform_entry_field_value', function ( $display_value, $field, $entry
 	aspect-ratio: 1/1;
 }
 </style>
-<div class="gpfup-preview-container">' . wp_kses( $html, array(
-			'img' => array(
-				'src'   => array(),
-				'style' => array(),
-			),
-			'a'   => array( 'href' => array() ),
-			'br'  => array(),
-			'ul'  => array(),
-			'li'  => array(),
-		) ) . '</div>';
+<div class="gpfup-preview-container">' . $html . '</div>';
 }, 10, 4 );
