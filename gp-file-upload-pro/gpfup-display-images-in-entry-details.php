@@ -6,17 +6,17 @@
  * Instead of an unordered list with links to the files, display the images. Image previews will be hyperlinked to the
  * original image.
  *
- * Instructions: https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
+ * Instructions:
+ *
+ * 1. Install the snippet.
+ *    https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
+ * 2. Add the "gpfup-images-on-entry-detail" class to your field's Custom CSS Class setting.
  */
 add_filter( 'gform_entry_field_value', function ( $display_value, $field, $entry, $form ) {
-	if ( ! rgar( $field, 'multipleFiles' ) || ! rgar( $field, 'gpfupEnable' ) ) {
+
+	if ( strpos( $field->cssClass, 'gpfup-images-on-entry-detail' ) === false ) {
 		return $display_value;
 	}
-
-	/**
-	 * Set to false if the images should not be links.
-	 */
-	$link_images = true;
 
 	/**
 	 * @var string Value from the entry. Is JSON if files are provided.
@@ -24,7 +24,7 @@ add_filter( 'gform_entry_field_value', function ( $display_value, $field, $entry
 	$entry_value = rgar( $entry, $field->id );
 
 	if ( ! $entry_value ) {
-		return $entry_value;
+		return $display_value;
 	}
 
 	$file_urls = json_decode( $entry_value, true );
