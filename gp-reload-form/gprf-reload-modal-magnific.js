@@ -2,9 +2,6 @@
  * Gravity Perks // Reload Form // Reload Form in Magnific Modal
  * https://gravitywiz.com/automatically-reload-gravity-form-modal-closed/
  * 
- * Describe this snippet's purpose and usage. Be generous when describing both. There
- * is no maximum description length.
- * 
  * Instructions:
  * 
  * 1. Install this snippet with our free Custom JavaScript plugin.
