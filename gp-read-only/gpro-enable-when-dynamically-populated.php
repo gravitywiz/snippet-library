@@ -16,7 +16,17 @@ add_filter( 'gform_pre_render', function ( $form, $ajax, $field_values ) {
 			continue;
 		}
 
-		$value = GFFormsModel::get_field_value( $field, $field_values, false ) || $field->gppa_hydrated_value;
+		$value = GFFormsModel::get_field_value( $field, $field_values, false );
+		if ( is_array( $value ) ) {
+			$value = array_filter( $value );
+		}
+
+		if ( ! $value ) {
+			$value = $field->gppa_hydrated_value;
+			if ( is_array( $value ) ) {
+				$value = array_filter( $value );
+			}
+		}
 
 		// If we have a value and we're populating a choice-based field, make sure the value matches a choice.
 		if ( $value && ! empty( $field->choices ) ) {
