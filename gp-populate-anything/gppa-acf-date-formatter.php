@@ -2,7 +2,7 @@
 /**
  * Gravity Perks // Populate Anything // Convert ACF Date Into Gravity Forms Date
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
- * 
+ *
  * Instructions:
  *
  * 1. Download and install as a plugin.
@@ -18,9 +18,9 @@
  */
 add_filter( 'gppa_process_template_value', function( $template_value, $field, $template_name, $populate, $object, $object_type, $objects ) {
 
-    if ( strpos( $field->cssClass, 'gppa-format-acf-date' ) === false ) {
-        return $template_value;
-    }
-    
-    return date( 'd/m/Y', strtotime( $template_value ) );
+	if ( strpos( $field->cssClass, 'gppa-format-acf-date' ) === false ) {
+		return $template_value;
+	}
+
+	return date( 'd/m/Y', strtotime( $template_value ) );
 }, 10, 7 );

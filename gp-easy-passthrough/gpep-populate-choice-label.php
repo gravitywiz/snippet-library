@@ -13,7 +13,7 @@ add_filter( 'gpep_target_field_value', function( $value, $form_id, $target_field
 		return $value;
 	}
 
-	if ( empty ( $source_field->choices ) ) {
+	if ( empty( $source_field->choices ) ) {
 		return $value;
 	}
 

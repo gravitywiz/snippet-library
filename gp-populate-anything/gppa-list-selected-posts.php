@@ -20,7 +20,7 @@ add_filter( 'gppa_live_merge_tag_value', function( $value, $merge_tag, $form, $f
 	if ( empty( $post_ids ) ) {
 		return $value;
 	}
-	$output   = array();
+	$output = array();
 	foreach ( $post_ids as $post_id ) {
 		$output[] = sprintf( '<a href="%s">%s</a>', get_permalink( $post_id ), get_the_title( $post_id ) );
 	}
