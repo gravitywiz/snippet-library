@@ -7,7 +7,7 @@
  * Plugin URI:   https://gravitywiz.com/make-gravity-forms-validation-errors-mobile-friendlyer/
  * Description:  Automatically focus (and scroll) to the first field with a validation error.
  * Author:       Gravity Wiz
- * Version:      1.3
+ * Version:      1.4
  * Author URI:   http://gravitywiz.com/
  */
 add_filter( 'gform_pre_render', function ( $form ) {
