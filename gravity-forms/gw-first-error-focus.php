@@ -31,7 +31,13 @@ function gw_first_error_focus_script() {
 					// We need to reset our flag so that we can still do our focus action when the form conditional logic
 					// has been re-evaluated.
 					window['gwfef'] = false;
-					gwFirstErrorFocus();
+					var hasError = gwFirstErrorFocus().length;
+
+					if (!hasError) {
+						requestAnimationFrame(function() {
+							window.scrollTo(0, $('.gform_wrapper').offset().top);
+						});
+					}
 				});
 				$(document).on('gform_post_conditional_logic', function (event, formId, fields, isInit) {
 					if (!window['gwfef'] && fields === null && isInit === true) {
@@ -41,7 +47,7 @@ function gw_first_error_focus_script() {
 				});
 
 				function gwFirstErrorFocus() {
-					var $firstError = $('.gfield.gfield_error:first');
+					var $firstError = $('.gfield.gfield_error:visible:first');
 					if ($firstError.length > 0) {
 						// Without setTimeout or requestAnimationFrame, window.scroll/window.scrollTo are not taking
 						// effect on iOS and Android.
@@ -50,6 +56,8 @@ function gw_first_error_focus_script() {
 							$firstError.find('input, select, textarea').eq(0).focus();
 						});
 					}
+
+					return $firstError;
 				}
 			})(jQuery);
 		}
