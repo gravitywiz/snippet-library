@@ -17,7 +17,7 @@
  * Plugin URI:   https://gravitywiz.com/
  * Description:  Append or prepend a string to a merge tag's output only when it has a value.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   https://gravitywiz.com
  */
 add_filter( 'gform_merge_tag_filter', function( $value, $input_id, $modifier, $field, $raw_values ) {
