@@ -8,5 +8,5 @@
  *    https://gravitywiz.com/gravity-forms-custom-javascript/
  */
 gform.addAction( 'gpnf_post_duplicate_entry', function( entry, data, response ) {
-	jQuery( 'tr[data-entryId="{0}"]'.format( entry.id ) ).find( '.edit a' ).click();
-});
+	$( 'tr[data-entryId="{0}"]'.format( entry.id ) ).find( '.edit a' ).click();
+} );
