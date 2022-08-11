@@ -77,8 +77,11 @@ class GPNF_Triggered_Population {
 						$form = $( '#gform_{0}'.format( self.formId ) );
 
 						$( '#field_{0}_{1}'.format( self.formId, self.triggerFieldId ) ).find( 'input' ).on( 'change', function() {
-							var value = $( this ).val();
-							if ( value === self.triggerFieldValue || ( value !== '' && self.triggerFieldValue === '_notempty_' ) ) {
+							var input = $( this );
+							var value = input.val();
+							var checked = input[0].checked;
+
+							if ( checked && value === self.triggerFieldValue || ( value !== '' && self.triggerFieldValue === '_notempty_' ) ) {
 								self.addChildEntry();
 							} else {
 								self.removeChildEntry();
@@ -98,6 +101,8 @@ class GPNF_Triggered_Population {
 
 						$.post( self.ajaxUrl, request, function( response ) {
 							if ( response.success ) {
+								// store the entry data for later for usage in the removeChildEntry method
+								window.gpnf_triggered_population_entry = response.data
 								GPNestedForms.loadEntry( response.data );
 							}
 						} );
@@ -105,7 +110,16 @@ class GPNF_Triggered_Population {
 					}
 
 					self.removeChildEntry = function() {
-						// @todo
+
+						var entryDataRowElem = $("tr[data-entryid='" + window.gpnf_triggered_population_entry.entryId + "']");
+						var item = Object.assign({}, window.gpnf_triggered_population_entry);
+						item.id = item.entryId;
+
+						GPNestedForms.deleteEntry(
+							item,
+							entryDataRowElem,
+						);
+
 					}
 
 					self.init();
@@ -149,6 +163,7 @@ class GPNF_Triggered_Population {
 
 		return empty( $this->_args['form_id'] ) || $form_id == $this->_args['form_id'];
 	}
+
 
 	public function ajax_add_child_entry() {
 
@@ -216,7 +231,6 @@ class GPNF_Triggered_Population {
 }
 
 # Configuration
-
 new GPNF_Triggered_Population( array(
 	'form_id'              => 123,
 	'trigger_field_id'     => 4,
