@@ -3,6 +3,8 @@
  * Gravity Perks // Populate Anything // Display Post Featured Image
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
+ * Instruction Video: https://www.loom.com/share/2193a97d68294e5e82af98e548bd47cf
+ *
  * Populate post featured image into an HTML field.
  *
  * Usage:
