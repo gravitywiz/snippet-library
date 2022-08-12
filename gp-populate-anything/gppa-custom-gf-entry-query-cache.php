@@ -3,10 +3,17 @@
  * Gravity Perks // GP Populate Anything // Custom GF_Entry Query Cache
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
- * This filter may improve performance but is known to return incorrect results when multiple fields are populated and chained to each other.
+ * This may improve performance but is known to return incorrect results when multiple fields are populated and chained to each other.
  */
-// Replace "123" with your form ID and "4" with your field ID.
-add_filter( 'gppa_query_limit_123_4', function() {
-	// Update "1000" to whatever you would like the query limit to be.
-	return 1000;
-} );
+add_filter( 'gppa_query_cache_hash', function( $query_cache_hash, $object_type, $args ) {
+	if ( $object_type === 'gf_entry' ) {
+		return sha1( sprintf( '%s-%s-%s-%s-%s',
+			$args['field']->formId,
+			json_encode( $args['filter_groups'] ),
+			json_encode( $args['ordering'] ),
+			json_encode( $args['primary_property_value'] ),
+			json_encode( $args['unique'] )
+		) );
+	}
+	return $query_cache_hash;
+}, 10, 3 );
