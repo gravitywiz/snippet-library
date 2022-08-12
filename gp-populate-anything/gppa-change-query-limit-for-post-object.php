@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // GP Populate Anything // Change The Query Limit For Only The Post Object Type
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
