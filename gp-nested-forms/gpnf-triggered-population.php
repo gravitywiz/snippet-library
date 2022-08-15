@@ -118,6 +118,7 @@ class GPNF_Triggered_Population {
 						GPNestedForms.deleteEntry(
 							item,
 							entryDataRowElem,
+							{ showSpinner: false },
 						);
 
 					}
