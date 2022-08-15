@@ -12,7 +12,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-nested-form/
  * Description:  Auto-add a child entry to a Nested Form field, created with data from your parent form.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   https://gravitywiz.com
  */
 class GPNF_Triggered_Population {
