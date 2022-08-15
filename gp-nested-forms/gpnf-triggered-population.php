@@ -81,7 +81,7 @@ class GPNF_Triggered_Population {
 							var value = input.val();
 							var checked = input[0].checked;
 
-							if ( checked && value === self.triggerFieldValue || ( value !== '' && self.triggerFieldValue === '_notempty_' ) ) {
+							if ( (checked && value === self.triggerFieldValue) || ( value !== '' && self.triggerFieldValue === '_notempty_' ) ) {
 								self.addChildEntry();
 							} else {
 								self.removeChildEntry();
@@ -164,7 +164,6 @@ class GPNF_Triggered_Population {
 
 		return empty( $this->_args['form_id'] ) || $form_id == $this->_args['form_id'];
 	}
-
 
 	public function ajax_add_child_entry() {
 
