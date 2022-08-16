@@ -3,6 +3,8 @@
  * Gravity Perks // Nested Forms // Modify Labels for Nested Entries Table
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
+ * Instruction Video: https://www.loom.com/share/f880c6c804614d24a2cb79c83c8e5981
+ *
  * It can be helpful to have longform field labels in your child form (like "How many pets do you have?") and shorter
  * field labels when this field is presented in the Nested Forms field (like "No. of Pets").
  */
