@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // Word Count // Disable Limits for Logged-in Users
  * https://gravitywiz.com/documentation/gravity-forms-word-count/
+ *
+ * Instruction Video: https://www.loom.com/share/76c71110738543ce8753d8ce26e89588
  */
 // Update "123" to your form ID.
 add_action( 'gform_pre_render_123', 'gpwc_remove_limits_for_logged_in_user' );
