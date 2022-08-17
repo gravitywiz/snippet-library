@@ -3,6 +3,8 @@
  * Gravity Perks // Limit Dates // Only Allow Every Other Monday
  * https://gravitywiz.com/documentation/gravity-forms-limit-dates/
  *
+ * Instruction Video: https://www.loom.com/share/b654d08f9cfa4244b138a2e7160e46c0
+ *
  * This snippet will block all dates except the every other Monday starting January 10th, 2022.
  */
 // Update "123" to your form ID. Update "4" to your Date field ID.
