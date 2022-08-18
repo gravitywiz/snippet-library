@@ -15,37 +15,47 @@
  * Version:      0.2
  * Author URI:   https://gravitywiz.com
  */
+function modify_child_form_button_messsage( $field_configs ) {
+	foreach ( $field_configs as $config ) {
+		// $args = gf_apply_filters( array( 'gpnf_template_args', $this->formId, $this->id ), $args, $this, $form );
+		add_filter( 'gpnf_template_args_' . $config['form_id'] . '_' . $config['child_form_field_id'], function( $args, $form_field, $form ) {
 
+			// $args->add_button_message is not always present when this hook is applied
+			if ( ! array_key_exists( 'add_button_message', $args ) ) {
+				return $args;
+			}
 
-function modify_child_form_button_messsage( $args ) {
+			$min = $form_field->gpnfEntryLimitMin;
+			$max = $form_field->gpnfEntryLimitMax;
 
-	add_filter('gpnf_add_button_max_message_' . $args['form_id'] . '_' . $args['child_form_field_id'], function( $message, $args ) {
+			if ( ( empty( $min ) || $min === '0' ) && ! empty( $max ) ) {
+				$args['add_button_message'] = format_message( 'You can add no more than ' . $max . ' entries.' );
+			} elseif ( ( empty( $max ) || $max === '0' ) && ! empty( $min ) ) {
+				$args['add_button_message'] = format_message( 'You must add at least ' . $min . ' entries.' );
+			} elseif ( ! empty( $min ) && ! empty( $max ) ) {
+				$args['add_button_message'] = format_message( 'You must add at least ' . $min . ' entries and no more than ' . $max . ' entries.' );
+			}
 
-		// due to backwards compatibility, this hooks has the potential to be called without $args
-		if ( ! $args ) {
-			return $message;
-		}
+			return $args;
 
-		$min = $args['form_field']->gpnfEntryLimitMin;
-		$max = $args['form_field']->gpnfEntryLimitMax;
+		}, 10, 3 );
+	}
+}
 
-		if ( ! $min || $min === 0 || $min === '0' ) {
-			return 'You can add no more than ' . $args['form_field']->gpnfEntryLimitMax . ' entries.';
-		}
-
-		if ( ! $max ) {
-			return 'You must add at least ' . $args['form_field']->gpnfEntryLimitMin . ' entries.';
-		}
-
-		return 'You must add at least ' . $args['form_field']->gpnfEntryLimitMin . ' entries and no more than ' . $args['form_field']->gpnfEntryLimitMax . ' entries.';
-
-	}, 10, 4 );
-
+function format_message( $message ) {
+	return sprintf(
+		'
+	 	<p class="gpnf-add-entry-max">
+	 		%s
+	 	</p>',
+		$message
+	);
 }
 
 
-# Example
 modify_child_form_button_messsage( array(
-	'form_id'             => 8,
-	'child_form_field_id' => 4,
+	array(
+		'form_id'             => 8,
+		'child_form_field_id' => 4,
+	),
 ) );
