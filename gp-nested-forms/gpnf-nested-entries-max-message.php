@@ -24,7 +24,7 @@ function override_child_form_max_entry_message( $field_configs = null ) {
 	}
 
 	foreach ( $field_configs as $config ) {
-		add_filter( 'gpnf_template_args_' . $config['form_id'] . '_' . $config['child_form_field_id'], 'template_args_filter' , 10, 3 );
+		add_filter( 'gpnf_template_args_' . $config['form_id'] . '_' . $config['child_form_field_id'], 'template_args_filter', 10, 3 );
 	}
 }
 
