@@ -13,8 +13,10 @@
  * Author URI:   https://gravitywiz.com/
  */
 class GPEP_Edit_Entry {
+
 	private $form_id;
 	private $delete_partial;
+	private $passs_through_entries;
 
 	public function __construct( $options ) {
 
@@ -31,9 +33,14 @@ class GPEP_Edit_Entry {
 		// Bypass limit submissions on validation
 		add_filter( 'gform_validation', array( $this, 'bypass_limit_submission_validation' ) );
 
+		add_filter( "gpi_query_{$this->form_id}", array( $this, 'exclude_edit_entry_from_inventory' ), 10, 2 );
+
 	}
 
 	public function capture_passed_through_entry_ids( $form, $values, $passed_through_entries ) {
+
+		// Save a runtime cache for use when releasing inventory reserved by the entry being edited.
+		$this->passed_through_entries = $passed_through_entries;
 
 		if ( empty( $passed_through_entries ) ) {
 			return $form;
@@ -107,17 +114,27 @@ class GPEP_Edit_Entry {
 
 	public function get_passed_through_entry_ids( $form_id ) {
 
-		$posted_value = rgpost( $this->get_passed_through_entries_input_name( $form_id ) );
-		if ( empty( $posted_value ) ) {
-			return array();
-		}
+		$entry_ids = array();
 
-		list( $entry_ids, $hash ) = explode( '|', $posted_value );
-		if ( $hash !== wp_hash( $entry_ids ) ) {
-			return array();
-		}
+		if ( ! empty( $_POST ) )  {
 
-		$entry_ids = explode( ',', $entry_ids );
+			$posted_value = rgpost( $this->get_passed_through_entries_input_name( $form_id ) );
+			if ( empty( $posted_value ) ) {
+				return $entry_ids;
+			}
+
+			list( $entry_ids, $hash ) = explode( '|', $posted_value );
+			if ( $hash !== wp_hash( $entry_ids ) ) {
+				return $entry_ids;
+			}
+
+			$entry_ids = explode( ',', $entry_ids );
+
+		} else if ( ! empty( $this->passed_through_entries ) ) {
+
+			$entry_ids = wp_list_pluck( $this->passed_through_entries, 'entry_id' );
+
+		}
 
 		return $entry_ids;
 	}
@@ -136,6 +153,27 @@ class GPEP_Edit_Entry {
 		 * @param int      $form_id       The ID of the form that was submitted.
 		 */
 		return gf_apply_filters( array( 'gpepee_edit_entry_id', $form_id ), $entry_id, $form_id );
+	}
+
+	/**
+	 * Exclude the entry being edited in GravityView from inventory counts.
+	 *
+	 * Without this, you can't reselect choices that the current entry has consumed.
+	 */
+	public function exclude_edit_entry_from_inventory( $query, $field ) {
+		global $wpdb;
+
+		$entry_ids = $this->get_passed_through_entry_ids( $field->formId );
+
+		// @todo Update to work with multiple passed through entries.
+		$current_entry_id = array_pop( $entry_ids );
+		if ( ! $current_entry_id ) {
+			return $query;
+		}
+
+		$query['where'] .= $wpdb->prepare( "\nAND em.entry_id != %d", $current_entry_id );
+
+		return $query;
 	}
 
 }
