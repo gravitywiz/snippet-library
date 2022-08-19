@@ -63,13 +63,7 @@ class GW_Choice_Count {
 						}
 					}
 
-					self.init = function() {
-
-						// Event handler for all listeners to avoid DRY
-						var updateChoiceEventHandler = function() {
-							self.updateChoiceCount( self.formId, self.choiceFieldIds, self.countFieldId );
-						};
-
+					self.updateEventHandlers = function() {
 						for( var i = 0; i < self.choiceFieldIds.length; i++ ) {
 
 							var choiceFieldId       = self.choiceFieldIds[i],
@@ -77,20 +71,34 @@ class GW_Choice_Count {
 								$choiceField        = $(choiceFieldSelector),
 								$parentForm         = $choiceField.parents('form');
 
+							$parentForm.off( 'click', choiceFieldSelector, self.updateChoiceEventHander );
+							$parentForm.off( 'change', choiceFieldSelector, self.updateChoiceEventHander );
+
 							if ( self.isCheckboxField( $choiceField ) ) {
-								$parentForm.on( 'click', choiceFieldSelector, updateChoiceEventHandler );
+								$parentForm.on( 'click', choiceFieldSelector, self.updateChoiceEventHandler );
 							} else {
-								$parentForm.on( 'change', choiceFieldSelector, updateChoiceEventHandler );
+								$parentForm.on( 'change', choiceFieldSelector, self.updateChoiceEventHandler );
 							}
 
 						}
+					};
 
-						updateChoiceEventHandler();
+					// Event handler for all listeners to avoid DRY and to maintain a pointer reference to the function
+					// which we can use to explicity unbind event handlers
+					self.updateChoiceEventHandler = function() {
+						self.updateChoiceCount( self.formId, self.choiceFieldIds, self.countFieldId );
+					};
+
+					self.init = function() {
+
+						self.updateEventHandlers();
+						self.updateChoiceEventHandler();
 
 						// Listen for `gppa_updated_batch_fields` and update count as GPPA may have re-written choice fields
 						$( document ).on( 'gppa_updated_batch_fields', function( e, formId ) {
 							if ( parseInt( formId ) === self.formId ) {
-								updateChoiceEventHandler();
+								self.updateEventHandlers();
+								self.updateChoiceEventHandler();
 							}
 						} );
 					};
