@@ -9,7 +9,7 @@
  * Plugin URI:   https://gravitywiz.com/edit-gravity-forms-entries-on-the-front-end/
  * Description:  Edit the entry that was passed through via GP Easy Passthrough rather than creating a new entry.
  * Author:       Gravity Wiz
- * Version:      1.4.1
+ * Version:      1.4.2
  * Author URI:   https://gravitywiz.com/
  */
 class GPEP_Edit_Entry {
