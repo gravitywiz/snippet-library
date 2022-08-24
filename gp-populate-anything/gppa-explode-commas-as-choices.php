@@ -10,6 +10,8 @@
  * Version:      0.1
  * Author URI:   https://gravitywiz.com
  *
+ * Instruction Video: https://www.loom.com/share/66c75aec58924ed2907291caa37ca2ef
+ *
  * If you have an array-like value mapped to a choice-based field, Populate Anything does not yet know when it should be
  * converted to choices or imploded into a string so it defaults to the latter.
  *
