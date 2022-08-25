@@ -3,6 +3,8 @@
  * Gravity Perks // Populate Anything // Include Static Choices
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
+ * Instruction Video: https://www.loom.com/share/84fd5a33c3624a81881489e61021114b
+ *
  * Plugin Name:  GPPA Include Static Choices
  * Plugin URI:   https://gravitywiz.com.com/documentation/gravity-forms-populate-anything/
  * Description:  Include static choices alongside your dynamic choices populated by Populate Anything.
