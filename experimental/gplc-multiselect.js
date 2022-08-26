@@ -1,20 +1,29 @@
-( function( $ ) {
-	var formId      = 560; // Change this to the form ID
-	var fieldId     = 2;   // Change this to the field ID
-	var maxSelected = 2;   // Number to limit maximum selected options to
+/**
+ * Gravity Wiz // Gravity Forms // Limit Multi Selects
+ * https://gravitywiz.com/
+ *
+ * Limit how many options may be selected in a Multi Select field. Works with
+ * regular Multi Select fields as well as fields with Enhanced UI enabled.
+ * 
+ * Instructions:
+ * 
+ * 1. Install this snippet with our free Custom JavaScript plugin.
+ *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ * 2. Configure snippet per inline instructions.
+ */
+// Update "1" to the ID of your Multi Select field.
+$( '#input_GFFORMID_1' ).on( 'change', function () {
+	// Update "2" to the max number of options that should be selectable.
+	var maxSelected = 2;
+	// Alternate: Set max number by the value of another field.
+	// var maxSelected = parseInt( $( '#input_GFFORMID_4' ).val() );
+	limitMultiSelect( $( this ), maxSelected );
+} );
 
-	var selector                  = '#input_' + formId + '_' + fieldId;
-	var triggerMultiSelectOptions = function( $select ) {
-		var disable = $select.find( 'option:checked' ).length === maxSelected;
-		$select.find( 'option:not(:checked)' ).prop( 'disabled', disable );
-		$select.trigger( 'chosen:updated' );
-	};
-	// Standard multi-select
-	$( selector + ' option' ).on('click change keyup blur', function () {
-		triggerMultiSelectOptions( $( this ).parent() );
-	});
-	// Enhanced-UI multi-select
-	$( selector ).on('change', function () {
-		triggerMultiSelectOptions( $( this ) );
-	});
-})( jQuery );
+function limitMultiSelect( $select, maxSelected ) {
+	var disable = $select.find( 'option:checked' ).length === maxSelected;
+	$select
+		.find( 'option:not(:checked)' )
+		.prop( 'disabled', disable )
+		.trigger( 'chosen:updated' );
+}
