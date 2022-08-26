@@ -1,6 +1,6 @@
 /**
  * Gravity Perks // Populate Anything // Replace Live Merge Tags Individually and Show Spinner
- * https://gravitywiz.comhttps://gravitywiz.com/documentation/gravity-forms-populate-anything/
+ * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
  *    https://gravitywiz.com/gravity-forms-custom-javascript/
