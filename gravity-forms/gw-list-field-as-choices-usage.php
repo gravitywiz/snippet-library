@@ -34,3 +34,31 @@ new GW_List_Field_As_Choices( array(
 	'label_template'   => '{Name} <span style="color:#999;font-style:italic;">({Age})</span>',
 	'value_template'   => '{Name}',
 ) );
+
+
+/** Usage of filters in the snippet */
+
+//Customization values based on a user input step from Gravity Flow - The entry list field has already been populated.
+/*
+add_filter( 'gplibrary_list_field_choices', 'example_flow_list_choice_populate', 10, 3 );
+function example_flow_list_choice_populate( $values, $form, $args) {
+    if ( is_array( $values ) ) {
+		return $values;
+	}
+
+	//Confirm we are within a Gravity Flow Inbox
+    if( rgget( 'lid' ) && rgget( 'page') == 'gravityflow-inbox' ) {
+        $entry = GFAPI::get_entry( (int)rgget('lid') );
+        //Verify the entry list field has previously stored values to use.
+        if ( $entry ) {
+            $values = unserialize( $entry[ $args['list_field_id'] ] );
+            if ( ! is_array( $values ) ) {
+                return false;
+            } else {
+                return $values;
+            }
+        }
+    }
+	return false;
+}
+*/
