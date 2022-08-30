@@ -48,6 +48,16 @@ class GW_List_Field_As_Choices {
 		$list_field = GFFormsModel::get_field( $form, $this->_args['list_field_id'] );
 		$values     = GFFormsModel::get_field_value( $list_field );
 
+		/**
+		 * Filter whether to return the form or continue with $values populated via filter.
+		 *
+		 * Allows 3rd parties to avoid customize values for choice use.
+		 *
+		 * @param array|mixed|string $values
+		 * @param array              $form
+		 * @param array				 $args
+		 */
+		$values = apply_filters( 'gplibrary_list_field_choices', $values, $form, $this->_args );
 		// if list field doesn't have any values, let's ditch this party
 		if ( ! is_array( $values ) ) {
 			return $form;
