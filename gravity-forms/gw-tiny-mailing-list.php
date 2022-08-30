@@ -32,7 +32,6 @@ class GW_Tiny_Mailing_List {
 
 		add_filter( 'gform_notification', array( $this, 'send_individual_notifications' ), 10, 3 );
 		add_filter( 'gform_is_valid_notification_to', array( $this, 'allow_multiple_modifiers_in_notification_to_merge_tags' ), 10, 4 );
-		add_filter( 'gform_pre_replace_merge_tags', array( $this, 'remove_tinyml_modifier' ) );
 
 	}
 
@@ -87,21 +86,6 @@ class GW_Tiny_Mailing_List {
 		}
 
 		return $is_valid;
-	}
-
-	/**
-	 * Gravity Forms doesn't support multiple modifiers on choice-based field types. Replace our modifier so it doesn't
-	 * conflict if there is another parameter present.
-	 *
-	 * For example, if we had ":value,tinyml" modifiers, the :value modifier would not be recognized when Gravity Forms
-	 * determined what to return for the field value.
-	 *
-	 * @param $text
-	 *
-	 * @return array|string|string[]|null
-	 */
-	public function remove_tinyml_modifier( $text ) {
-		return preg_replace( '/,?tinyml,?/', '', $text );
 	}
 
 }
