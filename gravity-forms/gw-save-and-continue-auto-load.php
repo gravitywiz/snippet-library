@@ -68,6 +68,10 @@ class GW_Save_Continue_Auto_Load {
 			return;
 		}
 
+		if ( ! $this->is_applicable_form( $form['id'] ) ) {
+			return;
+		}
+
 		$submission               = GFFormDisplay::$submission[ $form['id'] ];
 		$is_successful_submission = $page_number == 0 && $submission['is_valid'];
 
@@ -139,9 +143,23 @@ class GW_Save_Continue_Auto_Load {
 		return $message;
 	}
 
-	public function is_applicable_form( $form ) {
 
+	public function is_editing_entry( $form_id ) {
+		if ( ! method_exists( 'GP_Entry_Blocks\GF_Queryer', 'attach_to_current_block' ) ) {
+			return false;
+		}
+
+		$entry_block = GP_Entry_Blocks\GF_Queryer::attach_to_current_block();
+
+		return $entry_block && $entry_block->is_edit_entry() && $entry_block->form_id === $form_id;
+	}
+
+	public function is_applicable_form( $form ) {
 		$form_id = isset( $form['id'] ) ? $form['id'] : $form;
+
+		if ( $this->is_editing_entry( $form_id ) ) {
+			return false;
+		}
 
 		return empty( $this->_args['form_ids'] ) || in_array( $form_id, $this->_args['form_ids'] );
 	}
