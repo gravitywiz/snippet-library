@@ -2,7 +2,7 @@
 /**
  * Gravity Wiz // Gravity Forms // Delete Files After Notifications Sent
  * https://gravitywiz.com/
- *  
+ *
  * This snippet will automatically delete all uploaded files after notifications have been sent. This pairs well with
  * Gravity Forms' "Attach uploaded fields to notification" notification option, allowing you to attach the files to a
  * notification without preserving the files on the file server.
