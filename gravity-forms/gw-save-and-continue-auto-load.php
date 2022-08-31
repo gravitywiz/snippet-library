@@ -144,6 +144,9 @@ class GW_Save_Continue_Auto_Load {
 	}
 
 
+	/**
+	 * Checks to see if the context is the GP Entry Block Editor.
+	 */
 	public function is_editing_entry( $form_id ) {
 		if ( ! method_exists( 'GP_Entry_Blocks\GF_Queryer', 'attach_to_current_block' ) ) {
 			return false;
@@ -151,7 +154,7 @@ class GW_Save_Continue_Auto_Load {
 
 		$entry_block = GP_Entry_Blocks\GF_Queryer::attach_to_current_block();
 
-		return $entry_block && $entry_block->is_edit_entry() && $entry_block->form_id === $form_id;
+		return $entry_block && $entry_block->is_edit_entry() && $entry_block->form_id == $form_id;
 	}
 
 	public function is_applicable_form( $form ) {
