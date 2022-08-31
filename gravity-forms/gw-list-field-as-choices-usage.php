@@ -37,8 +37,8 @@ new GW_List_Field_As_Choices( array(
 
 # Filter Usage
 
-## Customize choices to be populated based on Gravity Flow User Input step.
-add_filter( 'gwlfac_list_field_choices', function( $values, $form, $args ) {
+## Customize List field values to be populated as choices based on Gravity Flow User Input step.
+add_filter( 'gwlfac_list_field_values', function( $values, $form, $args ) {
     if ( is_array( $values ) ) {
 		return $values;
 	}
