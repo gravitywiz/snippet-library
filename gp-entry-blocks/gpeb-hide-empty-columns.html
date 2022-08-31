@@ -1,0 +1,23 @@
+<!--
+ * Gravity Perks // Entry Blocks // Hide Empty Columns on Edit
+ * https://gravitywiz.com/documentation/gravity-forms-entry-blocks/
+ * 
+ * If you include multiple Entry Blocks on the same page and click to view or edit a single entry,
+ * only the block to which that entry belongs will be visible. If you have each Entry Block displayed
+ * in its own column, this will render any other column empty in these views.
+ *
+ * Use this snippet to automatically find empty columns and remove them, making the remaining column
+ * full width.
+ * 
+ * Instructions:
+ * 
+ * 1. Add an HTML block to your page.
+ * 2. Copy the snippet into that block.
+-->
+<script>
+document.querySelectorAll( '.wp-block-column' ).forEach( element => {
+    if ( element.textContent.trim() === '' ) {
+        element.remove();
+    }
+} );
+</script>
