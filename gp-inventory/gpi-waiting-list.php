@@ -5,8 +5,11 @@
  *
  * Instruction Video: https://www.loom.com/share/7a5e57ec14404b9080c5e9b9878e2ecc
  *
- * Replace the default available inventory message with a waiting list message when a choice's inventory is exhausted.
- * The choice will be selectable and submittable.
+ * Replace the default available inventory message with a waiting list message when a product's (or choice's) inventory
+ * is exhausted.
+ *
+ * Choices on the waiting list will remain selectable and submittable. Non-choice product fields will remain available
+ * rather than being removed
  */
 class GPI_Waiting_List {
 	public $waitlist_message = '(waiting list)';
