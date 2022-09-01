@@ -41,11 +41,11 @@ $cbs2.on( 'change', function() {
 function gwDisableCheckboxes( $triggerField, $targetField, exclusions ) {
 	
 	var checkedValues = [];
-	$.each( $triggerField.find( 'input:checked' ), function() {
+	$.each( $triggerField.find( 'input:checked:not( .gplc-disabled )' ), function() {
 		checkedValues.push( $(this).val() );
 	} );
 
-	var $targetCheckboxes = $targetField.find( 'input[type="checkbox"]' );
+	var $targetCheckboxes = $targetField.find( 'input[type="checkbox"]:not( .gplc-disabled )' );
 	$targetCheckboxes.prop( 'disabled', false );
 	
 	for ( const [ key, value ] of Object.entries( exclusions ) ) {
