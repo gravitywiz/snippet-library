@@ -46,6 +46,26 @@ function gpnf_override_parent_merge_tags( $entry, $form ) {
 					gpnf_override_child_entry_input_value( $entry, $field, $child_field->id, $child_field->defaultValue );
 				}
 			}
+
+			// Reprocess calculations based off of the potentially changed parent value.
+			$child_entry_ids = explode( ',', rgar( $entry, $field->id ) );
+
+			foreach ( $child_entry_ids as $child_entry_id ) {
+				foreach ( $child_form['fields'] as $child_field ) {
+					if ( in_array( $child_field->id, $exclude_field_ids ) ) {
+						continue;
+					}
+
+					if ( ! $child_field->has_calculation() ) {
+						continue;
+					}
+
+					// @todo do calculated product fields need to be accounted for differently?
+					$child_entry      = GFAPI::get_entry( $child_entry_id );
+					$calculated_value = $child_field->get_value_save_entry( null, $child_form, $child_field->id, $child_entry_id, $child_entry );
+					GFAPI::update_entry_field( $child_entry_id, $child_field->id, $calculated_value );
+				}
+			}
 		}
 	}
 
