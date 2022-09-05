@@ -3,7 +3,9 @@
  * Gravity Wiz // Gravity Forms // Conditional Logic: Entry Meta
  * https://gravitywiz.com/
  *
- * Supports all registered meta and as well as the "Payment Status" standard meta.
+ * Supports all registered meta and as well as the "Payment Status" standard meta. 
+ * Handles enabling conditional logic evaluation on send for GP Notification Scheduler when notification 
+ * contains a conditioanl rule for "payment_status".
  *
  * Requires Gravity Forms 2.6.2.
  *
