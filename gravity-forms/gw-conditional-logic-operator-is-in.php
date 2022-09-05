@@ -23,7 +23,7 @@ class GF_CLO_Is_In {
 
 	public function init() {
 
-		add_filter( 'gform_admin_pre_render', array( $this, 'enqueue_inline_admin_script' ) );
+		add_filter( 'admin_footer', array( $this, 'output_admin_inline_script' ) );
 		add_filter( 'gform_is_valid_conditional_logic_operator', array( $this, 'whitelist_operator' ), 10, 2 );
 
 		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
@@ -32,13 +32,8 @@ class GF_CLO_Is_In {
 
 	}
 
-	public function enqueue_inline_admin_script( $return ) {
-		add_filter( 'admin_footer', array( $this, 'output_admin_inline_script' ) );
-		return $return;
-	}
-
 	public function output_admin_inline_script() {
-		if ( ! GFForms::get_page() ) {
+		if ( ! GFForms::get_page() && ! is_admin() && ! in_array( rgget( 'page' ), array( 'gp-email-users' ) ) ) {
 			return;
 		}
 		?>
