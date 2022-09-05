@@ -3,8 +3,8 @@
  * Gravity Wiz // Gravity Forms // Conditional Logic: Entry Meta
  * https://gravitywiz.com/
  *
- * Supports all registered meta and as well as the "Payment Status" standard meta. 
- * Handles enabling conditional logic evaluation on send for GP Notification Scheduler when notification 
+ * Supports all registered meta and as well as the "Payment Status" standard meta.
+ * Handles enabling conditional logic evaluation on send for GP Notification Scheduler when notification
  * contains a conditioanl rule for "payment_status".
  *
  * Requires Gravity Forms 2.6.2.
@@ -43,7 +43,7 @@ class GW_CL_Entry_Meta {
 
 		add_action( 'admin_footer', array( $this, 'output_admin_script' ) );
 		add_filter( 'gform_rule_source_value', array( $this, 'set_rule_source_value' ), 10, 5 );
-		add_filter( 'gpns_evaluate_conditional_logic_on_send', array( $this, 'gpns_should_evaluate_conditional_logic_on_send', 10, 4 );
+		add_filter( 'gpns_evaluate_conditional_logic_on_send', array( $this, 'gpns_should_evaluate_conditional_logic_on_send' ), 10, 4 );
 
 	}
 
@@ -83,7 +83,17 @@ class GW_CL_Entry_Meta {
 
 	public function get_conditional_logic_options() {
 
-		$form_ids   = 0;
+		$form_ids = 0;
+
+		// Scope entry meta to the current form for GP Email Users.
+		if ( is_admin() && rgget( 'page' ) === 'gp-email-users' ) {
+			$form_ids = rgpost( '_gform_setting_form' );
+			if ( ! $form_ids ) {
+				$draft   = gp_email_users()->get_draft();
+				$form_ids = $draft['form'];
+			}
+		}
+
 		$entry_meta = GFFormsModel::get_entry_meta( $form_ids );
 		$options    = array();
 
@@ -151,7 +161,7 @@ class GW_CL_Entry_Meta {
 
 		return $source_value;
 	}
-				   
+
 	public function gpns_should_evaluate_conditional_logic_on_send( $eval_on_send, $form, $entry, $notifications ) {
 
 		foreach ( $notifications as $notification ) {
