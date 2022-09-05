@@ -10,7 +10,7 @@
  * Plugin URI:   https://gravitywiz.com/
  * Description:  Check if a source value is in a comma-delimited list of values.
  * Author:       Gravity Wiz
- * Version:      1.0
+ * Version:      1.1
  * Author URI:   https://gravitywiz.com
  */
 class GF_CLO_Is_In {
@@ -25,6 +25,7 @@ class GF_CLO_Is_In {
 
 		add_filter( 'admin_footer', array( $this, 'output_admin_inline_script' ) );
 		add_filter( 'gform_is_valid_conditional_logic_operator', array( $this, 'whitelist_operator' ), 10, 2 );
+		add_filter( 'gpeu_field_filters_from_conditional_logic', array( $this, 'convert_conditional_logic_to_field_filters' ) );
 
 		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
 		add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
@@ -167,6 +168,32 @@ class GF_CLO_Is_In {
 
 		return $is_match;
 
+	}
+
+	public function convert_conditional_logic_to_field_filters( $field_filters ) {
+
+		foreach( $field_filters as &$field_filter ) {
+
+			// The "mode" (any/all) is typically the first key in the $field_filters. Let's ignore it.
+			if ( ! is_array( $field_filter ) ) {
+				continue;
+			}
+
+			switch( $field_filter['operator'] ) {
+				case 'is_in':
+					$field_filter['operator'] = 'IN';
+					$field_filter['value']    = array_map( 'trim', explode( ',', $field_filter['value'] ) );
+					break;
+				// Thinking ahead. "not in" is not added in the UI yet.
+				case 'not_in':
+					$field_filter['operator'] = 'NOT IN';
+					$field_filter['value']    = array_map( 'trim', explode( ',', $field_filter['value'] ) );
+					break;
+			}
+
+		}
+
+		return $field_filters;
 	}
 
 	public function is_applicable_form( $form ) {
