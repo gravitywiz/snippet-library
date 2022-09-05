@@ -41,6 +41,7 @@ class GW_CL_Entry_Meta {
 
 		add_action( 'admin_footer', array( $this, 'output_admin_script' ) );
 		add_filter( 'gform_rule_source_value', array( $this, 'set_rule_source_value' ), 10, 5 );
+		add_filter( 'gpns_evaluate_conditional_logic_on_send', array( $this, 'gpns_should_evaluate_conditional_logic_on_send', 10, 4 );
 
 	}
 
@@ -147,6 +148,20 @@ class GW_CL_Entry_Meta {
 		}
 
 		return $source_value;
+	}
+				   
+	public function gpns_should_evaluate_conditional_logic_on_send( $eval_on_send, $form, $entry, $notifications ) {
+
+		foreach ( $notifications as $notification ) {
+			$_notification = gp_notification_schedule()->get_notification( $form, $notification['nid'] );
+			foreach ( rgars( $_notification, 'notification_conditional_logic_object/rules' ) as $rule ) {
+				if ( $rule['fieldId'] === 'payment_status' ) {
+					return true;
+				}
+			}
+		}
+
+		return $eval_on_send;
 	}
 
 }
