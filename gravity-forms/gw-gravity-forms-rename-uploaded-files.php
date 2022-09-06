@@ -251,7 +251,7 @@ class GW_Rename_Uploaded_Files {
 		$form     = GFAPI::get_form( $entry['form_id'] );
 		$filename = GFCommon::replace_variables( $template, $form, $entry, false, true, false, 'text' );
 		// make sure filename is "clean". This includes removing any user inputted items such as "../", "/usr/bin" etc
-		$filename = sanitize_file_name( $filename );
+		$filename = $this->clean( $filename );
 
 		if ( strpos( $template, '/' ) === 0 ) {
 			$dir      = wp_upload_dir();
@@ -278,6 +278,10 @@ class GW_Rename_Uploaded_Files {
 		$is_applicable_field_id = $this->_args['field_id'] ? $field['id'] == $this->_args['field_id'] : true;
 
 		return $is_file_upload_field && $is_applicable_field_id;
+	}
+
+	function clean( $str ) {
+		return sanitize_file_name( $str );
 	}
 
 	function get_url_by_path( $file, $form_id ) {
