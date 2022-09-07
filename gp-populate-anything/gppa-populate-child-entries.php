@@ -19,7 +19,7 @@
  * 1. Add any multi-choice field (e.g. Radio Buttons, Checkboxes, Drop Down).
  * 2. Check the "Populate choices dynamically" option.
  * 3. Select the desired child form for which you wish to fetch child entries.
- * 4. Add a filter and filter where Parent Entry ID entry meta is equal to the the Hidden field you created in Step 1.
+ * 4. Add a filter and filter where Parent Entry ID entry meta is equal to the Hidden field you created in Step 1.
  *
  * Important Note:
  *
@@ -30,7 +30,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  * Description:  A brief description about this snippet and the functionality it provides. Might also include basic usage instructions if applicable.
  * Author:       Gravity Wiz
- * Version:      1.1.1
+ * Version:      1.2
  * Author URI:   http://gravitywiz.com
  */
 class GPPA_Populate_Child_Entries {
@@ -119,23 +119,33 @@ class GPPA_Populate_Child_Entries {
 
 						self.$peidField = $( '#input_{0}_{1}'.format( self.formId, self.fieldId ) );
 
-						gform.addAction( 'gpnf_session_initialized', function() {
-							var gpnfCookie = $.parseJSON( self.getCookie( 'gpnf_form_session_{0}'.format( self.formId ) ) );
-							if ( ! self.$peidField.val() ) {
-								self.$peidField
-									.val( gpnfCookie.hash )
-									.change();
-							}
-
-							for ( var i = 0; i < self.nestedFormFieldIds.length; i++ ) {
-								window[ 'GPNestedForms_{0}_{1}'.format( self.formId, self.nestedFormFieldIds[ i ] ) ].viewModel.entries.subscribe( function( entries ) {
-									self.$peidField.data( 'lastValue', '' ).change();
-								} );
-							}
-
-						} );
+						if ( typeof window[ 'gpnfSessionPromise_' + self.formId ] === 'undefined' ) {
+							gform.addAction( 'gpnf_session_initialized', function() {
+								self.setupPeidField();
+							} );
+						} else {
+							self.setupPeidField();
+						}
 
 					};
+
+					self.setupPeidField = function() {
+
+						var gpnfCookie = $.parseJSON( self.getCookie( 'gpnf_form_session_{0}'.format( self.formId ) ) );
+
+						if ( ! self.$peidField.val() ) {
+							self.$peidField
+								.val( gpnfCookie.hash )
+								.change();
+						}
+
+						for ( var i = 0; i < self.nestedFormFieldIds.length; i++ ) {
+							window[ 'GPNestedForms_{0}_{1}'.format( self.formId, self.nestedFormFieldIds[ i ] ) ].viewModel.entries.subscribe( function( entries ) {
+								self.$peidField.data( 'lastValue', '' ).change();
+							} );
+						}
+
+					}
 
 					self.getCookie = function( name ) {
 
