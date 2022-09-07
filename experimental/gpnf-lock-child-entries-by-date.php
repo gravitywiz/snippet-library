@@ -11,10 +11,22 @@
  * Clicking "Delete" will do nothing.
  */
 add_filter( 'gpnf_can_user_edit_entry', function( $can_user_edit_entry, $entry ) {
+	
+	// Update "2022-09-01" to your desired lockout date in YYYY-MM-DD format.
+	$locked_date  = new DateTime( '2022-09-01' );
+	
+	// Update "123" to the parent form ID for which child entries should be locked.
+	$target_parent_form_id = 123;
+	
+	$parent_form_id = rgpost( 'gpnf_parent_form_id' );
+	if ( ! $parent_form_id || $parent_form_id != $target_parent_form_id ) {
+		return $can_user_edit_entry;
+	}
+	
 	$date_created = new DateTime( $entry['date_created'] );
-	$locked_date = new DateTime( '2022-08-24' );
 	if ( $date_created < $locked_date ) {
 		$can_user_edit_entry = false;
 	}
+	
 	return $can_user_edit_entry;
 }, 10, 2 );
