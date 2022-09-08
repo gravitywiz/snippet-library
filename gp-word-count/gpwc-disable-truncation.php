@@ -3,7 +3,7 @@
  * Gravity Perks // Word Count // Disable Truncation
  * https://gravitywiz.com/documentation/gravity-forms-word-count/
  *
- * Instruction Video: https://www.loom.com/share/385cfc1076ef43fea7673fdaf712e2e7
+ * Instruction Video: https://www.loom.com/share/4f588b75b8bb46d7b2d1bdb9ce11f56e
  *
  * This will prevent the words in a specific field from being truncated when the limit is reached.
  */
