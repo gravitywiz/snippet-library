@@ -3,6 +3,8 @@
  * Gravity Perks // Nested Forms // Include Child Products Directly in Parent Form Order Summary
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
+ * Instruction Video: https://www.loom.com/share/857f5bbc938041de85fc8e8cc1f2abc3
+ * 
  * 1. Add a Calculated Product to your parent form.
  * 2. Add your Nested Form field with the :total modifier.
  * 3. Copy and paste this snippet into your theme's functions.php file.
