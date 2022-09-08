@@ -3,6 +3,8 @@
  * Gravity Perks // Copy Cat // Clear Values for Specific Value
  * https://gravitywiz.com/documentation/gravity-forms-copy-cat/
  *
+ * Instruction Video: https://www.loom.com/share/254783b3578b4183b482eff4519b1754
+ *
  * Clear values in the target field when a specific option in a choice-based trigger field is
  * selected.
  *
