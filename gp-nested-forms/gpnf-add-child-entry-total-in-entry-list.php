@@ -3,7 +3,7 @@
  * Gravity Perks // Nested Forms // Add Total Entry Count for Nested Form Fields in Entry List View
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
- * Instruction Video: https://www.loom.com/share/6747bb12298c435da25f7c5ea0ae634c
+ * Instruction Video: https://www.loom.com/share/69eb4d65affa41c4a129a788047f41a7
  *
  * Add the total count of child entries for each Nested Form field in its label when viewed in the Entry List view.
  */
