@@ -3,7 +3,7 @@
  * Gravity Perks // Nested Forms // Force {Parent} Merge Tag Replacement on Submission
  * http://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
- * Instruction Video: https://www.loom.com/share/5ff99681acb6462ea9268e1ff30cd220
+ * Instruction Video: https://www.loom.com/share/1ccbaa94d6b94f0f97829916a8396ac7
  *
  * Override all {Parent} merge tags when the parent form is submitted or a parent entry is updated.
  */
