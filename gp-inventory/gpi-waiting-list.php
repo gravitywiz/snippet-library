@@ -50,7 +50,8 @@ class GPI_Waiting_List {
 		remove_filter( 'gform_validation', array( gp_inventory_type_simple(), 'validation' ) );
 
 		// Remove locking out single products.
-		add_filter( 'gform_field_input', function ( $field_content, $field ) {
+		add_filter( 'gform_field_input', function ( $return, $field ) {
+
 			remove_filter( "gform_field_input_{$field->formId}_{$field->id}", array(
 				gp_inventory_type_simple(),
 				'hide_field',
@@ -60,6 +61,8 @@ class GPI_Waiting_List {
 				gp_inventory_type_advanced(),
 				'hide_field',
 			) );
+
+			return $return;
 		}, 15, 2 );
 
 		add_filter( 'gform_pre_render', array( $this, 'add_waiting_list_to_single_product' ) );
