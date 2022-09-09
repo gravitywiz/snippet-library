@@ -13,10 +13,10 @@
 add_filter( 'gpnf_can_user_edit_entry', function( $can_user_edit_entry, $entry ) {
 
 	// Update "2022-09-01" to your desired lockout date in YYYY-MM-DD format.
-	$locked_date  = new DateTime( '2022-09-05' );
+	$locked_date  = new DateTime( '2022-09-01' );
 
 	// Update "123" to the parent form ID for which child entries should be locked.
-	$target_parent_form_id = 369;
+	$target_parent_form_id = 123;
 
 	$action = rgpost( 'action' );
 	switch ( $action ) {
