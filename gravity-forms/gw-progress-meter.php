@@ -8,7 +8,7 @@
  * Plugin URI:   https://gravitywiz.com/gravity-forms-progress-meter/
  * Description:  Display a meter indicating your progression towards a set goal based on your Gravity Forms entries.
  * Author:       Gravity Wiz
- * Version:      1.1
+ * Version:      1.2
  * Author URI:   https://gravitywiz.com
  *
  * @todo
@@ -39,13 +39,18 @@ class GW_Progress_Meter {
 			'id'          => false,
 			'status'      => 'total', // accepts 'total', 'unread', 'starred', 'trash', 'spam'
 			'goal'        => false,
+			'start'       => false,
 			'field'       => false,
 			'count_label' => '%s submissions',
 			'goal_label'  => '%s goal',
 			'name'        => false, // Accepts a string; used via the `shortcode_atts_gf_progress_meter` filter to conditionally filter the $atts.
 		), $atts, 'gf_progress_meter' );
 
-		$count            = $this->get_count( $atts );
+		$count = $this->get_count( $atts );
+		if ( $atts['start'] && $count < $atts['start'] ) {
+			$count = $atts['start'];
+		}
+
 		$percent_complete = $count <= 0 ? 0 : round( ( $count / $atts['goal'] ) * 100 );
 		$classes          = array( 'gwpm-container' );
 
@@ -66,7 +71,7 @@ class GW_Progress_Meter {
 				' . $this->prepare_label( $atts['count_label'], 'count', $count ) . '
 			</div>
 			<div class="gwpm-goal">
-				' . $this->prepare_label( $atts['goal_label'], 'goal', $atts['goal'] ) . ' 
+				' . $this->prepare_label( $atts['goal_label'], 'goal', $atts['goal'] ) . '
 			</div>
 		</div>';
 
@@ -92,7 +97,7 @@ class GW_Progress_Meter {
 					'from'   => "FROM {$wpdb->prefix}gf_entry e",
 					'join'   => '',
 					'where'  => $wpdb->prepare( "
-						WHERE e.form_id = %d 
+						WHERE e.form_id = %d
 						AND e.status = 'active'\n",
 						$atts['id']
 					),
@@ -106,7 +111,7 @@ class GW_Progress_Meter {
 					'join'   => "INNER JOIN {$wpdb->prefix}gf_entry e ON e.id = em.entry_id",
 					'where'  => $wpdb->prepare( "
 						WHERE em.form_id = %d
-						AND em.meta_key = %s 
+						AND em.meta_key = %s
 						AND e.status = 'active'\n",
 						$atts['id'], $atts['field']
 					),
