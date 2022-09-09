@@ -15,14 +15,14 @@ class GPI_Waiting_List {
 	public $waitlist_message = '(waiting list)';
 
 	public function __construct() {
-		if ( ! function_exists( 'gp_inventory_type_advanced' ) || ! function_exists( 'gp_inventory_type_simple' ) ) {
-			return;
-		}
-
 		add_action( 'init', array( $this, 'add_hooks' ), 20 ); // Wait for GPI to be instantiated
 	}
 
 	public function add_hooks() {
+		if ( ! function_exists( 'gp_inventory_type_advanced' ) || ! function_exists( 'gp_inventory_type_simple' ) ) {
+			return;
+		}
+
 		add_filter( 'gform_entry_post_save', array( $this, 'add_entry_meta' ), 10, 2 );
 
 		/*
