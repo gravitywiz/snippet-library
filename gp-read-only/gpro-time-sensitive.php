@@ -4,24 +4,31 @@
  * https://gravitywiz.com/documentation/gravity-forms-read-only/
  */
 // Update "123" to your form ID.
-add_filter( 'gform_pre_render_123', 'gpro_set_readonly_after_datetime' );
-add_filter( 'gform_pre_process_123', 'gpro_set_readonly_after_datetime' );
-function gpro_set_readonly_after_datetime( $form ) {
+// Update "4", "5", and "6" in the array to the field IDs which should be set as readonly after the given date/time.
+// Specify a date/time in the 24-hour format.
+gpro_set_readonly_after_datetime( 123, array( 4, 5, 6 ), '2022-09-09 16:00:00' );
 
-	// Set your desired date and time (including timezone) at which time-sensitive fields will become readonly.
-	$datetime  = '2022-09-09 14:00:00 EST';
-	// Specify the IDs of all fields that should be marked as readonly after the above date and time.
-	$field_ids = array( 1, 2, 3 );
+function gpro_set_readonly_after_datetime( $form_id, $field_ids, $datetime ) {
 
-	if ( new DateTime( substr( $datetime, -3, 3 ) ) < new DateTime( $datetime ) ) {
-		return $form;
-	}
+	$func = function( $form ) use( $field_ids, $datetime ) {
 
-	foreach ( $form['fields'] as &$field ) {
-		if ( in_array( $field->id, $field_ids ) ) {
-			$field->gwreadonly_enable = true;
+		$current_time  = new DateTime( wp_timezone_string() );
+		$readonly_time = new DateTime( $datetime . ' ' . wp_timezone_string() );
+
+		if ( $current_time < $readonly_time ) {
+			return $form;
 		}
-	}
 
-	return $form;
+		foreach ( $form['fields'] as &$field ) {
+			if ( in_array( $field->id, $field_ids ) ) {
+				$field->gwreadonly_enable = true;
+			}
+		}
+
+		return $form;
+	};
+
+	add_filter( "gform_pre_render_{$form_id}", $func );
+	add_filter( "gform_pre_process_{$form_id}", $func );
+
 }
