@@ -1,0 +1,53 @@
+/**
+ * Gravity Perks // Read Only // CSS Style Guide
+ * https://gravitywiz.com/how-to-style-gravity-forms-read-only-fields/
+ *
+ * An overview of how to style read-only and disabled fields with CSS. Includes examples of how to
+ * target specific field types and different methods of styling.
+ */
+/* most field types */
+.gform_wrapper input[readonly='readonly'] {
+	/* custom styles */
+}
+
+/* selects */
+.gform_wrapper select[disabled='disabled'] {
+	/* custom styles */
+}
+
+/* checkboxes & radio buttons */
+.gform_wrapper input[disabled='disabled'] {
+	/* custom styles */
+}
+
+/* change font color */
+.gform_wrapper input[readonly='readonly'] {
+	color: #999;
+}
+
+/* hide the "input" */
+.gform_wrapper input[readonly='readonly'] {
+	border-color: transparent;
+}
+
+/* change the cursor */
+.gform_wrapper input[readonly='readonly'] {
+	cursor: not-allowed;
+}
+
+/* all together */
+.gform_wrapper input[readonly='readonly'] {
+	color: #999;
+	border-color: transparent;
+	cursor: not-allowed;
+}
+
+/* textareas */
+.gform_wrapper textarea[readonly='readonly'] {
+	/* custom styles */
+}
+
+/* checkbox & radio button labels */
+.gform_wrapper input[disabled='disabled'] + label {
+	/* custom styles */
+}
