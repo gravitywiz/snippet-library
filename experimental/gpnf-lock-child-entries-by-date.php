@@ -23,7 +23,7 @@ add_filter( 'gpnf_can_user_edit_entry', function( $can_user_edit_entry, $entry )
 		case 'gpnf_edit_entry':
 			$parent_form_id = rgpost( 'gpnf_parent_form_id' );
 			break;
-		case 'gpnf_delete_entry';
+		case 'gpnf_delete_entry':
 			$parent_form_id = gform_get_meta( rgpost( 'gpnf_entry_id' ), GPNF_Entry::ENTRY_PARENT_FORM_KEY );
 			break;
 	}
