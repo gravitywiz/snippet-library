@@ -3,6 +3,8 @@
  * Gravity Perks // Populate Anything // Populate choices using choice labels rather than values
  * http://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
+ * Instruction Video: https://www.loom.com/share/0a3bc5ea99ee44f6acccceab3737101a
+ *
  * Installation instructions:
  *   1. https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  *   2. Update variables below accordingly.
