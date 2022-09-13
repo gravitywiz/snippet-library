@@ -3,6 +3,8 @@
  * Gravity Perks // Media Library // Change Upload Directory
  * https://gravitywiz.com/documentation/gravity-forms-media-library/
  *
+ * Instruction Video: https://www.loom.com/share/f4da8e923c72492ca97eb6135cd1057e
+ *
  * Customize the directory to which GP Media Library will import files for a specific form or field.
  */
 // Using "gpml_media_data" filter to ensure we only change upload directory for GPML-enabled uploads.
