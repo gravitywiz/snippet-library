@@ -39,22 +39,22 @@ new GW_List_Field_As_Choices( array(
 
 ## Customize List field values to be populated as choices based on Gravity Flow User Input step.
 add_filter( 'gwlfac_list_field_values', function( $values, $form, $args ) {
-    if ( is_array( $values ) ) {
+	if ( is_array( $values ) ) {
 		return $values;
 	}
 
 	// Confirm we are within a Gravity Flow Inbox.
-    if ( rgget( 'lid' ) && rgget( 'page') == 'gravityflow-inbox' ) {
-        $entry = GFAPI::get_entry( (int) rgget( 'lid' ) );
-        // Verify the entry list field has previously stored values to use.
-        if ( $entry ) {
-            $values = unserialize( $entry[ $args['list_field_id'] ] );
-            if ( ! is_array( $values ) ) {
-                return false;
-            } else {
-                return $values;
-            }
-        }
-    }
+	if ( rgget( 'lid' ) && rgget( 'page' ) == 'gravityflow-inbox' ) {
+		$entry = GFAPI::get_entry( (int) rgget( 'lid' ) );
+		// Verify the entry list field has previously stored values to use.
+		if ( $entry ) {
+			$values = unserialize( $entry[ $args['list_field_id'] ] );
+			if ( ! is_array( $values ) ) {
+				return false;
+			} else {
+				return $values;
+			}
+		}
+	}
 	return false;
 }, 10, 3 );

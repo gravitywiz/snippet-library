@@ -53,10 +53,10 @@ class GW_List_Field_As_Choices {
 		 *
 		 * @param array|mixed|string $values The List field values that will be used to populate field choices.
 		 * @param array              $form   The current form.
-		 * @param array				 $args   The arguments used to initialize this instance of GW_List_Field_As_Choices.
+		 * @param array              $args   The arguments used to initialize this instance of GW_List_Field_As_Choices.
 		 */
 		$values = apply_filters( 'gwlfac_list_field_values', $values, $form, $this->_args );
-		
+
 		// if list field doesn't have any values, let's ditch this party
 		if ( ! is_array( $values ) ) {
 			return $form;

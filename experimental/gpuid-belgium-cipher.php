@@ -16,7 +16,7 @@ add_filter( 'gform_entry_post_save', function( $entry, $form ) {
 
 	$key = 'ciphered_code';
 
-	foreach( $form['fields'] as $field ) {
+	foreach ( $form['fields'] as $field ) {
 
 		if ( strpos( $field->inputName, $key ) === false ) {
 			continue;
@@ -27,11 +27,11 @@ add_filter( 'gform_entry_post_save', function( $entry, $form ) {
 			continue;
 		}
 
-		$value           = (int) rgar( $entry, $source_field_id );
-		$mod97           = $value % 97;
-		$last_two        = str_pad( $mod97 ? $mod97 : '97', 2, '0', STR_PAD_LEFT );
-		$combined        = $value . $last_two;
-		$code            = '+++' . substr( $combined, 0, 3 ) . '/' . substr( $combined, 3, 4 ) . '/' . substr( $combined, 7, 5 ) . '+++';
+		$value    = (int) rgar( $entry, $source_field_id );
+		$mod97    = $value % 97;
+		$last_two = str_pad( $mod97 ? $mod97 : '97', 2, '0', STR_PAD_LEFT );
+		$combined = $value . $last_two;
+		$code     = '+++' . substr( $combined, 0, 3 ) . '/' . substr( $combined, 3, 4 ) . '/' . substr( $combined, 7, 5 ) . '+++';
 
 		$entry[ $field->id ] = $code;
 		GFAPI::update_entry_field( $entry['id'], $field->id, $code );

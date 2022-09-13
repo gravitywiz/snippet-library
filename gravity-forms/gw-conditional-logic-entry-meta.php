@@ -18,16 +18,16 @@
  */
 class GW_CL_Entry_Meta {
 
-    private static $instance;
+	private static $instance;
 
-    public static function get_instance() {
+	public static function get_instance() {
 
-        if ( ! self::$instance ) {
-            self::$instance = new GW_CL_Entry_Meta();
-        }
+		if ( ! self::$instance ) {
+			self::$instance = new GW_CL_Entry_Meta();
+		}
 
-        return self::$instance;
-    }
+		return self::$instance;
+	}
 
 	private function __construct() {
 
@@ -77,7 +77,7 @@ class GW_CL_Entry_Meta {
 					return str;
 				} );
 			</script>
-		<?php
+			<?php
 		endif;
 	}
 
@@ -89,7 +89,7 @@ class GW_CL_Entry_Meta {
 		if ( is_admin() && rgget( 'page' ) === 'gp-email-users' ) {
 			$form_ids = rgpost( '_gform_setting_form' );
 			if ( ! $form_ids ) {
-				$draft   = gp_email_users()->get_draft();
+				$draft    = gp_email_users()->get_draft();
 				$form_ids = $draft['form'];
 			}
 		}
@@ -114,7 +114,7 @@ class GW_CL_Entry_Meta {
 					'isnot' => 'isNot',
 				),
 			);
-			$_choices = rgar( $choices_by_key, $key );
+			$_choices        = rgar( $choices_by_key, $key );
 			if ( ! empty( $_choices ) ) {
 				$choices = array();
 				foreach ( $_choices as $value => $text ) {
@@ -179,7 +179,7 @@ class GW_CL_Entry_Meta {
 }
 
 function gw_cl_entry_meta() {
-    return GW_CL_Entry_Meta::get_instance();
+	return GW_CL_Entry_Meta::get_instance();
 }
 
 gw_cl_entry_meta();

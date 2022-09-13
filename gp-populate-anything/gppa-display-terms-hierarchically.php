@@ -25,7 +25,7 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 	) );
 
 	// Walk through all terms but only output terms filtered by Populate Anything.
-	$walker = function( $all_terms, $term_ids, $parent_id = 0, &$out_array = array(), $level = 0 ) use ( &$walker ) {
+	$walker  = function( $all_terms, $term_ids, $parent_id = 0, &$out_array = array(), $level = 0 ) use ( &$walker ) {
 		foreach ( $all_terms as $term ) {
 			if ( intval( $term->parent ) === intval( $parent_id ) ) {
 				$is_applicable_term = in_array( $term->term_id, $term_ids );

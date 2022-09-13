@@ -172,14 +172,14 @@ class GF_CLO_Is_In {
 
 	public function convert_conditional_logic_to_field_filters( $field_filters ) {
 
-		foreach( $field_filters as &$field_filter ) {
+		foreach ( $field_filters as &$field_filter ) {
 
 			// The "mode" (any/all) is typically the first key in the $field_filters. Let's ignore it.
 			if ( ! is_array( $field_filter ) ) {
 				continue;
 			}
 
-			switch( $field_filter['operator'] ) {
+			switch ( $field_filter['operator'] ) {
 				case 'is_in':
 					$field_filter['operator'] = 'IN';
 					$field_filter['value']    = array_map( 'trim', explode( ',', $field_filter['value'] ) );
@@ -190,7 +190,6 @@ class GF_CLO_Is_In {
 					$field_filter['value']    = array_map( 'trim', explode( ',', $field_filter['value'] ) );
 					break;
 			}
-
 		}
 
 		return $field_filters;

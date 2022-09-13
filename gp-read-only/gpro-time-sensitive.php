@@ -10,7 +10,7 @@ gpro_set_readonly_after_datetime( 123, array( 4, 5, 6 ), '2022-09-09 16:00:00' )
 
 function gpro_set_readonly_after_datetime( $form_id, $field_ids, $datetime ) {
 
-	$func = function( $form ) use( $field_ids, $datetime ) {
+	$func = function( $form ) use ( $field_ids, $datetime ) {
 
 		$current_time  = new DateTime( wp_timezone_string() );
 		$readonly_time = new DateTime( $datetime . ' ' . wp_timezone_string() );
