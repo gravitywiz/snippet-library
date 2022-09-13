@@ -22,5 +22,5 @@ add_filter( 'gppa_process_template_value', function( $template_value, $field, $t
 		return $template_value;
 	}
 
-	return date( 'd/m/Y', strtotime( $template_value ) );
+	return wp_date( 'd/m/Y', strtotime( $template_value ) );
 }, 10, 7 );
