@@ -10,7 +10,7 @@
  * Plugin URI: https://gravitywiz.com/automatic-save-and-continue-with-gravity-forms/
  * Description: Automatically save users' data as they progress through a form and automatically repopulate that data when they return.
  * Author: Gravity Wiz
- * Version: 0.6
+ * Version: 0.7
  * Author URI: https://gravitywiz.com
  */
 class GW_Save_Continue_Auto_Load {
@@ -148,13 +148,19 @@ class GW_Save_Continue_Auto_Load {
 	 * Checks to see if the context is the GP Entry Block Editor.
 	 */
 	public function is_editing_entry( $form_id ) {
-		if ( ! method_exists( 'GP_Entry_Blocks\GF_Queryer', 'attach_to_current_block' ) ) {
-			return false;
+		if ( method_exists( 'GP_Entry_Blocks\GF_Queryer', 'attach_to_current_block' ) ) {
+			$gpeb_queryer = GP_Entry_Blocks\GF_Queryer::attach_to_current_block();
+
+			if ( $gpeb_queryer && $gpeb_queryer->is_edit_entry() && $gpeb_queryer->form_id == $form_id ) {
+				return true;
+			}
 		}
 
-		$entry_block = GP_Entry_Blocks\GF_Queryer::attach_to_current_block();
+		if ( function_exists( 'gp_entry_blocks' ) && property_exists( gp_entry_blocks(), 'block_edit_form' ) ) {
+			return gp_entry_blocks()->block_edit_form->has_submitted_edited_entry();
+		}
 
-		return $entry_block && $entry_block->is_edit_entry() && $entry_block->form_id == $form_id;
+		return false;
 	}
 
 	public function is_applicable_form( $form ) {
