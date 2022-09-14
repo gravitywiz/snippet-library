@@ -11,7 +11,7 @@
  *  - add UI for naming zips
  *  - add UI for attaching zip to notification
  *
- * @version   1.3
+ * @version   1.4
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/
@@ -350,17 +350,15 @@ class GW_Zip_Files {
 			return $text;
 		}
 
+		$replace  = '';
 		$zip_file = $this->get_zip_paths( $entry, 'path' );
-		if ( ! $zip_file ) {
-			return '';
-		}
 
-		$zip = new ZipArchive;
-		if ( ! $zip->open( $zip_file ) || $zip->numFiles <= 0 ) {
-			return '';
+		if ( $zip_file ) {
+			$zip = new ZipArchive;
+			if ( $zip->open( $zip_file ) && $zip->numFiles > 0 ) {
+				$replace = $this->get_zip_paths( $entry, 'url' );
+			}
 		}
-
-		$replace = $this->get_zip_paths( $entry, 'url' );
 
 		return str_replace( $search, $replace, $text );
 	}
