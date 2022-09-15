@@ -3,7 +3,7 @@
  * Gravity Perks // Nested Forms // Attach Child Entry by Field
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
- * Instruction Video: ...
+ * Instruction Video: https://www.loom.com/share/6b3b4a4ad0fb420491a98046c5a18217
  * 
  * Attach child entries to a parent entry when the child form is submitted outside a Nested Form field. The attachment
  * happens by specifying a field on the child form that will contain the parent entry ID to which the form should be
@@ -72,7 +72,7 @@ class GPNF_Attach_Child_Entry_by_Field {
 # Configuration
 
 new GPNF_Attach_Child_Entry_by_Field( array(
-	'nested_form_field_id'  => 1,   // Update "4" to the ID of your Nested Form field on the parent form.
-	'child_form_id'         => 406, // Update "123" to ID of your child form. 
+	'nested_form_field_id'  => 4,   // Update "4" to the ID of your Nested Form field on the parent form.
+	'child_form_id'         => 123, // Update "123" to ID of your child form. 
 	'parent_entry_field_id' => 5,   // Update "5" to the ID of the field on your child form that will contain the parent entry ID.
 ) );
