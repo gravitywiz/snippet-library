@@ -11,7 +11,7 @@
  *  - add UI for naming zips
  *  - add UI for attaching zip to notification
  *
- * @version   1.4
+ * @version   1.5
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/
@@ -170,7 +170,7 @@ class GW_Zip_Files {
 
 	public function register_entry_meta( $entry_meta, $form_id ) {
 
-		if ( ! empty( $this->_args['field_ids'] ) ) {
+		if ( ! empty( $this->_args['field_ids'] ) || ! $this->is_applicable_form( $form_id ) ) {
 			return $entry_meta;
 		}
 
@@ -185,7 +185,7 @@ class GW_Zip_Files {
 
 	public function modify_zip_display_value( $value, $form_id, $field_id ) {
 
-		if ( $this->is_applicable_form( $form_id ) ) {
+		if ( ! $this->is_applicable_form( $form_id ) ) {
 			return $value;
 		}
 
@@ -199,11 +199,11 @@ class GW_Zip_Files {
 	}
 
 	public function is_applicable_form( $form ) {
-		if ( isset( $_POST['gpnf_parent_form_id'] ) && ! empty( $_POST['gpnf_parent_form_id'] ) ) {
-			return ! $this->_args['form_id'] || intval( $_POST['gpnf_parent_form_id'] ) == $this->_args['form_id'];
-		}
 
-		if ( is_int( $form ) ) {
+		// @todo This really doesn't belong here... this should be checked where applicable and passed to this function.
+		if ( rgpost( 'gpnf_parent_form_id' ) ) {
+			$form_id = intval( rgpost( 'gpnf_parent_form_id' ) );
+		} else if ( is_int( $form ) ) {
 			$form_id = $form;
 		} else {
 			$form_id = $form['id'];
@@ -334,7 +334,7 @@ class GW_Zip_Files {
 	public function all_files_merge_tag( $text, $form, $entry ) {
 
 		$search = '{all_files}';
-		if ( strpos( $text, $search ) === false ) {
+		if ( strpos( $text, $search ) === false || ! $this->is_applicable_form( $form ) ) {
 			return $text;
 		}
 
@@ -346,7 +346,7 @@ class GW_Zip_Files {
 	public function zip_url_merge_tag( $text, $form, $entry ) {
 
 		$search = '{zip_url}';
-		if ( strpos( $text, $search ) === false ) {
+		if ( strpos( $text, $search ) === false || ! $this->is_applicable_form( $form ) ) {
 			return $text;
 		}
 
@@ -440,12 +440,13 @@ class GW_Zip_Files {
 	}
 
 	public function add_zip_as_attachment( $notification, $form, $entry ) {
-		if ( ! $this->is_applicable_notification( $notification ) ) {
+
+		if ( ! $this->is_applicable_notification( $notification ) || ! $this->is_applicable_form( $form ) ) {
 			return $notification;
 		}
 
 		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure, WordPress.CodeAnalysis.AssignmentInCondition.Found
-		if ( $this->is_applicable_form( $form ) && $zip_path = $this->get_zip_paths( $entry, 'path' ) ) {
+		if ( $zip_path = $this->get_zip_paths( $entry, 'path' ) ) {
 
 			if ( isset( $notification['attachments'] ) ) {
 				$notification['attachments'] = is_array( $notification['attachments'] ) ? $notification['attachments'] : array( $notification['attachments'] );
