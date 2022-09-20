@@ -4,7 +4,7 @@
  *
  * Provides the ability to populate a Date field with a modified date based on the current date or a user-submitted date.
  *
- * @version   2.5.3
+ * @version   2.6
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/populate-dates-gravity-form-fields/
@@ -1115,7 +1115,7 @@ class GW_Populate_Date {
 											break;
 										case 'weekday':
 										case 'weekdays':
-											// todo
+											this.rwd += amount;
 											break;
 									}
 								}
@@ -1179,13 +1179,14 @@ class GW_Populate_Date {
 								regex: /^ago/i,
 								name: 'ago',
 								callback: function callback() {
-									this.ry = -this.ry;
-									this.rm = -this.rm;
-									this.rd = -this.rd;
-									this.rh = -this.rh;
-									this.ri = -this.ri;
-									this.rs = -this.rs;
-									this.rf = -this.rf;
+									this.ry  = -this.ry;
+									this.rm  = -this.rm;
+									this.rd  = -this.rd;
+									this.rwd = -this.rwd;
+									this.rh  = -this.rh;
+									this.ri  = -this.ri;
+									this.rs  = -this.rs;
+									this.rf  = -this.rf;
 								}
 							},
 
@@ -1252,6 +1253,7 @@ class GW_Populate_Date {
 							ry: 0,
 							rm: 0,
 							rd: 0,
+							rwd: 0,
 							rh: 0,
 							ri: 0,
 							rs: 0,
@@ -1417,6 +1419,22 @@ class GW_Populate_Date {
 								// it can't be used, thus this weird way
 								result.setFullYear(this.y, this.m, this.d);
 								result.setHours(this.h, this.i, this.s, this.f);
+
+								if ( this.rwd ) {
+									/**
+									 * Let's add a day to the current date result until our weekday allowance is exhausted.
+									 * If our weekday allowance is a negative number, we will subtract a day instead.
+									 */
+									var mod = this.rwd < 0 ? -1 : 1;
+									var i   = Math.abs( this.rwd );
+									while ( i > 0 ) {
+										result.setDate( result.getDate() + mod );
+										var currentDay = result.getDay();
+										if ( currentDay !== 6 && currentDay !== 0 ) {
+											i--;
+										}
+									}
+								}
 
 								// note: this is done twice in PHP
 								// early when processing special relatives
