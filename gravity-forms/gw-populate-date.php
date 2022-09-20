@@ -1421,6 +1421,10 @@ class GW_Populate_Date {
 								result.setHours(this.h, this.i, this.s, this.f);
 
 								if ( this.rwd ) {
+									/**
+									 * Let's add a day to the current date result until our weekday allowance is exhausted.
+									 * If our weekday allowance is a negative number, we will subtract a day instead.
+									 */
 									var mod = this.rwd < 0 ? -1 : 1;
 									var i   = Math.abs( this.rwd );
 									while ( i > 0 ) {
