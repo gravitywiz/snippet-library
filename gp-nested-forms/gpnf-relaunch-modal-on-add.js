@@ -2,6 +2,8 @@
  * Gravity Perks // Nested Forms // Relaunch Modal After Adding Child Entry
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
+ * Instruction Video: https://www.loom.com/share/694bf8a483964a4e985e5d0593e9e0ff
+ *
  * Instructions:
  *
  * 1. Install this snippet on your parent form with our free Custom JavaScript plugin.
