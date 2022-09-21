@@ -21,35 +21,36 @@ class GW_Submission_Limit {
 	public function __construct( $args ) {
 
 		// make sure we're running the required minimum version of Gravity Forms
-		if( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=' ) )
+		if ( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=' ) ) {
 			return;
+		}
 
 		$this->_args = wp_parse_args( $args, array(
-			'form_id'       => false,
-			'form_ids'      => array(),
-			'limit'         => 1,
-			'limit_by'      => 'ip', // 'ip', 'user_id', 'role', 'embed_url', 'field_value'
-			'time_period'   => 60 * 60 * 24, // integer in seconds or 'day', 'month', 'year' to limit to current day, month, or year respectively
-			'limit_message' => __( 'Sorry, you have reached the submission limit for this form.' ),
+			'form_id'              => false,
+			'form_ids'             => array(),
+			'limit'                => 1,
+			'limit_by'             => 'ip', // 'ip', 'user_id', 'role', 'embed_url', 'field_value'
+			'time_period'          => 60 * 60 * 24, // integer in seconds or 'day', 'month', 'year' to limit to current day, month, or year respectively
+			'limit_message'        => __( 'Sorry, you have reached the submission limit for this form.' ),
 			'apply_limit_per_form' => true,
-			'enable_notifications' => false
+			'enable_notifications' => false,
 		) );
 
-		if( ! is_array( $this->_args['limit_by'] ) ) {
+		if ( ! is_array( $this->_args['limit_by'] ) ) {
 			$this->_args['limit_by'] = array( $this->_args['limit_by'] );
 		}
 
-		if( empty( $this->_args['form_ids'] ) ) {
-			if( $this->_args['form_id'] === false ) {
+		if ( empty( $this->_args['form_ids'] ) ) {
+			if ( $this->_args['form_id'] === false ) {
 				$this->_args['form_ids'] = false;
-			} elseif( ! is_array( $this->_args['form_id'] ) ) {
+			} elseif ( ! is_array( $this->_args['form_id'] ) ) {
 				$this->_args['form_ids'] = array( $this->_args['form_id'] );
 			} else {
 				$this->_args['form_ids'] = $this->_args['form_id'];
 			}
 		}
 
-		if( $this->_args['form_ids'] ) {
+		if ( $this->_args['form_ids'] ) {
 			foreach( $this->_args['form_ids'] as $form_id ) {
 				self::$forms_with_individual_settings[] = $form_id;
 			}
@@ -64,7 +65,7 @@ class GW_Submission_Limit {
 		add_filter( 'gform_pre_render', array( $this, 'pre_render' ) );
 		add_filter( 'gform_validation', array( $this, 'validate' ) );
 
-		if( $this->_args['enable_notifications'] ) {
+		if ( $this->_args['enable_notifications'] ) {
 
 			$this->enable_notifications();
 
@@ -76,7 +77,7 @@ class GW_Submission_Limit {
 
 	public function pre_render( $form ) {
 
-		if( ! $this->is_applicable_form( $form ) || ! $this->is_limit_reached( $form['id'] ) ) {
+		if ( ! $this->is_applicable_form( $form ) || ! $this->is_limit_reached( $form['id'] ) ) {
 			return $form;
 		}
 
@@ -85,7 +86,7 @@ class GW_Submission_Limit {
 		// if no submission, hide form
 		// if submission and not valid, hide form
 		// unless 'field_value' limiter is applied
-		if( ( ! $submission_info || ! rgar( $submission_info, 'is_valid' ) ) && ! $this->is_limited_by_field_value() ) {
+		if ( ( ! $submission_info || ! rgar( $submission_info, 'is_valid' ) ) && ! $this->is_limited_by_field_value() ) {
 			add_filter( 'gform_get_form_filter_' . $form['id'], array( $this, 'get_limit_message' ), 10, 2 );
 		}
 
@@ -105,17 +106,17 @@ class GW_Submission_Limit {
 
 	public function validate( $validation_result ) {
 
-		if( ! $this->is_applicable_form( $validation_result['form'] ) || ! $this->is_limit_reached( $validation_result['form']['id'] ) ) {
+		if ( ! $this->is_applicable_form( $validation_result['form'] ) || ! $this->is_limit_reached( $validation_result['form']['id'] ) ) {
 			return $validation_result;
 		}
 
 		$validation_result['is_valid'] = false;
 
-		if( $this->is_limited_by_field_value() ) {
+		if ( $this->is_limited_by_field_value() ) {
 			$field_ids = array_map( 'intval', $this->get_limit_field_ids() );
 			foreach( $validation_result['form']['fields'] as &$field ) {
 				if( in_array( $field['id'], $field_ids ) ) {
-					$field['failed_validation'] = true;
+					$field['failed_validation']  = true;
 					$field['validation_message'] = do_shortcode( $this->_args['limit_message'] );
 				}
 			}
@@ -132,11 +133,11 @@ class GW_Submission_Limit {
 		global $wpdb;
 
 		$where = array();
-		$join = array();
+		$join  = array();
 
 		$where[] = 'e.status = "active"';
 
-		foreach( $this->_args['limit_by'] as $limiter ) {
+		foreach ( $this->_args['limit_by'] as $limiter ) {
 			switch( $limiter ) {
 				case 'role': // user ID is required when limiting by role
 				case 'user_id':
@@ -166,18 +167,18 @@ class GW_Submission_Limit {
 			}
 		}
 
-		if( $this->_args['apply_limit_per_form'] || ( ! $this->is_global( $form_id ) && count( $this->_args['form_ids'] ) <= 1 ) ) {
+		if ( $this->_args['apply_limit_per_form'] || ( ! $this->is_global( $form_id ) && count( $this->_args['form_ids'] ) <= 1 ) ) {
 			$where[] = $wpdb->prepare( 'e.form_id = %d', $form_id );
 		} else {
 			$where[] = $wpdb->prepare( 'e.form_id IN( %s )', implode( ', ', $this->_args['form_ids'] ) );
 		}
 
-		$time_period = $this->_args['time_period'];
+		$time_period     = $this->_args['time_period'];
 		$time_period_sql = false;
 
-		if( $time_period === false ) {
+		if ( $time_period === false ) {
 			// no time period
-		} else if( intval( $time_period ) > 0 ) {
+		} elseif ( intval( $time_period ) > 0 ) {
 			$time_period_sql = $wpdb->prepare( 'date_created BETWEEN DATE_SUB(utc_timestamp(), INTERVAL %d SECOND) AND utc_timestamp()', $this->_args['time_period'] );
 		} else {
 
@@ -211,7 +212,7 @@ class GW_Submission_Limit {
 
 		}
 
-		if( $time_period_sql ) {
+		if ( $time_period_sql ) {
 			$where[] = $time_period_sql;
 		}
 
@@ -236,7 +237,7 @@ class GW_Submission_Limit {
 
 		$limit = $this->_args['limit'];
 
-		if( is_array( $limit ) ) {
+		if ( is_array( $limit ) ) {
 			$field_ids = array_keys( $this->_args['limit'] );
 			$field_ids = array( array_shift( $field_ids ) );
 		} else {
@@ -251,17 +252,17 @@ class GW_Submission_Limit {
 		$form   = GFAPI::get_form( $form_id );
 		$values = array();
 
-		foreach( $field_ids as $field_id ) {
+		foreach ( $field_ids as $field_id ) {
 
 			$field = GFFormsModel::get_field( $form, $field_id );
-			if( ! $field ) {
+			if ( ! $field ) {
 				continue;
 			}
 
 			$input_name = 'input_' . str_replace( '.', '_', $field_id );
 			$value      = GFFormsModel::prepare_value( $form, $field, rgpost( $input_name ), $input_name, null );
 
-			if( ! rgblank( $value ) ) {
+			if ( ! rgblank( $value ) ) {
 				$values[ "$field_id" ] = $value;
 			}
 
@@ -274,9 +275,9 @@ class GW_Submission_Limit {
 
 		$limit = $this->_args['limit'];
 
-		if( $this->is_limited_by_field_value() ) {
+		if ( $this->is_limited_by_field_value() ) {
 			$limit = is_array( $limit ) ? array_shift( $limit ) : intval( $limit );
-		} else if( in_array( 'role', $this->_args['limit_by'] ) ) {
+		} elseif ( in_array( 'role', $this->_args['limit_by'] ) ) {
 			$limit = rgar( $limit, $this->get_user_role() );
 		}
 
@@ -335,7 +336,7 @@ class GW_Submission_Limit {
 		return $this->is_global( $form_id ) || $is_specific_form;
 	}
 
-	public function is_global( $form) {
+	public function is_global( $form ) {
 		$form_id = isset( $form['id'] ) ? $form['id'] : $form;
 		return empty( $this->_args['form_ids'] ) && ! in_array( $form_id, self::$forms_with_individual_settings );
 	}
