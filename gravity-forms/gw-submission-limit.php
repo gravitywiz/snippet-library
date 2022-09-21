@@ -51,7 +51,7 @@ class GW_Submission_Limit {
 		}
 
 		if ( $this->_args['form_ids'] ) {
-			foreach( $this->_args['form_ids'] as $form_id ) {
+			foreach ( $this->_args['form_ids'] as $form_id ) {
 				self::$forms_with_individual_settings[] = $form_id;
 			}
 		}
@@ -114,8 +114,8 @@ class GW_Submission_Limit {
 
 		if ( $this->is_limited_by_field_value() ) {
 			$field_ids = array_map( 'intval', $this->get_limit_field_ids() );
-			foreach( $validation_result['form']['fields'] as &$field ) {
-				if( in_array( $field['id'], $field_ids ) ) {
+			foreach ( $validation_result['form']['fields'] as &$field ) {
+				if ( in_array( $field['id'], $field_ids ) ) {
 					$field['failed_validation']  = true;
 					$field['validation_message'] = do_shortcode( $this->_args['limit_message'] );
 				}
@@ -138,7 +138,7 @@ class GW_Submission_Limit {
 		$where[] = 'e.status = "active"';
 
 		foreach ( $this->_args['limit_by'] as $limiter ) {
-			switch( $limiter ) {
+			switch ( $limiter ) {
 				case 'role': // user ID is required when limiting by role
 				case 'user_id':
 					$where[] = $wpdb->prepare( 'e.created_by = %s', get_current_user_id() );
@@ -151,11 +151,11 @@ class GW_Submission_Limit {
 					$values = $this->get_limit_field_values( $form_id, $this->get_limit_field_ids() );
 
 					// if there is no value submitted for any of our fields, limit is never reached
-					if( empty( $values ) ) {
+					if ( empty( $values ) ) {
 						return false;
 					}
 
-					foreach( $values as $field_id => $value ) {
+					foreach ( $values as $field_id => $value ) {
 						$table_slug = sprintf( 'em%s', str_replace( '.', '_', $field_id ) );
 						$join[]     = "INNER JOIN {$wpdb->prefix}gf_entry_meta {$table_slug} ON {$table_slug}.entry_id = e.id";
 						$where[]    = $wpdb->prepare( "\n( ( {$table_slug}.meta_key BETWEEN %s AND %s ) AND {$table_slug}.meta_value = %s )", doubleval( $field_id ) - 0.001, doubleval( $field_id ) + 0.001, $value );
@@ -189,19 +189,19 @@ class GW_Submission_Limit {
 			$date_created_sql  = sprintf( '%s( date_created, INTERVAL %d HOUR )',    $date_func, $hour_offset );
 			$utc_timestamp_sql = sprintf( '%s( utc_timestamp(), INTERVAL %d HOUR )', $date_func, $hour_offset );
 
-			switch( $time_period ) {
+			switch ( $time_period ) {
 				case 'per_day':
 				case 'day':
 					$time_period_sql = "DATE( $date_created_sql ) = DATE( $utc_timestamp_sql )";
 					break;
 				case 'per_week':
 				case 'week':
-					$time_period_sql = "WEEK( $date_created_sql ) = WEEK( $utc_timestamp_sql )";
+					$time_period_sql  = "WEEK( $date_created_sql ) = WEEK( $utc_timestamp_sql )";
 					$time_period_sql .= "AND YEAR( $date_created_sql ) = YEAR( $utc_timestamp_sql )";
 					break;
 				case 'per_month':
 				case 'month':
-					$time_period_sql = "MONTH( $date_created_sql ) = MONTH( $utc_timestamp_sql )";
+					$time_period_sql  = "MONTH( $date_created_sql ) = MONTH( $utc_timestamp_sql )";
 					$time_period_sql .= "AND YEAR( $date_created_sql ) = YEAR( $utc_timestamp_sql )";
 					break;
 				case 'per_year':
@@ -217,7 +217,7 @@ class GW_Submission_Limit {
 		}
 
 		$where = implode( ' AND ', $where );
-		$join = implode( "\n", $join );
+		$join  = implode( "\n", $join );
 
 		$sql = "SELECT count( e.id )
                 FROM {$wpdb->prefix}gf_entry e
@@ -294,7 +294,7 @@ class GW_Submission_Limit {
 
 	public function enable_notifications() {
 
-		if( ! class_exists( 'GW_Notification_Event' ) ) {
+		if ( ! class_exists( 'GW_Notification_Event' ) ) {
 
 			_doing_it_wrong( 'GW_Inventory::$enable_notifications', __( 'Inventory notifications require the \'GW_Notification_Event\' class.' ), '1.0' );
 
@@ -316,7 +316,7 @@ class GW_Submission_Limit {
 
 	public function maybe_send_limit_reached_notifications( $entry, $form ) {
 
-		if( $this->is_applicable_form( $form ) && $this->is_limit_reached( $form['id'] ) ) {
+		if ( $this->is_applicable_form( $form ) && $this->is_limit_reached( $form['id'] ) ) {
 			$this->send_limit_reached_notifications( $form, $entry );
 		}
 
@@ -349,7 +349,7 @@ class GWSubmissionLimit extends GW_Submission_Limit { }
 
 # Basic Usage
 new GW_Submission_Limit( array(
-	'form_id' => 86,
-	'limit' => 2,
+	'form_id'       => 86,
+	'limit'         => 2,
 	'limit_message' => 'Aha! You have been limited.'
 ) );
