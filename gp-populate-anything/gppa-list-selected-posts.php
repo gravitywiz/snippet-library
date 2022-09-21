@@ -3,6 +3,8 @@
  * Gravity Perks // Populate Anything // List Selected Posts in HTML Field
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
+ * Instruction Video: https://www.loom.com/share/6275eff1053b4bec965ff90790c95e42
+ *
  * When populating a Multi Select field with posts and allowing the user to select posts they're interested in, this
  * snippet will allow you to populate a list of linked post titles based on the selections in the Multi Select field.
  *
