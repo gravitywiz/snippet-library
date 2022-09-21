@@ -5,5 +5,5 @@
  *
  */
 add_filter('gform_field_value_year_from_date', function() {
-	return date('Y-m-d', strtotime('+1 year'));
+	return date( 'Y-m-d', strtotime('+1 year' ) );
 } );
