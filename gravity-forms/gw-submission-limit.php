@@ -144,10 +144,9 @@ class GW_Submission_Limit {
 					$where[] = $wpdb->prepare( 'e.created_by = %s', get_current_user_id() );
 					break;
 				case 'embed_url':
-					$where[] = $wpdb->prepare( 'e.source_url = %s', GFFormsModel::get_current_page_url());
+					$where[] = $wpdb->prepare( 'e.source_url = %s', GFFormsModel::get_current_page_url() );
 					break;
 				case 'field_value':
-
 					$values = $this->get_limit_field_values( $form_id, $this->get_limit_field_ids() );
 
 					// if there is no value submitted for any of our fields, limit is never reached
@@ -186,7 +185,7 @@ class GW_Submission_Limit {
 			$date_func   = $gmt_offset < 0 ? 'DATE_SUB' : 'DATE_ADD';
 			$hour_offset = abs( $gmt_offset );
 
-			$date_created_sql  = sprintf( '%s( date_created, INTERVAL %d HOUR )',    $date_func, $hour_offset );
+			$date_created_sql  = sprintf( '%s( date_created, INTERVAL %d HOUR )', $date_func, $hour_offset );
 			$utc_timestamp_sql = sprintf( '%s( utc_timestamp(), INTERVAL %d HOUR )', $date_func, $hour_offset );
 
 			switch ( $time_period ) {
@@ -209,7 +208,6 @@ class GW_Submission_Limit {
 					$time_period_sql = "YEAR( $date_created_sql ) = YEAR( $utc_timestamp_sql )";
 					break;
 			}
-
 		}
 
 		if ( $time_period_sql ) {
@@ -265,7 +263,6 @@ class GW_Submission_Limit {
 			if ( ! rgblank( $value ) ) {
 				$values[ "$field_id" ] = $value;
 			}
-
 		}
 
 		return $values;
@@ -300,13 +297,13 @@ class GW_Submission_Limit {
 
 		} else {
 
-			$event_slug = implode( array_filter( array( "gw_submission_limit_limit_reached", $this->_args['form_id'] ) ) );
+			$event_slug = implode( array_filter( array( 'gw_submission_limit_limit_reached', $this->_args['form_id'] ) ) );
 			$event_name = GFForms::get_page() == 'notification_edit' ? __( 'Submission limit reached' ) : __( 'Event name is only populated on Notification Edit view; saves a DB call to get the form on every ' );
 
 			$this->_notification_event = new GW_Notification_Event( array(
 				'form_id'    => $this->_args['form_id'],
 				'event_name' => $event_name,
-				'event_slug' => $event_slug
+				'event_slug' => $event_slug,
 				//'trigger'    => array( $this, 'notification_event_listener' )
 			) );
 
