@@ -12,7 +12,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-nested-form/
  * Description:  Auto-add a child entry to a Nested Form field, created with data from your parent form.
  * Author:       Gravity Wiz
- * Version:      0.2
+ * Version:      0.3
  * Author URI:   https://gravitywiz.com
  */
 class GPNF_Triggered_Population {
@@ -81,7 +81,13 @@ class GPNF_Triggered_Population {
 							var value = input.val();
 							var checked = input[0].checked;
 
-							if ( (checked && value === self.triggerFieldValue) || ( value !== '' && self.triggerFieldValue === '_notempty_' ) ) {
+							/*
+							 * Convert trigger field value to array if it's not an array so we can support multiple
+							 * trigger field values.
+							 */
+							var triggerFieldValue = Array.isArray( self.triggerFieldValue ) ? self.triggerFieldValue : [self.triggerFieldValue];
+
+							if ( (checked && $.inArray( value, triggerFieldValue ) !== -1 ) || ( value !== '' && self.triggerFieldValue === '_notempty_' ) ) {
 								self.addChildEntry();
 							} else {
 								self.removeChildEntry();
@@ -91,6 +97,14 @@ class GPNF_Triggered_Population {
 					};
 
 					self.addChildEntry = function() {
+
+						/*
+						 * Prevent duplicate from being added if another valid choice is selected if
+						 * triggerFieldValue is an array
+						 */
+						if ( window.gpnf_triggered_population_entry ) {
+							return;
+						}
 
 						var request = {
 							action: 'gpnf_triggered_population_add_child_entry',
@@ -111,6 +125,10 @@ class GPNF_Triggered_Population {
 
 					self.removeChildEntry = function() {
 
+						if ( ! window.gpnf_triggered_population_entry ) {
+							return;
+						}
+
 						var entryDataRowElem = $("tr[data-entryid='" + window.gpnf_triggered_population_entry.entryId + "']");
 						var item = Object.assign({}, window.gpnf_triggered_population_entry);
 						item.id = item.entryId;
@@ -120,6 +138,8 @@ class GPNF_Triggered_Population {
 							entryDataRowElem,
 							{ showSpinner: false },
 						);
+
+						window.gpnf_triggered_population_entry = undefined;
 
 					}
 
