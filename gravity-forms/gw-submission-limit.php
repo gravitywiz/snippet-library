@@ -157,6 +157,7 @@ class GW_Submission_Limit {
 					foreach ( $values as $field_id => $value ) {
 						$table_slug = sprintf( 'em%s', str_replace( '.', '_', $field_id ) );
 						$join[]     = "INNER JOIN {$wpdb->prefix}gf_entry_meta {$table_slug} ON {$table_slug}.entry_id = e.id";
+						// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 						$where[]    = $wpdb->prepare( "\n( ( {$table_slug}.meta_key BETWEEN %s AND %s ) AND {$table_slug}.meta_value = %s )", doubleval( $field_id ) - 0.001, doubleval( $field_id ) + 0.001, $value );
 					}
 
@@ -221,7 +222,8 @@ class GW_Submission_Limit {
                 FROM {$wpdb->prefix}gf_entry e
                 $join
                 WHERE $where";
-
+		
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$entry_count = $wpdb->get_var( $sql );
 
 		return $entry_count;
@@ -348,5 +350,5 @@ class GWSubmissionLimit extends GW_Submission_Limit { }
 new GW_Submission_Limit( array(
 	'form_id'       => 86,
 	'limit'         => 2,
-	'limit_message' => 'Aha! You have been limited.'
+	'limit_message' => 'Aha! You have been limited.',
 ) );
