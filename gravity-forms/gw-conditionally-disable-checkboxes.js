@@ -39,23 +39,23 @@ $cbs2.on( 'change', function() {
 } );
 
 function gwDisableCheckboxes( $triggerField, $targetField, exclusions ) {
-	
+
 	var checkedValues = [];
-	$.each( $triggerField.find( 'input:checked:not( .gplc-disabled )' ), function() {
+	$.each( $triggerField.find( 'input:checked:not( .gplc-disabled, .gwlc-disabled, .gpi-disabled )' ), function() {
 		checkedValues.push( $(this).val() );
 	} );
 
-	var $targetCheckboxes = $targetField.find( 'input[type="checkbox"]:not( .gplc-disabled )' );
+	var $targetCheckboxes = $targetField.find( 'input[type="checkbox"]:not( .gplc-disabled, .gwlc-disabled, .gpi-disabled )' );
 	$targetCheckboxes.prop( 'disabled', false );
-	
+
 	for ( const [ key, value ] of Object.entries( exclusions ) ) {
 		if ( $.inArray( key, checkedValues ) !== -1 ) {
 			for ( const targetValue of value ) {
 				$targetCheckboxes.filter( '[value="' + targetValue + '"]' )
-					.prop( 'checked', false )
-					.prop( 'disabled', true );
+				                 .prop( 'checked', false )
+				                 .prop( 'disabled', true );
 			}
 		}
 	}
-	
+
 }
