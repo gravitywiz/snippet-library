@@ -25,6 +25,7 @@ class GW_Require_Unique_Values {
 			'validation_message'  => __( 'Please enter a unique value.' ),
 			'validate_all_fields' => false,
 			'mode'                => 'collective', // 'collective' or 'individual' (experimental)
+			'case_sensitive'      => false,
 		) );
 
 		$this->_args['master_field_id'] = array_shift( $this->_args['field_ids'] );
@@ -129,6 +130,12 @@ class GW_Require_Unique_Values {
 	}
 
 	public function get_value_hash( $value ) {
+
+		if ( ! $this->_args['case_sensitive'] ) {
+			foreach( $value as &$v ) {
+				$v = strtolower( $v );
+			}
+		}
 
 		// Replace values like "1.1" with "x.1" to make it generic for comparison.
 		if ( is_array( $value ) ) {
