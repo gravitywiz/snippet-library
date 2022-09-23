@@ -1,8 +1,8 @@
 /**
- * Gravity Wiz // Gravity Forms // Disable Selected Dropdown Choice in other Dropdown Fields
+ * Gravity Wiz // Gravity Forms // Disable Selected Dropdown Choice in Other Dropdown Fields
  * https://gravitywiz.com/
  *
- * Remove a selected dropdown choice from other dropdown fields that have the same set of choices.
+ * Disable a selected dropdown choice in other dropdown fields that have the same set of choices.
  *
  * Instructions:
  *
