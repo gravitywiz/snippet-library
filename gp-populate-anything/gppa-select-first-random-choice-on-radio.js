@@ -6,6 +6,5 @@
  *    https://gravitywiz.com/gravity-forms-custom-javascript/
  */
 
-// Update field ID to match your Radio Button.
-var fieldID = 4; 
-$('input:radio[name=input_' + fieldID + ']')[0].checked = true;
+// Update "4" to the the ID of your Radio Button field.
+$( 'input[id^=choice_' + GFFORMID + '_4_' )[0].checked = true;
