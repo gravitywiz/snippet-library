@@ -132,9 +132,7 @@ class GW_Require_Unique_Values {
 	public function get_value_hash( $value ) {
 
 		if ( ! $this->_args['case_sensitive'] ) {
-			foreach( $value as &$v ) {
-				$v = strtolower( $v );
-			}
+			$value = array_map( 'strtolower', $value );
 		}
 
 		// Replace values like "1.1" with "x.1" to make it generic for comparison.
