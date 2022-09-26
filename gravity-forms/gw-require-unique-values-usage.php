@@ -12,6 +12,14 @@ new GW_Require_Unique_Values( array(
 	'validation_message' => 'My custom validation message!',
 ) );
 
+# Use Case Senstive Comparison
+
+new GW_Require_Unique_Values( array(
+	'form_id'            => 12,
+	'field_ids'          => array( 14, 15 ),
+	'case_sensitive'     => true,
+) );
+
 # Create Multiple Unique "Groups" on the Same Form
 
 new GW_Require_Unique_Values( array(
