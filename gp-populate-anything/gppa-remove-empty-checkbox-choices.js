@@ -6,9 +6,7 @@
  *    https://gravitywiz.com/gravity-forms-custom-javascript/
  */
 
-// replace 6 with ID of the targetted checkbox field
-// for targetting all checkboxes on the form use '.gfield_checkbox' as the selector
-var $containers = $( '#input_' + GFFORMID + '_6' );
+ var $containers = $( '.gfield_checkbox' );
  
 // On page load.
 $containers.each( function() {
@@ -21,9 +19,7 @@ $containers.bind( 'DOMNodeInserted DOMNodeRemoved', function() {
 } );
 
 function gwizRemoveEmptyCheckboxes( $elem ) {
-	// replace 6 with ID of the targetted checkbox field
-	// for targetting all checkboxes on the form use 'input[type="checkbox"]' as the selector
-	$elem.find( 'input[id^=choice_' + GFFORMID + '_6_' ).each( function() { 
+	$elem.find( 'input[type="checkbox"]' ).each( function() { 
 		if( ! $( this ).val() ) {
 			$( this ).parent().hide();
 		}
