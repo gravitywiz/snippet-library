@@ -12,7 +12,7 @@ if (danger.github) {
 	}
 
 	if (!danger.github.pr.title.match(/^(`.*?`|Tooling|Formatting): (Added|Fixed|Updated|Removed|Improved|Deprecated)/g)) {
-		fail(`Pull request title does match the correct format. The Pull Request title should match our Snippet Library Pull Request Title Guidelines in Notion.`)
+		fail(`Pull request title does match the correct format. The Pull Request title should match our [Snippet Library Pull Request Title Guidelines](https://www.notion.so/gravitywiz/Snippet-Library-Code-Organization-Formatting-and-Naming-d5bee101d9674dfc98d7ec007867de2b) in Notion.`)
 	}
 
 	if (!danger.github.pr.title.match(/[.!]{1}$/g)) {
