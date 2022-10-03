@@ -11,28 +11,26 @@
  *    https://gravitywiz.com/gravity-forms-custom-javascript/
  * 2. Configure snippet per inline instructions.
  */
-(function() {
-	// Update "1" to the ID of your Multi Select field.
-	var multiSelectId = '#input_GFFORMID_1';
-	var maxSelected = 2;
-	var $select = $( multiSelectId );
 
-	limitMultiSelect( $select, maxSelected );
+// Update "1" to the ID of your Multi Select field.
+var multiSelectId = '#input_GFFORMID_1';
+// Update "2" to the max number of options that should be selectable.
+var maxSelected = 2;
+// Alternate: Set max number by the value of another field.
+// var maxSelected = parseInt( $( '#input_GFFORMID_4' ).val() );
 
-	$select.on( 'change', function () {
-		// Update "2" to the max number of options that should be selectable.
+var $select = $( multiSelectId );
 
-		// Alternate: Set max number by the value of another field.
-		// var maxSelected = parseInt( $( '#input_GFFORMID_4' ).val() );
-		limitMultiSelect( $( this ), maxSelected );
-	} );
+limitMultiSelect( $select, maxSelected );
 
-	function limitMultiSelect( $select, maxSelected ) {
-		var disable = $select.find( 'option:checked' ).length === maxSelected;
-		$select
-			.find( 'option:not(:checked)' )
-			.prop( 'disabled', disable )
-			.trigger( 'chosen:updated' );
-	}
+$select.on( 'change', function () {
+	limitMultiSelect( $( this ), maxSelected );
+} );
 
-})();
+function limitMultiSelect( $select, maxSelected ) {
+	var disable = $select.find( 'option:checked' ).length === maxSelected;
+	$select
+		.find( 'option:not(:checked)' )
+		.prop( 'disabled', disable )
+		.trigger( 'chosen:updated' );
+}
