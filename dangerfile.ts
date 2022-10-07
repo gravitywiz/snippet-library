@@ -11,7 +11,7 @@ if (danger.github) {
 		fail('Please include a description of your PR changes so our future selves are thankful of our past selves. 😃');
 	}
 
-	if (!danger.github.pr.title.match(/^(`.*?`|Tooling|Formatting): (Added|Fixed|Updated|Removed|Improved|Deprecated)/g)) {
+	if (!danger.github.pr.title.match(/^(`.*?`|Tooling|Formatting): (Added|Fixed|Updated|Removed|Improved|Deprecated|Migrated)/g)) {
 		fail(`Pull request title does match the correct format. The Pull Request title should match our [Snippet Library Pull Request Title Guidelines](https://www.notion.so/gravitywiz/Snippet-Library-Code-Organization-Formatting-and-Naming-d5bee101d9674dfc98d7ec007867de2b) in Notion.`)
 	}
 
@@ -27,7 +27,7 @@ if (danger.github) {
 
 // Enforce commit message guidelines
 danger.git.commits.forEach(commit => {
-	if (!commit.message.match(/^(`.*?`|Tooling|Formatting): (Added|Fixed|Updated|Removed|Improved|Deprecated)/g)) {
+	if (!commit.message.match(/^(`.*?`|Tooling|Formatting): (Added|Fixed|Updated|Removed|Improved|Deprecated|Migrated)/g)) {
 		fail(`Commit message '${commit.message}' does match the correct format. See our Snippet Library Commit Messages Guidelines in Notion.`)
 	}
 
