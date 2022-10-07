@@ -20,6 +20,7 @@ var maxSelected = 2;
 // var maxSelected = parseInt( $( '#input_GFFORMID_4' ).val() );
 
 var $select = $( multiSelectId );
+var lastAcceptedValue = null;
 
 limitMultiSelect( $select, maxSelected );
 
@@ -28,9 +29,25 @@ $select.on( 'change', function () {
 } );
 
 function limitMultiSelect( $select, maxSelected ) {
-	var disable = $select.find( 'option:checked' ).length === maxSelected;
-	$select
-		.find( 'option:not(:checked)' )
-		.prop( 'disabled', disable )
-		.trigger( 'chosen:updated' );
+	var selectedCount = $select.find( 'option:selected' ).length;
+
+	if ( selectedCount <= maxSelected ) {
+		lastAcceptedValue = $select.val();
+	} else {
+		$select.val( lastAcceptedValue );
+		$select.blur();
+	}
+
+	// Blur selector on mobile after max number of options are selected
+	if ( !!navigator.platform.match( /iPhone|iPod|iPad/ ) ) {
+		if ( selectedCount >= maxSelected ) {
+			$select.blur();
+		}
+	} else {
+		// If not on iOS, disable the options as disabled options do not update live on iOS
+		$select
+			.find( 'option:not(:checked)' )
+			.prop( 'disabled', selectedCount >= maxSelected )
+			.trigger( 'chosen:updated' );
+	}
 }
