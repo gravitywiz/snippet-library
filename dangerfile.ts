@@ -1,5 +1,7 @@
 import {danger, warn, fail, message} from 'danger';
 
+const NOTION_PR_GUIDELINES = 'https://www.notion.so/gravitywiz/Snippet-Library-Code-Organization-Formatting-and-Naming-d5bee101d9674dfc98d7ec007867de2b'
+
 // GitHub-specific checks
 if (danger.github) {
 	if (!danger.github.pr.title) {
@@ -12,7 +14,7 @@ if (danger.github) {
 	}
 
 	if (!danger.github.pr.title.match(/^(`.*?`|Tooling|Formatting): (Added|Fixed|Updated|Removed|Improved|Deprecated|Migrated)/g)) {
-		fail(`Pull request title does match the correct format. The Pull Request title should match our [Snippet Library Pull Request Title Guidelines](https://www.notion.so/gravitywiz/Snippet-Library-Code-Organization-Formatting-and-Naming-d5bee101d9674dfc98d7ec007867de2b) in Notion.`)
+		fail(`Pull request title does match the correct format. The Pull Request title should match our [Snippet Library Pull Request Title Guidelines](${NOTION_PR_GUIDELINES}) in Notion.`)
 	}
 
 	if (!danger.github.pr.title.match(/[.!]{1}$/g)) {
@@ -28,7 +30,7 @@ if (danger.github) {
 // Enforce commit message guidelines
 danger.git.commits.forEach(commit => {
 	if (!commit.message.match(/^(`.*?`|Tooling|Formatting): (Added|Fixed|Updated|Removed|Improved|Deprecated|Migrated|Refactored)/g)) {
-		fail(`Commit message '${commit.message}' does match the correct format. See our Snippet Library Commit Messages Guidelines in Notion.`)
+		fail(`Commit message '${commit.message}' does match the correct format. See our [Snippet Library Commit Messages Guidelines](${NOTION_PR_GUIDELINES}) in Notion.`)
 	}
 
 	if (!commit.message.match(/[.!]{1}$/g)) {
