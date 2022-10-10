@@ -27,7 +27,7 @@ if (danger.github) {
 
 // Enforce commit message guidelines
 danger.git.commits.forEach(commit => {
-	if (!commit.message.match(/^(`.*?`|Tooling|Formatting): (Added|Fixed|Updated|Removed|Improved|Deprecated|Migrated)/g)) {
+	if (!commit.message.match(/^(`.*?`|Tooling|Formatting): (Added|Fixed|Updated|Removed|Improved|Deprecated|Migrated|Refactored)/g)) {
 		fail(`Commit message '${commit.message}' does match the correct format. See our Snippet Library Commit Messages Guidelines in Notion.`)
 	}
 
