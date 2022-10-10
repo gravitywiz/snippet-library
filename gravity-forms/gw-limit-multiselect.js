@@ -37,11 +37,15 @@ function limitMultiSelect( $select, maxSelected ) {
 		$select.val( lastAcceptedValue );
 		$select.blur();
 	}
-
+	
 	// Blur selector on mobile after max number of options are selected
-	if ( !!navigator.platform.match( /iPhone|iPod|iPad/ ) ) {
+	if ( !!navigator.platform.match( /iPhone|iPod|iPad/ ) || !!navigator.userAgent.match( /android/i ) ) {
 		if ( selectedCount >= maxSelected ) {
 			$select.blur();
+		}
+		
+		if ( selectedCount > maxSelected ) {
+			alert('Please select ' + maxSelected + ' choices or fewer.');
 		}
 	} else {
 		// If not on iOS, disable the options as disabled options do not update live on iOS
