@@ -13,7 +13,7 @@ if (danger.github) {
 		fail('Please include a description of your PR changes so our future selves are thankful of our past selves. 😃');
 	}
 
-	if (!danger.github.pr.title.match(/^(`.*?`|Tooling|Formatting): (Added|Fixed|Updated|Removed|Improved|Deprecated|Migrated)/g)) {
+	if (!danger.github.pr.title.match(/^(`.*?`|Tooling|Formatting): (Added|Fixed|Updated|Removed|Improved|Deprecated|Migrated|Refactored)/g)) {
 		fail(`Pull request title does match the correct format. The Pull Request title should match our [Snippet Library Pull Request Title Guidelines](${NOTION_PR_GUIDELINES}) in Notion.`)
 	}
 
