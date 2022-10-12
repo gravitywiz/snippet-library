@@ -31,7 +31,7 @@ add_filter( 'gform_product_info', function( $product_info, $form, $entry ) {
 				continue;
 			}
 
-			$child_form    = gp_nested_forms()->get_nested_form( $field->gpnfForm );
+			$child_form    = gp_nested_forms()->get_nested_form( $nested_form_field->gpnfForm );
 			$_entry        = new GPNF_Entry( $entry );
 			$child_entries = $_entry->get_child_entries( $nested_form_field_id );
 
@@ -40,6 +40,16 @@ add_filter( 'gform_product_info', function( $product_info, $form, $entry ) {
 				$_child_products    = array();
 				foreach ( $child_product_info['products'] as $child_field_id => $child_product ) {
 					$child_product['name'] = "{$product_info['products'][ $field->id ]['name']} — {$child_product['name']}";
+
+					// If Nested Form fields have Live Merge Tags, process those.
+					if ( method_exists( 'GP_Populate_Anything_Live_Merge_Tags', 'has_live_merge_tag' ) ) {
+						$gppa_lmt = GP_Populate_Anything_Live_Merge_Tags::get_instance();
+						if ( $gppa_lmt->has_live_merge_tag( $child_product['name'] ) ) {
+							$gppa_lmt->populate_lmt_whitelist( $child_form );
+							$child_product['name'] = $gppa_lmt->replace_live_merge_tags_static( $child_product['name'], $child_form, $child_entry );
+						}
+					}
+
 					$_child_products[ "{$nested_form_field_id}.{$child_entry['id']}.{$child_field_id}" ] = $child_product;
 				}
 				$child_products = $child_products + $_child_products;
