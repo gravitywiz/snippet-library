@@ -4,10 +4,10 @@
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
  * Instruction Video: https://www.loom.com/share/6b3b4a4ad0fb420491a98046c5a18217
- * 
+ *
  * Attach child entries to a parent entry when the child form is submitted outside a Nested Form field. The attachment
  * happens by specifying a field on the child form that will contain the parent entry ID to which the form should be
- * attached. Tip: Populate Anything can be used to populate this field with existing parent entries. The designated 
+ * attached. Tip: Populate Anything can be used to populate this field with existing parent entries. The designated
  * field will only appear when the child form is accessed outside a Nested Form field.
  */
 class GPNF_Attach_Child_Entry_by_Field {
@@ -28,7 +28,7 @@ class GPNF_Attach_Child_Entry_by_Field {
 
 	public function init() {
 
-		add_action( 'gform_entry_created', array( $this, 'attach_child_entry_to_parent' ) );
+		add_filter( 'gform_entry_post_save', array( $this, 'attach_child_entry_to_parent' ) );
 		add_action( 'gform_pre_render', array( $this, 'hide_parent_entry_id_field' ) );
 
 	}
@@ -37,7 +37,7 @@ class GPNF_Attach_Child_Entry_by_Field {
 
 		$parent_entry_id = rgar( $child_entry, $this->_args['parent_entry_field_id'] );
 		if ( ! $parent_entry_id || $child_entry['form_id'] != $this->_args['child_form_id'] ) {
-			return;
+			return $child_entry;
 		}
 
 		$parent_entry = GFAPI::get_entry( $parent_entry_id );
@@ -46,6 +46,7 @@ class GPNF_Attach_Child_Entry_by_Field {
 		$child_entry->set_parent_meta( $parent_entry['form_id'], $parent_entry['id'] );
 		$child_entry->set_nested_form_field( $this->_args['nested_form_field_id'] );
 
+		return $child_entry->get_entry();
 	}
 
 	public function hide_parent_entry_id_field( $form ) {
