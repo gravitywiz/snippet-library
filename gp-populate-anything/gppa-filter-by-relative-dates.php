@@ -43,10 +43,7 @@ function gppa_replace_int_unit_ago_merge_tags( $value ) {
 	preg_match_all( '/{(\d+) ((week|day|month|year)s?) ago}/m', $value, $matches, PREG_SET_ORDER, 0 );
 
 	if ( ! $matches || ! count( $matches ) ) {
-		$relative_time = explode( ':', substr( $value, 1, -1 ) );
-		if ( ! strtotime( $relative_time[1] ) ) {
-			return $value;
-		}
+		return $value;
 	}
 
 	foreach ( $matches as $match ) {
