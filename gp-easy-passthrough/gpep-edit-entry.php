@@ -18,6 +18,10 @@ class GPEP_Edit_Entry {
 
 	public function __construct( $options ) {
 
+		if ( ! function_exists( 'rgar' ) ) {
+			return;
+		}
+
 		$this->form_id        = rgar( $options, 'form_id' );
 		$this->delete_partial = rgar( $options, 'delete_partial', true );
 		$this->refresh_token  = rgar( $options, 'refresh_token', false );
