@@ -468,6 +468,12 @@ class GW_Advanced_Merge_Tags {
 					// Updated to use the same method we use in GP Pay Per Word.
 					return count( array_filter( preg_split( '/[ \n\r]+/', trim( $value ) ) ) );
 					break;
+				case 'urlencode':
+					return urlencode( $value );
+					break;
+				case 'rawurlencode':
+					return rawurlencode( $value );
+					break; '
 			}
 		}
 
