@@ -12,6 +12,11 @@
  * formula via Auto List Field. 
  * 
  *   [1]: https://docs.gravityforms.com/gform_column_input/#examples
+ * 
+ * Instructions:
+ * 
+ * 1. Install this snippet with our free Custom JavaScript plugin.
+ *    https://gravitywiz.com/gravity-forms-custom-javascript/
  */
 gform.addFilter( 'gform_list_item_pre_add', function( $clone ) {
 	$clone.find( 'select' ).find( 'option:first' ).prop( 'selected', true );
