@@ -145,6 +145,7 @@ class GW_Cache_Buster {
 			}
 		}
 		$params = ( count( $params ) > 0 ) ? '&' . join( '&', $params ) : '';
+		$lang   = null;
 		if ( class_exists( 'Gravity_Forms_Multilingual' ) ) {
 			global $sitepress;
 			$lang = $sitepress->get_current_language();
