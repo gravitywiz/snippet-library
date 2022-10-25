@@ -63,7 +63,7 @@ class GW_Cache_Buster {
 			return $markup;
 		}
 
-		$is_enabled = rgar( $atts, 'cachebuster' ) || gf_apply_filters( array( 'gfcb_enable_cache_buster', $form_id ), false );
+		$is_enabled = rgar( $atts, 'cachebuster' ) || gf_apply_filters( array( 'gfcb_enable_cache_buster', $form_id ), false, $form_id );
 		if ( ! $is_enabled ) {
 			return $markup;
 		}
@@ -260,4 +260,13 @@ class GW_Cache_Buster {
 
 new GW_Cache_Buster();
 
+# Enable Cache Buster on all forms.
 //add_filter( 'gfcb_enable_cache_buster', '__return_true' );
+
+# Enable Cache Buster on all forms with exceptions.
+//add_filter( 'gfcb_enable_cache_buster', function( $should_enable, $form_id ) {
+//	if ( ! in_array( $form_id, array( 493, 124, 125 ) ) ) {
+//		$should_enable = true;
+//	}
+//	return $should_enable;
+//}, 10, 2 );
