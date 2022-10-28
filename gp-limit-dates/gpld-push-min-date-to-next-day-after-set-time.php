@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // Limit Dates // Push Minimum Date to Next Day After Set Time
  * https://gravitywiz.com/documentation/gravity-forms-limit-dates/
