@@ -1,20 +1,24 @@
+<?php
 /**
-* CHAINED SELECT AUTO SELECT IF ONLY ONE CHOICE IS AVAILABLE
-*/
+ * Gravity Wiz // Gravity Forms Chained Selects // Auto Select Only Option
+ * https://gravitywiz.com/
+ *
+ * The Gravity Forms Chained Selects field requires you to manually select a value in each Drop Down 
+ * even if there is only a single option available in that Drop Down. This snippet will automatically
+ * selected an option when it is the only option available.
+ */
+add_filter( 'gform_chained_selects_input_choices', function( $choices ) {
+	$choices = gfcs_auto_select_only_choice( $choices );
+	return $choices;
+} );
 
-add_filter('gform_chained_selects_input_choices', function($selects) {
-foreach($selects as $index => $select) {
-$selects[$index]['isSelected'] = $selects[$index]['isSelected'] == true || count($selects[$index]['choices']) <= 1;
-$selects[$index]['choices'] = autoSelectOnceChoice($select['choices']);
-}
-return $selects;
-});
+function gfcs_auto_select_only_choice( $choices ) {
 
-function autoSelectOnceChoice($choices){
-$choices[0]['isSelected'] = $choices[0]['isSelected'] || count($choices) <= 1;
+	$choices[0]['isSelected'] = $choices[0]['isSelected'] || count( $choices ) <= 1;
 
-if (!empty($choices['choices'])){
-$choices['choices'] = autoSelectOnceChoice($choices['choices']);
-}
-return $choices;
+	if ( ! empty( $choices['choices'] ) ) {
+		$choices['choices'] = gfcs_auto_select_only_choice( $choices['choices'] );
+	}
+
+	return $choices;
 }
