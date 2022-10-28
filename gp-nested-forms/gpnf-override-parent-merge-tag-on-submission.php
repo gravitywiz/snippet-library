@@ -76,14 +76,10 @@ class GPNF_Override_Parent_Merge_Tags {
 				/**
 				 * note: if include_field_ids exists, we should ignore exclude_field_ids
 				 */
-				$should_include = in_array( $child_field->id, $this->include_field_ids );
+				$should_include = empty( $this->include_field_ids ) ? true : in_array( $child_field->id, $this->include_field_ids );
 				$should_exclude = in_array( $child_field->id, $this->exclude_field_ids );
 
-				if ( empty( $this->include_field_ids ) && $should_exclude ) {
-					continue;
-				}
-
-				if ( ! $should_include ) {
+				if ( ! $should_include || $should_exclude ) {
 					continue;
 				}
 
