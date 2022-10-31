@@ -1861,7 +1861,7 @@ class GW_Populate_Date {
 		);
 
 		$script = 'new GWPopulateDate( ' . json_encode( $args ) . ' );';
-		$slug   = implode( '_', array( 'gw_populate_date', $this->_args['form_id'], $this->_args['target_field_id'] ) );
+		$slug   = implode( '_', array( 'gw_populate_date', $this->_args['form_id'], $this->_args['source_field_id'], $this->_args['target_field_id'] ) );
 
 		GFFormDisplay::add_init_script( $this->_args['form_id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
 
