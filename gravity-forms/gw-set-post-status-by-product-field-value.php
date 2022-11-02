@@ -3,7 +3,7 @@
  * Gravity Wiz // Gravity Forms // Set Post Status by Product Field Value
  * https://gravitywiz.com/set-post-status-by-field-value-advanced/
  */
-// update "123" to the ID of your form
+// Update "123" to the ID of your form.
 add_filter( 'gform_post_data_123', 'gform_dynamic_post_status', 10, 3 );
 function gform_dynamic_post_status( $post_data, $form, $entry ) {
 
