@@ -1,3 +1,7 @@
+/**
+ * Gravity Wiz // Gravity Forms // Default Currencies
+ * https://gravitywiz.com/gravity-forms-currencies/
+ */
 {
 	"USD": {
 		"name": "U.S. Dollar",
