@@ -6,12 +6,6 @@
  * Name Field, etc) as a separate column. This snippet allows you to export all inputs (of a specific field) in a
  * single column.
  *
- * @version   1.2
- * @author    David Smith <david@gravitywiz.com>
- * @license   GPL-2.0+
- * @link      http://gravitywiz.com/how-do-i-export-multi-input-fields-in-a-single-column-with-gravity-forms/
- * @copyright 2015 Gravity Wiz
- *
  * Plugin Name: Gravity Forms - Export Multi-input Fields in Single Column
  * Plugin URI: http://gravitywiz.com/how-do-i-export-multi-input-fields-in-a-single-column-with-gravity-forms/
  * Description: Export multi-input Gravity Forms fields as a single column.
