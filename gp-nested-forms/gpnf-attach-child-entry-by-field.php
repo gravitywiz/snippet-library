@@ -74,6 +74,6 @@ class GPNF_Attach_Child_Entry_by_Field {
 
 new GPNF_Attach_Child_Entry_by_Field( array(
 	'nested_form_field_id'  => 4,   // Update "4" to the ID of your Nested Form field on the parent form.
-	'child_form_id'         => 123, // Update "123" to ID of your child form. 
+	'child_form_id'         => 123, // Update "123" to ID of your child form.
 	'parent_entry_field_id' => 5,   // Update "5" to the ID of the field on your child form that will contain the parent entry ID.
 ) );

@@ -5,12 +5,12 @@
  *
  * If you are customizing a forms validation message with the `gform_validation_message` hook, you
  * may be frustrated to discover that Multi-page Navigation will override your changes. If you only
- * need to modify the validation message for a single form, the easiest method is to use the 
+ * need to modify the validation message for a single form, the easiest method is to use the
  * form-specific version of that hook with a priority of 11.
  *
  * add_filter( 'gform_validation_message_123', 'your_func_name', 11 );
  *
- * If you are applying a change globally, use this snippet to remove Multi-page Navigations' 
+ * If you are applying a change globally, use this snippet to remove Multi-page Navigations'
  * validation customization altogether.
  */
 add_filter( 'gform_validation_message', function( $message, $form ) {

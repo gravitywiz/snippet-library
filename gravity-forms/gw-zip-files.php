@@ -203,7 +203,7 @@ class GW_Zip_Files {
 		// @todo This really doesn't belong here... this should be checked where applicable and passed to this function.
 		if ( rgpost( 'gpnf_parent_form_id' ) ) {
 			$form_id = intval( rgpost( 'gpnf_parent_form_id' ) );
-		} else if ( is_array( $form ) ) {
+		} elseif ( is_array( $form ) ) {
 			$form_id = $form['id'];
 		} else {
 			$form_id = $form;

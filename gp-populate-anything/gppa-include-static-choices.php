@@ -39,7 +39,7 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 		usort( $choices, function ( $choice1, $choice2 ) {
 			return $choice2['text'] <=> $choice1['text'];
 		});
-	}	
+	}
 
 	if ( isset( $other_choice ) ) {
 		array_push( $choices, $other_choice );

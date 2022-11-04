@@ -10,7 +10,7 @@
 add_filter( 'gppa_live_merge_tag_value_123_4', function( $value, $merge_tag, $form, $field_id, $entry_values ) {
 
 	$values = array_map( 'trim', explode( ',', $value ) );
-	if ( empty ( $values ) ) {
+	if ( empty( $values ) ) {
 		return $value;
 	}
 
