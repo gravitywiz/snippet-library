@@ -13,9 +13,9 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install dependencies
-        run: composer install --dev --prefer-dist --no-progress --no-suggest
+        run: |
+          composer install --dev --prefer-dist --no-progress --no-suggest
+          composer require --dev staabm/annotate-pull-request-from-checkstyle
 
-      - name: PHPCS check
-        uses: chekalsky/phpcs-action@v1
-        with:
-          phpcs_bin_path: './vendor/bin/phpcs'
+      - name: Run phpcs
+        run: ./vendor/bin/phpcs -q --report=checkstyle | ./vendor/bin/cs2pr --graceful-warnings
