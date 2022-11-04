@@ -1,15 +1,10 @@
 <?php
 /**
- * Gravity Wiz // Calculate Number of Days Between Two Gravity Form Date Fields
+ * Gravity Wiz // Gravity Forms // Calculate Number of Days Between Two Gravity Form Date Fields
+ * http://gravitywiz.com/calculate-number-of-days-between-two-dates/
  *
  * Allows you to calculate the number of days between two Gravity Form date fields and populate that number into a
  * field on your Gravity Form.
- *
- * @version   1.1
- * @author    David Smith <david@gravitywiz.com>
- * @license   GPL-2.0+
- * @link      http://gravitywiz.com/calculate-number-of-days-between-two-dates/
- * @copyright 2013 Gravity Wiz
  */
 class GWDayCount {
 
@@ -196,7 +191,6 @@ class GWDayCount {
 			if ( $field['id'] == $this->end_field_id ) {
 				$end_date = self::parse_field_date( $field );
 			}
-
 		}
 
 		if ( $start_date > $end_date ) {
