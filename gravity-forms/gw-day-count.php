@@ -1,5 +1,10 @@
 <?php
 /**
+ * --- STOP! ---
+ * Get the latest version:
+ * https://gravitywiz.com/documentation/gravity-forms-date-time-calculator/
+ * -------------
+ *
  * Gravity Wiz // Gravity Forms // Calculate Number of Days Between Two Gravity Form Date Fields
  * http://gravitywiz.com/calculate-number-of-days-between-two-dates/
  *
