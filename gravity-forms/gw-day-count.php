@@ -12,6 +12,7 @@ class GWDayCount {
 
 	function __construct( $args ) {
 
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( wp_parse_args( $args, array(
 			'form_id'          => false,
 			'start_field_id'   => false,
