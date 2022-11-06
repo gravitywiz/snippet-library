@@ -160,18 +160,13 @@ class GW_All_Fields_Template {
 				}
 			}
 
-			if ( $modifier === 'nopricingfields' ) {
-				$func = function() use ( &$func ) {
-					remove_filter( 'gform_order_summary', $func );
-					return '';
-				};
-				add_filter( 'gform_order_summary', $func );
-				// Hide "Order Summary" label if nopricingfields is used
-				$gf_dps_func = function() use ( &$gf_dps_func ) {
-					remove_filter( 'gform_display_product_summary', $gf_dps_func );
-					return false;
-				};
-				add_filter( 'gform_display_product_summary', $gf_dps_func );
+			if ( $modifier === 'nopricingfields' && ! has_filter( 'gform_order_summary', array( $this, 'clear_order_summary' ) ) ) {
+
+				add_filter( 'gform_order_summary', array( $this, 'clear_order_summary' ) );
+
+				// Hide "Order Summary" label if `:nopricingfields` is used.
+				add_filter( 'gform_display_product_summary', array( $this, 'hide_order_summary_label' ) );
+
 			}
 
 			/**
@@ -535,6 +530,16 @@ class GW_All_Fields_Template {
 
 	public function log( $message ) {
 		GFCommon::log_debug( $message );
+	}
+
+	public function clear_order_summary() {
+		remove_filter( 'gform_order_summary', array( $this, 'clear_order_summary' ) );
+		return '';
+	}
+
+	public function hide_order_summary_label() {
+		remove_filter( 'gform_display_product_summary', array( $this, 'hide_order_summary_label' ) );
+		return false;
 	}
 
 	// ### TEMPLATE SYSTEM (compliments of EDD) ###
