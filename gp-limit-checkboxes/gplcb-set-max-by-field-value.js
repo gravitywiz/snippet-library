@@ -31,6 +31,11 @@ gform.addFilter( 'gplc_group', function( group, fieldId, $elem, gplc ) {
 		group.max = Math.max( 0, parseInt( $maxField.filter( ':checked' ).val() ) );
 	} else {
 		group.max = $maxField.val() ? $maxField.val() : 0;
+
+		// For Product field, get the value required by tokenizing the string.
+		if ( group.max.toString().indexOf('|') > -1 ) {
+			group.max = group.max.split(/|(.*)/s)[0];
+		}
 	}
 
 	// Only bind our event listener once.
