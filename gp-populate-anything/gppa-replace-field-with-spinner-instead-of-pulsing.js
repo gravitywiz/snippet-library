@@ -2,6 +2,8 @@
  * Gravity Perks // Populate Anything // Replace Field with Spinner Instead of Pulsing
  * https://gravitywiz.comhttps://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
+ * Instruction Video: https://www.loom.com/share/3ed196b95f1544b7aa250101f1b1a783
+ * 
  * 1. Install this snippet with our free Custom JavaScript plugin.
  *    https://gravitywiz.com/gravity-forms-custom-javascript/
  */
