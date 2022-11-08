@@ -2,10 +2,12 @@
  * Gravity Perks // Auto List Field // Dynamic Row Labels for List Fields
  * https://gravitywiz.com/documentation/gravity-forms-auto-list-field/
  *
+ * Instruction Video: https://www.loom.com/share/3f35501b321541cd9a3d1a7bdc414ca3
+ *
  * Dynamically populate the first column of a List field with a dynamic value that includes the row number. 
  * For example, if your List field represents attendees to an event, you could label each row, "Attendee #1,
  * Attendee #2, etc).
- 
+ *
  * Instructions:
  * 
  * 1. Install this snippet with our free Custom JavaScript plugin.
