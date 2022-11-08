@@ -10,7 +10,7 @@
  * Version:      0.1
  * Author URI:   https://gravitywiz.com
  *
- * Instruction Video: https://www.loom.com/share/5f9af6c9d95c41e7ac0265d3357f86b5
+ * Instruction Video: https://www.loom.com/share/27416c01037949a1bd600b27bb5a834c
  *
  * The snippet allows you to use a checkbox field as choices. This will use whatever property
  * is selected in the "Value Template" for the choices.
