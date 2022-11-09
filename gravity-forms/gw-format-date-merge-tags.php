@@ -33,6 +33,9 @@ add_filter( 'gform_pre_replace_merge_tags', function( $text, $form, $entry, $url
 
 		$value = GFFormsModel::get_lead_field_value( $entry, $field );
 		$value = $field->get_value_merge_tag( $value, $input_id, $entry, $form, $modifier, $value, $url_encode, $esc_html, $format, $nl2br );
+		if ( ! $value ) {
+			continue;
+		}
 
 		$format      = $field->dateFormat ? $field->dateFormat : 'mdy';
 		$parsed_date = GFCommon::parse_date( $value, $format );
