@@ -34,7 +34,7 @@ gform.addFilter( 'gplc_group', function( group, fieldId, $elem, gplc ) {
 
 		// For Product field, get the value required by tokenizing the string.
 		if ( group.max.toString().indexOf('|') > -1 ) {
-			group.max = group.max.split(/|(.*)/s)[0];
+			group.max = group.max.split( '|' )[0];
 		}
 	}
 
