@@ -17,7 +17,7 @@ add_filter( 'gpml_media_data_123', function( $return, $field, $entry ) {
 		$upload_dir['url']  = WP_CONTENT_URL . "/uploads/{$entry[4]}/my-custom-folder";
 		
 		
-		$upload['basedir'] = WP_CONTENT_URL . "/uploads/{$entry[4]}/my-custom-folder";
+		$upload['basedir'] = WP_CONTENT_DIR . "/uploads/{$entry[4]}/my-custom-folder";
 		$upload['baseurl'] = WP_CONTENT_URL . "/uploads/{$entry[4]}/my-custom-folder";
 		
 		return $upload_dir;
