@@ -80,17 +80,23 @@ class GW_Zip_Files {
 					continue;
 				}
 				$nested_form          = GFAPI::get_form( $nested_entry['form_id'] );
-				$nested_archive_files = array_merge( $nested_archive_files, $this->get_entry_files( $nested_entry, $nested_form ) );
+				// Add each nested entry files list as a separate array to avoid overriding previously saved files with the same associative array key (the field id).
+				$nested_archive_files = array_merge( $nested_archive_files, array( $this->get_entry_files( $nested_entry, $nested_form ) ) );
 			}
 		}
 
-		$archive_files = $this->get_entry_files( $entry, $form );
+		// For conformity with the $nested_archive_files, the current (parent) entry files are also loaded onto an array.
+		$archive_files = array( $this->get_entry_files( $entry, $form ) );
 		$archive_files = array_merge( $archive_files, $nested_archive_files );
 		if ( empty( $archive_files ) ) {
 			return;
 		}
 
-		$archive_file_paths = wp_list_pluck( $archive_files, 'path' );
+		$archive_file_paths = array();
+		foreach ( $archive_files as $archive_file ) {
+			$archive_file_path  = array_values( wp_list_pluck( $archive_file, 'path' ) );
+			$archive_file_paths = array_merge( $archive_file_paths, $archive_file_path );
+		}
 
 		$zip = $this->create_zip( $archive_file_paths, $this->get_zip_paths( $entry, 'path' ) );
 		if ( $zip ) {
