@@ -10,21 +10,8 @@
  * call this function before the `gpnf_session_script_data` filter is called.
  */
 function gpnf_session_hash( $form_id ) {
-
 	$session = new GPNF_Session( $form_id );
-	$cookie  = $session->get_cookie();
-
-	if ( empty( $cookie ) ) {
-		$hash = $session->make_hashcode();
-		add_filter( "gpnf_session_script_data_{$form_id}", function( $data ) use ( $hash ) {
-			$data['hash'] = $hash;
-			return $data;
-		} );
-	} else {
-		$hash = $cookie['hash'];
-	}
-
-	return $hash;
+	return $session->get_runtime_hashcode();
 }
 
 /**
