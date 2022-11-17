@@ -79,7 +79,7 @@ class GW_Zip_Files {
 				if ( is_wp_error( $nested_entry ) ) {
 					continue;
 				}
-				$nested_form          = GFAPI::get_form( $nested_entry['form_id'] );
+				$nested_form = GFAPI::get_form( $nested_entry['form_id'] );
 				// Add each nested entry files list as a separate array to avoid overriding previously saved files with the same associative array key (the field id).
 				$nested_archive_files = array_merge( $nested_archive_files, array( $this->get_entry_files( $nested_entry, $nested_form ) ) );
 			}

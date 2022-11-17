@@ -2,8 +2,8 @@
 /**
  * Gravity Perks // Populate Anything // Search by Multiple Values w/ Contains
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
- * 
- * This snippet extends the "contains" operator to support comparisions where a multi-value field (like a Multi Select) 
+ *
+ * This snippet extends the "contains" operator to support comparisions where a multi-value field (like a Multi Select)
  * is the needle. Typically, the "in" operator would be used for this; however, it has the limitation of only being able
  * to match full values rather than checking if any of the needles are contained in the haystack.
  */

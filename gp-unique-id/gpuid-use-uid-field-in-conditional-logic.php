@@ -11,6 +11,6 @@ add_action( 'admin_footer', function() {
 				return isConditionalLogicField || field.type === 'uid';
 			} );
 		</script>
-	<?php
+		<?php
 	endif;
 } );
