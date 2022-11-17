@@ -4,7 +4,7 @@
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
  * Programattically create and attach a child entry to a Nested Form field when the parent form is rendered.
- * 
+ *
  * Please note: A new child entry will be added on every render. You will need to identify your own condition
  * for when a child entry should be generated and attached.
  */
@@ -44,7 +44,7 @@ if ( ! function_exists( 'gpnf_add_child_entry' ) ) {
 	function gpnf_add_child_entry( $parent_entry_id, $nested_form_field_id, $field_values = array(), $parent_form_id = false ) {
 
 		if ( ! $parent_form_id ) {
-			$parent_entry = GFAPI::get_entry( $parent_entry_id );
+			$parent_entry   = GFAPI::get_entry( $parent_entry_id );
 			$parent_form_id = $parent_entry['form_id'];
 		}
 
