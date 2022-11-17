@@ -9,7 +9,7 @@
  * for when a child entry should be generated and attached.
  */
 // Update "123" to your form ID and "4" to your Nested Form field ID.
-add_filter( 'gpnf_submitted_entry_ids_556_1', function( $entry_ids, $parent_form, $nested_form_field ) {
+add_filter( 'gpnf_submitted_entry_ids_123_4', function( $entry_ids, $parent_form, $nested_form_field ) {
 
 	$hash = gpnf_session_hash( $parent_form['id'] );
 
