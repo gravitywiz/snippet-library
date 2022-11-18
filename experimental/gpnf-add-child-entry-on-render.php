@@ -17,12 +17,20 @@ add_filter( 'gpnf_submitted_entry_ids_123_4', function( $entry_ids, $parent_form
 		// Update "1" to any field ID from your child form and "Second Choice" the value that should be saved to this field.
 		'1' => 'Second Choice',
 		// Update "2" to another field ID in your child field and "Second" to the value that should be saved to it.
-		'2' => 'Second',
+		'2' => time(),
 		// Add as many "field ID" => "value" pairs as required.
 	), $parent_form['id'] );
 
 	$session = new GPNF_Session( $parent_form['id'] );
+
+	// Attach new child entry to the session.
 	$session->add_child_entry( $child_entry_id );
+
+	// Get all entry IDs from the session and return them.
+	$session_entry_ids = $session->get( 'nested_entries' );
+	if ( ! empty( $session_entry_ids[ $nested_form_field->id ] ) ) {
+		$entry_ids = $session_entry_ids[ $nested_form_field->id ];
+	}
 
 	return $entry_ids;
 }, 10, 3 );
