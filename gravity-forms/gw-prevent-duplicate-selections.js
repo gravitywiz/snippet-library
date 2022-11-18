@@ -15,7 +15,7 @@
  *
  * 2. Add 'gw-prevent-duplicates' to the CSS Class Name setting for any field in which duplicate selections
  *    should be prevented.
- *
+ */
 $checkboxes = $( '.gw-prevent-duplicates' ).find( 'input' );
 
 $checkboxes.click( function() {
