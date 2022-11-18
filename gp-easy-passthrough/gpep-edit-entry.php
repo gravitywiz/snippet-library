@@ -35,6 +35,8 @@ class GPEP_Edit_Entry {
 		// Bypass limit submissions on validation
 		add_filter( 'gform_validation', array( $this, 'bypass_limit_submission_validation' ) );
 
+		// Update entry values on submission
+		add_action( 'gform_after_submission', array( $this, 'gpep_update_entry' ), 10, 2 );
 	}
 
 	public function capture_passed_through_entry_ids( $form, $values, $passed_through_entries ) {
@@ -142,6 +144,9 @@ class GPEP_Edit_Entry {
 		return gf_apply_filters( array( 'gpepee_edit_entry_id', $form_id ), $entry_id, $form_id );
 	}
 
+	public function gpep_update_entry( $entry, $form ) {
+		GFAPI::update_entry( $entry );
+	}	
 }
 
 // Configurations
