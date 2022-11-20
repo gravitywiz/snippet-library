@@ -13,7 +13,7 @@
  * Plugin URI:   https://gravitywiz.com/customizing-multi-file-merge-tag/
  * Description:  Enhance the merge tag for multi-file upload fields by adding support for outputting markup that corresponds to the uploaded file.
  * Author:       Gravity Wiz
- * Version:      1.7.5
+ * Version:      1.8
  * Author URI:   https://gravitywiz.com
  */
 class GW_Multi_File_Merge_Tag {
@@ -48,9 +48,10 @@ class GW_Multi_File_Merge_Tag {
 			'form_id'        => false,
 			'field_ids'      => array(),
 			'exclude_forms'  => array(),
-			'default_markup' => '<li><a href="{url}">{filename}.{ext}</a></li>',
+			'default_markup' => '<a href="{url}">{filename}.{ext}</a>',
 			'formats'        => array( 'html' ),
 			'markup'         => array(
+				'container'      => false,
 				array(
 					'file_types' => array( 'jpg', 'jpeg', 'png', 'gif' ),
 					'markup'     => '<img src="{url}" width="33%" />',
@@ -162,6 +163,13 @@ class GW_Multi_File_Merge_Tag {
 
 			$has_value = ! empty( $value );
 
+			if ( $has_value ) {
+				$markup_settings = $this->get_markup_settings( $form['id'] );
+				if ( $markup_settings['container'] ) {
+					$value = sprintf( $markup_settings['container'], $value );
+				}
+			}
+
 			// Replace each instance of our merge tag individually so we can check if it is part of a [gf conditional]
 			// shortcode; if so, replace the value with 1 so it can correctly evaluate as having a value.
 			do {
@@ -208,6 +216,11 @@ class GW_Multi_File_Merge_Tag {
 		$markup_found = false;
 
 		foreach ( $markup_settings as $file_type_markup ) {
+
+			// Some properties like "container" are not arrays.
+			if ( ! is_array( $file_type_markup ) ) {
+				continue;
+			}
 
 			$file_types = array_map( 'strtolower', $file_type_markup['file_types'] );
 			if ( ! in_array( strtolower( $extension ), $file_types, true ) ) {
