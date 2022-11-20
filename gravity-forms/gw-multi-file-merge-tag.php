@@ -230,12 +230,12 @@ class GW_Multi_File_Merge_Tag {
 			$markup_found = true;
 			$markup       = $file_type_markup['markup'];
 
-			$tags = array(
+			$tags = gf_apply_filters( array( 'gwmfmt_tags', $form_id ), array(
 				'{url}'      => $file,
 				'{filename}' => $filename,
 				'{basename}' => $basename,
 				'{ext}'      => $extension,
-			);
+			), $file, $file_info, $form_id );
 
 			foreach ( $tags as $tag => $tag_value ) {
 				$markup = str_replace( $tag, $tag_value, $markup );
