@@ -300,6 +300,19 @@ class GW_Populate_Date {
 							self.populateDate( self.sourceFieldId, self.targetFieldId, self.getModifier(), self.format );
 						} );
 
+						// Listen for any dynamic content loaded on modifier field (if existing) to refresh values on Target.
+						if ( self.modifier && self instanceof GWPopulateDate ) {
+							var modifier = self.modifier.inputId;
+
+							if ( modifier ) {
+								var modifierParent = '#field_' + self.formId + '_' + modifier;
+								var modifierTarget = '#input_' + self.formId + '_' + modifier;
+								$( modifierParent ).on( 'change', modifierTarget, function() {
+									self.populateDate( self.sourceFieldId, self.targetFieldId, self.getModifier(), self.format );
+								} );
+							}
+						}
+
 						// Listen for GPPA's new `gppa_updated_batch_fields`
 						$( document ).on( 'gppa_updated_batch_fields', function ( e, formId, updatedFieldIDs ) {
 							for ( var i = 0, max = updatedFieldIDs.length; i < max; i ++ ) {
