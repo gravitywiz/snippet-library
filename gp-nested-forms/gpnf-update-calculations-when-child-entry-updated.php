@@ -7,11 +7,11 @@ add_action( 'gform_update_status', function ( $entry_id, $new_status, $old_statu
 	$entry = new GPNF_Entry( $entry_id );
 
 	// Updating the child entry status (trashed/spammed/restored), update formula calculations (if any).
-	$parent_entry_id   = $entry->get_entry()[ 'gpnf_entry_parent' ];
+	$parent_entry_id   = $entry->get_entry()['gpnf_entry_parent'];
 	$parent_entry      = GFAPI::get_entry( $parent_entry_id );
-	$parent_form_id    = $entry->get_entry()[ 'gpnf_entry_parent_form' ];
+	$parent_form_id    = $entry->get_entry()['gpnf_entry_parent_form'];
 	$parent_form       = GFAPI::get_form( $parent_form_id );
-	$nested_form_field = $entry->get_entry()[ 'gpnf_entry_nested_form_field' ];
+	$nested_form_field = $entry->get_entry()['gpnf_entry_nested_form_field'];
 
 	// Check for merge tag formula in use on each parent field.
 	foreach ( $parent_form['fields'] as $field ) {
