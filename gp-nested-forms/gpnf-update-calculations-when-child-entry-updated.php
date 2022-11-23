@@ -21,7 +21,8 @@ add_action( 'gform_update_status', function ( $entry_id, $new_status, $old_statu
 		// Get any successfully updated value.
 		if ( ! empty( $formula ) ) {
 			$parent_entry[ $field['id'] ] = $formula;
-			GFAPI::update_entry( $parent_entry );
 		}
 	}
+
+	GFAPI::update_entry( $parent_entry );
 }, 12, 3 );
