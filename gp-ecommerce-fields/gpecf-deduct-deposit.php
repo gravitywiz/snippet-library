@@ -12,7 +12,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-ecommerce-fields/
  * Description:  This snippet uses a Produdct field to create a deposit field and deducts the deposit from Order Summary
  * Author:       Gravity Wiz
- * Version:      0.2
+ * Version:      0.3
  * Author URI:   https://gravitywiz.com
  */
 class GW_Deduct_Deposit {
@@ -31,7 +31,7 @@ class GW_Deduct_Deposit {
 
 	public function init() {
 
-		if ( ! function_exists( 'gp_ecommerce_fields' ) ) {
+		if ( ! class_exists( 'Gravity_Forms' ) || ! function_exists( 'gp_ecommerce_fields' ) ) {
 			return;
 		}
 
