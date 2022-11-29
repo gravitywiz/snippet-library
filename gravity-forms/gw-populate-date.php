@@ -1716,6 +1716,9 @@ class GW_Populate_Date {
 									} else if ( hours > 12 ) {
 										hours -= 12;
 										isPM   = true;
+									} else if ( hours == 12 ) {
+										// for 12 PM, the PM display should update
+										isPM = true;
 									}
 								}
 
