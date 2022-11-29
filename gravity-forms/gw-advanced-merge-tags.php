@@ -435,17 +435,33 @@ class GW_Advanced_Merge_Tags {
 					// Note: str_word_count() is not a great solution as it does not support characters with accents reliably.
 					// Updated to use the same method we use in GP Pay Per Word.
 					return count( array_filter( preg_split( '/[ \n\r]+/', trim( $value ) ) ) );
-					break;
 				case 'urlencode':
 					return urlencode( $value );
-					break;
 				case 'rawurlencode':
 					return rawurlencode( $value );
-					break;
+				case 'mask':
+					if ( GFCommon::is_valid_email( $value ) ) {
+						list( $name, $domain ) = explode( '@', $value );
+						$frags = explode( '.', $domain );
+						$base  = $this->mask_value( array_shift( $frags ) );
+						$name  = $this->mask_value( $name );
+						// Example: "one.two.three@domain.gov.uk" → "o***********e@d****n.gov.uk".
+						return sprintf( '%s@%s.%s', $name, $base, implode( '.', $frags ) );
+					} else {
+						// Example: "hello my old friend" → "h*****************d".
+						return $this->mask_value( $value );
+					}
 			}
 		}
 
 		return $value;
+	}
+
+	public function mask_value( $value ) {
+		$chars = str_split( $value );
+		$first = array( array_shift( $chars ) );
+		$last  = array( array_pop( $chars ) );
+		return implode( '', array_merge( $first, array_pad( array(), count( $chars ), '*' ), $last ) );
 	}
 
 }
