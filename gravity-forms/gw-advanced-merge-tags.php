@@ -80,7 +80,6 @@ class GW_Advanced_Merge_Tags {
 			'save_source_post_id' => false,
 		) );
 
-		add_action( 'gform_pre_render', array( $this, 'support_default_value_and_html_content_merge_tags' ) );
 		add_action( 'gform_pre_render', array( $this, 'support_dynamic_population_merge_tags' ) );
 
 		add_action( 'gform_merge_tag_filter', array( $this, 'support_html_field_merge_tags' ), 10, 4 );
@@ -92,37 +91,6 @@ class GW_Advanced_Merge_Tags {
 			add_filter( 'gform_entry_created', array( $this, 'save_source_post_id' ), 10, 2 );
 		}
 
-	}
-
-	public function support_default_value_and_html_content_merge_tags( $form ) {
-
-		$current_page = max( 1, (int) rgars( GFFormDisplay::$submission, "{$form['id']}/page_number" ) );
-		$fields       = array();
-
-		foreach ( $form['fields'] as &$field ) {
-
-			//            $default_value = rgar( $field, 'defaultValue' );
-			//            preg_match_all( '/{.+}/', $default_value, $matches, PREG_SET_ORDER );
-			//            if( ! empty( $matches ) ) {
-			//                if( rgar( $field, 'pageNumber' ) != $current_page ) {
-			//                    $field['defaultValue'] = '';
-			//                } else {
-			//                    $field['defaultValue'] = $this->replace_merge_tags( $default_value, $form, null );
-			//                }
-			//            }
-
-			// only run 'content' filter for fields on the current page
-			//            if( rgar( $field, 'pageNumber' ) != $current_page )
-			//                continue;
-			//
-			//            $html_content = rgar( $field, 'content' );
-			//            preg_match_all( '/{.+}/', $html_content, $matches, PREG_SET_ORDER );
-			//            if( ! empty( $matches ) )
-			//                $field['content'] = $this->replace_merge_tags( $html_content, $form, null );
-
-		}
-
-		return $form;
 	}
 
 	public function support_dynamic_population_merge_tags( $form ) {
