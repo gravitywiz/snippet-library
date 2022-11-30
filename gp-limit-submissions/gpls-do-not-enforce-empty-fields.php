@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // Limit Submissions // Only Enforce Field Limits on Render if All Fields Have Values
+ * Gravity Perks // Limit Submissions // Do Not Enforce Empty Fields
  * https://gravitywiz.com/documentation/gravity-forms-limit-submissions/
  *
  * By default, Limit Submissions will attempt to enforce field-based limits even if the field is empty. This snippet
