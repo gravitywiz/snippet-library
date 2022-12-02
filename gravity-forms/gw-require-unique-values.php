@@ -52,6 +52,10 @@ class GW_Require_Unique_Values {
 			return $result;
 		}
 
+		if ( $field->get_input_type() == 'list' ) {
+			return $this->validate_list( $result, $value );
+		}
+
 		$value = $this->get_filtered_value( $field );
 		if ( empty( $value ) ) {
 			return $result;
@@ -80,6 +84,25 @@ class GW_Require_Unique_Values {
 		if ( $result['is_valid'] && ! $is_unique ) {
 			$result['is_valid'] = false;
 			$result['message']  = $this->_args['validation_message'];
+		}
+
+		return $result;
+	}
+
+	public function validate_list( $result, $value ) {
+		$rows      = count( $value );
+		$is_unique = true;
+		foreach ( array_keys( $value[0] ) as $column_name ) {
+			$column_values = array_column( $value, $column_name );
+			// Count unique values in each column.
+			if ( $rows != count( array_unique( $column_values ) ) ) {
+				$is_unique = false;
+			}
+		}
+
+		if ( $result['is_valid'] && ! $is_unique ) {
+			$result['is_valid'] = false;
+			$result['message']  = $this->_args['validation_message'] . ' All columns should have unique values.';
 		}
 
 		return $result;
@@ -153,7 +176,10 @@ class GW_Require_Unique_Values {
 
 	public function is_applicable_field( $field ) {
 
-		if ( ! $this->_args['field_ids'] ) {
+		// A single list field can be used for validation (validation logic to use unique values check over columns).
+		if ( ! $this->_args['field_ids'] && $field->get_input_type() == 'list' ) {
+			return true;
+		} elseif ( ! $this->_args['field_ids'] ) {
 			return false;
 		} elseif ( $this->_args['validate_all_fields'] && $field->id == $this->_args['master_field_id'] ) {
 			return true;
