@@ -92,10 +92,19 @@ class GW_Require_Unique_Values {
 	public function validate_list( $result, $value ) {
 		$rows      = count( $value );
 		$is_unique = true;
-		foreach ( array_keys( $value[0] ) as $column_name ) {
-			$column_values = array_column( $value, $column_name );
-			// Count unique values in each column.
-			if ( $rows != count( array_unique( $column_values ) ) ) {
+
+		// Multi-Column List
+		if ( is_array( $value[0] ) ) {
+			foreach ( array_keys( $value[0] ) as $column_name ) {
+				$column_values = array_column( $value, $column_name );
+				// Count unique values in each column.
+				if ( $rows != count( array_unique( $column_values ) ) ) {
+					$is_unique = false;
+				}
+			}
+		} else {
+			// Count unique values in the Single Column List.
+			if ( $rows != count( array_unique( $value ) ) ) {
 				$is_unique = false;
 			}
 		}
