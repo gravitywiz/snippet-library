@@ -127,10 +127,9 @@ class GW_Choice_Count {
 								$choiceField.find( 'input[type="checkbox"]:checked' ).each( function( k, $selectedChoice ) {
 									selectedValues.push( $selectedChoice.value );
 								});
-								var result = values.every( function( val ) {
-									return selectedValues.indexOf( val ) >= 0;
+								values.forEach( function( val ) {
+									count += selectedValues.indexOf( val ) >= 0;
 								});
-								count += result;
 							}
 
 						}
