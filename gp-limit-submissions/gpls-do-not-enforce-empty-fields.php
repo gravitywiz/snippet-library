@@ -12,6 +12,17 @@
 // Update "123" to your form ID or remove "_123" to apply this functionality to all forms.
 add_filter( 'gpls_should_enforce_on_render_123', function( $should_enforce, $form, $field_values, $gpls_enforce ) {
 
+	// Don't enforce if the form was submitted and is returning a validation error. This implies the form was previously
+	// rendered and the user entered a value and should have the opportunity to change the value to pass validation.
+	if ( isset( GFFormDisplay::$submission[ $form['id'] ] ) && ! GFFormDisplay::$submission[ $form['id'] ]['is_valid'] ) {
+		return false;
+	}
+
+	// If there are no rule groups for this form, no feed has been configured.
+	if ( empty( $gpls_enforce->get_rule_groups() ) ) {
+		return $should_enforce;
+	}
+	
 	$failed_rule_group = $gpls_enforce->get_test_result()->failed_rule_group;
 	if ( ! $failed_rule_group ) {
 		return $should_enforce;
