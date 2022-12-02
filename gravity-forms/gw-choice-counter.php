@@ -23,6 +23,7 @@ class GW_Choice_Count {
 			'count_field_id'   => false,
 			'choice_field_id'  => null,
 			'choice_field_ids' => false,
+			'values'           => false,
 		) );
 
 		if ( isset( $this->_args['choice_field_id'] ) ) {
@@ -86,7 +87,7 @@ class GW_Choice_Count {
 					// Event handler for all listeners to avoid DRY and to maintain a pointer reference to the function
 					// which we can use to explicity unbind event handlers
 					self.updateChoiceEventHandler = function() {
-						self.updateChoiceCount( self.formId, self.choiceFieldIds, self.countFieldId );
+						self.updateChoiceCount( self.formId, self.choiceFieldIds, self.countFieldId, self.values );
 					};
 
 					self.init = function() {
@@ -107,7 +108,7 @@ class GW_Choice_Count {
 						return Boolean( $field.find( 'input[type="checkbox"]' ).length );
 					}
 
-					self.updateChoiceCount = function( formId, choiceFieldIds, countFieldId ) {
+					self.updateChoiceCount = function( formId, choiceFieldIds, countFieldId, values ) {
 
 						var countField = $( '#input_' + formId + '_' + countFieldId ),
 							count      = 0;
@@ -115,10 +116,21 @@ class GW_Choice_Count {
 						for ( var i = 0; i < choiceFieldIds.length; i++ ) {
 
 							var $choiceField = $( '#input_' + formId + '_' + choiceFieldIds[ i ] );
-							if ( self.isCheckboxField( $choiceField ) ) {
-								count += $choiceField.find( 'input[type="checkbox"]:checked' ).not(' #choice_' + choiceFieldIds[ i ] + '_select_all').length;
+							if ( values.length == 0) {
+								if ( self.isCheckboxField( $choiceField ) ) {
+									count += $choiceField.find( 'input[type="checkbox"]:checked' ).not(' #choice_' + choiceFieldIds[ i ] + '_select_all').length;
+								} else {
+									count += $choiceField.find( 'option:selected' ).length;
+								}
 							} else {
-								count += $choiceField.find( 'option:selected' ).length;
+								var selectedValues = [];
+								$choiceField.find( 'input[type="checkbox"]:checked' ).each( function( k, $selectedChoice ) {
+									selectedValues.push( $selectedChoice.value );
+								});
+								var result = values.every( function( val ) {
+									return selectedValues.indexOf( val ) >= 0;
+								});
+								count += result;
 							}
 
 						}
@@ -151,6 +163,7 @@ class GW_Choice_Count {
 			'formId'         => $this->_args['form_id'],
 			'countFieldId'   => $this->_args['count_field_id'],
 			'choiceFieldIds' => $this->_args['choice_field_ids'],
+			'values'         => $this->_args['values'],
 		);
 
 		$script = 'new GWChoiceCount( ' . json_encode( $args ) . ' );';
@@ -182,7 +195,8 @@ class GW_Choice_Count {
 # Configuration
 
 new GW_Choice_Count( array(
-	'form_id'          => 123,           // The ID of your form.
-	'count_field_id'   => 4,             // Any Number field on your form in which the number of checked checkboxes should be dynamically populated; you can configure conditional logic based on the value of this field.
-	'choice_field_ids' => array( 5, 6 ), // Any array of Checkbox or Multi-select field IDs which should be counted.
+	'form_id'          => 123,                          // The ID of your form.
+	'count_field_id'   => 4,                            // Any Number field on your form in which the number of checked checkboxes should be dynamically populated; you can configure conditional logic based on the value of this field.
+	'choice_field_ids' => array( 5, 6 ),                // Any array of Checkbox or Multi-select field IDs which should be counted.
+	'values'           => array( 'None of the above' ), // Array of values, all of which should match.
 ) );
