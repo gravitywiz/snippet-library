@@ -28,6 +28,11 @@ class GW_Require_Unique_Values {
 			'case_sensitive'      => false,
 		) );
 
+		// No validation when the field id list is empty.
+		if ( ! $this->_args['field_ids'] ) {
+			return;
+		}
+
 		$this->_args['master_field_id'] = array_shift( $this->_args['field_ids'] );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -111,7 +116,7 @@ class GW_Require_Unique_Values {
 
 		if ( $result['is_valid'] && ! $is_unique ) {
 			$result['is_valid'] = false;
-			$result['message']  = $this->_args['validation_message'] . ' All columns should have unique values.';
+			$result['message']  = $this->_args['validation_message'];
 		}
 
 		return $result;
@@ -186,7 +191,7 @@ class GW_Require_Unique_Values {
 	public function is_applicable_field( $field ) {
 
 		// A single list field can be used for validation (validation logic to use unique values check over columns).
-		if ( ! $this->_args['field_ids'] && $field->get_input_type() == 'list' ) {
+		if ( $field->id == $this->_args['master_field_id'] && ! $this->_args['field_ids'] && $field->get_input_type() == 'list' ) {
 			return true;
 		} elseif ( ! $this->_args['field_ids'] ) {
 			return false;
