@@ -29,7 +29,7 @@ class GW_Require_Unique_Values {
 		) );
 
 		// No validation when the field id list is empty.
-		if ( ! $this->_args['field_ids'] ) {
+		if ( empty( $this->_args['field_ids'] ) ) {
 			return;
 		}
 
@@ -99,9 +99,9 @@ class GW_Require_Unique_Values {
 		$is_unique = true;
 
 		// Multi-Column List
-		if ( is_array( $value[0] ) ) {
+		if ( is_array( rgar( $value, 0 ) ) ) {
 			foreach ( array_keys( $value[0] ) as $column_name ) {
-				$column_values = array_column( $value, $column_name );
+				$column_values = wp_list_pluck( $value, $column_name );
 				// Count unique values in each column.
 				if ( $rows != count( array_unique( $column_values ) ) ) {
 					$is_unique = false;
