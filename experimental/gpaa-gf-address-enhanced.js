@@ -12,7 +12,7 @@ gform.addAction('gpaa_fields_filled', function (place, instance, formId, fieldId
 	place.address_components.forEach( function( component ) { 
 		if ( component.types.indexOf( 'administrative_area_level_1' ) !== -1 ) {
 			// Update "1" to the field ID in which you would GPAA and GF Address Enhanced enabled
-			$( '#input_GFFORMID_1_4 option[value="' + component.short_name + '"]' ).attr('selected','selected');
+			$( '#input_GFFORMID_1_4 option[value="' + component.short_name + '"]' ).attr('selected', 'selected');
 		}
 	} );
 } );
