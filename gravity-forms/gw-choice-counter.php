@@ -117,12 +117,14 @@ class GW_Choice_Count {
 
 							var $choiceField = $( '#input_' + formId + '_' + choiceFieldIds[ i ] );
 							if ( values.length == 0) {
+								// If no values provided in the config, just get the number of checkboxes checked.
 								if ( self.isCheckboxField( $choiceField ) ) {
 									count += $choiceField.find( 'input[type="checkbox"]:checked' ).not(' #choice_' + choiceFieldIds[ i ] + '_select_all').length;
 								} else {
 									count += $choiceField.find( 'option:selected' ).length;
 								}
 							} else {
+								// When values are provided, match the values before adding them to count.
 								var selectedValues = [];
 								$choiceField.find( 'input[type="checkbox"]:checked' ).each( function( k, $selectedChoice ) {
 									selectedValues.push( $selectedChoice.value );
