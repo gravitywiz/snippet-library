@@ -11,12 +11,9 @@ gform.addFilter( 'gpcc_custom_copy', function( copyMode, id, sourceGroup, target
 	// Get the source text field value.
 	var sourceValue = $(sourceGroup[0]).val();
 	
-	// Get the first list input.
-	var listFirstInput = $('.gfield_list_row_odd').find(':input')[0];
-	
-	// Set the source text field value to the first list input.
-	$( listFirstInput ).val(sourceValue);
-	
+	// Set the source text field value to the first row of list input.
+	$( '.gfield_list_row_odd' ).find(':input').first().val( sourceValue );
+
 	// Return copyMode as true indicating the default logic for this case is bypassed by the above overriden logic.
 	return true;
 });
