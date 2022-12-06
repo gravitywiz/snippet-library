@@ -7,9 +7,9 @@
  */
 add_filter( 'gpns_schedule_timestamp', function ( $timestamp, $notification, $entry, $is_recurring, $current_time ) {
 	// Only process for GravityView notification events.
-	if ( strpos( $notification['event'], 'gravityview') === false ) {
+	if ( strpos( $notification['event'], 'gravityview' ) === false ) {
 		return $timestamp;
 	}
 
-   return time() + 5; // Use current time plus a few seconds to force-schedule GravityView event.
+	return time() + 5; // Use current time plus a few seconds to force-schedule GravityView event.
 }, 10, 5 );
