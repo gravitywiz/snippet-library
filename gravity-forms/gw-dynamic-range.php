@@ -220,8 +220,15 @@ class GW_Dynamic_Range {
 
 						currentValue = parseInt( currentValue );
 
-						let value = Math.max( currentValue, min );
-						value = Math.min( value, max );
+						let value = currentValue;
+
+						if ( min !== undefined ) {
+							value = Math.max( value, min );
+						}
+
+						if ( max !== undefined ) {
+							value = Math.min( value, max );
+						}
 
 						if ( value !== currentValue ) {
 							self.$target.val( value ).change();
