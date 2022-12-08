@@ -1,4 +1,9 @@
 /**
+ * --- STOP! ---
+ * 
+ * This snippet is deprecated and no longer required if you are using the latest version of Simply Schedule Appointments.
+ */
+/**
  * Gravity Perks // GP Populate Anything // Refresh Live Merge Tags pointing to Simply Schedule Appointments field
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything
  *
