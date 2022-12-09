@@ -3,7 +3,7 @@
  * Gravity Wiz // Gravity Forms // Dynamic Range
  * http://gravitywiz.com/
  *
- * Set a Number field's minimum and/or maximum range by the value entered in another field.
+ * Set a Number field's minimum and/or maximum range by the value entered into another field.
  *
  * @todo
  *  - Prevent min field's value from exceeding max's.
@@ -14,7 +14,7 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Set a Number field's minimum and maximum range by the values entered in to other fields.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   http://gravitywiz.com
  */
 class GW_Dynamic_Range {
@@ -148,14 +148,16 @@ class GW_Dynamic_Range {
 						if ( ! self.minFieldId ) {
 							return null;
 						}
-						return parseInt( self.$min.val() );
+						let min = parseInt( self.$min.val() );
+						return isNaN( min ) ? 0 : min;
 					}
 
 					self.getMaxValue = function() {
 						if ( ! self.maxFieldId ) {
 							return null;
 						}
-						return parseInt( self.$max.val() );
+						let max = parseInt( self.$max.val() );
+						return isNaN( max ) ? 0 : max;
 					}
 
 					self.setDynamicRange = function() {
