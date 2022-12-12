@@ -18,6 +18,6 @@ gform.addFilter( 'gpcc_field_group', function( $group, field, groupType, $field 
 		return $group;
 	}
 	// Update "1" to your first Checkbox field ID and "2" to your second Checkbox field ID.
-	$group = $( '#field_605_1, #field_605_2' ).find( 'input:checked' );
+	$group = $( '#field_GFFORMID_1, #field_GFFORMID_2' ).find( 'input:checked' );
 	return $group;
 } );
