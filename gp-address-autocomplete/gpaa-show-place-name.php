@@ -17,10 +17,11 @@ add_action( 'gform_pre_enqueue_scripts_123', function() {
 		// Enable search by Place Name
 		gform.addFilter( 'gpaa_autocomplete_options', function( options ) {
 			options.types = [ 'geocode', 'establishment' ];
+			options.fields.push( 'name' );
 			return options;
 		} );
 		// Display Place Name
-		gform.addAction('gpaa_fields_filled', function (place, instance, formId, fieldId) {
+		gform.addAction('gpaa_fields_filled', function ( place, instance, formId, fieldId ) {
 			// Update "123" to your form ID, update _1_1 to your field ID. If your field ID is 4, this would be _4_1.
 			jQuery('#input_123_1_1').val( place.name );
 			return place;
