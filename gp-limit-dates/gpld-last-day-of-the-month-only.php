@@ -8,19 +8,15 @@ add_filter( 'gpld_limit_dates_options_123_4', function( $options, $form, $field 
 
 	$range_start = new DateTime();
 	if ( (int) $range_start->format( 'j' ) > 1 ) {
-		$range_start->modify( 'first day of next month' );
+		$range_start->modify( 'last day of this month' );
 	}
 
 	$cloned_date_range = clone $range_start;
 	$range_end         = $cloned_date_range->add( new DateInterval( 'P1Y' ) );
 
 	$period = new DatePeriod( $range_start, new DateInterval( 'P1M' ), $range_end );
-	$month  = 1;
 	foreach ( $period as $date ) {
-		$last_day  = cal_days_in_month( CAL_GREGORIAN, $month, date('Y') );
-		$last_date = 'm/' . $last_day . '/Y'; 
-		$options['exceptions'][] = $date->format( $last_date );
-		$month += 1;
+		$options['exceptions'][] = date( 'm/d/Y', strtotime( 'last day ' . $date->format( 'm/01/Y' ) ) );
 	}
 
 	$options['disableAll']    = true;
