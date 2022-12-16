@@ -16,7 +16,7 @@ add_filter( 'gpld_limit_dates_options_123_4', function( $options, $form, $field 
 
 	$period = new DatePeriod( $range_start, new DateInterval( 'P1M' ), $range_end );
 	foreach ( $period as $date ) {
-		$options['exceptions'][] = date( 'm/d/Y', strtotime( 'last day ' . $date->format( 'm/01/Y' ) ) );
+		$options['exceptions'][] = gmdate( 'm/d/Y', strtotime( 'last day ' . $date->format( 'm/01/Y' ) ) );
 	}
 
 	$options['disableAll']    = true;
