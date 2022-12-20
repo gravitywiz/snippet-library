@@ -1,6 +1,18 @@
+/**
+ * Gravity Perks // GP Address Autocomplete // Add Google Street View
+ *
+ * Adds a Google Street View container to the bottom of the map and automatically
+ * updates the Street View when the user selects an address.
+ *
+ * Instructions:
+ *     1. Install our free Custom JavaScript for Gravity Forms plugin.
+ *         Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
+ *     2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
+ */
+
 window.gform.addAction('gpaa_marker_set', function (opts) {
   var panorama = new google.maps.StreetViewPanorama(
-  document.getElementById('gpaa_street_view_container_' + opts.fieldId),
+  	document.getElementById('gpaa_street_view_container_' + opts.fieldId),
     {
       position: opts.map.getCenter(),
       pov: {
