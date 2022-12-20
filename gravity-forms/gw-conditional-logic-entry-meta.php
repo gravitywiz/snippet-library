@@ -151,7 +151,7 @@ class GW_CL_Entry_Meta {
 		$target = $rule['fieldId'];
 
 		if ( in_array( $target, $keys ) && $entry ) {
-			if ( $target === 'payment_status' ) {
+			if ( in_array( $target, $this->get_runtime_entry_meta_keys(), true ) ) {
 				// Some payment add-ons do not update the runtime entry but do update the entry in the database.
 				// Fetch the latest from the database.
 				$entry = GFAPI::get_entry( $entry['id'] );
@@ -167,13 +167,26 @@ class GW_CL_Entry_Meta {
 		foreach ( $notifications as $notification ) {
 			$_notification = gp_notification_schedule()->get_notification( $form, $notification['nid'] );
 			foreach ( rgars( $_notification, 'notification_conditional_logic_object/rules' ) as $rule ) {
-				if ( $rule['fieldId'] === 'payment_status' ) {
+				if ( in_array( $rule['fieldId'], $this->get_runtime_entry_meta_keys(), true ) ) {
 					return true;
 				}
 			}
 		}
 
 		return $eval_on_send;
+	}
+
+	/**
+	 * Get the keys for any entry meta that may be updated during a form submission.
+	 *
+	 * Since these are updated mid-submission, conditional logic in some contexts (like notifications triggered by a feed
+	 * action) will be using a stale entry. Identifying these entry meta keys allows us to ensure special functionality
+	 * to support them.
+	 *
+	 * @return mixed|void
+	 */
+	public function get_runtime_entry_meta_keys() {
+		return apply_filters( 'gwclem_runtime_entry_meta_keys', array( 'payment_status' ) );
 	}
 
 }
