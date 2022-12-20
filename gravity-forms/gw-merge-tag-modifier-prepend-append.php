@@ -61,6 +61,9 @@ add_filter( 'gform_merge_tag_filter', function( $value, $input_id, $modifier, $f
 		// with an actual comma since the merge tag has already been parsed.
 		$modifier_value = str_replace( '&comma;', ',', $modifier_value );
 
+		// Support adding line breaks.
+		$modifier_value = str_replace( '\n', "\n", $modifier_value );
+
 		switch ( $modifier ) {
 			case 'append':
 				$value .= $modifier_value;
