@@ -75,7 +75,7 @@ class GW_Choice_Count {
 							$parentForm.off( 'click', choiceFieldSelector, self.updateChoiceEventHander );
 							$parentForm.off( 'change', choiceFieldSelector, self.updateChoiceEventHander );
 
-							if ( self.isCheckboxField( $choiceField ) ) {
+							if ( self.isCheckableField( $choiceField ) ) {
 								$parentForm.on( 'click', choiceFieldSelector, self.updateChoiceEventHandler );
 							} else {
 								$parentForm.on( 'change', choiceFieldSelector, self.updateChoiceEventHandler );
@@ -104,8 +104,8 @@ class GW_Choice_Count {
 						} );
 					};
 
-					self.isCheckboxField = function( $field ) {
-						return Boolean( $field.find( 'input[type="checkbox"]' ).length );
+					self.isCheckableField = function($field ) {
+						return Boolean( $field.find( ':checkbox, :radio' ).length );
 					}
 
 					self.updateChoiceCount = function( formId, choiceFieldIds, countFieldId, values ) {
@@ -118,15 +118,15 @@ class GW_Choice_Count {
 							var $choiceField = $( '#input_' + formId + '_' + choiceFieldIds[ i ] );
 							if ( ! values ) {
 								// If no values provided in the config, just get the number of checkboxes checked.
-								if ( self.isCheckboxField( $choiceField ) ) {
-									count += $choiceField.find( 'input[type="checkbox"]:checked' ).not(' #choice_' + choiceFieldIds[ i ] + '_select_all').length;
+								if ( self.isCheckableField( $choiceField ) ) {
+									count += $choiceField.find( ':checked' ).not(' #choice_' + choiceFieldIds[ i ] + '_select_all').length;
 								} else {
 									count += $choiceField.find( 'option:selected' ).length;
 								}
 							} else {
 								// When values are provided, match the values before adding them to count.
 								var selectedValues = [];
-								$choiceField.find( 'input[type="checkbox"]:checked' ).each( function( k, $selectedChoice ) {
+								$choiceField.find( ':checked' ).each( function( k, $selectedChoice ) {
 									selectedValues.push( $selectedChoice.value );
 								});
 								values.forEach( function( val ) {
