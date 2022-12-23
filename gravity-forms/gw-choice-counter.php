@@ -7,7 +7,7 @@
  * Get the total number of checkboxes checked or multi-select options selected. Useful when wanting to apply conditional
  * logic based on those totals.
  *
- * @version   1.1
+ * @version   1.2
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/
