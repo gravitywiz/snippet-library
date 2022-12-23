@@ -13,7 +13,7 @@
  * Plugin URI:   https://gravitywiz.com/
  * Description:  Use the entry meta in conditional logic (e.g. payment status, approval status, etc).
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   https://gravitywiz.com
  */
 class GW_CL_Entry_Meta {
@@ -54,7 +54,9 @@ class GW_CL_Entry_Meta {
 				const entryOptions = <?php echo json_encode( $this->get_conditional_logic_options() ); ?>;
 				gform.addFilter( 'gform_conditional_logic_fields', function( options, form, selectedFieldId ) {
 					for ( const property in entryOptions ) {
-						if ( entryOptions.hasOwnProperty( property ) ) {
+						// Entry meta are already added in Notifications and Confirmations conditional logic but not in feeds.
+						// Let's just make sure that none of our entry meta options have been previously added.
+						if ( entryOptions.hasOwnProperty( property ) && ! options.find( opt => opt.value === entryOptions[ property ].value ) ) {
 							options.push( {
 								label: entryOptions[ property ].label,
 								value: entryOptions[ property ].value
