@@ -9,7 +9,7 @@
  * Plugin URI:   https://gravitywiz.com/require-minimum-character-limit-gravity-forms/
  * Description:  Adds support for requiring a minimum and maximum number of characters for text-based Gravity Form fields.
  * Author:       Gravity Wiz
- * Version:      1.2
+ * Version:      1.3
  * Author URI:   https://gravitywiz.com/
  */
 class GW_Minimum_Characters {
@@ -34,6 +34,15 @@ class GW_Minimum_Characters {
 			'max_validation_message' => __( 'You may only enter %s characters.' ),
 		) );
 
+		/**
+		 * @var int $form_id
+		 * @var int $field_id
+		 * @var int $min_chars
+		 * @var false|int $max_chars
+		 * @var false|string $validation_message
+		 * @var string $min_validation_message
+		 * @var string $max_validation_message
+		 */
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $this->_args );
 
@@ -56,6 +65,14 @@ class GW_Minimum_Characters {
 			if ( count( explode( '.', $this->_args['field_id'] ) ) > 1 ) {
 				$modifier = explode( '.', $this->_args['field_id'] )[1];
 				$value    = rgar( $value, $field->id . '.' . $modifier );
+			} elseif ( $field->type === 'list' ) {
+				foreach ( $value as $row_values ) {
+					foreach ( $row_values as $row_value ) {
+						$result = $this->validate_character_count( $result, $row_value, $form, $field );
+					}
+				}
+
+				return $result;
 			} else {
 				return $result;
 			}
