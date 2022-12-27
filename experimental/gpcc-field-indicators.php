@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // Copy Cat // Show Source and Target Field Indicators in Form Editor
  * https://gravitywiz.com/documentation/gravity-forms-copy-cat/
