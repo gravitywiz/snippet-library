@@ -6,13 +6,13 @@
  * Schedule reminders for users who signed up but never activated their accounts.
  *
  * Requirements:
- * 
+ *
  * 1. [User Registration](https://www.gravityforms.com/add-ons/user-registration/)
  * 2. [Notification Scheduler](https://gravitywiz.com/documentation/gravity-forms-notification-scheduler/)
  * 3. [GW Conditional Logic: Entry Meta](https://github.com/gravitywiz/snippet-library/blob/master/gravity-forms/gw-conditional-logic-entry-meta.php)
  *
  * Instructions:
- * 
+ *
  * 1. Ensure that all required plugins have been installed and activated.
  * 2. Setup a User Registration feed to create a new user with "User Activation" enabled.
  * 3. Setup a notification triggered by the "User is pending activation" event.
@@ -46,15 +46,15 @@ add_filter( 'gform_entry_meta', function ( $entry_meta, $form_id ) {
 				'is',
 				'isnot',
 			),
-			'choices' => array(
+			'choices'   => array(
 				array(
-					'text' => 'Yes',
-					'value' => 1,
+					'text'       => 'Yes',
+					'value'      => 1,
 					'isSelected' => false,
 				),
 				array(
-					'text' => 'No',
-					'value' => '',
+					'text'       => 'No',
+					'value'      => '',
 					'isSelected' => false,
 				),
 			),
@@ -71,13 +71,13 @@ add_filter( 'gform_field_filters', function( $field_filters, $form ) {
 		}
 		$field_filter['values'] = array(
 			array(
-				'text' => 'Yes',
-				'value' => 1,
+				'text'       => 'Yes',
+				'value'      => 1,
 				'isSelected' => false,
 			),
 			array(
-				'text' => 'No',
-				'value' => '',
+				'text'       => 'No',
+				'value'      => '',
 				'isSelected' => false,
 			),
 		);

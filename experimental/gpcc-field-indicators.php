@@ -2,7 +2,7 @@
 /**
  * Gravity Perks // Copy Cat // Show Source and Target Field Indicators in Form Editor
  * https://gravitywiz.com/documentation/gravity-forms-copy-cat/
- * 
+ *
  * Display visual source and target field indicators next to field labels in the form editor.
  */
 add_filter( 'gform_admin_pre_render', function( $form ) {
@@ -11,7 +11,7 @@ add_filter( 'gform_admin_pre_render', function( $form ) {
 		return $form;
 	}
 
-	$gpcc = new GP_Copy_Cat();
+	$gpcc        = new GP_Copy_Cat();
 	$gpcc_fields = $gpcc->get_copy_cat_fields( $form );
 	if ( empty( $gpcc_fields ) ) {
 		return $form;
@@ -54,8 +54,8 @@ add_filter( 'gform_admin_pre_render', function( $form ) {
 		$mappings = array_merge( $_mappings );
 	}
 
-	foreach( $form['fields'] as &$field ) {
-		foreach( $mappings as $mapping ) {
+	foreach ( $form['fields'] as &$field ) {
+		foreach ( $mappings as $mapping ) {
 			if ( $field->id == $mapping['source'] ) {
 				$field->cssClass .= ' gpcc-source';
 			}

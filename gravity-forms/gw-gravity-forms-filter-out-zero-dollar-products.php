@@ -4,9 +4,9 @@
  * http://gravitywiz.com/
  *
  * Use this snippet to hide Product fields from the order summary when their cost is $0.00.
- * 
+ *
  * Note: this snippet was originally designed to account for the lack of a true placeholder option
- * Gravity Forms Drop Down Products which resulted in the placeholder choice being added to the 
+ * Gravity Forms Drop Down Products which resulted in the placeholder choice being added to the
  * order as a zero-cost line item. We are not aware of a current need for this snippet.
  */
 add_filter( 'gform_product_info', 'gw_remove_empty_products', 10, 3 );

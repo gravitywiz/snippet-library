@@ -22,7 +22,7 @@ add_filter( 'gpls_should_enforce_on_render_123', function( $should_enforce, $for
 	if ( empty( $gpls_enforce->get_rule_groups() ) ) {
 		return $should_enforce;
 	}
-	
+
 	$failed_rule_group = $gpls_enforce->get_test_result()->failed_rule_group;
 	if ( ! $failed_rule_group ) {
 		return $should_enforce;

@@ -64,7 +64,6 @@ class GW_Dynamic_Range {
 					$field->rangeMax = $this->get_range_value( $this->_args['max_field_id'], $form, $field_values );
 				}
 			}
-
 		}
 
 		return $form;
@@ -262,8 +261,11 @@ class GW_Dynamic_Range {
 			'maxFieldId'  => $this->_args['max_field_id'],
 			'enforceLive' => $this->_args['enforce_live'],
 			'messages'    => array(
+				// translators: placeholders are numbers
 				'both' => esc_html__( 'Please enter a number from %1$s to %2$s.', 'gravityforms' ),
+				// translators: placeholder is a number
 				'min'  => esc_html__( 'Please enter a number greater than or equal to %s.', 'gravityforms' ),
+				// translators: placeholder is a number
 				'max'  => esc_html__( 'Please enter a number less than or equal to %s.', 'gravityforms' ),
 			),
 		);
@@ -287,8 +289,8 @@ class GW_Dynamic_Range {
 # Configuration
 
 new GW_Dynamic_Range( array(
-	'form_id' => 123,
-	'field_id' => 4,
+	'form_id'      => 123,
+	'field_id'     => 4,
 	'min_field_id' => 5,
 	'max_field_id' => 6,
 ) );

@@ -10,7 +10,7 @@
  * attached. Tip: Populate Anything can be used to populate this field with existing parent entries. The designated
  * field will only appear when the child form is accessed outside a Nested Form field.
  */
-class GPNF_Attach_Child_Entry_by_Field {
+class GPNF_Attach_Child_Entry_By_Field {
 
 	public function __construct( $args = array() ) {
 
@@ -72,7 +72,7 @@ class GPNF_Attach_Child_Entry_by_Field {
 
 # Configuration
 
-new GPNF_Attach_Child_Entry_by_Field( array(
+new GPNF_Attach_Child_Entry_By_Field( array(
 	'nested_form_field_id'  => 4,   // Update "4" to the ID of your Nested Form field on the parent form.
 	'child_form_id'         => 123, // Update "123" to ID of your child form.
 	'parent_entry_field_id' => 5,   // Update "5" to the ID of the field on your child form that will contain the parent entry ID.

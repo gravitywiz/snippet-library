@@ -51,7 +51,7 @@ class GW_Multi_File_Merge_Tag {
 			'default_markup' => '<a href="{url}">{filename}.{ext}</a>',
 			'formats'        => array( 'html' ),
 			'markup'         => array(
-				'container'      => false,
+				'container' => false,
 				array(
 					'file_types' => array( 'jpg', 'jpeg', 'png', 'gif' ),
 					'markup'     => '<img src="{url}" width="33%" />',
