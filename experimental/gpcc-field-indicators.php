@@ -5,65 +5,66 @@
  *
  * Display visual source and target field indicators next to field labels in the form editor.
  */
-add_filter( 'gform_admin_pre_render', function( $form ) {
+add_filter( 'gform_field_content', function( $content, $field ) {
 
-	if ( ! class_exists( 'GP_Copy_Cat' ) ) {
-		return $form;
+	if ( ! GFCommon::is_form_editor() || ! class_exists( 'GP_Copy_Cat' ) || ! $field->formId ) {
+		return $content;
 	}
 
-	$gpcc        = new GP_Copy_Cat();
-	$gpcc_fields = $gpcc->get_copy_cat_fields( $form );
+	$gpcc        = new GP_Copy_Cat( 'fake.php' );
+	$gpcc_fields = $gpcc->get_copy_cat_fields( GFAPI::get_form( $field->formId ) );
 	if ( empty( $gpcc_fields ) ) {
-		return $form;
+		return $content;
 	}
 
-	add_filter( 'admin_footer', function() {
-		?>
-		<style>
-			.gpcc-source .gform-field-label:after {
-				content: 'GPCC: Source';
-				color: #274524;
-				margin: 0 0.5rem;
-				background-color: #edf8ec;
-				border: 1px solid #d7e8d5;
-				border-radius: 40px;
-				float: right;
-				font-size: 0.6875rem;
-				font-weight: 600;
-				padding: 0.1125rem 0.4625rem;
-			}
-
-			.gpcc-target .gform-field-label:after {
-				content: 'GPCC: Target';
-				color: #274524;
-				margin: 0 0.5rem;
-				background-color: #edf8ec;
-				border: 1px solid #d7e8d5;
-				border-radius: 40px;
-				float: right;
-				font-size: 0.6875rem;
-				font-weight: 600;
-				padding: 0.1125rem 0.4625rem;
-			}
-		</style>
-		<?php
-	} );
+	if ( ! has_action( 'admin_footer', 'gpcc_field_indicator_styles' ) ) {
+		add_filter( 'admin_footer', 'gpcc_field_indicator_styles' );
+	}
 
 	$mappings = array();
 	foreach ( $gpcc_fields as $_mappings ) {
 		$mappings = array_merge( $_mappings );
 	}
 
-	foreach ( $form['fields'] as &$field ) {
-		foreach ( $mappings as $mapping ) {
-			if ( $field->id == $mapping['source'] ) {
-				$field->cssClass .= ' gpcc-source';
-			}
-			if ( $field->id == $mapping['target'] ) {
-				$field->cssClass .= ' gpcc-target';
-			}
+	$spans = array();
+
+	foreach( $mappings as $mapping ) {
+		if ( $field->id == $mapping['source'] ) {
+			$spans['source'] = '<span class="gpcc-source gw-field-indicator">GPCC: Source</span>';
+		}
+		if ( $field->id == $mapping['target'] ) {
+			$spans['target'] = '<span class="gpcc-target gw-field-indicator">GPCC: Target</span>';
 		}
 	}
 
-	return $form;
-} );
+	$search  = '<\/label>|<\/legend>';
+	$replace = sprintf( '\0 %s', implode( '', $spans ) );
+	$content = preg_replace( "/$search/", $replace, $content, 1 );
+
+	return $content;
+}, 11, 2 );
+
+function gpcc_field_indicator_styles() {
+	?>
+	<style>
+		.gw-field-indicator {
+			margin: 0 0 0 0.6875rem;
+			background-color: #ecedf8;
+			border: 1px solid #d5d7e9;
+			border-radius: 40px;
+			font-size: 0.6875rem;
+			font-weight: 600;
+			padding: 0.1125rem 0.4625rem;
+			vertical-align: text-top;
+		}
+		.gw-field-indicator + .gw-field-indicator {
+			margin-left: 0;
+		}
+		.gpcc-source, .gpcc-target {
+			color: #274524;
+			background-color: #edf8ec;
+			border-color: #d7e8d5;
+		}
+	</style>
+	<?php
+}
