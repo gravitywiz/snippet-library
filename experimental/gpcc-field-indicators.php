@@ -38,7 +38,7 @@ add_filter( 'gform_field_content', function( $content, $field ) {
 	}
 
 	$search  = '<\/label>|<\/legend>';
-	$replace = sprintf( '\0 %s', implode( '', $spans ) );
+	$replace = sprintf( '%s\0', implode( '', $spans ) );
 	$content = preg_replace( "/$search/", $replace, $content, 1 );
 
 	return $content;
@@ -56,9 +56,11 @@ function gpcc_field_indicator_styles() {
 			font-weight: 600;
 			padding: 0.1125rem 0.4625rem;
 			vertical-align: text-top;
+			position: relative;
+			top: 3px;
 		}
 		.gw-field-indicator + .gw-field-indicator {
-			margin-left: 0;
+			margin-left: 0.3725rem;
 		}
 		.gpcc-source, .gpcc-target {
 			color: #274524;
