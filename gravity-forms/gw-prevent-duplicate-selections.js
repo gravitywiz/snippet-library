@@ -2,8 +2,8 @@
  * Gravity Wiz // Gravity Forms // Prevent Duplicate Selections
  * https://gravitywiz.com/
  * 
- * Prevent duplicate selections in choice-based fields. Currently limited to Checkbox fields with plans
- * to support all choice-based fields (e.g. Radio Buttons, Drop Downs & Multi Selects).
+ * Prevent duplicate selections in choice-based fields. Currently works with Checkbox and
+ * Radio Button fields with plans to support all choice-based fields (e.g. Drop Downs & Multi Selects).
  * 
  * For Drop Down field support, use this snippet: 
  * https://github.com/gravitywiz/snippet-library/blob/master/experimental/gw-prevent-duplicate-drop-down-selections.js
