@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // Easy Passthrough // Delete Token After Use
  * https://gravitywiz.com/documentation/gravity-forms-easy-passthrough/
