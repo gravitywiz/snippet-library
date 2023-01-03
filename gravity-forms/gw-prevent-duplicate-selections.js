@@ -16,20 +16,48 @@
  * 2. Add 'gw-prevent-duplicates' to the CSS Class Name setting for any field in which duplicate selections
  *    should be prevented.
  */
-$checkboxes = $( '.gw-prevent-duplicates' ).find( 'input' );
+$inputs = $( '.gw-prevent-duplicates' ).find( 'input' );
 
-$checkboxes.click( function() {
-	gwDisableDuplicates( $( this ), $checkboxes );
+$inputs.click( function() {
+	gwDisableDuplicates( $( this ), $inputs );
 } );
 
-$checkboxes.each( function() {
-	gwDisableDuplicates( $( this ), $checkboxes );
+$inputs.each( function() {
+	gwDisableDuplicates( $( this ), $inputs );
 } );
 
 function gwDisableDuplicates( $elem, $group ) {
-	let value = $elem.val();
-	$group
-		.not( $elem )
+	
+	let value     = $elem.val();
+	let $targets  = $group.not( $elem );
+	let isChecked = $elem.is( ':checked' );
+	// We use this to instruct Gravity Forms not to re-enable disabled duplicate options when
+	// that option is revealed by conditional logic.
+	let disabledClass = 'gf-default-disabled';
+	let previousValue;
+	
+	// Only one choice can be selected in a Radio Button field while multiple choices
+	// can be selected in a Checkbox field. This logic handles saving/retrieving the previous
+	// value and re-enabling inputs with the previous value.
+	if ( $elem.is( ':radio' ) ) {
+		previousValue = $elem.parents( '.gfield' ).data( 'previous-value' );
+		$elem.parents( '.gfield' ).data( 'previous-value', $elem.val() );
+		if ( previousValue ) {
+			$targets
+			.filter( '[value="{0}"]'.format( previousValue ) )
+			.prop( 'disabled', false )
+			.removeClass( disabledClass );
+		}
+	}
+	
+	let $filteredTargets = $targets
 		.filter( '[value="{0}"]'.format( value ) )
 		.prop( 'disabled', $elem.is( ':checked' ) );
+	
+	if ( isChecked ) {
+		$filteredTargets.addClass( disabledClass );
+	} else {
+		$filteredTargets.removeClass( disabledClass );
+	}
+	
 }
