@@ -28,7 +28,7 @@ add_filter( 'gform_field_content', function( $content, $field ) {
 
 	$spans = array();
 
-	foreach( $mappings as $mapping ) {
+	foreach ( $mappings as $mapping ) {
 		if ( $field->id == $mapping['source'] ) {
 			$spans['source'] = '<span class="gpcc-source gw-field-indicator">GPCC: Source</span>';
 		}

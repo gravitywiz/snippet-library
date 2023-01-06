@@ -21,12 +21,11 @@ add_action( 'gform_field_validation', function( $result, $field_value, $form, $f
 
 		if ( $countries_action === 'include' && ! $is_found ) {
 			$result['is_valid'] = false;
-			$result['message'] = esc_html__( 'This phone number is not valid for the selected country.' );
-		} else if ( $countries_action === 'exclude' && $is_found ) {
+			$result['message']  = esc_html__( 'This phone number is not valid for the selected country.' );
+		} elseif ( $countries_action === 'exclude' && $is_found ) {
 			$result['is_valid'] = false;
-			$result['message'] = esc_html__( 'This phone number is not valid for the selected country.' );
+			$result['message']  = esc_html__( 'This phone number is not valid for the selected country.' );
 		}
-
 	}
 
 	return $result;
