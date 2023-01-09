@@ -6,7 +6,7 @@
  * Description: If a page has a name, use it instead of `PAGE BREAK`.
  * Plugin URI:   http://gravitywiz.com/
  * Author:       Gravity Wiz
- * Version:      1.0
+ * Version:      1.0.1
  * Author URI:   http://gravitywiz.com
  *
  * Installation:
@@ -24,10 +24,11 @@ add_filter( 'gform_field_content', function ( $field_content, $field, $value, $e
 		return $field_content;
 	}
 
-	$form = GFAPI::get_form( $form_id );
+	$form        = GFAPI::get_form( $form_id );
+	$page_fields = GFAPI::get_fields_by_type( $form, 'page' );
 
-	$page_index = array_search( $field->id, array_column( $form['fields'], 'id' ) );
-	$page_name  = rgar( $form['pagination']['pages'], $page_index );
+	$page_index = array_search( $field->id, array_column( $page_fields, 'id' ) );
+	$page_name  = rgar( $form['pagination']['pages'], $page_index + 1 );
 
 	if ( rgblank( $page_name ) ) {
 		return $field_content;
