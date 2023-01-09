@@ -8,7 +8,7 @@
  * Plugin URI:  https://gravitywiz.com/submit-gravity-form-access-content/
  * Description: Require that a form be submitted before a post or page can be accessed.
  * Author:      Gravity Wiz
- * Version:     1.11
+ * Version:     1.12
  * Author URI:  https://gravitywiz.com
  */
 class GW_Submit_Access {
@@ -24,6 +24,7 @@ class GW_Submit_Access {
 			'loading_message'             => '', // set later so we can use GFCommon to get URL to GF spinner,
 			'enable_user_meta'            => false,
 			'is_persistent'               => true,
+			'cookie_expiration'           => null,
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -355,7 +356,7 @@ class GW_Submit_Access {
 			if ( $this->_args['enable_user_meta'] && is_user_logged_in() ) {
 				update_user_meta( get_current_user_id(), 'gwsa_submitted_forms', $submitted_forms );
 			} else {
-				$expiration = $this->_args['is_persistent'] ? strtotime( '+1 year' ) : null;
+				$expiration = $this->_args['is_persistent'] ? strtotime( '+1 year' ) : $this->_args['cookie_expiration'];
 				setcookie( 'gwsa_submitted_forms', json_encode( $submitted_forms ), $expiration, '/' );
 			}
 		}
