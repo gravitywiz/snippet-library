@@ -356,7 +356,7 @@ class GW_Submit_Access {
 			if ( $this->_args['enable_user_meta'] && is_user_logged_in() ) {
 				update_user_meta( get_current_user_id(), 'gwsa_submitted_forms', $submitted_forms );
 			} else {
-				$expiration = $this->_args['is_persistent'] ? strtotime( '+1 year' ) : $this->_args['cookie_expiration'];
+				$expiration = $this->_args['is_persistent'] ? rgar( $this->_args, 'cookie_expiration', strtotime( '+1 year' ) ) : null;
 				setcookie( 'gwsa_submitted_forms', json_encode( $submitted_forms ), $expiration, '/' );
 			}
 		}
