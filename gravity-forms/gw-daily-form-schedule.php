@@ -42,6 +42,11 @@ add_filter( 'gform_pre_render', 'gw_daily_form_schedule' );
 add_filter( 'gform_pre_validation', 'gw_daily_form_schedule' );
 function gw_daily_form_schedule( $form ) {
 
+	// Skip "Gravity Forms Daily Form Schedule" for the forms having set schedule start and schedule end date via Form Settings.
+	if ( strstr( $form['scheduleStart'], '/' ) || strstr( $form['scheduleEnd'], '/' ) ) {
+		return $form;
+	}
+
 	$days = array( 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' );
 
 	if ( rgar( $form, 'scheduleForm' ) ) {
