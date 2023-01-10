@@ -142,6 +142,16 @@ class GW_Choice_Count {
 
 					};
 
+					// Prevent count field to reset to default if hidden by conditional logic.
+					gform.addFilter('gform_reset_pre_conditional_logic_field_action', function (reset, formId, targetId, defaultValues, isInit) {
+						var id = targetId.split( '_' ).pop();
+						if ( id == args.countFieldId ) { 
+							return false;
+						}
+
+						return reset;
+					});					
+
 					self.init();
 
 				}
