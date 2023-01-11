@@ -113,31 +113,34 @@ class GW_Choice_Count {
 						var countField = $( '#input_' + formId + '_' + countFieldId ),
 							count      = 0;
 
-						for ( var i = 0; i < choiceFieldIds.length; i++ ) {
+						// Prevent count field from being recalculated if it's hidden.
+						if ( ! gformIsHidden( countField ) ) {
+							for ( var i = 0; i < choiceFieldIds.length; i++ ) {
 
-							var $choiceField = $( '#input_' + formId + '_' + choiceFieldIds[ i ] );
-							if ( ! values ) {
-								// If no values provided in the config, just get the number of checkboxes checked.
-								if ( self.isCheckableField( $choiceField ) ) {
-									count += $choiceField.find( ':checked' ).not(' #choice_' + choiceFieldIds[ i ] + '_select_all').length;
+								var $choiceField = $( '#input_' + formId + '_' + choiceFieldIds[ i ] );
+								if ( ! values ) {
+									// If no values provided in the config, just get the number of checkboxes checked.
+									if ( self.isCheckableField( $choiceField ) ) {
+										count += $choiceField.find( ':checked' ).not(' #choice_' + choiceFieldIds[ i ] + '_select_all').length;
+									} else {
+										count += $choiceField.find( 'option:selected' ).length;
+									}
 								} else {
-									count += $choiceField.find( 'option:selected' ).length;
+									// When values are provided, match the values before adding them to count.
+									var selectedValues = [];
+									$choiceField.find( ':checked' ).each( function( k, $selectedChoice ) {
+										selectedValues.push( $selectedChoice.value );
+									});
+									values.forEach( function( val ) {
+										count += selectedValues.indexOf( val ) >= 0;
+									});
 								}
-							} else {
-								// When values are provided, match the values before adding them to count.
-								var selectedValues = [];
-								$choiceField.find( ':checked' ).each( function( k, $selectedChoice ) {
-									selectedValues.push( $selectedChoice.value );
-								});
-								values.forEach( function( val ) {
-									count += selectedValues.indexOf( val ) >= 0;
-								});
+
 							}
 
-						}
-
-						if( parseInt( countField.val() ) != parseInt( count ) ) {
-							countField.val( count ).change();
+							if( parseInt( countField.val() ) != parseInt( count ) ) {
+								countField.val( count ).change();
+							}
 						}
 
 					};
@@ -150,7 +153,19 @@ class GW_Choice_Count {
 						}
 
 						return reset;
-					});					
+					});
+
+					// Tackle show/hide action to count field. Recalculation when show is triggered.
+					gform.addAction('gform_post_conditional_logic_field_action', function (formId, action, targetId, defaultValues, isInit) {
+						var id = targetId.split( '_' ).pop();
+						if ( id == args.countFieldId ) { 
+							if ( action == 'hide' ) {
+								$( targetId ).find( 'input' ).val('0').trigger( 'change' );
+							} else if ( action == 'show' ) {
+								self.updateChoiceEventHandler();
+							}
+						}
+					});
 
 					self.init();
 
