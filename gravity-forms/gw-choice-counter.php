@@ -145,27 +145,13 @@ class GW_Choice_Count {
 
 					};
 
-					// Prevent count field to reset to default if hidden by conditional logic.
-					gform.addFilter('gform_reset_pre_conditional_logic_field_action', function (reset, formId, targetId, defaultValues, isInit) {
+					// Recalculate Count field when it is revealed by conditional logic.
+					gform.addAction( 'gform_post_conditional_logic_field_action', function ( formId, action, targetId ) {
 						var id = targetId.split( '_' ).pop();
-						if ( id == args.countFieldId ) { 
-							return false;
+						if ( id == args.countFieldId && action === 'show' ) {
+							self.updateChoiceEventHandler();
 						}
-
-						return reset;
-					});
-
-					// Tackle show/hide action to count field. Recalculation when show is triggered.
-					gform.addAction('gform_post_conditional_logic_field_action', function (formId, action, targetId, defaultValues, isInit) {
-						var id = targetId.split( '_' ).pop();
-						if ( id == args.countFieldId ) { 
-							if ( action == 'hide' ) {
-								$( targetId ).find( 'input' ).val('0').trigger( 'change' );
-							} else if ( action == 'show' ) {
-								self.updateChoiceEventHandler();
-							}
-						}
-					});
+					} );
 
 					self.init();
 
