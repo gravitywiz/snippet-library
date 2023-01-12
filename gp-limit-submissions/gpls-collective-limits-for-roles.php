@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // Limit Submissions // Collective Limits for Roles
  * https://gravitywiz.com/documentation/gravity-forms-limit-submissions/
