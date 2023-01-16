@@ -36,7 +36,7 @@ add_filter( 'gform_replace_merge_tags', function( $text ) {
 
 	parse_str( $matches[1], $atts );
 	$shortcode = array( array_key_first( $atts ) );
-	if ( ! in_array( $shortcode, $white_listed_shortcodes ) ) {
+	if ( ! in_array( $shortcode[0], $white_listed_shortcodes ) ) {
 		return $text;
 	}
 
