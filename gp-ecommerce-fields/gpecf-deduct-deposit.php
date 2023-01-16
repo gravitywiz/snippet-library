@@ -31,7 +31,7 @@ class GW_Deduct_Deposit {
 
 	public function init() {
 
-		if ( ! class_exists( 'Gravity_Forms' ) || ! function_exists( 'gp_ecommerce_fields' ) ) {
+		if ( ! class_exists( 'GFForms' ) || ! function_exists( 'gp_ecommerce_fields' ) ) {
 			return;
 		}
 
