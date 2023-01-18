@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // Unique ID // Generate Unique ID when Entry is Duplicated in GravityView
+ * Gravity Perks // Unique ID // Generate Unique ID when Entry is Duplicated using GFAPI.
  * https://gravitywiz.com/documentation/gp-unique-id/
  *
  * When an entry is duplicated using GFAPI, the Unique ID value is copied to the duplicated entry.
