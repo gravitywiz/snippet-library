@@ -97,7 +97,7 @@ class GW_Update_Posts {
 			$time = $this->_args['date_time']['time'];
 
 			$date = rgar( $entry, $date );
-			$time = rgar( $entry, $time );
+			$time = rgar( $entry, $time, '00:00 am' );
 
 			if ( empty( $date ) ) {
 				$date = explode( ' ', $post->post_date )[0];
@@ -108,12 +108,9 @@ class GW_Update_Posts {
 				if ( strtolower( $am_pm ) == 'pm' ) {
 					$hour += 12;
 				}
-			} else {
-				$hour = '00';
-				$min  = '00';
 			}
 
-			$new_date_time       = date( 'Y-m-d H:i:s', strtotime( sprintf( '%s %s:%s:00', $date, $hour, $min ) ) );
+			$new_date_time       = gmdate( 'Y-m-d H:i:s', strtotime( sprintf( '%s %s:%s:00', $date, $hour, $min ) ) );
 			$post->post_date     = $new_date_time;
 			$post->post_date_gmt = get_gmt_from_date( $new_date_time );
 		}
