@@ -92,6 +92,31 @@ class GW_Update_Posts {
 			$post->post_name = rgar( $entry, $this->_args['slug'] );
 		}
 
+		if ( $this->_args['date_time'] ) {
+			$date = $this->_args['date_time']['date'];
+			$time = $this->_args['date_time']['time'];
+
+			$date = rgar( $entry, $date );
+			$time = rgar( $entry, $time );
+
+			if ( empty( $date ) ) {
+				$date = explode( ' ', $post->post_date )[0];
+			}
+
+			if ( $time ) {
+				list( $hour, $min, $am_pm ) = array_pad( preg_split( '/[: ]/', $time ), 3, false );
+				if ( strtolower( $am_pm ) == 'pm' ) {
+					$hour += 12;
+				}
+			} else {
+				$hour = '00';
+				$min  = '00';
+			}
+
+			$new_date_time   = date( 'Y-m-d H:i:s', strtotime( sprintf( '%s %s:%s:00', $date, $hour, $min ) ) );
+			$post->post_date = $new_date_time;
+		}
+
 		if ( $this->_args['featured_image'] && is_callable( 'gp_media_library' ) ) {
 			if ( rgar( $entry, $this->_args['featured_image'] ) ) {
 				$image_id = gp_media_library()->get_file_ids( $entry['id'], $this->_args['featured_image'], 0 );
