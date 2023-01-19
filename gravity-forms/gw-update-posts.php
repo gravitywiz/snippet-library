@@ -113,8 +113,9 @@ class GW_Update_Posts {
 				$min  = '00';
 			}
 
-			$new_date_time   = date( 'Y-m-d H:i:s', strtotime( sprintf( '%s %s:%s:00', $date, $hour, $min ) ) );
-			$post->post_date = $new_date_time;
+			$new_date_time       = date( 'Y-m-d H:i:s', strtotime( sprintf( '%s %s:%s:00', $date, $hour, $min ) ) );
+			$post->post_date     = $new_date_time;
+			$post->post_date_gmt = get_gmt_from_date( $new_date_time );
 		}
 
 		if ( $this->_args['featured_image'] && is_callable( 'gp_media_library' ) ) {
