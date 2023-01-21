@@ -47,7 +47,7 @@ add_filter( 'gform_merge_tag_filter', function ( $value, $merge_tag, $modifiers,
 	}
 
 	$excluded_field_types = array( 'html', 'section', 'password', 'captcha' );
-	$all_nested_fields    = gp_nested_forms()->get_fields_by_ids( $nested_field_ids, $nested_form );
+	$all_nested_fields    = gp_nested_forms()->get_fields_by_ids( $nested_field_ids, $nested_form, true );
 
 	$filtered_nested_fields = array();
 	foreach ( $all_nested_fields as $nested_field ) {
