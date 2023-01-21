@@ -17,7 +17,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  * Description:  This snippet displays the child entries in a table format when using the {all_fields} merge tag with the gpnf_table modifier.
  * Author:       Gravity Wiz
- * Version:      0.3
+ * Version:      0.4
  * Author URI:   https://gravitywiz.com
  */
 add_filter( 'gform_merge_tag_filter', function ( $value, $merge_tag, $modifiers, $field, $raw_value ) {
