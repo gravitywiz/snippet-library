@@ -45,6 +45,7 @@ class GW_Force_Default_Value {
 
 		// carry on
 		add_filter( 'gform_entry_post_save', array( $this, 'add_default_values_to_entry' ), 10, 2 );
+		add_filter( 'gform_replace_merge_tags', array( $this, 'replace_unreplaced_merge_tags' ) );
 
 	}
 
@@ -89,6 +90,26 @@ class GW_Force_Default_Value {
 		}
 
 		return $entry;
+	}
+
+	/**
+	 * If default value *is* a merge tag (or multiple merge tags), and these merge tags still exist after prepopulation
+	 * merge tags have been replaced, assume that this is a merge tag that should be replaced on submission and clear
+	 * it from the default value so that the user does not see the merge tag if the field is visible.
+	 *
+	 * @param $text
+	 *
+	 * @return mixed|string
+	 */
+	public function replace_unreplaced_merge_tags( $text ) {
+		if ( GFFormDisplay::is_submit_form_id_valid() ) {
+			return $text;
+		}
+		$chars = str_split( trim( $text ) );
+		if ( $chars[0] === '{' && $chars[ count( $chars ) - 1 ] === '}' ) {
+			$text = '';
+		}
+		return $text;
 	}
 
 	function is_applicable_form( $form ) {
