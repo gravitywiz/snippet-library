@@ -18,7 +18,7 @@
  * Plugin URI:   https://gravitywiz.com/
  * Description:  Force the default value to be captured for fields hidden by conditional logic.
  * Author:       Gravity Wiz
- * Version:      1.2
+ * Version:      1.3
  * Author URI:   https://gravitywiz.com/
  */
 class GW_Force_Default_Value {
