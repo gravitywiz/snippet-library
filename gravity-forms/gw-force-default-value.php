@@ -102,7 +102,7 @@ class GW_Force_Default_Value {
 	 * @return mixed|string
 	 */
 	public function replace_unreplaced_merge_tags( $text ) {
-		if ( GFFormDisplay::is_submit_form_id_valid() ) {
+		if ( isset( $_POST['gform_submit'] ) ) {
 			return $text;
 		}
 		$chars = str_split( trim( $text ) );
