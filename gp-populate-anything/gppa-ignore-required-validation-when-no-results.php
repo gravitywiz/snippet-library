@@ -7,7 +7,7 @@
 add_filter( 'gform_field_validation_123_4', function( $result, $value, $form, $field ) {
 	if ( ! $result['is_valid'] && $result['message'] === __( 'This field is required.', 'gravityforms' ) && $field->choices[0]['gppaErrorChoice'] === 'no_choices' ) {
 		$result['is_valid'] = true;
-		$result['message'] = '';
+		$result['message']  = '';
 	}
 	return $result;
 }, 10, 4 );

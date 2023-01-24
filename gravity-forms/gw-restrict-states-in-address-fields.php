@@ -63,7 +63,7 @@ class GW_Restrict_States_In_Address_Field {
 			}
 
 			if ( in_array( $selected_state, $this->_args['allowed_states'], true )
-			  || array_key_exists( $selected_state, $this->_args['allowed_states'])) {
+			  || array_key_exists( $selected_state, $this->_args['allowed_states'] ) ) {
 				continue;
 			}
 
