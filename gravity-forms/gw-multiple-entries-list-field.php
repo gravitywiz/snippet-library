@@ -93,8 +93,10 @@ class GW_Multiple_Entries_List_Field {
 
 			}
 
-			// send Gravity Form notifications
-			GFAPI::send_notifications( $form, $working_entry );
+			// send Gravity Forms notifications, if enabled
+			if ( $this->_args['send_notifications'] ) {
+				GFAPI::send_notifications( $form, $working_entry );
+			}
 		}
 
 		return $entry;
@@ -151,4 +153,5 @@ new GW_Multiple_Entries_List_Field( array(
 	),
 	'preserve_list_data' => true,
 	'append_list_data'   => true,
+	'send_notifications' => false,
 ) );
