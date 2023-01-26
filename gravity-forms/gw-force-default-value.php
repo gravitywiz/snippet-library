@@ -65,9 +65,10 @@ class GW_Force_Default_Value {
 			}
 
 			$entry_value = rgar( $entry, $field->id );
+			$is_hidden   = GFFormsModel::is_field_hidden( $form, $field, array(), $entry );
 
 			// Get default value if field is hidden.
-			if ( GFFormsModel::is_field_hidden( $form, $field, array(), $entry ) ) {
+			if ( $is_hidden || ( empty( $entry_value ) && ! GFFormDisplay::is_field_validation_supported( $field ) ) ) {
 				$value = $field->get_value_default_if_empty( $field->get_value_submission( array(), false ) );
 			} else {
 				$value = $entry_value;
