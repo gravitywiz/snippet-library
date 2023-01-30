@@ -26,7 +26,7 @@ class GWPostPermalink {
 
 	function add_custom_merge_tag( $merge_tags, $form_id, $fields, $element_id ) {
 
-		if ( ! GFCommon::has_post_field( $fields ) ) {
+		if ( ! $this->is_post_generating_form( $form_id, $fields ) ) {
 			return $merge_tags;
 		}
 
@@ -41,14 +41,43 @@ class GWPostPermalink {
 	function replace_merge_tag( $text, $form, $entry ) {
 
 		$custom_merge_tag = '{post_permalink}';
-		if ( strpos( $text, $custom_merge_tag ) === false || ! rgar( $entry, 'post_id' ) ) {
+		if ( strpos( $text, $custom_merge_tag ) === false ) {
 			return $text;
 		}
 
-		$post_permalink = get_permalink( rgar( $entry, 'post_id' ) );
+		$post_id = $this->get_post_id_by_entry( $entry );
+		if ( ! $post_id ) {
+			return $text;
+		}
+
+		$post_permalink = get_permalink( $post_id );
 		$text           = str_replace( $custom_merge_tag, $post_permalink, $text );
 
 		return $text;
+	}
+
+	function get_post_id_by_entry( $entry ) {
+		$post_id = rgar( $entry, 'post_id' );
+		if ( ! $post_id && function_exists( 'gf_advancedpostcreation' ) ) {
+			$entry_post_ids = gform_get_meta( $entry['id'], gf_advancedpostcreation()->get_slug() . '_post_id' );
+			if ( ! empty( $entry_post_ids ) ) {
+				$post_id = $entry_post_ids[0]['post_id'];
+			}
+		}
+		return $post_id;
+	}
+
+	function is_post_generating_form( $form_id, $fields ) {
+
+		if ( GFCommon::has_post_field( $fields ) ) {
+			return true;
+		}
+
+		if ( function_exists( 'gf_advancedpostcreation' ) && gf_advancedpostcreation()->has_feed( $form_id ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 }
