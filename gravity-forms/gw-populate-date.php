@@ -4,7 +4,7 @@
  *
  * Provides the ability to populate a Date field with a modified date based on the current date or a user-submitted date.
  *
- * @version   2.6
+ * @version   2.7
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/populate-dates-gravity-form-fields/
@@ -25,6 +25,7 @@ class GW_Populate_Date {
 			'min_date'               => false,
 			'enable_i18n'            => false,
 			'override_on_submission' => false,
+			'utc_offset'             => get_option( 'gmt_offset' ), // Used only for time calculations on the current date.
 		) );
 
 		$this->_field_values = array();
@@ -328,7 +329,7 @@ class GW_Populate_Date {
 
 					self.populateDate = function( sourceFieldId, targetFieldId, modifier, format ) {
 
-						var timestamp = GWDates.getFieldTimestamp( sourceFieldId, self.formId );
+						var timestamp = GWDates.getFieldTimestamp( sourceFieldId, self.formId, undefined, self.utcOffset );
 						if( timestamp === 0 ) {
 							return;
 						}
@@ -1535,7 +1536,7 @@ class GW_Populate_Date {
 
 				window.GWDates = {
 
-					getFieldTimestamp: function( dateTimeFieldId, formId, $inputs ) {
+					getFieldTimestamp: function( dateTimeFieldId, formId, $inputs, utcOffset ) {
 
 						var field;
 
@@ -1596,6 +1597,21 @@ class GW_Populate_Date {
 										break;
 								}
 
+								/*
+								 * If the date matches the current date, attach the time to it as well so time calculations
+								 * work as expected rather than off of midnight.
+								 */
+								var now = new Date();
+
+								// Convert now to use the UTC offset from the server.
+								now = new Date( now.getTime() + ( now.getTimezoneOffset() * 60000 ) + ( utcOffset * 1000 ) );
+
+								if (datetime.getDate() == now.getDate() && datetime.getMonth() == now.getMonth() && datetime.getFullYear() == now.getFullYear()) {
+									datetime.setHours(now.getHours());
+									datetime.setMinutes(now.getMinutes());
+									datetime.setSeconds(now.getSeconds());
+								}
+
 								var timestamp = datetime === false ? false : datetime.getTime();
 
 								break;
@@ -1608,9 +1624,16 @@ class GW_Populate_Date {
 									missingData = ! hour || ! min,
 									datetime    = missingData ? false : new Date();
 
-
 								if ( $inputs.eq( 2 ).length ) {
-									datetime.setHours( parseInt( hour ) + ( ampm.toLowerCase() === 'pm' ? 12 : 0 ) );
+									hours = parseInt(hour);
+
+									if (ampm.toLowerCase() === 'am') {
+										hours += hour === 12 ? -12 : 0;
+									} else {
+										hours += hour !== 12 ? 12 : 0;
+									}
+
+									datetime.setHours( hours );
 								} else {
 									datetime.setHours( parseInt( hour ) );
 								}
@@ -1859,6 +1882,7 @@ class GW_Populate_Date {
 			'targetFieldId' => $this->_args['target_field_id'],
 			'sourceFieldId' => $this->_args['source_field_id'],
 			'modifier'      => $this->_args['modifier'],
+			'utcOffset'     => $this->_args['utc_offset'],
 			// Keep the format in the `date()` format for JS.
 			'format'        => $this->get_format( false ),
 		);
