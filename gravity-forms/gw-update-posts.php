@@ -27,6 +27,7 @@ class GW_Update_Posts {
 				'terms'           => array(),
 				'meta'            => array(),
 				'featured_image'  => false,
+				'post_date'       => false,
 				// If property is mapped but no entry value is submitted, delete the property.
 				// Currently only works with 'featured_image' and custom fields specified in 'meta'.
 				'delete_if_empty' => false,
@@ -92,16 +93,24 @@ class GW_Update_Posts {
 			$post->post_name = rgar( $entry, $this->_args['slug'] );
 		}
 
-		if ( $this->_args['date_time'] ) {
-			$date = $this->_args['date_time']['date'];
-			$time = $this->_args['date_time']['time'];
+		if ( $this->_args['post_date'] ) {
+			$post_date = array();
+			if ( ! is_array( $this->_args['post_date'] ) ) {
 
-			$date = rgar( $entry, $date );
-			$time = rgar( $entry, $time, '00:00 am' );
-
-			if ( empty( $date ) ) {
-				$date = explode( ' ', $post->post_date )[0];
+				$field_one = GFAPI::get_field( $form, $this->_args['post_date'] );
+				if ( $field_one->get_input_type() === 'date' ) {
+					$post_date['date'] = $this->_args['post_date'];
+					$post_date['time'] = '';
+				} elseif ( $field_one->get_input_type() === 'time' ) {
+					$post_date['time'] = $this->_args['post_date'];
+					$post_date['date'] = '';
+				}
+			} else {
+				$post_date = $this->_args['post_date'];
 			}
+
+			$date = rgar( $entry, $post_date['date'], gmdate( 'm/d/Y' ) );
+			$time = rgar( $entry, $post_date['time'], '00:00 am' );
 
 			if ( $time ) {
 				list( $hour, $min, $am_pm ) = array_pad( preg_split( '/[: ]/', $time ), 3, false );
