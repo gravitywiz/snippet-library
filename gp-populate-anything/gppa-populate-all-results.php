@@ -10,10 +10,13 @@
  * CSS Class Name setting.
  */
 add_filter( 'gppa_process_template_value', function( $template_value, $field, $template_name, $populate, $object, $object_type, $objects, $template ) {
-	if ( strpos( $field->cssClass, 'gppa-populate-all' ) !== false ) {
-		$values = array();
+	if ( ! empty( $objects ) && strpos( $field->cssClass, 'gppa-populate-all' ) !== false ) {
+		$values = array( $template_value );
 		foreach ( $objects as $_object ) {
-			$values[] = $object_type->get_object_prop_value( $_object, $template );
+			if ( $_object === $object ) {
+				continue;
+			}
+			$values[] = gp_populate_anything()->process_template( $field, $template_name, $_object, $populate, array() );
 		}
 		$template_value = implode( ', ', $values );
 	}
