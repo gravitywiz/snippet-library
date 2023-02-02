@@ -27,6 +27,10 @@ class GW_Update_Posts {
 				'terms'           => array(),
 				'meta'            => array(),
 				'featured_image'  => false,
+				'post_date'       => array(
+					'date' => false,
+					'time' => false,
+				),
 				// If property is mapped but no entry value is submitted, delete the property.
 				// Currently only works with 'featured_image' and custom fields specified in 'meta'.
 				'delete_if_empty' => false,
@@ -92,25 +96,8 @@ class GW_Update_Posts {
 			$post->post_name = rgar( $entry, $this->_args['slug'] );
 		}
 
-		if ( $this->_args['date_time'] ) {
-			$date = $this->_args['date_time']['date'];
-			$time = $this->_args['date_time']['time'];
-
-			$date = rgar( $entry, $date );
-			$time = rgar( $entry, $time, '00:00 am' );
-
-			if ( empty( $date ) ) {
-				$date = explode( ' ', $post->post_date )[0];
-			}
-
-			if ( $time ) {
-				list( $hour, $min, $am_pm ) = array_pad( preg_split( '/[: ]/', $time ), 3, false );
-				if ( strtolower( $am_pm ) == 'pm' ) {
-					$hour += 12;
-				}
-			}
-
-			$new_date_time       = gmdate( 'Y-m-d H:i:s', strtotime( sprintf( '%s %s:%s:00', $date, $hour, $min ) ) );
+		if ( $this->_args['post_date'] ) {
+			$new_date_time       = $this->get_post_date( $entry, $form );
 			$post->post_date     = $new_date_time;
 			$post->post_date_gmt = get_gmt_from_date( $new_date_time );
 		}
@@ -220,6 +207,32 @@ class GW_Update_Posts {
 			add_filter( 'gppa_process_template', array( $this, 'return_ids_instead_of_names' ), 9, 8 );
 		}
 		return $value;
+	}
+
+	public function get_post_date( $entry, $form ) {
+
+		if ( ! is_array( $this->_args['post_date'] ) ) {
+			$post_date_field = GFAPI::get_field( $form, $this->_args['post_date'] );
+			if ( $post_date_field->get_input_type() === 'date' ) {
+				$post_date['date'] = $this->_args['post_date'];
+				$post_date['time'] = '';
+			} elseif ( $post_date_field->get_input_type() === 'time' ) {
+				$post_date['time'] = $this->_args['post_date'];
+				$post_date['date'] = '';
+			}
+		}
+
+		$date = rgar( $entry, $post_date['date'], gmdate( 'm/d/Y' ) );
+		$time = rgar( $entry, $post_date['time'], '00:00 am' );
+
+		if ( $time ) {
+			list( $hour, $min, $am_pm ) = array_pad( preg_split( '/[: ]/', $time ), 3, false );
+			if ( strtolower( $am_pm ) == 'pm' ) {
+				$hour += 12;
+			}
+		}
+
+		return gmdate( 'Y-m-d H:i:s', strtotime( sprintf( '%s %s:%s:00', $date, $hour, $min ) ) );
 	}
 
 }
