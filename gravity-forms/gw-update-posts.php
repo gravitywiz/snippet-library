@@ -211,8 +211,6 @@ class GW_Update_Posts {
 
 	public function get_post_date( $entry, $form ) {
 
-		$post_date = $this->_args['post_date'];
-
 		if ( ! is_array( $this->_args['post_date'] ) ) {
 			$post_date_field = GFAPI::get_field( $form, $this->_args['post_date'] );
 			if ( $post_date_field->get_input_type() === 'date' ) {
