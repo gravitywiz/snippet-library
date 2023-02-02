@@ -15,6 +15,11 @@ add_filter( 'gpld_limit_dates_options_123_4', function( $options, $form, $field 
 	$range_end         = $cloned_date_range->add( new DateInterval( 'P1Y' ) );
 
 	$period = new DatePeriod( $range_start, new DateInterval( 'P1M' ), $range_end );
+
+	if ( empty( $options['exceptions'] ) || ! is_array( $options['exceptions'] ) ) {
+		$options['exceptions'] = array();
+	}
+
 	foreach ( $period as $date ) {
 		$options['exceptions'][] = gmdate( 'm/d/Y', strtotime( 'last day ' . $date->format( 'm/01/Y' ) ) );
 	}

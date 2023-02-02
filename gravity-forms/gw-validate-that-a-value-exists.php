@@ -131,10 +131,15 @@ class GW_Value_Exists_Validation {
 			);
 		}
 
-		$entries = GFAPI::get_entries( $form_id, array(
-			'status'        => 'active',
-			'field_filters' => $field_filters,
+		$args = apply_filters( 'gwvev_get_entries_args', array(
+			$form_id,
+			array(
+				'status'        => 'active',
+				'field_filters' => $field_filters,
+			),
 		) );
+
+		$entries = GFAPI::get_entries( $args[0], $args[1] );
 
 		return reset( $entries );
 	}

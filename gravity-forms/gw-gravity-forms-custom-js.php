@@ -94,6 +94,9 @@ class GF_Custom_JS {
 	}
 
 	public function add_custom_js_setting( $form_settings, $form ) {
+		if ( rgget( 'subview' ) !== 'settings' ) {
+			return $form_settings;
+		}
 		$form_settings['Custom Code'] = array(
 			'title'  => esc_html__( 'Custom Code' ),
 			'fields' => array(

@@ -60,6 +60,7 @@ class GW_Multiple_Entries_List_Field {
 
 		$data          = maybe_unserialize( $data );
 		$working_entry = $entry;
+		$form          = GFAPI::get_form( $entry['form_id'] );
 
 		if ( ! $this->_args['preserve_list_data'] ) {
 			$working_entry[ $this->_args['field_id'] ] = null;
@@ -90,6 +91,11 @@ class GW_Multiple_Entries_List_Field {
 				gform_add_meta( $entry_id, 'gwmelf_parent_entry', false );
 				gform_add_meta( $entry_id, 'gwmelf_group_entry_id', $entry['id'] );
 
+			}
+
+			// send Gravity Forms notifications, if enabled
+			if ( $this->_args['send_notifications'] ) {
+				GFAPI::send_notifications( $form, $working_entry );
 			}
 		}
 
@@ -147,4 +153,5 @@ new GW_Multiple_Entries_List_Field( array(
 	),
 	'preserve_list_data' => true,
 	'append_list_data'   => true,
+	'send_notifications' => false,
 ) );

@@ -19,6 +19,11 @@ add_action( 'gform_pre_entry_list', function ( $form_id ) {
 
 	$message_content = '<strong>' . __( 'Current Inventory:', 'gp-inventory' ) . '</strong><ul style="margin-top: .5rem;padding: 0 0 0 2rem;">';
 
+	// Hydrate choices if using Populate Anything
+	if ( function_exists( 'gp_populate_anything' ) ) {
+		$form = gp_populate_anything()->modify_admin_field_choices( $form );
+	}
+
 	foreach ( gp_inventory_type_simple()->get_applicable_fields( $form, true ) as $inventory_field ) {
 
 		if ( isset( $inventory_field->choices ) && is_array( $inventory_field->choices ) ) {
