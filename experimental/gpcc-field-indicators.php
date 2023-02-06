@@ -23,7 +23,7 @@ add_filter( 'gform_field_content', function( $content, $field ) {
 
 	$mappings = array();
 	foreach ( $gpcc_fields as $_mappings ) {
-		$mappings = array_merge( $_mappings );
+		$mappings = array_merge( $mappings, $_mappings );
 	}
 
 	$spans = array();
@@ -34,6 +34,9 @@ add_filter( 'gform_field_content', function( $content, $field ) {
 		}
 		if ( $field->id == $mapping['target'] ) {
 			$spans['target'] = '<span class="gpcc-target gw-field-indicator">GPCC: Target</span>';
+		}
+		if ( $field->id == $mapping['trigger'] ) {
+			$spans['trigger'] = '<span class="gpcc-trigger gw-field-indicator">GPCC: Trigger</span>';
 		}
 	}
 
@@ -62,7 +65,7 @@ function gpcc_field_indicator_styles() {
 		.gw-field-indicator + .gw-field-indicator {
 			margin-left: 0.3725rem;
 		}
-		.gpcc-source, .gpcc-target {
+		.gpcc-source, .gpcc-target, .gpcc-trigger {
 			color: #274524;
 			background-color: #edf8ec;
 			border-color: #d7e8d5;
