@@ -220,6 +220,9 @@ class GW_Update_Posts {
 				$post_date['time'] = $this->_args['post_date'];
 				$post_date['date'] = '';
 			}
+		} else {
+			$post_date['date'] = $this->_args['post_date']['date'];
+			$post_date['time'] = $this->_args['post_date']['time'];
 		}
 
 		$date = rgar( $entry, $post_date['date'], gmdate( 'm/d/Y' ) );
