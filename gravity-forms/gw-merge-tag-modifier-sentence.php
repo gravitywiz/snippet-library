@@ -25,7 +25,7 @@ add_filter( 'gform_merge_tag_filter', function( $value, $input_id, $modifier, $f
 		return $value;
 	}
 
-	$values = array_map( 'trim', explode( ',', $value ) );
+	$values = array_filter( array_map( 'trim', $raw_values ) );
 	$count  = count( $values );
 
 	if ( $count > 1 ) {
