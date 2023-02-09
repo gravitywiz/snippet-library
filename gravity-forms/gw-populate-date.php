@@ -1604,7 +1604,7 @@ class GW_Populate_Date {
 								var now = new Date();
 
 								// Convert now to use the UTC offset from the server.
-								now = new Date( now.getTime() + ( now.getTimezoneOffset() * 60000 ) + ( utcOffset * 1000 ) );
+								now = new Date( now.getTime() + ( now.getTimezoneOffset() * 60000 ) + ( utcOffset * 60 * 60000 ) );
 
 								if (datetime.getDate() == now.getDate() && datetime.getMonth() == now.getMonth() && datetime.getFullYear() == now.getFullYear()) {
 									datetime.setHours(now.getHours());
@@ -1618,14 +1618,14 @@ class GW_Populate_Date {
 
 							case 'time':
 
-								var hour        = $inputs.eq( 0 ).val(),
-									min         = $inputs.eq( 1 ).val(),
+								var hour        = parseInt( $inputs.eq( 0 ).val() ),
+									min         = parseInt( $inputs.eq( 1 ).val() ),
 									ampm        = $inputs.eq( 2 ).val(),
-									missingData = ! hour || ! min,
+									missingData = isNaN( hour ) || isNaN( min ),
 									datetime    = missingData ? false : new Date();
 
 								if ( $inputs.eq( 2 ).length ) {
-									hours = parseInt(hour);
+									hours = hour;
 
 									if (ampm.toLowerCase() === 'am') {
 										hours += hour === 12 ? -12 : 0;
@@ -1635,7 +1635,7 @@ class GW_Populate_Date {
 
 									datetime.setHours( hours );
 								} else {
-									datetime.setHours( parseInt( hour ) );
+									datetime.setHours( hour );
 								}
 
 								datetime.setMinutes( min );
