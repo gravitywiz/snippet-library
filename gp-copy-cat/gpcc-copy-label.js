@@ -4,7 +4,7 @@
 *
 * Instruction Video: https://www.loom.com/share/00f1287e4a23495aa9aa02ba95f882a5
 *
-* By default, the value of a choice-based field is copied.
+* By default, the value of a choice-based field/radio is copied.
 * Use this snippet to copy the label instead of the value.
 *
 * Instructions:
@@ -16,6 +16,8 @@ gform.addFilter( 'gppc_copied_value', function( value, $elem, data ) {
     $source = jQuery( '#input_' + data.sourceFormId + '_' + data.source );
     if( $source.is( 'select' ) ) {
         value = $source.find( 'option:selected' ).text();
-    }
+    }  else if( $source.is( '.gfield_radio' ) ) {
+        value = $( '.gfield-choice-input:checked + label' ).text();
+	}
     return value;
 } );
