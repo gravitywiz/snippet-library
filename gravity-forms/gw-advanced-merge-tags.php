@@ -80,7 +80,6 @@ class GW_Advanced_Merge_Tags {
 			'save_source_post_id' => false,
 		) );
 
-		add_action( 'gform_pre_render', array( $this, 'support_default_value_and_html_content_merge_tags' ) );
 		add_action( 'gform_pre_render', array( $this, 'support_dynamic_population_merge_tags' ) );
 
 		add_action( 'gform_merge_tag_filter', array( $this, 'support_html_field_merge_tags' ), 10, 4 );
@@ -92,37 +91,6 @@ class GW_Advanced_Merge_Tags {
 			add_filter( 'gform_entry_created', array( $this, 'save_source_post_id' ), 10, 2 );
 		}
 
-	}
-
-	public function support_default_value_and_html_content_merge_tags( $form ) {
-
-		$current_page = max( 1, (int) rgars( GFFormDisplay::$submission, "{$form['id']}/page_number" ) );
-		$fields       = array();
-
-		foreach ( $form['fields'] as &$field ) {
-
-			//            $default_value = rgar( $field, 'defaultValue' );
-			//            preg_match_all( '/{.+}/', $default_value, $matches, PREG_SET_ORDER );
-			//            if( ! empty( $matches ) ) {
-			//                if( rgar( $field, 'pageNumber' ) != $current_page ) {
-			//                    $field['defaultValue'] = '';
-			//                } else {
-			//                    $field['defaultValue'] = $this->replace_merge_tags( $default_value, $form, null );
-			//                }
-			//            }
-
-			// only run 'content' filter for fields on the current page
-			//            if( rgar( $field, 'pageNumber' ) != $current_page )
-			//                continue;
-			//
-			//            $html_content = rgar( $field, 'content' );
-			//            preg_match_all( '/{.+}/', $html_content, $matches, PREG_SET_ORDER );
-			//            if( ! empty( $matches ) )
-			//                $field['content'] = $this->replace_merge_tags( $html_content, $form, null );
-
-		}
-
-		return $form;
 	}
 
 	public function support_dynamic_population_merge_tags( $form ) {
@@ -467,17 +435,33 @@ class GW_Advanced_Merge_Tags {
 					// Note: str_word_count() is not a great solution as it does not support characters with accents reliably.
 					// Updated to use the same method we use in GP Pay Per Word.
 					return count( array_filter( preg_split( '/[ \n\r]+/', trim( $value ) ) ) );
-					break;
 				case 'urlencode':
 					return urlencode( $value );
-					break;
 				case 'rawurlencode':
 					return rawurlencode( $value );
-					break;
+				case 'mask':
+					if ( GFCommon::is_valid_email( $value ) ) {
+						list( $name, $domain ) = explode( '@', $value );
+						$frags = explode( '.', $domain );
+						$base  = $this->mask_value( array_shift( $frags ) );
+						$name  = $this->mask_value( $name );
+						// Example: "one.two.three@domain.gov.uk" → "o***********e@d****n.gov.uk".
+						return sprintf( '%s@%s.%s', $name, $base, implode( '.', $frags ) );
+					} else {
+						// Example: "hello my old friend" → "h*****************d".
+						return $this->mask_value( $value );
+					}
 			}
 		}
 
 		return $value;
+	}
+
+	public function mask_value( $value ) {
+		$chars = str_split( $value );
+		$first = array( array_shift( $chars ) );
+		$last  = array( array_pop( $chars ) );
+		return implode( '', array_merge( $first, array_pad( array(), count( $chars ), '*' ), $last ) );
 	}
 
 }
