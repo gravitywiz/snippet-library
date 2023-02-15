@@ -38,8 +38,8 @@ add_filter( 'shortcode_atts_gf_progress_meter', function( $atts ) {
 		}
 
 		if ( isset( $date_range ) ) {
-			$search_criteria['start_date'] = date( 'Y-m-d', strtotime( $date_range['start_date'] ) );
-			$search_criteria['end_date']   = date( 'Y-m-d', strtotime( $date_range['end_date'] ) );
+			$search_criteria['start_date'] = gmdate( 'Y-m-d', strtotime( $date_range['start_date'] ) );
+			$search_criteria['end_date']   = gmdate( 'Y-m-d', strtotime( $date_range['end_date'] ) );
 		}
 
 		$results       = GFAPI::get_entries( $atts['id'], $search_criteria );
