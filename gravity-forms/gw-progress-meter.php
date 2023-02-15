@@ -82,7 +82,7 @@ class GW_Progress_Meter {
 
 	public function get_count( $atts ) {
 
-		if ( isset( $atts['count'] ) && $atts['count'] ) {
+		if ( isset( $atts['count'] ) && ! rgblank( $atts['count'] ) ) {
 			return $atts['count'];
 		}
 
