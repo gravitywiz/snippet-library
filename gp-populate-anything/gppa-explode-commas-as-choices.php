@@ -7,7 +7,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  * Description:  Convert comma-delimited values into choices when populated into a choice-based field.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   https://gravitywiz.com
  *
  * Instruction Video: https://www.loom.com/share/00aa97e976f44dea97ce9d08a42c3414
@@ -29,7 +29,7 @@ add_filter( 'gppa_input_choices', function ( $choices, $field, $objects ) {
 	}
 	$new_choices = array();
 	foreach ( $choices as $choice ) {
-		$values = explode( ',', $choice['value'] );
+		$values = array_map( 'trim', explode( ',', $choice['value'] ) );
 		foreach ( $values as $value ) {
 			$new_choices[] = array(
 				'text'       => $value,
