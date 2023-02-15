@@ -1,22 +1,31 @@
 <?php
 /**
- * Gravity Wiz // Gravity Forms // Filter Progress Meter using field value or Date Range.
+ * Gravity Wiz // Gravity Forms // Filter Progress Meter Using Field Values or Date Range.
  * https://gravitywiz.com/gravity-forms-progress-meter/
  *
- * Adds support to get the count of entries with a specific value or/and within a specific date range.
+ * Adds support to get the count of entries with a specific values or/and within a specific date range.
  */
 
 add_filter( 'shortcode_atts_gf_progress_meter', function( $atts ) {
 
 	if ( $atts['name'] === 'field_filter' ) {
-		// Update this array to the ID of the field and the value to check for.
-		$field = array(
-			'id'    => 4,
-			'value' => 'First Choice',
+
+		$field_filters = array(
+			// Update 'mode' to either all or any.
+			'mode' => 'all',
+			// Update 'key to the Field ID and 'value' to the value to check for.
+			array(
+				'key'   => '4',
+				'value' => 'Second Choice',
+			),
+			array(
+				'key'   => '5',
+				'value' => 'Test',
+			),
 		);
-		// Update this array with the start date and end date date in this format mm/dd/yyyy.
+
 		$date_range = array(
-			'start_date' => '02/11/2023',
+			'start_date' => '02/10/2023',
 			'end_date'   => '02/16/2023',
 		);
 
@@ -24,14 +33,8 @@ add_filter( 'shortcode_atts_gf_progress_meter', function( $atts ) {
 			'status' => 'active',
 		);
 
-		if ( isset( $field ) ) {
-			$search_criteria['field_filters'] = array(
-				'mode' => 'all',
-				array(
-					'key'   => $field['id'],
-					'value' => $field['value'],
-				),
-			);
+		if ( isset( $field_filters ) ) {
+			$search_criteria['field_filters'] = $field_filters;
 		}
 
 		if ( isset( $date_range ) ) {
