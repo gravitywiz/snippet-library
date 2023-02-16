@@ -12,6 +12,7 @@ add_filter( 'gform_currencies', function( $currencies ) {
 		'thousand_separator' => '.',
 		'decimal_separator'  => ',',
 		'decimals'           => 2,
+		'code'               => 'EUR',
 	);
 	return $currencies;
 } );
