@@ -77,6 +77,8 @@ class GPNF_Triggered_Population {
 						$form = $( '#gform_{0}'.format( self.formId ) );
 
 						$( '#field_{0}_{1}'.format( self.formId, self.triggerFieldId ) ).find( 'input' ).on( 'change', function() {
+							// disable the field while entry creation is processing to avoid duplicate entries
+							$( $( '#field_{0}_{1}'.format( self.formId, self.triggerFieldId ) ).attr( 'disabled', true ) );
 							var input = $( this );
 							var value = input.val();
 							var checked = input[0].checked;
@@ -119,6 +121,8 @@ class GPNF_Triggered_Population {
 								window.gpnf_triggered_population_entry = response.data
 								GPNestedForms.loadEntry( response.data );
 							}
+							// re-enable the field after entry creation is processed
+							$( $( '#field_{0}_{1}'.format( self.formId, self.triggerFieldId ) ).attr( 'disabled', false ) );
 						} );
 
 					}
