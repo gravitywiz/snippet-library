@@ -193,6 +193,8 @@ class GFRandomFields {
 	 * @return int|mixed
 	 */
 	public function modify_target_page( $page_number, $form, $current_page ) {
+		// Prevent recursion when getting info below.
+		remove_filter( "gform_target_page_{$form['id']}", array( $this, 'modify_target_page' ) );
 
 		$page_number = intval( $page_number );
 		$form        = $this->pre_render( $form );
