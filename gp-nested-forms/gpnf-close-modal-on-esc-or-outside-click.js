@@ -6,20 +6,16 @@
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
  *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ * 2. Also add "Load Init Scripts Early" snippet to your theme's functions.php.
+ *    https://github.com/gravitywiz/snippet-library/blob/master/experimental/gfjs-early-init-scripts.php
  */
-// Replace 1 with Nested Form Field ID
-var gpnf = window['GPNestedForms_GFFORMID_1'];
-
-// Close the modal when Escape key is pressed
-document.addEventListener( 'keydown', function( event ) {
-    if ( event.key === 'Escape' ) {
-        gpnf.modal.close();
+window.gform.addFilter( 'gpnf_modal_args', function( args, formId, fieldId, gpnf ) {
+    // Only run for parent form ID 1. Remove this if the behavior is desired for all forms.
+    if ( formId != 1 ) {
+        return args;
     }
-});
 
-// Close the modal when clicking outside the modal box
-$( document ).on( 'click', function (event ) {
-    if ( $( event.target ).hasClass( 'tingle-modal--noOverlayClose' ) ) {
-        gpnf.modal.close();
-    }
-});
+    args.closeMethods = ['overlay', 'button', 'escape'];
+
+    return args;
+} );
