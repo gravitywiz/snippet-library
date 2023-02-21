@@ -8,6 +8,9 @@
  *
  * Works both with the field-specific merge tags as well as within the context of the {all_fields}
  * merge tag. 
+ *
+ * [1]: https://gravitywiz.com/documentation/gravity-forms-preview-submission/
+ * [2]: https://gravitywiz.com/customizing-multi-file-merge-tag/
  */
 add_filter( 'gform_merge_tag_filter', function ( $value, $merge_tag, $modifier, $field, $raw_value, $format ) {
   // Update "123" to your form ID.
