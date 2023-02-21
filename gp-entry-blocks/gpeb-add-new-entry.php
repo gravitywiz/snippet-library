@@ -3,7 +3,7 @@
  * Gravity Perks // Entry Blocks // Add Entry Button
  * http://gravitywiz.com/
  *
- * Instruction Video: Incoming...
+ * Instruction Video: https://www.loom.com/share/08a28f6e054c483780db738ac8f900bd
  * 
  * Instructions
  *
