@@ -1,11 +1,9 @@
 <?php
 /**
  * Gravity Perks // File Renamer // Gravity Forms Salesforce Plugin Compatibility
- *
  * https://gravitywiz.com/documentation/gravity-forms-file-renamer/
  *
- * https://www.crmperks.com/plugins/gravity-forms-plugins/gravity-forms-salesforce-plugin/
- *
+ * Gravity Forms Salesforce Plugin: https://www.crmperks.com/plugins/gravity-forms-plugins/gravity-forms-salesforce-plugin/
  *
  * Compatibility snippet to ensure that files are renamed by GP File Renamer before being
  * uploaded to the Salesforce API by the Gravity Forms Salesforce plugin.
