@@ -15,43 +15,57 @@
 // Update "1" to the ID of your Multi Select field.
 var multiSelectId = '#input_GFFORMID_1';
 // Update "2" to the max number of options that should be selectable.
-var maxSelected = 2;
-// Alternate: Set max number by the value of another field.
-// var maxSelected = parseInt( $( '#input_GFFORMID_4' ).val() );
+var max = 2;
+// Alternate: Set max number by the value of another field. Update "3" to the field ID.
+// var maxFieldId = $( '#input_GFFORMID_3' );
 
 var $select = $( multiSelectId );
 var lastAcceptedValue = null;
 
-limitMultiSelect( $select, maxSelected );
+limitMultiSelect( $select, getMax() );
 
 $select.on( 'change', function () {
-	limitMultiSelect( $( this ), maxSelected );
+	limitMultiSelect( $( this ), getMax() );
 } );
 
-function limitMultiSelect( $select, maxSelected ) {
+if ( typeof maxFieldId !== 'undefined' ) {
+	$( maxFieldId ).on( 'change', function() {
+		limitMultiSelect( $select, $( this ).val() );
+	} );
+}
+
+function limitMultiSelect( $select, max ) {
 	var selectedCount = $select.find( 'option:selected' ).length;
 
-	if ( selectedCount <= maxSelected ) {
+	if ( selectedCount <= max ) {
 		lastAcceptedValue = $select.val();
 	} else {
+		if ( lastAcceptedValue.length > max ) {
+			// Remove elements from array until it is less than the max variable using array.splice.
+			lastAcceptedValue.splice( max, lastAcceptedValue.length - max );
+		}
 		$select.val( lastAcceptedValue );
 		$select.blur();
 	}
-	
+
 	// Blur selector on mobile after max number of options are selected
-	if ( !!navigator.platform.match( /iPhone|iPod|iPad/ ) || !!navigator.userAgent.match( /android/i ) ) {
-		if ( selectedCount >= maxSelected ) {
+	if ( !! navigator.platform.match( /iPhone|iPod|iPad/ ) || !! navigator.userAgent.match( /android/i ) ) {
+		if ( selectedCount >= max ) {
 			$select.blur();
 		}
-		
-		if ( selectedCount > maxSelected ) {
-			alert('Please select ' + maxSelected + ' choices or fewer.');
+
+		if ( selectedCount > max ) {
+			alert('Please select ' + max + ' choices or fewer.');
 		}
 	} else {
 		// If not on iOS, disable the options as disabled options do not update live on iOS
 		$select
 			.find( 'option:not(:checked)' )
-			.prop( 'disabled', selectedCount >= maxSelected )
+			.prop( 'disabled', selectedCount >= max )
 			.trigger( 'chosen:updated' );
 	}
+}
+
+function getMax() {
+	return typeof maxFieldId !== 'undefined' ? $( maxFieldId ).val() : max;
 }
