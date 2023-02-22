@@ -51,7 +51,7 @@ class GW_Progress_Meter {
 			$count = $atts['start'];
 		}
 
-		$goal = $this->get_goal( $count, $atts['goal'] );
+		$goal = (int) $this->get_goal( $count, $atts['goal'] );
 
 		$percent_complete = $count <= 0 ? 0 : round( ( $count / $goal ) * 100 );
 		$classes          = array( 'gwpm-container' );
