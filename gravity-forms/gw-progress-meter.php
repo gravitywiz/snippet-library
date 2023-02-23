@@ -8,7 +8,7 @@
  * Plugin URI:   https://gravitywiz.com/gravity-forms-progress-meter/
  * Description:  Display a meter indicating your progression towards a set goal based on your Gravity Forms entries.
  * Author:       Gravity Wiz
- * Version:      1.2
+ * Version:      1.3
  * Author URI:   https://gravitywiz.com
  *
  * @todo
@@ -51,7 +51,9 @@ class GW_Progress_Meter {
 			$count = $atts['start'];
 		}
 
-		$percent_complete = $count <= 0 ? 0 : round( ( $count / $atts['goal'] ) * 100 );
+		$goal = (int) $this->get_goal( $count, $atts['goal'] );
+
+		$percent_complete = $count <= 0 ? 0 : round( ( $count / $goal ) * 100 );
 		$classes          = array( 'gwpm-container' );
 
 		if ( $percent_complete >= 100 ) {
@@ -71,7 +73,7 @@ class GW_Progress_Meter {
 				' . $this->prepare_label( $atts['count_label'], 'count', $count ) . '
 			</div>
 			<div class="gwpm-goal">
-				' . $this->prepare_label( $atts['goal_label'], 'goal', $atts['goal'] ) . '
+				' . $this->prepare_label( $atts['goal_label'], 'goal', $goal ) . '
 			</div>
 		</div>';
 
@@ -140,6 +142,22 @@ class GW_Progress_Meter {
 		}
 
 		return $count;
+	}
+
+	public function get_goal( $count, $goal ) {
+
+		if ( strpos( $goal, ';' ) === false ) {
+			return $goal;
+		}
+
+		$goals = explode( ';', $goal );
+		foreach( $goals as $goal ) {
+			if ( $count < $goal ) {
+				return $goal;
+			}
+		}
+
+		return end( $goals );
 	}
 
 	public function enqueue_styles() {
