@@ -96,8 +96,36 @@ class GW_CL_Entry_Meta {
 			}
 		}
 
+		$options = array();
+
+		if ( ! empty( $form_ids ) ) {
+			$post_submission_conditional_logic_field_types = array(
+				'uid' => array(
+					'operators' => array(
+						'is'          => 'is',
+						'isnot'       => 'isNot',
+						'>'           => 'greaterThan',
+						'<'           => 'lessThan',
+						'contains'    => 'contains',
+						'starts_with' => 'startsWith',
+						'ends_with'   => 'endsWith'
+					),
+				)
+			);
+			$form = GFAPI::get_form( is_array( $form_ids ) ? $form_ids[0] : $form_ids );
+			if ( $form ) {
+				$fields = GFAPI::get_fields_by_type( $form, array_keys( $post_submission_conditional_logic_field_types ) );
+				foreach ( $fields as $field ) {
+					$options[ $field->id ] = array(
+						'label'     => $field->label,
+						'value'     => $field->id,
+						'operators' => rgars( $post_submission_conditional_logic_field_types, $field->type . '/operators', array() ),
+					);
+				}
+			}
+		}
+
 		$entry_meta = GFFormsModel::get_entry_meta( $form_ids );
-		$options    = array();
 
 		$choices_by_key = array(
 			'is_approved' => array(
