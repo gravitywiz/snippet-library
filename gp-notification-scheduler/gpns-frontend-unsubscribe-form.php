@@ -10,7 +10,7 @@ add_action( 'gform_after_submission_123', function( $entry ) {
 	global $wpdb;
 
 	// Update "4" to the ID of the field in which the email to be unsubscribed or resubscribed is entered.
-	$email  = rgar( $entry, '4' );
+	$email = rgar( $entry, '4' );
 
 	// Update "5" to the ID of the field in which the user will indicate if the field should be unsubscribed or resubscribed.
 	$action = rgar( $entry, '5' );

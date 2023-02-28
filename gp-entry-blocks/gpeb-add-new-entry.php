@@ -4,7 +4,7 @@
  * http://gravitywiz.com/
  *
  * Instruction Video: https://www.loom.com/share/08a28f6e054c483780db738ac8f900bd
- * 
+ *
  * Instructions
  *
  * 1. Install the Manual Entries plugin.
@@ -45,7 +45,7 @@ class GWME_Entry_Blocks_New_Entry {
 
 		add_filter( 'gfme_is_add_entry_request', array( $this, 'is_add_entry_request' ) );
 
-		add_filter( 'gfme_edit_url', array( $this, 'set_edit_url'), 10, 3 );
+		add_filter( 'gfme_edit_url', array( $this, 'set_edit_url' ), 10, 3 );
 
 	}
 
@@ -68,5 +68,5 @@ class GWME_Entry_Blocks_New_Entry {
 # Configuration
 
 new GWME_Entry_Blocks_New_Entry( array(
-	'page_id' => 1234
+	'page_id' => 1234,
 ) );

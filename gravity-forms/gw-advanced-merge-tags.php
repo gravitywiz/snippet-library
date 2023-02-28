@@ -442,9 +442,9 @@ class GW_Advanced_Merge_Tags {
 				case 'mask':
 					if ( GFCommon::is_valid_email( $value ) ) {
 						list( $name, $domain ) = explode( '@', $value );
-						$frags = explode( '.', $domain );
-						$base  = $this->mask_value( array_shift( $frags ) );
-						$name  = $this->mask_value( $name );
+						$frags                 = explode( '.', $domain );
+						$base                  = $this->mask_value( array_shift( $frags ) );
+						$name                  = $this->mask_value( $name );
 						// Example: "one.two.three@domain.gov.uk" → "o***********e@d****n.gov.uk".
 						return sprintf( '%s@%s.%s', $name, $base, implode( '.', $frags ) );
 					} else {

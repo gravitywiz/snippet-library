@@ -151,7 +151,7 @@ class GW_Progress_Meter {
 		}
 
 		$goals = explode( ';', $goal );
-		foreach( $goals as $goal ) {
+		foreach ( $goals as $goal ) {
 			if ( $count < $goal ) {
 				return $goal;
 			}
