@@ -12,10 +12,21 @@
  * Plugin URI: http://gravitywiz.com
  * Description: Create entries manually for Gravity Forms. Adds an "Add New" button next to the page title on all entry-related pages.
  * Author: Gravity Wiz
- * Version: 1.5
+ * Version: 1.6
  * Author URI: http://gravitywiz.com
  */
 class GW_Manual_Entries {
+
+	private static $instance;
+
+	public static function get_instance() {
+
+		if ( ! self::$instance ) {
+			self::$instance = new self;
+		}
+
+		return self::$instance;
+	}
 
 	public function __construct( $args = array() ) {
 
@@ -105,9 +116,10 @@ class GW_Manual_Entries {
 
 	public function is_add_entry_request() {
 
-		$is_entry_view = rgget( 'page' ) == 'gf_entries';
+		$is_entry_view        = rgget( 'page' ) == 'gf_entries';
+		$is_add_entry_request = $is_entry_view && rgget( 'add_new' ) && rgget( 'id' );
 
-		return $is_entry_view && rgget( 'add_new' ) && rgget( 'id' );
+		return apply_filters( 'gfme_is_add_entry_request', $is_add_entry_request );
 	}
 
 	public function process_query_string() {
@@ -141,7 +153,7 @@ class GW_Manual_Entries {
 			}
 
 			$entry_url = sprintf( '%s/wp-admin/admin.php?page=gf_entries&view=entry&id=%d&lid=%d&pos=0', get_bloginfo( 'wpurl' ), $form_id, $entry_id );
-			wp_redirect( apply_filters( 'gfme_edit_url', add_query_arg( array( 'edit' => 1 ), $entry_url ) ) );
+			wp_redirect( apply_filters( 'gfme_edit_url', add_query_arg( array( 'edit' => 1 ), $entry_url ), $form_id, $entry_id, $entry ) );
 
 			exit;
 		}
@@ -279,6 +291,8 @@ class GW_Manual_Entries {
 
 }
 
-# Configuration
+function gw_manual_entries() {
+	return GW_Manual_Entries::get_instance();
+}
 
-new GW_Manual_Entries();
+gw_manual_entries();
