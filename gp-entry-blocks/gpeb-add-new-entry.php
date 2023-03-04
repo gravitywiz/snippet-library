@@ -47,6 +47,10 @@ class GWME_Entry_Blocks_New_Entry {
 
 		add_filter( 'gfme_edit_url', array( $this, 'set_edit_url' ), 10, 3 );
 
+		add_filter( 'gpeb_edit_form_entry', array( $this, 'populate_is_new_parameter' ) );
+
+		add_filter( 'gpeb_cleaned_current_url', array( $this, 'remove_is_new_parameter' ) );
+
 	}
 
 	public function is_add_entry_request( $is_add_entry_request ) {
@@ -61,6 +65,23 @@ class GWME_Entry_Blocks_New_Entry {
 			$edit_url = add_query_arg( array( 'edit_entry' => $entry_id, 'is_new' => 1 ), get_permalink( $this->_args['page_id'] ) );
 		}
 		return $edit_url;
+	}
+
+	public function populate_is_new_parameter( $entry ) {
+		if ( ! rgget( 'is_new' ) ) {
+			return $entry;
+		}
+		$form = GFAPI::get_form( $entry['form_id'] );
+		foreach ( $form['fields'] as $field ) {
+			if ( $field->inputName === 'is_new' ) {
+				$entry[ $field->id ] = 1;
+			}
+		}
+		return $entry;
+	}
+
+	public function remove_is_new_parameter( $url ) {
+		return remove_query_arg( 'is_new', $url );
 	}
 
 }
