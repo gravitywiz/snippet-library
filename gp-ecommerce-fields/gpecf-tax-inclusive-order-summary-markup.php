@@ -96,7 +96,7 @@ class GW_Tax_Inclusive_Order_Summary {
 									$class  = $index == count( $product['options'] ) - 1 ? '.last-child' : '';
 									?>
 									<li style="<?php gp_ecommerce_fields()->style( ".order-summary/.product-options/li{$class}" ); ?>"><?php echo $option['option_label']; ?></li>
-								<?php
+									<?php
 								endforeach;
 							endif;
 							$price_excl_tax  = ( 100 * $price ) / ( 100 + $this->_args['tax_rate'] );
@@ -110,7 +110,7 @@ class GW_Tax_Inclusive_Order_Summary {
 					<td style="<?php gp_ecommerce_fields()->style( '.order-summary/tbody/tr/td.column-3' ); ?>"><?php echo GFCommon::to_money( $price_excl_tax, $entry['currency'] ); ?></td>
 					<td style="<?php gp_ecommerce_fields()->style( '.order-summary/tbody/tr/td.column-4' ); ?>"><?php echo GFCommon::to_money( $field_total, $entry['currency'] ); ?></td>
 				</tr>
-			<?php
+				<?php
 			endforeach;
 			?>
 			</tbody>
