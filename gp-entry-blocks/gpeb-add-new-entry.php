@@ -42,14 +42,11 @@ class GWME_Entry_Blocks_New_Entry {
 		}
 
 		add_filter( 'wp', array( gw_manual_entries(), 'process_query_string' ) );
-
 		add_filter( 'gfme_is_add_entry_request', array( $this, 'is_add_entry_request' ) );
-
 		add_filter( 'gfme_edit_url', array( $this, 'set_edit_url' ), 10, 3 );
-
 		add_filter( 'gpeb_edit_form_entry', array( $this, 'populate_is_new_parameter' ) );
-
 		add_filter( 'gpeb_cleaned_current_url', array( $this, 'remove_is_new_parameter' ) );
+		add_filter( 'gform_pre_submission', array( $this, 'remove_is_new_field_value_on_submission' ) );
 
 	}
 
@@ -78,6 +75,20 @@ class GWME_Entry_Blocks_New_Entry {
 			}
 		}
 		return $entry;
+	}
+
+	/**
+	 * Prevent the is_new field value from being saved to the entry so that on subsequent page loads, conditional logic
+	 * based on the "is_new" field will not generate a false positive.
+	 *
+	 * @param $form
+	 */
+	public function remove_is_new_field_value_on_submission( $form ) {
+		foreach ( $form['fields'] as $field ) {
+			if ( $field->inputName === 'is_new' ) {
+				$_POST[ "input_{$field->id}" ] = '';
+			}
+		}
 	}
 
 	public function remove_is_new_parameter( $url ) {
