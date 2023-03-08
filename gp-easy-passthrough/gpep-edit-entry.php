@@ -120,7 +120,7 @@ class GPEP_Edit_Entry {
 
 		$entry_ids = array();
 
-		if ( ! empty( $_POST ) )  {
+		if ( ! empty( $_POST ) ) {
 
 			$posted_value = rgpost( $this->get_passed_through_entries_input_name( $form_id ) );
 			if ( empty( $posted_value ) ) {
@@ -134,7 +134,7 @@ class GPEP_Edit_Entry {
 
 			$entry_ids = explode( ',', $entry_ids );
 
-		} else if ( ! empty( $this->passed_through_entries ) ) {
+		} elseif ( ! empty( $this->passed_through_entries ) ) {
 
 			$entry_ids = wp_list_pluck( $this->passed_through_entries, 'entry_id' );
 

@@ -108,9 +108,9 @@ class GW_CL_Entry_Meta {
 						'<'           => 'lessThan',
 						'contains'    => 'contains',
 						'starts_with' => 'startsWith',
-						'ends_with'   => 'endsWith'
+						'ends_with'   => 'endsWith',
 					),
-				)
+				),
 			);
 			$form = GFAPI::get_form( is_array( $form_ids ) ? $form_ids[0] : $form_ids );
 			if ( $form ) {
