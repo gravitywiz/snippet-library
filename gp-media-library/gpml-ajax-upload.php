@@ -58,7 +58,10 @@ class GPML_Ajax_Upload {
 		$field_uid = implode( '_', array( rgpost( 'gform_unique_id' ), $field->id ) );
 
 		$renamed_file_path = str_replace( basename( $file_path ), $uploaded_filename, $file_path );
-		rename( $file_path, $renamed_file_path );
+
+		// Use rename instead of copy here as rename will get rid of the original temporary filename which can
+		// trigger a validation error if the field is required.
+		copy( $file_path, $renamed_file_path );
 
 		$id = gp_media_library()->upload_to_media_library( $renamed_file_path, $field, array( 'id' => $this->_args['default_entry_id'] ) );
 		if ( is_wp_error( $id ) ) {
@@ -108,6 +111,21 @@ class GPML_Ajax_Upload {
 				continue;
 			}
 
+			// Delete files stored in GF uploads directory as they have already been uploaded to the Media Library.
+			// We have to do this as we keep the original tmp file otherwise validation errors may be encountered.
+			try {
+				$gf_duplicate_files = json_decode( rgar( $entry, $field->id ), true );
+
+				if ( ! empty( $gf_duplicate_files ) ) {
+					foreach ( $gf_duplicate_files as $duplicate_file ) {
+						$path = GFFormsModel::get_physical_file_path( $duplicate_file );
+						@unlink( $path );
+					}
+				}
+			} catch ( Exception $e ) {
+				// Do nothing
+			}
+
 			$new_value = array();
 
 			foreach ( $ids as $id ) {
@@ -115,12 +133,6 @@ class GPML_Ajax_Upload {
 					$new_value[] = wp_get_attachment_url( $id );
 				}
 			}
-			// Append to current value if present
-			$current_value = rgar( $entry, $field->id, false );
-			if ( $current_value ) {
-				$new_value = array_merge( json_decode( $current_value ), $new_value );
-			}
-			$entry[ $field->id ] = json_encode( $new_value );
 
 			$entry[ $field->id ] = json_encode( $new_value );
 
