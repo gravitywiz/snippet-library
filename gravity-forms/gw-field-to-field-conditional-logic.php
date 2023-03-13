@@ -1,9 +1,5 @@
 <?php
 /**
- * ---------------------------------------
- * DO NOT USE. THIS IS A WORK IN PROGRESS.
- * ---------------------------------------
- *
  * Gravity Wiz // Gravity Forms // Field to Field Conditional Logic
  *
  * Compare fields in Gravity Forms conditional logic. Is Field A greater than Field B? Is the emergency contact's name different than
