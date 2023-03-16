@@ -16,7 +16,7 @@ add_filter( 'gform_pre_render_123', function( $form, $ajax, $field_values ) {
 		$count  = gp_inventory_type_choices()->get_choice_count( $value, $field, $field->formId );
 		$limit  = gp_inventory_type_choices()->get_choice_inventory_limit( $choice, $field, $form );
 		if ( $count >= $limit ) {
-			$markup = gp_inventory_type_choices()->get_inventory_exhausted_message( $choice, $field, $form );
+			$markup = gp_inventory_type_choices()->get_inventory_exhausted_message( $field );
 		}
 		return $markup;
 	}, 10, 2 );
