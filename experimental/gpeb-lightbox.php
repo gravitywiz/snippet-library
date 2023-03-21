@@ -20,7 +20,7 @@ add_action( 'wp', function() {
 			'markup' => array(
 				array(
 					'file_types' => array( 'jpg', 'jpeg' ),
-					'markup' => '<div class="gpeb-image"><a href="{url}" class="gpep-image-link"><img src="{url}" width="100%" /></a><span>{filename}</span></div>'
+					'markup' => '<div class="gpeb-image"><a href="{url}" class="gpep-image-link"><img src="{url}" width="100%" /></a></div>'
 				)
 			)
 		) );
