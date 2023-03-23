@@ -3,6 +3,8 @@
  * Gravity Perks // Address Autocomplete // Autocomplete By City
  * https://gravitywiz.com/documentation/gravity-forms-address-autocomplete/
  *
+ * Instruction Video: https://www.loom.com/share/4649b62e6cf54ac5b4dcf2c9ab00d568
+ *
  * Autocomplete cities (including state and country) instead of full addresses.
  */
 class GPAA_Autocomplete_By_City {
