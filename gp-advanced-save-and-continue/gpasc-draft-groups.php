@@ -3,7 +3,7 @@
  * Gravity Perks // Advanced Save & Continue // Draft Groups by Query Parameter
  * https://gravitywiz.com/documentation/gravity-forms-advanced-save-continue/
  *
- * Instruction Video: Incoming...
+ * Instruction Video: https://www.loom.com/share/d8fae1209023492f8a163401b934b052
  * 
  * Create draft groups where only drafts saved from a URL with the same group ID 
  * (specified by a query parameter) will be displayed when that query parameter is
