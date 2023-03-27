@@ -42,6 +42,11 @@ class GW_Manual_Entries {
 			return;
 		}
 
+		// do not display the Add New Entry button for Stripe Sales Screen
+		if ( rgget( 'view' ) == 'gf_results_gravityformsstripe' ) {
+			return;
+		}
+
 		add_filter( 'admin_print_scripts-forms_page_gf_entries', array( $this, 'output_entry_button_script' ) );
 
 		add_filter( 'gpnf_template_args', array( $this, 'gpnf_add_entry_action' ), 10, 2 );
