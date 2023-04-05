@@ -166,7 +166,8 @@ class GW_Save_Continue_Auto_Load {
 	public function is_applicable_form( $form ) {
 		$form_id = isset( $form['id'] ) ? $form['id'] : $form;
 
-		if ( $this->is_editing_entry( $form_id ) ) {
+		$form = GFAPI::get_form( $form_id );
+		if ( $this->is_editing_entry( $form_id ) || ! $form['save']['enabled'] ) {
 			return false;
 		}
 
