@@ -60,8 +60,11 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 		$entry_ids   = explode( ',', $nested_form_field_value );
 		$entry_count = empty( $nested_form_field_value ) ? 0 : count( $entry_ids );
 
-		$raw_min = rgpost( "input_{$this->_args['min_field_id']}" );
-		$raw_max = rgpost( "input_{$this->_args['max_field_id']}" );
+		$min_field_id = str_replace( '.', '_', $this->_args['min_field_id'] );
+		$max_field_id = str_replace( '.', '_', $this->_args['max_field_id'] );
+
+		$raw_min = rgpost( "input_{$min_field_id}" );
+		$raw_max = rgpost( "input_{$max_field_id}" );
 
 		if ( empty( $raw_min ) ) {
 			$raw_min = $this->_args['default_min'];
@@ -128,7 +131,14 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 
 					self.init = function () {
 
-						var maxFieldId = 'input_' + self.parentFormId + '_' + self.maxFieldId;
+						var attrReadyMaxFieldId = self.maxFieldId.replace( '.', '_' );
+						var maxFieldId = 'input_' + self.parentFormId + '_' + attrReadyMaxFieldId;
+
+						// GF uses "1" for the input index in the HTML id attribute for Single Product fields. Weird.
+						var $maxField = $( '#input_' + self.parentFormId + '_' + parseInt( self.maxFieldId ) );
+						if ( $maxField.parents( '.gfield' ).hasClass( 'gfield--input-type-singleproduct' ) ) {
+							maxFieldId = 'input_' + self.parentFormId + '_' + parseInt( self.maxFieldId ) + '_1';
+						}
 
 						gform.addFilter('gpnf_entry_limit_max', function (max, currentFormId, currentFieldId) {
 							if (self.parentFormId != currentFormId || self.nestedFormFieldId != currentFieldId) {
