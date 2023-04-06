@@ -6,7 +6,6 @@
  * If you've configured a filter based on the "Current User ID" option and wish to ignore that filter for administrators,
  * this snippet will allow you to do so. Please note that all other filters will still be applied.
  *
- * 
  * This is useful if you wish to show user-specific results to non-admins but want to show all results to admins.
  */
 add_filter( 'gppa_object_type_filter_after_processing', function ( $query_builder_args, $args ) {
