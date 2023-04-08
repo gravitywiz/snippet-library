@@ -7,7 +7,7 @@
  * uses the international number (e.g. `+1 757-123-4567`) as a base and formats it like so: `+1 757.123.4567`.
  */
 // Update "123" to your form ID and "4" to your Phone field ID.
-add_action( 'gform_save_field_value_983_1', function( $value, $entry, $field, $form, $input_id ) {
+add_action( 'gform_save_field_value_123_4', function( $value, $entry, $field, $form, $input_id ) {
 
 	if ( ! is_callable( 'gp_advanced_phone_field' ) || ! class_exists( '\libphonenumber\PhoneNumberUtil' ) ) {
 		return $value;
