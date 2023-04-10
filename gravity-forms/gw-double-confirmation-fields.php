@@ -40,7 +40,7 @@ function gfcf_validation( $validation_result ) {
 		$confirm_error = true;
 
 		foreach ( $form['fields'] as &$field ) {
-			if ( ! in_array( $field['id'], $confirm_fields ) ) {
+			if ( ! in_array( $field['id'], $confirm_fields ) || RGFormsModel::is_field_hidden( $form, $confirm_field, array() ) ) {
 				continue;
 			}
 
