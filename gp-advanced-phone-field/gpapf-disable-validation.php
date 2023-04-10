@@ -16,5 +16,5 @@ add_action( 'init', function () {
 		return;
 	}
 
-	remove_filter( 'gform_validation', array( gp_advanced_phone_field(), 'validation' ) );
+	remove_filter( 'gform_field_validation', array( gp_advanced_phone_field(), 'validation' ) );
 }, 16 );
