@@ -2,7 +2,7 @@
 /**
  * Gravity Perks // Nested Forms // Single Submission Child Form
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
- * 
+ *
  * Instruction Video: https://www.loom.com/share/0416ee154c2f4e4b88f3c1ad67023a1c
  */
 add_filter( 'gp_template_output_nested-entries', function( $markup, $located_template, $load, $args ) {

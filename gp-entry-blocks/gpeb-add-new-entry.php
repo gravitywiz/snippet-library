@@ -59,7 +59,10 @@ class GWME_Entry_Blocks_New_Entry {
 
 	public function set_edit_url( $edit_url, $form_id, $entry_id ) {
 		if ( get_queried_object_id() == $this->_args['page_id'] ) {
-			$edit_url = add_query_arg( array( 'edit_entry' => $entry_id, 'is_new' => 1 ), get_permalink( $this->_args['page_id'] ) );
+			$edit_url = add_query_arg( array(
+				'edit_entry' => $entry_id,
+				'is_new'     => 1,
+			), get_permalink( $this->_args['page_id'] ) );
 		}
 		return $edit_url;
 	}

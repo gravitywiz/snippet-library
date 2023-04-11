@@ -105,7 +105,7 @@ class GPAA_Autocomplete_By_City {
 		if ( ! $this->is_applicable_form( $form ) ) {
 			return $form;
 		}
-		foreach( $form['fields'] as &$field ) {
+		foreach ( $form['fields'] as &$field ) {
 			if ( ! $this->is_applicable_field( $field->id ) ) {
 				continue;
 			}

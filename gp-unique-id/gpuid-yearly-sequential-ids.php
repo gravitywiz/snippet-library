@@ -3,7 +3,7 @@
  * GP Unique ID // Gravity Perks // Creates Yearly Sequential IDs
  * https://gravitywiz.com/documentation/gravity-forms-unique-id/
  *
- * Make the sequence for a given Unique ID field specific to the current year. The sequence 
+ * Make the sequence for a given Unique ID field specific to the current year. The sequence
  * will automatically reset each year.
  */
 // Update "123" to your form ID and "4" to your Unique ID field.

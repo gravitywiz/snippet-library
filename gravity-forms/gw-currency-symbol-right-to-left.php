@@ -4,7 +4,7 @@
  * http://gravitywiz.com/how-do-i-move-the-currency-symbol-from-the-right-to-the-left-for-gravity-forms/
  */
 add_filter( 'gform_currencies', function( $currencies ) {
-	$currencies['EUR']['symbol_left'] = '&#8364;';
+	$currencies['EUR']['symbol_left']  = '&#8364;';
 	$currencies['EUR']['symbol_right'] = '';
 	return $currencies;
 } );
