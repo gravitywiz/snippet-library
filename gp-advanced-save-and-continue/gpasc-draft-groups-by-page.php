@@ -11,7 +11,7 @@ add_filter( 'gpasc_form_resume_tokens', function( $tokens, $form_id ) {
 	// Set ignore parameters to false if you would like parameters to be included in identifying unique pages.
 	$ignore_parameters = true;
 
-	if ( is_ajax() ) {
+	if ( wp_doing_ajax() ) {
 		return $tokens;
 	}
 
