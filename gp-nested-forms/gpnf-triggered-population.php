@@ -110,10 +110,33 @@ class GPNF_Triggered_Population {
 							return;
 						}
 
+						// serialize including disabled form data
+						$.fn.serializeWithDisabled = function() {
+							var data = {};
+
+							// iterate over all input fields, including disabled ones
+							$(this).find(':input').each(function() {
+								var name = $(this).attr('name');
+								var value = $(this).val();
+
+								if ($(this).is(':radio,:checkbox')) {
+									// for radio buttons and checkboxes, only include the selected option
+									if ($(this).is(':checked')) {
+										data[name] = value;
+									}
+								} else {
+									// for other input fields, include the value as-is
+									data[name] = value;
+								}
+							});
+
+							return $.param(data);
+						};
+
 						var request = {
 							action: 'gpnf_triggered_population_add_child_entry',
 							nonce: self.nonce,
-							data: $form.serialize(),
+							data: $form.serializeWithDisabled(),
 							hash: self.hash,
 						}
 
