@@ -207,8 +207,8 @@ class GW_Choice_Count {
 # Configuration
 
 new GW_Choice_Count( array(
-	'form_id'          => 123,                          // The ID of your form.
-	'count_field_id'   => 4,                            // Any Number field on your form in which the number of checked checkboxes should be dynamically populated; you can configure conditional logic based on the value of this field.
-	'choice_field_ids' => array( 5, 6 ),                // Any array of Checkbox or Multi-select field IDs which should be counted.
-	'values'           => array( 'None of the above' ), // Array of values, all of which should match.
+	'form_id'          => 123,           // The ID of your form.
+	'count_field_id'   => 4,             // Any Number field on your form in which the number of checked checkboxes should be dynamically populated; you can configure conditional logic based on the value of this field.
+	'choice_field_ids' => array( 5, 6 ), // Any array of Checkbox or Multi-select field IDs which should be counted.
+	'values'           => false,         // Specify an array of values that should be counted. Values not in this list will not be counted. Defaults to `false` which will count all values.
 ) );
