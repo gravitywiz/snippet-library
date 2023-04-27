@@ -164,6 +164,10 @@ class GW_Inventory {
 			$requested_qty = rgpost( 'input_' . str_replace( '.', '_', $input_id ) );
 			$field_sum     = $this->get_sum();
 
+			if ( $field->get_input_type() === 'number' && $field->numberFormat === 'currency' ) {
+				$requested_qty = GFCommon::to_number( $requested_qty );
+			}
+
 			if ( rgblank( $requested_qty ) || $field_sum + $requested_qty <= $limit ) {
 				continue;
 			}
@@ -521,5 +525,5 @@ new GW_Inventory( array(
 	'not_enough_stock_message' => 'You ordered %1$s tickets. There are only %2$s tickets left.',
 	'approved_payments_only'   => false,
 	'hide_form'                => false,
-	'enable_notifications'     => true,
+	'enable_notifications'     => false,
 ) );
