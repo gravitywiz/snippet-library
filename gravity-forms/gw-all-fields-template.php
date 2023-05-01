@@ -331,7 +331,7 @@ class GW_All_Fields_Template {
 
 	public function parse_modifiers( $modifiers_str ) {
 
-		preg_match_all( '/([a-z]+)(?:(?:\[(.+?)\])|,?)/i', $modifiers_str, $modifiers, PREG_SET_ORDER );
+		preg_match_all( '/([a-z_]+)(?:(?:\[(.+?)\])|,?)/i', $modifiers_str, $modifiers, PREG_SET_ORDER );
 		$parsed = array();
 
 		foreach ( $modifiers as $modifier ) {
