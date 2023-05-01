@@ -8,8 +8,11 @@
  */
 add_filter( 'gpeb_edit_form_entry', function( $entry ) {
 
-	$form_id = 34;
-	$field_ids = array( 1, 3, 4 );
+	// Update "123" to your form ID.
+	$form_id = 123;
+	
+	// Update (or remove) "4", "5", and "6" to the field IDs that should be rehydrated.
+	$field_ids = array( 4, 5, 6 );
 
 	if ( ! isset( $GLOBALS['gppa-field-values'] ) || $entry['form_id'] != $form_id ) {
 		return $entry;
