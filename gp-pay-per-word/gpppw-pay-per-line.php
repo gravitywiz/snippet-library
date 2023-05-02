@@ -25,12 +25,15 @@ class GPPPW_Pay_Per_Line {
 		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
 		add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
 
-		add_filter( 'gpppw_word_count', array( $this, 'get_line_count' ), 10, 2 );
+		add_filter( 'gpppw_word_count', array( $this, 'get_line_count' ), 10, 3 );
 
 	}
 
-	public function get_line_count( $word_count, $words ) {
-		return count( explode( "\n", $words ) );
+	public function get_line_count( $word_count, $words, $price_field ) {
+		if ( $this->is_applicable_form( $price_field->formId ) && $price_field->id == $this->_args['field_id'] ) {
+			$word_count = count( explode( "\n", $words ) );
+		}
+		return $word_count;
 	}
 
 	public function load_form_script( $form, $is_ajax_enabled ) {
@@ -64,7 +67,10 @@ class GPPPW_Pay_Per_Line {
 					self.init = function() {
 
 						gform.addFilter( 'gpppw_word_count', function( wordCount, text, gwppw, ppwField, formId ) {
-							return text.split( "\n" ).length;
+							if ( formId == self.formId && ppwField.price_field == self.fieldId ) {
+								wordCount = text.split( "\n" ).length;
+							}
+							return wordCount;
 						} );
 
 					};
