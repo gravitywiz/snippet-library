@@ -197,6 +197,11 @@ class GW_All_Fields_Template {
 			switch ( $modifier ) {
 				case 'filter':
 					if ( in_array( $field->id, $field_ids ) ) {
+						// In the case of a Single Product field, the $value is empty, but $raw_value contains an array.
+						if ( ! $value && is_array( $raw_value ) ) {
+							$value = GFCommon::get_lead_field_display( $field, $raw_value );
+						}
+
 						$value = $this->get_all_fields_field_value( $field, $value );
 					} else {
 						$value = false;
@@ -418,7 +423,12 @@ class GW_All_Fields_Template {
 
 						// ignore product fields as they will be grouped together at the end of the grid
 						$display_product_summary = apply_filters( 'gform_display_product_summary', true, $field, $form, $lead );
-						if ( $display_product_summary ) {
+
+						// Do not include product fields if the product/order summary will be included.
+						if (
+							$display_product_summary
+							&& $this->all_fields_extra_options( GFCommon::get_submitted_pricing_fields( $form, $lead, $format, $use_text, $use_admin_label ), $merge_tag, $modifiers, 'order_summary', null, $format )
+						) {
 							break;
 						}
 					} elseif ( GFFormsModel::is_field_hidden( $form, $field, array(), $lead ) ) {
