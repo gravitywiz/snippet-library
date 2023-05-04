@@ -18,8 +18,17 @@ add_filter( 'gppa_live_merge_tag_value', function( $merge_tag_match_value, $merg
 	$modifiers = gw_parse_modifiers( array_pop( $bits ) );
 	$diff      = rgar( $modifiers, 'diff' );
 
-	if ( ! $diff ) {
+	if ( ! isset( $modifiers['diff'] ) ) {
 		return $merge_tag_match_value;
+	}
+
+	// If :diff modifier is set but no value is specified, assume we are diffing against today's date.
+	if ( $diff === 'diff' ) {
+		$diff = date( 'Y-m-d' );
+	}
+	// Check if $diff contains any non-numeric characters except a dash. If so, assume we've passed a relative date (e.g. +1 year).
+	else if ( preg_match( '/[^0-9\-]/', $diff ) ) {
+		$diff = date( 'Y-m-d', strtotime( $diff ) );
 	}
 
 	$date1 = date_create( rgar( $entry_values, $field_id ) );
