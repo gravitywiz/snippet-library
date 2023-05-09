@@ -1,5 +1,6 @@
 <?php
 /**
+ * Gravity Perks // Easy Passthrough + Nested Forms // Duplicate child entries on passthrough
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  * https://gravitywiz.com/documentation/gravity-forms-easy-passthrough/
  *
@@ -11,18 +12,19 @@
  *  * Update $parent_form_ids to match the form IDs that need to have their Nested Form field child entries duplicated
  *  * Update $parent_form_field_ids to include the Nested Form field IDs that should have their child entries duplicated
  *
- * As an example, this snippet is configured to duplicate child entries for Nested Form fields 1 and 2 in form 10.
+ * As an example, this snippet is configured to duplicate child entries for Nested Form fields 4 and 5 in form 123.
  */
 add_filter( 'gpep_target_field_value', function ( $field_value, $form_id, $target_field_id, $source_field ) {
-	if ( ! class_exists( 'GPNF_Entry' ) || ! function_exists( 'gp_nested_forms' ) ) {
-		return $field_value;
-	}
 
 	/**
 	 * Important! Update these two variables.
 	 */
-	$parent_form_ids       = array( 10 );
-	$parent_form_field_ids = array( 1, 2 );
+	$parent_form_ids       = array( 123 );
+	$parent_form_field_ids = array( 4, 5 );
+
+	if ( ! class_exists( 'GPNF_Entry' ) || ! function_exists( 'gp_nested_forms' ) ) {
+		return $field_value;
+	}
 
 	if ( ! in_array( $form_id, $parent_form_ids ) ) {
 		return $field_value;
