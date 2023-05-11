@@ -44,8 +44,9 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 
 	foreach ( $terms as $object ) {
 		$choices[] = array(
-			'value' => $object->term_id,
-			'text'  => $object->name,
+			'value'  => $object->term_id,
+			'text'   => $object->name,
+			'object' => $object,
 		);
 	}
 
