@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Forms // Merge Tag: Add merge {tab} for tabbed space.
+ * Gravity Wiz // Gravity Forms // Merge Tag: Add merge {tab} for tabbed space.
  *
  * Adds merge tags {tab}, {space}, and {newline}.
  *
