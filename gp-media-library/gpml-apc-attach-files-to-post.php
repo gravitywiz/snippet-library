@@ -1,7 +1,7 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Attach Files uploaded via GPML to Posts created with GFAPC + ACF
- * 
+ *
  * Attach Files uploaded via GPML to Posts created with GFAPC + ACF
  *
  * Instructions:
@@ -21,7 +21,6 @@ add_action( 'gform_advancedpostcreation_post_after_creation', function( $post_id
 					'post_parent' => $post_id,
 				) );
 			}
-			set_post_thumbnail( $post_id, $file_id );
 		}
 	}
 }, 10, 4 );
