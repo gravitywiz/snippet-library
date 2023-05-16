@@ -11,7 +11,7 @@
  * Plugin URI:   http://gravitywiz.com/documentation/gravity-forms-nested-forms/
  * Description:  Auto-attach Uploaded Files from Child to Parent Notifications
  * Author:       Gravity Wiz
- * Version:      0.2
+ * Version:      0.3
  * Author URI:   https://gravitywiz.com/
  */
 class GPNF_Auto_Attach_Child_Files {
@@ -94,7 +94,8 @@ class GPNF_Auto_Attach_Child_Files {
 				continue;
 			}
 
-			$upload_fields = GFCommon::get_fields_by_type( GFAPI::get_form( $field->gpnfForm ), array( 'fileupload' ) );
+			$child_form    = GFAPI::get_form( $field->gpnfForm );
+			$upload_fields = GFCommon::get_fields_by_type( $child_form, array( 'fileupload' ) );
 			$child_entries = $parent_entry->get_child_entries( $field->id );
 			$upload_root   = GFFormsModel::get_upload_root();
 
@@ -102,6 +103,24 @@ class GPNF_Auto_Attach_Child_Files {
 				foreach ( $upload_fields as $upload_field ) {
 					if ( ! $this->is_applicable_upload_field( $upload_field ) ) {
 						continue;
+					}
+
+					/*
+					 * Handle GP Media Library as handle_attachments won't work as expected for the parent form since
+					 * these file upload fields do not exist in the parent form, and it will fail to find the IDs.
+					 */
+					if ( function_exists( 'gp_media_library' ) ) {
+						$gpml_file_ids = gp_media_library()->get_file_ids_by_entry( $child_entry, $child_form );
+
+						/*
+						 * gp_media_library()->get_file_ids_by_entry() returns a structure with array<fieldId, array<fileId>>
+						 * so this is a cheap way to flatten it and avoid PHP errors at the same time.
+						 */
+						$gpml_ids = ( count( $gpml_file_ids ) > 0 ) ? call_user_func_array( 'array_merge', $gpml_file_ids ) : array();
+
+						foreach ( $gpml_ids as $gpml_id ) {
+							$attachments[] = get_attached_file( $gpml_id );
+						}
 					}
 
 					$attachment_urls = rgar( $child_entry, $upload_field->id );
