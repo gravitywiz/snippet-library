@@ -18,7 +18,7 @@ $( document ).on( 'gpnf_post_render', function( event ) {
 	swapRowIdMergeTag();
 } );
 
-function swapRowIdMergeTag(event) {
+function swapRowIdMergeTag() {
 	let entrySet = document.querySelector("[data-bind='value: entryIds']").value.split(',');
 	let entryIdElement = document.querySelector("input[name='gpnf_entry_id']");
 	let entryId = false;
