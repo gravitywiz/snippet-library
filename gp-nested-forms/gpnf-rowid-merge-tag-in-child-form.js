@@ -14,14 +14,9 @@
  *    HTML block in the Gutenberg block editor). 
  */
 
-document.querySelector(".gpnf-add-entry").addEventListener('click', () => {
-	setTimeout(swapRowIdMergeTag, 200);
-});
-document.querySelector("table.gpnf-nested-entries").addEventListener('click', (event) => {
-	if(event.target.classList.contains('edit-button')) {
-		setTimeout(swapRowIdMergeTag, 200);
-	}
-});
+$( document ).on( 'gpnf_post_render', function( event ) {
+	swapRowIdMergeTag();
+} );
 
 function swapRowIdMergeTag(event) {
 	let entrySet = document.querySelector("[data-bind='value: entryIds']").value.split(',');
