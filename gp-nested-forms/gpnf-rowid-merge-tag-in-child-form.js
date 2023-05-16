@@ -12,6 +12,10 @@
  *
  * 2. Add a {RowID} merge tag to the child form, and a "rowid-merge" CSS class to the element that contains it (e.g. the
  *    HTML block in the Gutenberg block editor). 
+ * 
+ * Known Limitations:
+ * 
+ * 1. This snippet currently only works with a maximum of one nested form in the parent form. 
  */
 
 $( document ).on( 'gpnf_post_render', function( event ) {
