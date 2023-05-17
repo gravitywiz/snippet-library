@@ -107,6 +107,17 @@ class GW_Round_Robin {
 			}
 		}
 
+		// date wise round robin
+		$dateString = $entry['date_created'];
+		$date       = new DateTime($dateString);
+		$dateValue  = $date->format('Y-m-d');
+		$field_filters = array(
+			array(
+				'key'   => 'date_created',
+				'value' => $dateString,
+			),
+		);
+
 		$last_entry = rgar(
 			GFAPI::get_entries(
 				$entry['form_id'],
