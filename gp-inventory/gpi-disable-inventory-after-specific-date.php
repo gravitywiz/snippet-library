@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // Inventory // Disable Inventory for a Form After a Specific Date
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
