@@ -6,5 +6,8 @@
  *    https://gravitywiz.com/gravity-forms-custom-javascript/
  */
 
-// Update "4" to the the ID of your Radio Button field.
-$( 'input[id^=choice_' + GFFORMID + '_4_' )[0].checked = true;
+// This has also been tested to work with GP Populate Anything.
+// Update "3" to the the ID of your Radio Button field, and keep it as "0" for for the first choice.
+// Rename "SelectDefaultRoomType" to something unique.
+const SelectDefaultRoomType = document.getElementById('choice_' + GFFORMID + '_3_0'); SelectDefaultRoomType.click();
+
