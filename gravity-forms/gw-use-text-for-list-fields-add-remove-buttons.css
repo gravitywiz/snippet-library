@@ -1,0 +1,16 @@
+/**
+ * Gravity Wiz // Gravity Forms // Use Text for List Fields Add/Remove Buttons
+ * https://gravitywiz.com/
+ *
+ * Screenshot: https://gwiz.io/42a3CCC
+ */
+.gform_wrapper.gravity-theme .gfield_list_icons {
+    width: auto;
+}
+
+.gform_wrapper.gravity-theme .gfield_list_icons button {
+    background: none !important;
+    width: auto;
+    margin-left: 1rem !important;
+    font-size: 1rem;
+}
