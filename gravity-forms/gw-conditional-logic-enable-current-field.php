@@ -18,7 +18,7 @@
  * Author URI:   https://gravitywiz.com
  */
 add_action( 'admin_footer', function() {
-	if ( wp_script_is( 'gform_form_admin' ) ) :
+	if ( ! rgget( 'subview' ) === 'notification' && wp_script_is( 'gform_form_admin' ) ) :
 		?>
 		<script>
 			gform.addFilter( 'gform_is_conditional_logic_field', function( isSupported, field ) {
