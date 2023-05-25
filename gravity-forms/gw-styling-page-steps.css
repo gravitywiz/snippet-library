@@ -3,58 +3,60 @@
  * https://gravitywiz.com/
  */
 .gform_wrapper.gravity-theme form .gf_page_steps {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 0;
-  position: relative;
-  margin-left: -20px;
-  margin-right: -20px;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+	display: flex;
+	justify-content: space-between;
+	border-bottom: 0;
+	position: relative;
+	margin-left: -20px;
+	margin-right: -20px;
+	flex-wrap: wrap;
+	gap: 0.5rem;
 }
 
 .gform_wrapper.gravity-theme form .gf_page_steps:after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc( 50% - ( 5px / 2 ) );
-  background-color: #cfd3d9;
-  height: 5px;
-  z-index: 1;
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: calc(50% - (5px / 2));
+	background-color: #cfd3d9;
+	height: 5px;
+	z-index: 1;
 }
 
 .gform_wrapper.gravity-theme form .gf_step {
-  margin: 0;
-  border: 20px solid #fff;
-  background-color: #fff;
-  z-index: 2;
+	margin: 0;
+	border: 20px solid #fff;
+	background-color: #fff;
+	z-index: 2;
 }
 
 .gform_wrapper.gravity-theme form .gf_step_number {
-  background-color: #fff;
-  position: relative;
+	background-color: #fff;
+	position: relative;
 }
 
 .gform_wrapper.gravity-theme form .gf_step_label {
-  display: none;
+	display: none;
 }
 
 @media (max-width: 560px) {
-  .gform_wrapper.gravity-theme form .gf_page_steps {
-    margin-left: 0;
-    margin-right: 0;
-  }
-  .gform_wrapper.gravity-theme form .gf_page_steps:after {
-    content: none;
-  }
-  .gform_wrapper.gravity-theme form .gf_step {
-    border: 0;
-  }
+	.gform_wrapper.gravity-theme form .gf_page_steps {
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	.gform_wrapper.gravity-theme form .gf_page_steps:after {
+		content: none;
+	}
+
+	.gform_wrapper.gravity-theme form .gf_step {
+		border: 0;
+	}
 }
 
 @media (max-width: 340px) {
-  .gform_wrapper.gravity-theme form .gf_page_steps {
-    justify-content: start;
-  }
+	.gform_wrapper.gravity-theme form .gf_page_steps {
+		justify-content: start;
+	}
 }

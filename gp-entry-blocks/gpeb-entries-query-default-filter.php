@@ -20,7 +20,7 @@ add_filter( 'gpeb_entries_query', function( $filters, $form_id, $block_context )
 		'property' => '1',
 		'operator' => 'is',
 		// Update "groupid" to the meta key of the user meta value indicating to which group the user belongs.
-		'value'    => 'gf_custom:{user:groupid}'
+		'value'    => 'gf_custom:{user:groupid}',
 	);
 
 	static $_running;

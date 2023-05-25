@@ -24,10 +24,11 @@ add_filter( 'gppa_live_merge_tag_value', function( $merge_tag_match_value, $merg
 
 	// If :diff modifier is set but no value is specified, assume we are diffing against today's date.
 	if ( $diff === 'diff' ) {
+		// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 		$diff = date( 'Y-m-d' );
-	}
-	// Check if $diff contains any non-numeric characters except a dash. If so, assume we've passed a relative date (e.g. +1 year).
-	else if ( preg_match( '/[^0-9\-]/', $diff ) ) {
+	} elseif ( preg_match( '/[^0-9\-]/', $diff ) ) {
+		// Check if $diff contains any non-numeric characters except a dash. If so, assume we've passed a relative date (e.g. +1 year).
+		// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 		$diff = date( 'Y-m-d', strtotime( $diff ) );
 	}
 

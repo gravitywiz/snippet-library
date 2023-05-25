@@ -63,6 +63,7 @@ add_filter( 'gpep_target_field_value', function ( $field_value, $form_id, $targe
 
 	foreach ( $child_entries as $child_entry ) {
 		$duplicated_child_entry = GFAPI::add_entry( array_replace( $child_entry, array(
+			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 			'date_created'                          => date( 'Y-m-d H:i:s' ),
 			GPNF_Entry::ENTRY_PARENT_KEY            => $session->get_runtime_hashcode(),
 			GPNF_Entry::ENTRY_PARENT_FORM_KEY       => $form_id,

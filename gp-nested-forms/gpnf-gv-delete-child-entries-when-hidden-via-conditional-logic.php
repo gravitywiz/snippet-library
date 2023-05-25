@@ -10,7 +10,7 @@ add_action( 'gravityview/edit_entry/after_update', function ( $form, $entry_id, 
 	 * temporarily overwrite the $_POST values to trick GFAPI::get_entry() into returning the correct values.
 	 */
 	$orig_post = $_POST;
-	$_POST = array();
+	$_POST     = array();
 
 	$entry = GFAPI::get_entry( $entry_id );
 

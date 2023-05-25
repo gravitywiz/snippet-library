@@ -22,12 +22,12 @@ class GW_Check_In {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
 		$this->_args = wp_parse_args( $args, array(
-			'form_id'  => false,
-			'name_field_id' => false,
+			'form_id'           => false,
+			'name_field_id'     => false,
 			'product_field_ids' => array(),
-			'labels' => array(
+			'labels'            => array(
 				'check_in_title' => __( 'Check-in' ),
-			)
+			),
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -37,7 +37,7 @@ class GW_Check_In {
 
 	public function init() {
 
-		if( ! is_callable( 'gp_post_content_merge_tags' ) ) {
+		if ( ! is_callable( 'gp_post_content_merge_tags' ) ) {
 			return;
 		}
 
@@ -53,9 +53,9 @@ class GW_Check_In {
 
 	public function maybe_process_check_in() {
 
-		if( $this->is_check_in_request() ) {
+		if ( $this->is_check_in_request() ) {
 			$entry = gp_post_content_merge_tags()->get_entry();
-			if( $entry && $this->is_applicable_form( $entry['form_id'] ) ) {
+			if ( $entry && $this->is_applicable_form( $entry['form_id'] ) ) {
 				$this->output_check_in_markup( $entry );
 				die();
 			}
@@ -69,20 +69,19 @@ class GW_Check_In {
 
 	public function output_check_in_markup( $entry ) {
 
-		if( ! current_user_can( $this->_args['check_in_role'] ) ) {
+		if ( ! current_user_can( $this->_args['check_in_role'] ) ) {
 			die( 'You do not have permission to check-in.' );
 		}
 
-		if( rgpost( 'nonce' ) ) {
+		if ( rgpost( 'nonce' ) ) {
 
-			if( ! wp_verify_nonce( rgpost( 'nonce' ), 'gwci_check_in' ) ) {
+			if ( ! wp_verify_nonce( rgpost( 'nonce' ), 'gwci_check_in' ) ) {
 				die( 'Invalid nonce.' );
 			}
 
-			foreach( rgpost( 'products' ) as $product_id ) {
+			foreach ( rgpost( 'products' ) as $product_id ) {
 				$this->check_in_product( rgpost( 'entry_id' ), $product_id );
 			}
-
 		}
 
 		?>
@@ -178,22 +177,27 @@ class GW_Check_In {
 			</div>
 
 			<div class="notices">
-				<?php if( rgpost( 'products' ) ): foreach( rgpost( 'products' ) as $product_id ):
-					$text = $this->get_product_display_label( $product_id, $entry );
-					if ( ! $text ) {
-						continue;
-					}
-					?>
+				<?php
+				if ( rgpost( 'products' ) ) :
+					foreach ( rgpost( 'products' ) as $product_id ) :
+						$text = $this->get_product_display_label( $product_id, $entry );
+						if ( ! $text ) {
+							continue;
+						}
+						?>
 					<div class="success">
 						<?php echo rgar( $entry, $this->_args['name_field_id'] . '.3' ); ?> was checked in for <em><?php echo $text; ?></em>.
 					</div>
-				<?php endforeach; endif; ?>
+									<?php
+				endforeach;
+endif;
+				?>
 			</div>
 
 			<div class="products">
 				<ul>
 					<?php
-					foreach( $this->_args['product_field_ids'] as $product_field_id ) {
+					foreach ( $this->_args['product_field_ids'] as $product_field_id ) {
 
 						$text = $this->get_product_display_label( $product_field_id, $entry );
 						if ( ! $text ) {
@@ -203,7 +207,7 @@ class GW_Check_In {
 						$disabled = $this->is_product_checked_in( $product_field_id, $entry['id'] ) ? 'disabled="disabled"' : '';
 
 						printf( '
-							<li> 
+							<li>
 								<label for="product_%1$d">
 									<input type="checkbox" name="products[]" id="product_%1$d" value="%1$d" %3$s>
 									<span>%2$s</span>
@@ -257,7 +261,7 @@ class GW_Check_In {
 			$text = $field_label;
 		} else {
 			$choice = $this->get_product_choice( $product_id, $entry );
-			if( ! $choice ) {
+			if ( ! $choice ) {
 				return false;
 			}
 			$text = sprintf( '%s (%s)', $choice['text'], $field_label );
@@ -273,8 +277,9 @@ class GW_Check_In {
 	public function is_product_checked_in( $product_id, $entry_id ) {
 		global $wpdb;
 
-		$sql = $wpdb->prepare( "SELECT count( id ) FROM {$wpdb->prefix}gf_entry_meta WHERE entry_id = %d AND meta_key = 'gwci_checked_in_product' AND meta_value = %d", $entry_id, $product_id );
-		$result = $wpdb->get_var( $sql );
+		$result = $wpdb->get_var(
+			$wpdb->prepare( "SELECT count( id ) FROM {$wpdb->prefix}gf_entry_meta WHERE entry_id = %d AND meta_key = 'gwci_checked_in_product' AND meta_value = %d", $entry_id, $product_id )
+		);
 
 		return $result > 0;
 	}
@@ -290,24 +295,27 @@ class GW_Check_In {
 
 		$pretty_id = gform_get_meta( $entry_id, 'gppcmt_pretty_id' );
 
-		return add_query_arg( array( 'gwci' => 1, 'eid' => $pretty_id ), get_site_url() );
+		return add_query_arg( array(
+			'gwci' => 1,
+			'eid'  => $pretty_id,
+		), get_site_url() );
 	}
 
 	public function get_product_choice( $product_id, $entry ) {
 
-		if( ! $this->is_applicable_form( $entry['form_id'] ) ) {
+		if ( ! $this->is_applicable_form( $entry['form_id'] ) ) {
 			return false;
 		}
 
-		$form = GFAPI::get_form( $entry['form_id'] );
+		$form  = GFAPI::get_form( $entry['form_id'] );
 		$field = GFFormsModel::get_field( $form, $product_id );
 
-		if( is_array( $field->choices ) ) {
-			$value = explode( '|', rgar( $entry, $product_id ) );
-			$value = array_shift( $value );
+		if ( is_array( $field->choices ) ) {
+			$value   = explode( '|', rgar( $entry, $product_id ) );
+			$value   = array_shift( $value );
 			$choices = $field->choices;
-			foreach( $choices as $index => $choice ) {
-				if( $choice['value'] == $value ) {
+			foreach ( $choices as $index => $choice ) {
+				if ( $choice['value'] == $value ) {
 					return $choice;
 				}
 			}
@@ -319,10 +327,10 @@ class GW_Check_In {
 	public function custom_entry_meta( $entry_meta, $form_id ) {
 
 		$entry_meta['gwci_checked_in_products'] = array(
-			'label' => 'Checked-in Products',
-			'is_numeric' => false,
+			'label'                      => 'Checked-in Products',
+			'is_numeric'                 => false,
 			'update_entry_meta_callback' => null,
-			'is_default_column' => true
+			'is_default_column'          => true,
 		);
 
 		return $entry_meta;
@@ -330,13 +338,13 @@ class GW_Check_In {
 
 	public function checked_in_products_entry_meta_value( $value, $form_id, $field_id, $entry ) {
 
-		if( $field_id != 'gwci_checked_in_products' ) {
+		if ( $field_id != 'gwci_checked_in_products' ) {
 			return $value;
 		}
 
 		$value = array();
 
-		foreach( $this->_args['product_field_ids'] as $product_id ) {
+		foreach ( $this->_args['product_field_ids'] as $product_id ) {
 
 			$field       = GFAPI::get_field( $form_id, $product_id );
 			$field_label = $field->get_field_label( false, '' );
@@ -345,32 +353,32 @@ class GW_Check_In {
 				$text = $field_label;
 			} else {
 				$choice = $this->get_product_choice( $product_id, $entry );
-				if( ! $choice ) {
+				if ( ! $choice ) {
 					continue;
 				}
 				$text = sprintf( '%s (%s)', $choice['text'], $field_label );
 			}
 
 			$is_checked_in = $this->is_product_checked_in( $product_id, $entry['id'] );
-			$icon  = $is_checked_in ? '&#10003;' : '&#10007;';
-			$class = $is_checked_in ? 'checked-in' : 'not-checked-in';
+			$icon          = $is_checked_in ? '&#10003;' : '&#10007;';
+			$class         = $is_checked_in ? 'checked-in' : 'not-checked-in';
 
 			$value[] = "<li class=\"{$class}\">{$icon} {$text}</li>";
 
 		}
 
-		$value[] = '<li><a href="' . $this->get_check_in_url( $entry['id'] ). '">Manage Check-ins</a>';
+		$value[] = '<li><a href="' . $this->get_check_in_url( $entry['id'] ) . '">Manage Check-ins</a>';
 
-		return '<ul>' . implode( "\n", $value )  . '</ul>';
+		return '<ul>' . implode( "\n", $value ) . '</ul>';
 	}
 
 	public function populate_check_in_url_field( $entry ) {
 
-		if( ! $this->is_applicable_form( $entry['form_id'] ) ) {
+		if ( ! $this->is_applicable_form( $entry['form_id'] ) ) {
 			return $entry;
 		}
 
-		$field_id = $this->_args['url_field_id'];
+		$field_id           = $this->_args['url_field_id'];
 		$entry[ $field_id ] = $this->get_check_in_url( $entry['id'] );
 		GFAPI::update_entry_field( $entry['id'], $field_id, $entry[ $field_id ] );
 
@@ -387,7 +395,7 @@ new GW_Check_In( array(
 	'product_field_ids' => array( 1, 3 ),
 	'url_field_id'      => 4,
 	'check_in_role'     => 'administrator',
-	'labels' => array(
+	'labels'            => array(
 		'check_in_title' => 'Product Check-in',
-	)
+	),
 ) );

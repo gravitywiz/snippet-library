@@ -5,10 +5,10 @@
  *
  * By default, Live Preview will show a login form if a user is not logged in or does
  * not have the permissions to preview a form.
- * 
+ *
  * In some situations, these pages can be indexed by search engines. To remedy this,
  * this snippet redirects to `wp-login.php` instead of showing a login form.
- * 
+ *
  * Installation:
  *  1. Install per https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  */

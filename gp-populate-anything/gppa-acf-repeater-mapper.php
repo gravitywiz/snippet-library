@@ -59,16 +59,16 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 			foreach ( $rows as $row ) {
 				if ( isset( $map['price'] ) ) {
 					$choices[] = array(
-						'value' => rgar( $row, $map['value'] ),
-						'text'  => rgar( $row, $map['label'] ),
-						'price' => rgar( $row, $map['price'] ),
+						'value'           => rgar( $row, $map['value'] ),
+						'text'            => rgar( $row, $map['label'] ),
+						'price'           => rgar( $row, $map['price'] ),
 						'inventory_limit' => rgar( $row, $map['inventory_limit'] ),
 					);
 				} else {
 					$choices[] = array(
-						'value' => rgar( $row, $map['value'] ),
-						'text'  => rgar( $row, $map['label'] ),
-						'inventory_limit'  => rgar( $row, $map['inventory_limit'] ),
+						'value'           => rgar( $row, $map['value'] ),
+						'text'            => rgar( $row, $map['label'] ),
+						'inventory_limit' => rgar( $row, $map['inventory_limit'] ),
 					);
 				}
 			}

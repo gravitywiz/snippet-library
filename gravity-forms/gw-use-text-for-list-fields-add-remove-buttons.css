@@ -5,12 +5,12 @@
  * Screenshot: https://gwiz.io/42a3CCC
  */
 .gform_wrapper.gravity-theme .gfield_list_icons {
-    width: auto;
+	width: auto;
 }
 
 .gform_wrapper.gravity-theme .gfield_list_icons button {
-    background: none !important;
-    width: auto;
-    margin-left: 1rem !important;
-    font-size: 1rem;
+	background: none !important;
+	width: auto;
+	margin-left: 1rem !important;
+	font-size: 1rem;
 }

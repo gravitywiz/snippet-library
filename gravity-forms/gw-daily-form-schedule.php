@@ -59,7 +59,8 @@ function gw_daily_form_schedule( $form ) {
 			if ( ! rgblank( $form['scheduleStart'] ) && $form['scheduleStart'] <= 6 ) {
 
 				$is_interweek = $form['scheduleStart'] > $form['scheduleEnd'];
-				$current_day  = (int) date( 'w' );
+				// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+				$current_day = (int) date( 'w' );
 
 				// If it's a Thursday and the schedule starts on Friday, assume the current schedule is for the previous week.
 				// Pro Tip: In PHP, Monday is the first day of the week.

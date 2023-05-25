@@ -27,16 +27,16 @@ class GPPA_Aggregate_Functions {
 	public static $min_regex = '/{min:(.+)}/';
 	public static $max_regex = '/{max:(.+)}/';
 
-    private static $instance;
+	private static $instance;
 
-    public static function get_instance() {
+	public static function get_instance() {
 
-        if ( ! self::$instance ) {
-            self::$instance = new self;
-        }
+		if ( ! self::$instance ) {
+			self::$instance = new self;
+		}
 
-        return self::$instance;
-    }
+		return self::$instance;
+	}
 
 	public function __construct() {
 
@@ -170,7 +170,7 @@ class GPPA_Aggregate_Functions {
 }
 
 function gppa_aggregate_functions() {
-    return GPPA_Aggregate_Functions::get_instance();
+	return GPPA_Aggregate_Functions::get_instance();
 }
 
 gppa_aggregate_functions();

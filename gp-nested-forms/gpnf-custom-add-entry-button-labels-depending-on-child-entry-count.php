@@ -9,8 +9,8 @@
 // Update "123" to your parent form ID.
 add_filter( 'gpnf_template_args_123', function( $args ) {
 	if ( isset( $args['add_button'] ) ) {
-		$search  = 'data-bind="';
-		$replace = $search . sprintf( 'text: ! entries().length ? `Add First %1$s` : `Add Another %1$s`, ', $args['field']->get_item_label() );
+		$search             = 'data-bind="';
+		$replace            = $search . sprintf( 'text: ! entries().length ? `Add First %1$s` : `Add Another %1$s`, ', $args['field']->get_item_label() );
 		$args['add_button'] = str_replace( $search, $replace, $args['add_button'] );
 	}
 	return $args;

@@ -7,7 +7,7 @@
  *
  * This snippet casts the value to a string before it is sent to Google Sheets, which will preserve the leading 0's.
  *
- * Installation: 
+ * Installation:
  *   1. Install per https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  *   2. Update the FORMID and FIELDID accordingly.
  */
