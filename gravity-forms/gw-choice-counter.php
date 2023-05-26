@@ -7,7 +7,7 @@
  * Get the total number of checkboxes checked or multi-select options selected. Useful when wanting to apply conditional
  * logic based on those totals.
  *
- * @version   1.2
+ * @version   1.3
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/
@@ -41,6 +41,7 @@ class GW_Choice_Count {
 		if ( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
 			add_action( 'wp_footer', array( $this, 'output_script' ) );
 			add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
+			add_action( 'admin_footer', array( $this, 'output_script' ) );
 		}
 
 		return $form;
