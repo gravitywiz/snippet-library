@@ -10,7 +10,7 @@ add_filter( 'gform_merge_tag_data', function( $data, $text, $form ) {
 	foreach ( $form['fields'] as $field ) {
 		if ( gp_media_library()->is_applicable_field( $field ) ) {
 			$key = gp_media_library()->get_file_ids_meta_key( $field->id );
-			if ( isset( $data['entry'][ $key ] ) ) {
+			if ( isset( $data['entry'][ $key ] ) && is_array( $data['entry'][ $key ] ) ) {
 				$data['entry'][ $key ] = implode( ',', $data['entry'][ $key ] );
 			}
 		}
