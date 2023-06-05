@@ -19,7 +19,7 @@ add_filter( 'gpnf_all_entries_nested_entry_markup', function( $markup, $field, $
 	}
 
 	$dom = new DOMDocument();
-	$dom->loadHTML( $markup );
+	$dom->loadHTML( '<?xml encoding="utf-8" ?>' . $markup );
 
 	$first_row  = $dom->getElementsByTagName( 'tr' )->item( 1 );
 	$header_row = clone $first_row;
