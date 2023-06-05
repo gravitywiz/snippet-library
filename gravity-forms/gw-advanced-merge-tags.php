@@ -439,6 +439,10 @@ class GW_Advanced_Merge_Tags {
 					return urlencode( $value );
 				case 'rawurlencode':
 					return rawurlencode( $value );
+				case 'uppercase':
+					return strtoupper( $value );
+				case 'lowercase':
+					return strtolower( $value );
 				case 'mask':
 					if ( GFCommon::is_valid_email( $value ) ) {
 						list( $name, $domain ) = explode( '@', $value );
