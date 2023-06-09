@@ -3,6 +3,12 @@
  * https://gravitywiz.com/documentation/gravity-forms-advanced-save-continue/
  *
  * This snippet allows you to toggle GPASC client side with radio buttons.
+ * 
+ * Instructions:
+ *  1. Add snippet to form using https://gravitywiz.com/gravity-forms-custom-javascript/
+ *  2. Customize formId for the form you want this to apply to.
+ *  3. Customize radioButtonFieldId to the field you want this to apply to.
+ *  4. Customize enableInputId and disableInputId per the comments above each variable.
  */
 
 // change this to match your form ID
