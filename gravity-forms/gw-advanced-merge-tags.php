@@ -36,15 +36,10 @@
  *       In this example, "pid" would be passed via the query string from the contact link and "Bob Smith" would be the
  *       "post_title" of the post the user is coming from.
  *
- * @version 1.2
- * @author  David Smith <david@gravitywiz.com>
- * @license GPL-2.0+
- * @link    https://gravitywiz.com/
- *
  * Plugin Name: Gravity Forms Advanced Merge Tags
  * Plugin URI: https://gravitywiz.com
  * Description: Provides a host of new ways to work with Gravity Forms merge tags.
- * Version: 1.1
+ * Version: 1.3
  * Author: Gravity Wiz
  * Author URI: https://gravitywiz.com/
  */
@@ -443,6 +438,8 @@ class GW_Advanced_Merge_Tags {
 					return strtoupper( $value );
 				case 'lowercase':
 					return strtolower( $value );
+				case 'capitalize':
+					return ucwords( strtolower( $value ) );
 				case 'mask':
 					if ( GFCommon::is_valid_email( $value ) ) {
 						list( $name, $domain ) = explode( '@', $value );
