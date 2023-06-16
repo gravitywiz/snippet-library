@@ -236,15 +236,15 @@ class GF_Field_To_Field_Conditional_Logic {
 			$_is_modifying_rule = false;
 		}
 
-		if ( ! isset( $_rule_cache[ $entry['id'] ] ) ) {
-			$_rule_cache[ $entry['id'] ] = array();
+		if ( ! isset( $_rule_cache[ rgar( $entry, 'id' ) ] ) ) {
+			$_rule_cache[ rgar( $entry, 'id' ) ] = array();
 		}
 
-		if ( isset( $_rule_cache[ $entry['id'] ][ $rule['value'] ] ) ) {
-			$value = $_rule_cache[ $entry['id'] ][ $rule['value'] ];
+		if ( isset( $_rule_cache[ rgar( $entry, 'id' ) ][ $rule['value'] ] ) ) {
+			$value = $_rule_cache[ rgar( $entry, 'id' ) ][ $rule['value'] ];
 		} else {
 			$value = GFCommon::replace_variables( $rule['value'], $form, $entry );
-			$_rule_cache[ $entry['id'] ][ $rule['value'] ] = $value;
+			$_rule_cache[ rgar( $entry, 'id' ) ][ $rule['value'] ] = $value;
 		}
 
 		$rule['value'] = $value;
