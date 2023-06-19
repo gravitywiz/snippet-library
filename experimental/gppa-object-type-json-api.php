@@ -143,6 +143,11 @@ class GPPA_Object_Type_JSON_API extends GPPA_Object_Type {
 	 */
 	public function search( $var, $search_params ) {
 		foreach ( $search_params as $search_group ) {
+			// For GPPA 2.0+, search_group may also read the numeric "limit" value, so skip for non-array values.
+			if ( ! is_array( $search_group ) ) {
+				continue;
+			}
+
 			$matches_group = true;
 
 			foreach ( $search_group as $search ) {
