@@ -99,10 +99,10 @@ class GPNF_Triggered_Population {
 					self.addChildEntry = function() {
 
 						/*
-						 * Prevent duplicate from being added if another valid choice is selected if
-						 * triggerFieldValue is an array
+						 * Prevent duplicate from being added if another valid choice is selected if triggerFieldValue is an array.
+						 * Duplicate check shouldn't flag a different Nested Form trigger instance from getting blocked.
 						 */
-						if ( window.gpnf_triggered_population_entry ) {
+						if ( window.gpnf_triggered_population_entry && window.gpnf_triggered_population_entry.fieldId == self.nestedFormFieldId ) {
 							return;
 						}
 
@@ -172,7 +172,7 @@ class GPNF_Triggered_Population {
 		);
 
 		$script = 'new GPNFTriggeredPopulation( ' . json_encode( $args ) . ' );';
-		$slug   = implode( '_', array( 'gpnf_triggered_population', $this->_args['form_id'], $this->_args['trigger_field_id'] ) );
+		$slug   = implode( '_', array( 'gpnf_triggered_population', $this->_args['form_id'], $this->_args['trigger_field_id'], $this->_args['nested_form_field_id'] ) );
 
 		GFFormDisplay::add_init_script( $this->_args['form_id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
 
