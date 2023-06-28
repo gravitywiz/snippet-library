@@ -76,10 +76,10 @@ class GPNF_Triggered_Population {
 
 						$form = $( '#gform_{0}'.format( self.formId ) );
 
-						$( '#field_{0}_{1}'.format( self.formId, self.triggerFieldId ) ).find( 'input' ).on( 'change', function() {
+						$( '#field_{0}_{1}'.format( self.formId, self.triggerFieldId ) ).find( ':input' ).on( 'change', function() {
 							var input = $( this );
 							var value = input.val();
-							var checked = input[0].checked;
+							var checked = ( input[0].nodeName === 'SELECT' && self.triggerFieldValue === value ) ? true : input[0].checked;
 
 							/*
 							 * Convert trigger field value to array if it's not an array so we can support multiple
