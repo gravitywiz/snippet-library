@@ -150,7 +150,7 @@ class GPECF_Discount_Amounts_by_Field_Value {
 # Configuration
 
 new GPECF_Discount_Amounts_by_Field_Value( array(
-	'form_id'           => 206,
-	'discount_field_id' => 1,
-	'amount_field_id'   => 6,
+	'form_id'           => 123,
+	'discount_field_id' => 4,
+	'amount_field_id'   => 5,
 ) );
