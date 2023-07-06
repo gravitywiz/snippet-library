@@ -14,7 +14,7 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Set a Number field's minimum and maximum range by the values entered in to other fields.
  * Author:       Gravity Wiz
- * Version:      0.2
+ * Version:      0.3
  * Author URI:   http://gravitywiz.com
  */
 class GW_Dynamic_Range {
@@ -147,7 +147,7 @@ class GW_Dynamic_Range {
 						if ( ! self.minFieldId ) {
 							return null;
 						}
-						let min = parseInt( self.$min.val() );
+						let min = gformToNumber( self.$min.val() );
 						return isNaN( min ) ? 0 : min;
 					}
 
@@ -155,7 +155,7 @@ class GW_Dynamic_Range {
 						if ( ! self.maxFieldId ) {
 							return null;
 						}
-						let max = parseInt( self.$max.val() );
+						let max = gformToNumber( self.$max.val() );
 						return isNaN( max ) ? 0 : max;
 					}
 
@@ -214,8 +214,8 @@ class GW_Dynamic_Range {
 
 					self.enforceRange = function( min, max ) {
 
-						let currentValue = self.$target.val();
-						if ( currentValue === '' ) {
+						let currentValue = gformToNumber( self.$target.val() );
+						if ( currentValue === false || currentValue === '' ) {
 							return;
 						}
 
