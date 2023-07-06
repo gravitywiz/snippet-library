@@ -13,7 +13,7 @@ add_filter( 'gpld_limit_dates_options_123_4', function( $field_options, $form, $
         $even_days = array();
 
         while ( $min_date <= $max_date ) {
-            if ( $min_date->format( 'd' ) % 2 === 0 ) {
+            if ( $min_date->format( 'd' ) % 2 !== 0 ) {
                 $even_days[] = $min_date->format( 'm/d/Y' );
             }
             $min_date->modify( '+1 day' );
