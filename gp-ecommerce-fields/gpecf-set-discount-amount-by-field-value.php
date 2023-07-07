@@ -3,7 +3,7 @@
  * Gravity Perks // GP eCommerce Fields // Set Discount Amount by Field Value
  * http://gravitywiz.com/documentation/gravity-forms-ecommerce-fields/
  */
-class GPECF_Discount_Amounts_by_Field_Value {
+class GPECF_Discount_Amounts_By_Field_Value {
 
 	public function __construct( $args = array() ) {
 
@@ -36,10 +36,8 @@ class GPECF_Discount_Amounts_by_Field_Value {
 		}
 
 		foreach ( $form['fields'] as &$field ) {
-
-			// Update "5" to your Discount field ID.
-			if ( $field->id == 1 ) {
-				$field->discountAmount = rgpost( 'input_6' );
+			if ( $field->id == $this->_args['discount_field_id'] ) {
+				$field->discountAmount = rgpost( 'input_' . $this->_args['amount_field_id'] );
 			}
 		}
 
@@ -52,8 +50,12 @@ class GPECF_Discount_Amounts_by_Field_Value {
 			return $order;
 		}
 
-		$discount_field = GFAPI::get_field( $form, 1 );
-		$value          = rgar( $entry, 6 );
+		$discount_field = GFAPI::get_field( $form, $this->_args['discount_field_id'] );
+		$value          = rgar( $entry, $this->_args['amount_field_id'] );
+
+		if ( strpos( $value, '|' ) !== false ) {
+			$value = explode( '|', $value )[0];
+		}
 
 		$discount_field->discountAmount = $value;
 
@@ -101,6 +103,9 @@ class GPECF_Discount_Amounts_by_Field_Value {
 					};
 
 					self.setDiscountAmount = function( value ) {
+						if ( value.indexOf( '|' ) !== -1 ) {
+							value = value.split( '|' )[0];
+						}
 						self.$getInput( self.discountFieldId ).data( 'amount', value );
 					}
 
@@ -149,7 +154,7 @@ class GPECF_Discount_Amounts_by_Field_Value {
 
 # Configuration
 
-new GPECF_Discount_Amounts_by_Field_Value( array(
+new GPECF_Discount_Amounts_By_Field_Value( array(
 	'form_id'           => 123,
 	'discount_field_id' => 4,
 	'amount_field_id'   => 5,
