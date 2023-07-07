@@ -82,7 +82,7 @@ class GW_All_Fields_Template {
 	public function init() {
 
 		add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_merge_tags' ), 9, 7 );
-		add_filter( 'gform_merge_tag_filter', array( $this, 'all_fields_extra_options' ), 11, 6 );
+		add_filter( 'gform_merge_tag_filter', array( $this, 'all_fields_extra_options' ), 21, 6 );
 
 	}
 
