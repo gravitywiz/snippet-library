@@ -8,6 +8,10 @@
  * For example, you could show a list of dates and only show the first three date choices until one of them is sold out.
  * Then, the next available date would be shown when the form is rendered again.
  *
+ * Video Demo
+ * 
+ * https://www.loom.com/share/81fdb1f69e0c4234b7aa21120180e3e8?sid=2e9cc5ec-ba24-46f7-9712-2b0615aba74c
+ *
  * Instructions
  *
  * 1. Install the snippet.
