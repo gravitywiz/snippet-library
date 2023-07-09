@@ -312,7 +312,7 @@ class GW_Multi_File_Merge_Tag {
 
 		$is_valid_form        = ! $this->is_excluded_form( $field['formId'] );
 		$is_matching_field_id = empty( $field_ids ) || in_array( $field->id, $field_ids );
-		$is_file_upload_filed = GFFormsModel::get_input_type( $field ) === 'fileupload';
+		$is_file_upload_filed = in_array( GFFormsModel::get_input_type( $field ), [ 'fileupload', 'image_hopper' ], true );
 		$is_multi             = rgar( $field, 'multipleFiles' );
 
 		return $is_valid_form && $is_matching_field_id && $is_file_upload_filed && $is_multi;
