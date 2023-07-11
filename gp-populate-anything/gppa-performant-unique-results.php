@@ -24,6 +24,9 @@ add_filter( 'gppa_object_type_database_query', function( $query, $args, $db_obje
 
 	if ( $are_all_same ) {
 		$query = str_replace( 'SELECT *', $wpdb->prepare( 'SELECT DISTINCT %i', $order_by ), $query );
+		if ( is_callable( array( $db_object_type, 'set_primary_key_cache' ) ) ) {
+			$db_object_type->set_primary_key_cache( $args['primary_property_value'], $order_by );
+		}
 	}
 
 	return $query;
