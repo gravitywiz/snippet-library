@@ -20,10 +20,18 @@
  *    any Checkbox field to which this should be applied.
  */
 $( '.gw-none-of-the-above' ).each( function() {
-	
+
 	var $field  = $( this );
 	var $last   = $field.find( '.gchoice:last-child input' );
 	var $others = $field.find( 'input' ).not( $last );
+
+	// If "None of the Above" choice is checked by default.
+	if ( $( last ).prop( 'checked' ) ) {
+		var $checkboxes = $field.find( 'input' ).not( $last )
+		$checkboxes
+			.prop( 'checked', false )
+			.prop( 'disabled', true );
+	}
 
 	$last.on( 'click', function() {
 		var $checkboxes = $field.find( 'input' ).not( $( this ) )
