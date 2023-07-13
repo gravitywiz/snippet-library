@@ -26,7 +26,7 @@ $( '.gw-none-of-the-above' ).each( function() {
 	var $others = $field.find( 'input' ).not( $last );
 
 	// If "None of the Above" choice is checked by default.
-	if ( $last[0].checked ) {
+	if ( $( last ).prop( 'checked' ) ) {
 		var $checkboxes = $field.find( 'input' ).not( $last )
 		$checkboxes
 			.prop( 'checked', false )
