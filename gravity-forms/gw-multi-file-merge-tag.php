@@ -13,7 +13,7 @@
  * Plugin URI:   https://gravitywiz.com/customizing-multi-file-merge-tag/
  * Description:  Enhance the merge tag for multi-file upload fields by adding support for outputting markup that corresponds to the uploaded file.
  * Author:       Gravity Wiz
- * Version:      1.8
+ * Version:      1.9
  * Author URI:   https://gravitywiz.com
  */
 class GW_Multi_File_Merge_Tag {
@@ -106,6 +106,11 @@ class GW_Multi_File_Merge_Tag {
 		preg_match_all( '/{[^{]*?:(\d+(\.\d+)?)(:(.*?))?}/mi', $text, $matches, PREG_SET_ORDER );
 
 		foreach ( $matches as $match ) {
+
+			// Ignore the {apc_media:xx} merge tag which handles its own business.
+			if ( str_contains( $match[0], '{apc_media:' ) !== false ) {
+				continue;
+			}
 
 			$input_id = $match[1];
 			$field    = GFFormsModel::get_field( $form, $input_id );
