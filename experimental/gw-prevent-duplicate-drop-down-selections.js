@@ -23,7 +23,6 @@ jQuery(".gfield_ddselect").change(function () {
 	jQuery(".gfield_ddselect").each(function (a) {
 		var parent_el = jQuery(this);
 		jQuery("option", jQuery(this)).each(function (b) {
-			jQuery(this).prop("disabled", false);
 			if (b != 0) {
 				for (c = 0; c < select_num; c++) {
 					if (a != c) {
