@@ -8,6 +8,6 @@
  */
 // Update "123" to your form ID and "4" to your Unique ID field.
 add_filter( 'gpui_unique_id_attributes_123_4', function( $atts ) {
-	$atts['form_id'] = (int) gmdate( 'Y' ) + '0000';
+	$atts['form_id'] = (int) gmdate( 'Y' ) . '0000';
 	return $atts;
 } );
