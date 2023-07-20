@@ -24,7 +24,7 @@ jQuery(".gfield_ddselect").change(function () {
 		var parent_el = jQuery(this);
 		jQuery("option", jQuery(this)).each(function (b) {
 			// With GP Inventory, any Inventory Exhausted choice should remain disabled.
-			if ($(this).attr('class') != 'gpi-disabled') {
+			if (! $(this).hasClass('gpi-disabled')) {
 				jQuery(this).prop("disabled", false);
 			}
 			if (b != 0) {
