@@ -107,6 +107,15 @@ class GPECF_Discount_Amounts_By_Field_Value {
 							value = value.split( '|' )[0];
 						}
 						self.$getInput( self.discountFieldId ).data( 'amount', value );
+						var amount = parseFloat(value, 10);
+						if ( !isNaN( amount ) ) {
+							var currency = new window.Currency(
+								window.gf_global.gf_currency_config
+							);
+
+							var formattedAmount = currency.toMoney(amount);
+							$( '.ginput_discount_' + self.formId + '_' + self.discountFieldId ).html( formattedAmount );
+						}
 					}
 
 					self.$getInput = function( fieldId ) {
