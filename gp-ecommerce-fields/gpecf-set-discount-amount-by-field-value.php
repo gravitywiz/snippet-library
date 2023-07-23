@@ -112,6 +112,8 @@ class GPECF_Discount_Amounts_By_Field_Value {
 							var currency = new window.Currency(
 								window.gf_global.gf_currency_config
 							);
+							amount = amount > 0 ? -1 * amount : amount;
+
 
 							var formattedAmount = currency.toMoney(amount);
 							$( '.ginput_discount_' + self.formId + '_' + self.discountFieldId ).html( formattedAmount );
