@@ -102,6 +102,11 @@ class GPECF_Discount_Amounts_By_Field_Value {
 
 					};
 
+					// Function to convert the formatted amount to a number
+					function convertToNumber(amount) {
+						return parseFloat( amount.replace( /[^\d.-]/g, '' ) );
+					}
+
 					self.setDiscountAmount = function( value ) {
 						if ( value.indexOf( '|' ) !== -1 ) {
 							value = value.split( '|' )[0];
@@ -117,6 +122,12 @@ class GPECF_Discount_Amounts_By_Field_Value {
 
 							var formattedAmount = currency.toMoney(amount);
 							$( '.ginput_discount_' + self.formId + '_' + self.discountFieldId ).html( formattedAmount );
+
+							var total = $( '.ginput_total_' + self.formId ).val();
+							total = convertToNumber(total) +convertToNumber(formattedAmount);
+							total = total < 0 ? 0 : total;
+							var formattedTotal = currency.toMoney(total);
+							$( '.ginput_total_' + self.formId ).val(formattedTotal);
 						}
 					}
 
