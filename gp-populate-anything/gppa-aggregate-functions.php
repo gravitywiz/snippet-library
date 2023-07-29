@@ -57,7 +57,7 @@ class GPPA_Aggregate_Functions {
 	}
 
 	public function enable_query_all_value_objects( $query_all_value_objects, $field, $field_values, $object_type_instance, $filter_groups, $primary_property, $templates ) {
-		return $this->matches_any_merge_tag( $templates['value'] );
+		return $this->matches_any_merge_tag( rgar( $templates, 'value' ) );
 	}
 
 	public function matches_any_merge_tag( $template_value ) {
