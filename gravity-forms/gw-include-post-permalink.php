@@ -12,7 +12,7 @@
  * Plugin URI:   https://gravitywiz.com/include-post-permalink-gravity-forms-confirmation-notification/
  * Description:  Provides a link immediately to preview their newly created post.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      1.0
  * Author URI:   https://gravitywiz.com
  */
 class GWPostPermalink {
@@ -40,18 +40,25 @@ class GWPostPermalink {
 
 	function replace_merge_tag( $text, $form, $entry ) {
 
-		$custom_merge_tag = '{post_permalink}';
-		if ( strpos( $text, $custom_merge_tag ) === false ) {
+		if ( ! preg_match_all( '/{post_permalink(:.+)?}/', $text, $matches ) ) {
 			return $text;
 		}
 
-		$post_id = $this->get_post_id_by_entry( $entry );
-		if ( ! $post_id ) {
-			return $text;
+		foreach ( $matches as $match ) {
+
+			$custom_merge_tag = $match[0];
+
+			$post_id = $this->get_post_id_by_entry( $entry );
+			if ( ! $post_id ) {
+				return $text;
+			}
+
+			$post_permalink = get_permalink( $post_id );
+			$text           = str_replace( $custom_merge_tag, $post_permalink, $text );
+
 		}
 
-		$post_permalink = get_permalink( $post_id );
-		$text           = str_replace( $custom_merge_tag, $post_permalink, $text );
+
 
 		return $text;
 	}
@@ -62,6 +69,14 @@ class GWPostPermalink {
 			$entry_post_ids = gform_get_meta( $entry['id'], gf_advancedpostcreation()->get_slug() . '_post_id' );
 			if ( ! empty( $entry_post_ids ) ) {
 				$post_id = $entry_post_ids[0]['post_id'];
+			} else {
+				$posts = get_posts( array(
+					'meta_key'   => '_' . gf_advancedpostcreation()->get_slug() . '_entry_id',
+					'meta_value' => $entry['id'],
+				) );
+				if ( ! empty( $posts ) ) {
+					$post_id = $posts[0]->ID;
+				}
 			}
 		}
 		return $post_id;
