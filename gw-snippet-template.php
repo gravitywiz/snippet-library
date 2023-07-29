@@ -72,7 +72,7 @@ class GW_JS_Snippet_Template {
 
 		// time for hooks
 		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
-		add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
+		add_action( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
 
 	}
 
