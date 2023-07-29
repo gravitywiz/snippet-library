@@ -14,7 +14,7 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Set a Number field's minimum and maximum range by the values entered in to other fields.
  * Author:       Gravity Wiz
- * Version:      0.3
+ * Version:      0.4
  * Author URI:   http://gravitywiz.com
  */
 class GW_Dynamic_Range {
@@ -39,11 +39,15 @@ class GW_Dynamic_Range {
 		add_filter( 'gform_pre_process', array( $this, 'set_dynamic_range' ), 10, 3 );
 
 		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
-		add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
+		add_action( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
 
 	}
 
 	public function set_dynamic_range( $form, $ajax, $field_values ) {
+
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $form;
+		}
 
 		foreach ( $form['fields'] as &$field ) {
 
