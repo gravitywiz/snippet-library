@@ -17,6 +17,7 @@ var $cbs1 = $( '#input_GFFORMID_1' );
 // Update "2" to your second Checkbox field's ID.
 var $cbs2 = $( '#input_GFFORMID_2' );
 // See video above for instructions on editing exclusions.
+// Note: This uses the choice value not the choice label. When targeting Product Option fields configured as a checkbox, you must include the price (e.g. 'First Choice B|15').
 var exclusions = {
 	// First Checkbox field exclusions.
 	'First Choice A': [ 'First Choice B' ],
