@@ -113,6 +113,9 @@ class GPECF_Discount_Amounts_By_Field_Value {
 							.trigger('change');
 
 						window.gformCalculateTotalPrice(self.formId);
+
+						// Trigger recalculations for formulas
+						$( document ).trigger( 'gform_pre_conditional_logic', [ self.formId] );
 					}
 
 					self.$getInput = function( fieldId ) {
