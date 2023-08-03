@@ -30,8 +30,8 @@ function gspc_allow_subscription_switching_for_product( $product_id, $switch_lin
 		return false;
 	}, 10, 2 );
 
-	add_filter( 'woocommerce_subscriptions_switch_link_text', function ( $text, $item_id, $item ) use ( $switch_link_text ) {
-		if ( $item->get_product_id() != 6 || empty( $switch_link_text ) ) {
+	add_filter( 'woocommerce_subscriptions_switch_link_text', function ( $text, $item_id, $item ) use ( $product_id, $switch_link_text ) {
+		if ( $item->get_product_id() != $product_id || empty( $switch_link_text ) ) {
 			return $text;
 		}
 
