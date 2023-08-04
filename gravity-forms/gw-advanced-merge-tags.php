@@ -174,12 +174,13 @@ class GW_Advanced_Merge_Tags {
 						$args['entry'] = $entry;
 						$value         = $this->get_entry_meta_merge_tag_value( $args );
 						break;
-					case 'callback':
-						$args['callback'] = array_shift( array_keys( $args ) );
-						unset( $args[ $args['callback'] ] );
-						$args['entry'] = $entry;
-						$value         = $this->get_callback_merge_tag_value( $args );
-						break;
+					// @todo: Add a whitelist here that the user can provide when they initialize the class.
+//					case 'callback':
+//						$args['callback'] = array_shift( array_keys( $args ) );
+//						unset( $args[ $args['callback'] ] );
+//						$args['entry'] = $entry;
+//						$value         = $this->get_callback_merge_tag_value( $args );
+//						break;
 				}
 
 				// @todo: figure out if/how to support values that are not strings
