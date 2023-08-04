@@ -39,7 +39,7 @@
  * Plugin Name: Gravity Forms Advanced Merge Tags
  * Plugin URI: https://gravitywiz.com
  * Description: Provides a host of new ways to work with Gravity Forms merge tags.
- * Version: 1.3
+ * Version: 1.4
  * Author: Gravity Wiz
  * Author URI: https://gravitywiz.com/
  */
@@ -165,6 +165,18 @@ class GW_Advanced_Merge_Tags {
 					case 'post_meta':
 					case 'custom_field':
 						$value = $this->get_post_meta_merge_tag_value( $args );
+						break;
+					case 'source_post':
+						if ( empty( $entry ) || ! rgar( $entry, 'id' ) ) {
+							break;
+						}
+						$source_post_id = gform_get_meta( $entry['id'], 'source_post_id' );
+						if ( ! $source_post_id ) {
+							break;
+						}
+						$args['id']   = $source_post_id;
+						$args['prop'] = $args_str;
+						$value        = $this->get_post_merge_tag_value( $args );
 						break;
 					case 'entry':
 						$args['entry'] = $entry;
