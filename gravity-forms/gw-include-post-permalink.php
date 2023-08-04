@@ -12,7 +12,7 @@
  * Plugin URI:   https://gravitywiz.com/include-post-permalink-gravity-forms-confirmation-notification/
  * Description:  Provides a link immediately to preview their newly created post.
  * Author:       Gravity Wiz
- * Version:      1.0
+ * Version:      1.1
  * Author URI:   https://gravitywiz.com
  */
 class GWPostPermalink {
@@ -71,6 +71,7 @@ class GWPostPermalink {
 				$post_id = $entry_post_ids[0]['post_id'];
 			} else {
 				$posts = get_posts( array(
+					'post_type'  => 'any',
 					'meta_key'   => '_' . gf_advancedpostcreation()->get_slug() . '_entry_id',
 					'meta_value' => $entry['id'],
 				) );
