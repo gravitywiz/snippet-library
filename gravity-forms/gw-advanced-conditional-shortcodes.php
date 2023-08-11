@@ -48,6 +48,7 @@ add_filter( 'gform_shortcode_conditional', function( $result, $atts, $content ) 
 			break;
 		} elseif ( $relation == 'all' && ! $is_match ) {
 			$conditional_met = false;
+			break;
 		}
 	}
 
