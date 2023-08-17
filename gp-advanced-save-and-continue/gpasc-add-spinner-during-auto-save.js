@@ -12,7 +12,6 @@
 
 gform.addAction( 'gpasc_auto_save_started', function( formId, gpasc ) {
 	var spinnerTarget = function() {
-		console.log( 'spinner target' );
 		return $( '.gform_save_link' );
 	}
 	gform.addFilter( 'gform_spinner_target_elem', spinnerTarget, 10, 'gpasc_spinner_target_elem' );
