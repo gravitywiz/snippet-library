@@ -9,10 +9,9 @@
  *  1. Add snippet to form using https://gravitywiz.com/gravity-forms-custom-javascript/
  *  2. Profit.
  */
-
 gform.addAction( 'gpasc_auto_save_started', function( formId, gpasc ) {
 	var spinnerTarget = function() {
-		return $( '.gform_save_link' );
+		return $( '.gform_save_link:visible' );
 	}
 	gform.addFilter( 'gform_spinner_target_elem', spinnerTarget, 10, 'gpasc_spinner_target_elem' );
 	gformAddSpinner( formId );
