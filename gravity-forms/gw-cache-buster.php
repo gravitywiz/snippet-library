@@ -212,6 +212,12 @@ class GW_Cache_Buster {
 			$form_id = isset( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : 0;
 		}
 
+		add_filter( 'gpasc_new_draft_form_path', function( $form_path, $form ) {
+			return rgget( 'form_request_origin' )
+				? remove_query_arg( 'gf_token', rgget( 'form_request_origin' ) )
+				: $form_path;
+		}, 10, 2 );
+
 		/**
 		 * Init scripts are output to the footer by default so they are not needed in the AJAX response. Some plugins
 		 * deliberately output inline scripts alongside the form (see Nested Forms' `gpnf_preload_form` filter) but I
