@@ -43,6 +43,7 @@ class GW_Cache_Buster {
 		add_action( 'wp_ajax_nopriv_gfcb_get_form', array( $this, 'ajax_get_form' ) );
 		add_action( 'wp_ajax_gfcb_get_form', array( $this, 'ajax_get_form' ) );
 
+		add_action( 'gform_register_init_scripts', array( $this, 'wrap_perk_scripts_in_gform_post_render' ), 11, 2 );
 	}
 
 	public function shortcode( $markup, $attributes, $content ) {
@@ -228,6 +229,26 @@ class GW_Cache_Buster {
 		gravity_form( $form_id, filter_var( rgar( $atts, 'title', true ), FILTER_VALIDATE_BOOLEAN ), filter_var( rgar( $atts, 'description', true ), FILTER_VALIDATE_BOOLEAN ), false, $field_values, true /* default to true; add support for non-ajax in the future */, rgar( $atts, 'tabindex' ) );
 
 		die();
+	}
+
+	/**
+	 * Since this snippet loads the form via AJAX, we need to wait to run some perk's init scripts until the `gform_post_render`
+	 * event is triggered. Otherwise, the perk's init scripts will run before the form is loaded into the DOM.
+	 */
+	public function wrap_perk_scripts_in_gform_post_render( $form, $is_ajax ) {
+		if ( class_exists( 'GP_Nested_Forms' ) ) {
+			$key    = 'gpnf_init_script_' . GFFormDisplay::ON_PAGE_RENDER;
+			$script = GFFormDisplay::$init_scripts[ $form['id'] ][ $key ]['script'];
+			$script = 'jQuery( document ).on( "gform_post_render", function() { ' . $script . ' } );';
+			GFFormDisplay::$init_scripts[ $form['id'] ][ $key ]['script'] = $script;
+		}
+
+		if ( class_exists( 'GP_Advanced_Save_And_Continue' ) ) {
+			$key    = 'gp_advanced_save_and_continue_' . $form['id'] . '_' . GFFormDisplay::ON_PAGE_RENDER;
+			$script = GFFormDisplay::$init_scripts[ $form['id'] ][ $key ]['script'];
+			$script = 'jQuery( document ).on( "gform_post_render", function() { ' . $script . ';console.log("supp brother....");' . ' } );';
+			GFFormDisplay::$init_scripts[ $form['id'] ][ $key ]['script'] = $script;
+		}
 	}
 
 	/**
