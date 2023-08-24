@@ -236,18 +236,27 @@ class GW_Cache_Buster {
 	 * event is triggered. Otherwise, the perk's init scripts will run before the form is loaded into the DOM.
 	 */
 	public function wrap_perk_scripts_in_gform_post_render( $form, $is_ajax ) {
-		if ( class_exists( 'GP_Nested_Forms' ) ) {
-			$key    = 'gpnf_init_script_' . GFFormDisplay::ON_PAGE_RENDER;
-			$script = GFFormDisplay::$init_scripts[ $form['id'] ][ $key ]['script'];
-			$script = 'jQuery( document ).on( "gform_post_render", function() { ' . $script . ' } );';
-			GFFormDisplay::$init_scripts[ $form['id'] ][ $key ]['script'] = $script;
-		}
+		$perks = array(
+			array(
+				'perk_class' => 'GP_Nested_Forms',
+				'key'        => 'gpnf_init_script_' . GFFormDisplay::ON_PAGE_RENDER,
+			),
+			array(
+				'perk_class' => 'GP_Advanced_Save_And_Continue',
+				'key'        => 'gp_advanced_save_and_continue_' . $form['id'] . '_' . GFFormDisplay::ON_PAGE_RENDER,
+			)
+		);
 
-		if ( class_exists( 'GP_Advanced_Save_And_Continue' ) ) {
-			$key    = 'gp_advanced_save_and_continue_' . $form['id'] . '_' . GFFormDisplay::ON_PAGE_RENDER;
-			$script = GFFormDisplay::$init_scripts[ $form['id'] ][ $key ]['script'];
-			$script = 'jQuery( document ).on( "gform_post_render", function() { ' . $script . ';console.log("supp brother....");' . ' } );';
-			GFFormDisplay::$init_scripts[ $form['id'] ][ $key ]['script'] = $script;
+		foreach ( $perks as $perk ) {
+			$script = rgars( GFFormDisplay::$init_scripts, "{$form['id']}/{$perk['key']}/script" );
+
+			if ( ! class_exists( $perk['perk_class'] ) || ! $script ) {
+				continue;
+			}
+
+			$script = 'jQuery( document ).on( "gform_post_render", function() { ' . $script . ' } );';
+
+			GFFormDisplay::$init_scripts[ $form['id'] ][ $perk['key'] ]['script'] = $script;
 		}
 	}
 
