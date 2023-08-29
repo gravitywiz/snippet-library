@@ -175,6 +175,7 @@ class GW_Cache_Buster {
 					gform.initializeOnLoaded( function() {
 						// Form has been rendered. Trigger post render to initialize scripts.
 						jQuery( document ).trigger( 'gform_post_render', [ formId, 1 ] );
+						gform.utils.trigger({ event: 'gform/postRender', native: false, data: { formId: formId, currentPage: 1 } });} );
 					} );
 				} );
 			} )( jQuery );
@@ -191,10 +192,15 @@ class GW_Cache_Buster {
 
 	public function suppress_default_post_render_event( $form_string, $form, $current_page ) {
 
-		$footer_script_body = "gform.initializeOnLoaded( function() { jQuery(document).trigger('gform_post_render', [{$form['id']}, {$current_page}]) } );";
-		$search             = GFCommon::get_inline_script_tag( $footer_script_body );
+		$searches = array(
+			"gform.initializeOnLoaded( function() { jQuery(document).trigger('gform_post_render', [{$form['id']}, {$current_page}]) } );",
+			"gform.initializeOnLoaded( function() {jQuery(document).trigger('gform_post_render', [{$form['id']}, {$current_page}]);gform.utils.trigger({ event: 'gform/postRender', native: false, data: { formId: {$form['id']}, currentPage: {$current_page} } });} );",
+		);
 
-		$form_string = str_replace( $search, '', $form_string );
+		foreach ( $searches as $search ) {
+			$search      = GFCommon::get_inline_script_tag( $search );
+			$form_string = str_replace( $search, '', $form_string );
+		}
 
 		return $form_string;
 	}
