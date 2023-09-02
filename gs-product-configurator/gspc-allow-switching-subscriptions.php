@@ -1,6 +1,7 @@
 <?php
 /**
  * Gravity Shop // GS Product Configurator // Allow switching subscriptions for products managed by GS Product Configurator
+ * https://gravitywiz.com/documentation/gravity-shop-product-configurator/
  *
  * By default, with WooCommerce Subscriptions, you can only switch subscriptions with products that are either
  * Variable Subscriptions or subscriptions in a Grouped Product.

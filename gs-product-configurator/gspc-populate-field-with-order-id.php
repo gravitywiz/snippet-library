@@ -1,6 +1,7 @@
 <?php
 /**
  * Gravity Shop // GS Product Configurator // Populate Gravity Forms field with WooCommerce Order ID
+ * https://gravitywiz.com/documentation/gravity-shop-product-configurator/
  *
  * Populate fields in a Gravity Form that is linked to a WooCommerce product using GS Product Configurator
  * with the WooCommerce order ID after checking out.
