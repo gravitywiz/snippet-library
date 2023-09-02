@@ -37,7 +37,7 @@ add_action( 'woocommerce_checkout_order_processed', function( $order_id ) {
 			$entry_updated = false;
 
 			foreach ( $form['fields'] as $field ) {
-				$css_classes = empty( $field->cssClass ) ? [] : explode( ' ', $field->cssClass );
+				$css_classes = empty( $field->cssClass ) ? array() : explode( ' ', $field->cssClass );
 
 				if ( ! in_array( $field_css_class, $css_classes, true ) ) {
 					continue;

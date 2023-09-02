@@ -58,8 +58,6 @@ class GWPostPermalink {
 
 		}
 
-
-
 		return $text;
 	}
 

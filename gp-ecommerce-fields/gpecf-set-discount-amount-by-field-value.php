@@ -140,9 +140,9 @@ class GPECF_Discount_Amounts_By_Field_Value {
 		}
 
 		$args = array(
-			'formId'  => $this->_args['form_id'],
+			'formId'          => $this->_args['form_id'],
 			'discountFieldId' => $this->_args['discount_field_id'],
-			'amountFieldId' => $this->_args['amount_field_id'],
+			'amountFieldId'   => $this->_args['amount_field_id'],
 		);
 
 		$script = 'new GPECFSetDiscountByFieldValue( ' . json_encode( $args ) . ' );';

@@ -1,7 +1,7 @@
 <?php
 /**
  * Gravity Perks // GP eCommerce Fields + Gravity Forms Product Add-ons for WooCommerce // Exclude Tax Fields
- * 
+ *
  * Note: See https://gravitywiz.com/documentation/how-do-i-install-a-snippet/ for details on how to install snippets.
  *
  * Normally, GP eCommerce Fields Tax fields will be treated as Gravity Forms products when passed to WC Product Add-ons.

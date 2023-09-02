@@ -121,7 +121,7 @@ class GW_Edit_Products {
 
 					GFAPI::update_entry_field( $entry['id'], $field->id, $subtotal );
 				} elseif ( $field->type === 'discount' ) {
-					$order = GFCommon::get_product_fields( $form, $entry, false );
+					$order    = GFCommon::get_product_fields( $form, $entry, false );
 					$discount = rgars( $order, "products/{$field->id}/price" );
 
 					GFAPI::update_entry_field( $entry['id'], $field->id, $discount );

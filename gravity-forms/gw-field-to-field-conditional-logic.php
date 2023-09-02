@@ -244,7 +244,7 @@ class GF_Field_To_Field_Conditional_Logic {
 		if ( isset( $_rule_cache[ $entry_id ][ $rule['value'] ] ) ) {
 			$value = $_rule_cache[ $entry_id ][ $rule['value'] ];
 		} else {
-			$value = GFCommon::replace_variables( $rule['value'], $form, $entry );
+			$value                                      = GFCommon::replace_variables( $rule['value'], $form, $entry );
 			$_rule_cache[ $entry_id ][ $rule['value'] ] = $value;
 		}
 

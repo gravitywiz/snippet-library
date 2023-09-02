@@ -7,5 +7,5 @@ add_filter( 'gppa_object_type_database_query', function( $query, $args, $gppa_ob
 	// Replace "order_name" with the column name in which you would like to make the search case-sensitive.
 	$search  = "`{$args['primary_property_value']}`.`order_name` = ";
 	$replace = "`{$args['primary_property_value']}`.`order_name` = BINARY ";
-	return str_replace( $search, $replace, $query);
+	return str_replace( $search, $replace, $query );
 }, 10, 3 );

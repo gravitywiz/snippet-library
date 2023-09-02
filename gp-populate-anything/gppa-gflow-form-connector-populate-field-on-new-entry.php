@@ -16,7 +16,7 @@ add_filter( 'gravityflowformconnector_new_entry_form', function( $form ) {
 
 	if ( is_callable( 'gp_populate_anything' ) && $form['id'] == $trigger_form_id ) {
 		add_filter( 'gform_post_add_entry', function( $entry, $form ) use ( $target_field_id ) {
-			$hydrated_field = gp_populate_anything()->populate_field( GFAPI::get_field( $form, $target_field_id ), $form, $entry, $entry );
+			$hydrated_field            = gp_populate_anything()->populate_field( GFAPI::get_field( $form, $target_field_id ), $form, $entry, $entry );
 			$entry[ $target_field_id ] = $hydrated_field['field_value'];
 			GFAPI::update_entry_field( $entry['id'], $target_field_id, $entry[ $target_field_id ] );
 			return $entry;

@@ -2,9 +2,9 @@
 /**
  * Gravity Perks // Nested Forms // Hide Empty Columns in Summary Table
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
- * 
- * Video Instructions: 
- * 
+ *
+ * Video Instructions:
+ *
  * https://www.loom.com/share/84e6d9c5c4334fd79d41e68942fae0d5
  */
 add_filter( 'gp_template_output_nested-entries', function( $markup, $located_template, $load, $args ) {
@@ -33,7 +33,7 @@ add_filter( 'gp_template_output_nested-entries', function( $markup, $located_tem
 
 			<thead>
 			<tr>
-				<?php foreach( $nested_fields as $nested_field  ): ?>
+				<?php foreach ( $nested_fields as $nested_field ) : ?>
 					<th class="gpnf-field-<?php echo $nested_field['id']; ?>" data-bind="visible: window.gpnfHecColumnHasValue( '<?php echo $nested_field['id']; ?>', entries() );">
 						<?php echo GFCommon::get_label( $nested_field ); ?>
 					</th>
@@ -44,7 +44,7 @@ add_filter( 'gp_template_output_nested-entries', function( $markup, $located_tem
 
 			<tbody data-bind="visible: entries().length, foreach: entries">
 			<tr data-bind="attr: { 'data-entryid': id }">
-				<?php foreach( $nested_fields as $nested_field ): ?>
+				<?php foreach ( $nested_fields as $nested_field ) : ?>
 					<td class="gpnf-field" data-bind="html: f<?php echo $nested_field['id']; ?>.label,visible: window.gpnfHecColumnHasValue( '<?php echo $nested_field['id']; ?>', $parent.entries() );">&nbsp;</td>
 				<?php endforeach; ?>
 				<td class="gpnf-row-actions">
@@ -105,7 +105,8 @@ add_filter( 'gp_template_output_nested-entries-detail-simple', function( $markup
 
 			<thead>
 			<tr>
-				<?php foreach ( $nested_fields as $nested_field ) :
+				<?php
+				foreach ( $nested_fields as $nested_field ) :
 					if ( ! gpnf_hec_column_has_value( $nested_field->id, $entries ) ) :
 						continue;
 					endif;

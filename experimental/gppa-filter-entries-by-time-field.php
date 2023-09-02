@@ -2,7 +2,7 @@
 /**
  * Gravity Perks // Populate Anything // Filter Entries by Time Field
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
- * 
+ *
  * Filter entry choices by a Time field on the source form. For example, if your source form is used
  * to collect events, including their start date and time, use this snippet to only populate events
  * that have yet to start in your target form.
