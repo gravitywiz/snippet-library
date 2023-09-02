@@ -5,7 +5,7 @@
     "phpcompatibility/phpcompatibility-wp": "*"
   },
   "scripts": {
-    "lint": "phpcs",
+    "lint": "phpcs -s",
     "lint:fix": "phpcbf"
   },
   "config": {
