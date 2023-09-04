@@ -9,7 +9,7 @@
  * Plugin URI:  https://gravitywiz.com/cache-busting-with-gravity-forms/
  * Description: Bypass your website cache when loading a Gravity Forms form.
  * Author:      Gravity Wiz
- * Version:     0.2
+ * Version:     0.3
  * Author URI:  https://gravitywiz.com
  */
 class GW_Cache_Buster {
@@ -135,17 +135,18 @@ class GW_Cache_Buster {
 			</style>
 		</div>
 		<?php
-		// Store current URL parameters and include them in AJAX call
-		// This preserves dynamic form population
-		$params         = array();
-		$exclude_params = array( 'action', 'form_id', 'atts' ); // Exclude parameters that may clash
-		foreach ( $_GET as $k => $v ) {
-			if ( ! in_array( $k, $exclude_params, true ) ) {
-				$params[ $k ] = sprintf( '%s=%s', $k, $_GET[ $k ] );
-			}
-		}
-		$params = ( count( $params ) > 0 ) ? '&' . join( '&', $params ) : '';
-		$lang   = null;
+		// Include original query parameters (with some exclusions) in the AJAX call to preserve dynamic population via query string.
+		$exclude_params = array( 'action', 'form_id', 'atts' );
+		$ajax_url       = remove_query_arg( $exclude_params, add_query_arg( $_GET, admin_url( 'admin-ajax.php' ) ) );
+		$ajax_url       = add_query_arg(
+			array(
+				'action' => 'gfcb_get_form',
+				'form_id' => $form_id
+			),
+			$ajax_url
+		);
+
+		$lang = null;
 		if ( class_exists( 'Gravity_Forms_Multilingual' ) ) {
 			global $sitepress;
 			$lang = $sitepress->get_current_language();
@@ -154,7 +155,7 @@ class GW_Cache_Buster {
 		<script type="text/javascript">
 			( function ( $ ) {
 				var formId = '<?php echo $form_id; ?>';
-				$.post( '<?php echo admin_url( 'admin-ajax.php' ); ?>?action=gfcb_get_form&form_id=<?php echo $form_id, $params; ?>', {
+				$.post( '<?php echo $ajax_url; ?>', {
 					action: 'gfcb_get_form',
 					form_id: '<?php echo $form_id; ?>',
 					atts: '<?php echo json_encode( $attributes ); ?>',
@@ -175,8 +176,7 @@ class GW_Cache_Buster {
 						// Form has been rendered. Trigger post render to initialize scripts.
 						jQuery( document ).trigger( 'gform_post_render', [ formId, 1 ] );
 					} );
-				} );
-			} ( jQuery ) );
+				} ) ( jQuery);
 		</script>
 
 		<?php
