@@ -176,7 +176,8 @@ class GW_Cache_Buster {
 						// Form has been rendered. Trigger post render to initialize scripts.
 						jQuery( document ).trigger( 'gform_post_render', [ formId, 1 ] );
 					} );
-				} ) ( jQuery);
+				} );
+			} )( jQuery );
 		</script>
 
 		<?php
