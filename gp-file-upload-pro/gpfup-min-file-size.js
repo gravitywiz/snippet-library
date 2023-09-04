@@ -11,14 +11,14 @@
  */
 window.gform.addAction( 'gpfup_before_upload', (formId, fieldId, file, up, gpfupInstance) => {
 	// Specify min size per file in megabytes.
-	var maxTotalSize = 1;
+	var minFileSize = 1;
 		
-	if ( file.size < maxTotalSize * 1000000 ) {
+	if ( file.size < minFileSize * 1000000 ) {
 		file.type = 'application/octet-stream'; // Prevent image processing
 		
 		gpfupInstance.handleFileError( up, file, {
 			code: 'too_little_file',
-			message: 'File size must be at least ' + maxTotalSize + 'MB.',
+			message: 'File size must be at least ' + minFileSize + 'MB.',
 		} );
 		
 		up.stop();
