@@ -140,8 +140,8 @@ class GW_Cache_Buster {
 		$ajax_url       = remove_query_arg( $exclude_params, add_query_arg( $_GET, admin_url( 'admin-ajax.php' ) ) );
 		$ajax_url       = add_query_arg(
 			array(
-				'action' => 'gfcb_get_form',
-				'form_id' => $form_id
+				'action'  => 'gfcb_get_form',
+				'form_id' => $form_id,
 			),
 			$ajax_url
 		);
