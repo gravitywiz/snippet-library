@@ -12,8 +12,8 @@ add_filter( 'gpep_target_field_value_2_1', function( $field_value, $form_id, $ta
 	static $possible_gpep_field_values = array();
 
 	// if current value is not empty, add to the static array
-	if ( ! empty( $field_value) ) {
-		array_push( $possible_gpep_field_values, $field_value );
+	if ( ! empty( $field_value ) ) {
+		$possible_gpep_field_values[] = $field_value;
 	} else {
 		// if current value is empty, try to restore the last added value
 		if ( ! empty( $possible_gpep_field_values ) ) {
