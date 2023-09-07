@@ -5,7 +5,7 @@
  */
 add_action( 'gravityview/edit_entry/after_update', function( $form, $entry_id ) {
 	// Update "123" to your form ID.
-	if ( $form == 123 ) {
+	if ( $form['id'] == 123 ) {
 		/** @var $uid_field \GF_Field_Unique_ID */
 		// Update "4" to your Unique ID field ID.
 		$uid_field = GFAPI::get_field( $form['id'], 4 );
