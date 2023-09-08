@@ -1,5 +1,9 @@
 <?php
 /**
+ * WARNING! THIS SNIPPET IS DEPRECATED. 🚧
+ * Nested Forms' sessions are now page-specific by default as of version 1.1.35.
+ */
+/**
  * Gravity Perks // Nested Forms // Create Unique Sessions Per Page
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
