@@ -32,7 +32,7 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 		// time for hooks
 		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
 		add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 5, 2 );
-		add_filter( 'gform_validation_' . $this->_args['parent_form_id'], array( $this, 'validate' ) );
+		add_filter( 'gform_validation_' . $this->_args['parent_form_id'], array( $this, 'validate' ), 15, 1 );
 
 	}
 
