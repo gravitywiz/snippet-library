@@ -3,7 +3,7 @@
  * Gravity Perks // Easy Passthrough // Update Other Entry on Submission
  * https://gravitywiz.com/documentation/gravity-forms-easy-passthrough/
  * 
- * Instruction Video: Coming soon...
+ * Instruction Video: https://www.loom.com/share/65fad5b264e640ab94dca058d6ba83f4
  * 
  * Update a field value of an entry on Form A when Form B is submitted based on populated
  * Easy Passthrough token.
@@ -11,6 +11,11 @@
  * This technique provides a secure way to allow users to modify specific information on a previous
  * entry without exposing an entry ID. Exposing the entry ID can be a security risk as it is highly
  * predictable, potentially allowing bad actors to act on entries that do not belong to them.
+ *
+ * Note: this is very similar to our [GPEP Edit Entry](https://gravitywiz.com/edit-gravity-forms-entries-on-the-front-end/)
+ * snippet. The key difference is the GPEP Edit Entry snippet is intended to update entries using the
+ * same form that they were submitted from, while this snippet is intended to provide a more surgical
+ * approach, updating only specific values on the original entry based on the submission of a separate form.
  *
  * Instructions
  *
