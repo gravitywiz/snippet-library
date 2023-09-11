@@ -12,13 +12,15 @@
  * 2. Configure per the inline instructions.
  */
 // Update "4" to your Multi Select field ID.
-let $target = $( '#input_GFFORMID_4' );
+let targetFieldId = 4;
+
 let $button = $( '<button type="button" style="margin-top: 1rem;">Select All</button>' );
+let $target = $( '#input_GFFORMID_' + targetFieldId );
 
 $target.parents( '.ginput_container' ).append( $button );
 
 $button.on( 'click', function() {
 	$target.find( 'option' ).prop( 'selected', true );
-	window.GPAdvancedSelect_346_1.sync();
+	window[ 'GPAdvancedSelect_GFFORMID_' + targetFieldId ].sync();
 	$target.trigger( 'change' );
 } );
