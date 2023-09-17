@@ -22,7 +22,6 @@
  */
 class GPPA_Aggregate_Functions {
 
-	public static $default_count_regex = '/{count}/';
 	public static $sum_regex = '/{sum:(.+)}/';
 	public static $avg_regex = '/{avg:(.+)}/';
 	public static $min_regex = '/{min:(.+)}/';
@@ -57,15 +56,14 @@ class GPPA_Aggregate_Functions {
 
 	}
 
-	public function enable_query_all_value_objects( $query_all_value_objects, $field, $field_values, $object_type_instance, $filter_groups, $primary_property, $templates ) {
-		return $this->matches_any_merge_tag( rgar( $templates, 'value' ) );
+	public function enable_query_all_value_objects( $should_query_all, $field, $field_values, $object_type_instance, $filter_groups, $primary_property, $templates ) {
+		return $should_query_all || $this->matches_any_merge_tag( rgar( $templates, 'value' ) );
 	}
 
 	// The count function normally has "query all value objects" enabled, but this function overrides that.
 	// We need to specify that count has to have "query all value objects" enabled to avoid breaking it.
 	public function matches_any_merge_tag( $template_value ) {
-		return preg_match( self::$default_count_regex, $template_value ) ||
-			preg_match( self::$sum_regex, $template_value ) ||
+		return preg_match( self::$sum_regex, $template_value ) ||
 			preg_match( self::$avg_regex, $template_value ) ||
 			preg_match( self::$min_regex, $template_value ) ||
 			preg_match( self::$max_regex, $template_value );
