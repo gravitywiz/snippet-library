@@ -6,15 +6,14 @@
  * 
  * Instructions:
  *  1. Add snippet to form using https://gravitywiz.com/gravity-forms-custom-javascript/
- *  2. Customize formId for the form you want this to apply to.
- *  3. Customize radioButtonFieldId to the field you want this to apply to.
- *  4. Customize enableInputId and disableInputId per the comments above each variable.
+ *  2. Customize radioButtonFieldId to the field you want this to apply to.
+ *  3. Customize enableInputId and disableInputId per the comments above each variable.
  */
 
 // change this to match your form ID
-var formId = 1;
+var formId = GFFORMID;
 // change this to match the radio button field you'd like to use to control this
-var radioButtonFieldId = 2;
+var radioButtonFieldId = 1;
 // change this to match the radio button input ID you'd like to use to enable GPASC
 var enableInputId = 0;
 // change this to match the radio button input ID you'd like to use to disable GPASC
@@ -36,12 +35,9 @@ function disableGPASC() {
   }
 }
 
-var enabledRadioButton = $(enabledSelector)[0];
-var disabledRadioButton = $(disabledSelector)[0];
-
-if (enabledRadioButton && enabledRadioButton.checked ) {
+if ($(enabledSelector).prop('checked')) {
 	enableGPASC()
-} else if (disabledRadioButton && disabledRadioButton.checked) {
+} else if ($(disabledSelector).prop('checked')) {
 	disableGPASC();
 }
 
