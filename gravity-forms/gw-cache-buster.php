@@ -140,8 +140,9 @@ class GW_Cache_Buster {
 		$ajax_url       = remove_query_arg( $exclude_params, add_query_arg( $_GET, admin_url( 'admin-ajax.php' ) ) );
 		$ajax_url       = add_query_arg(
 			array(
-				'action'  => 'gfcb_get_form',
-				'form_id' => $form_id,
+				'action'              => 'gfcb_get_form',
+				'form_id'             => $form_id,
+				'form_request_origin' => rawurlencode( $_SERVER['REQUEST_URI'] ),
 			),
 			$ajax_url
 		);
@@ -175,7 +176,7 @@ class GW_Cache_Buster {
 					gform.initializeOnLoaded( function() {
 						// Form has been rendered. Trigger post render to initialize scripts.
 						jQuery( document ).trigger( 'gform_post_render', [ formId, 1 ] );
-						gform.utils.trigger({ event: 'gform/postRender', native: false, data: { formId: formId, currentPage: 1 } });} );
+						gform.utils.trigger({ event: 'gform/postRender', native: false, data: { formId: formId, currentPage: 1 } });
 					} );
 				} );
 			} )( jQuery );
