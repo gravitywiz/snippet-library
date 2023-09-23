@@ -241,6 +241,18 @@ class GW_Dynamic_Range {
 
 					}
 
+					// For dynamically populated Min-Max Fields
+					$( document ).on( 'gppa_updated_batch_fields', function( e, formId, updatedFieldIDs ) {
+						if ( parseInt( formId ) !== self.formId ) {
+							return;
+						}
+
+						// Re-init if min or max fields are updated via GP Populate Anything
+						if ( $.inArray( String( self.minFieldId ), updatedFieldIDs ) !== -1 || $.inArray( String( self.maxFieldId ), updatedFieldIDs ) !== -1 ) {
+							self.init();
+						}
+					} );
+
 					self.init();
 
 				}
