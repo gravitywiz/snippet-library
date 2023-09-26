@@ -10,7 +10,7 @@
  * your field to target the desired post and then add each option manually based on its post meta key.
  */
 // Update "123" to your form ID and "4" to your field ID.
-add_filter( 'gppa_input_choices_386_4', function( $choices, $field, $objects ) {
+add_filter( 'gppa_input_choices_123_4', function( $choices, $field, $objects ) {
 
 	$choices = array();
 
