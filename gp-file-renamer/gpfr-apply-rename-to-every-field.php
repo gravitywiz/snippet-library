@@ -13,3 +13,20 @@
 add_filter( 'gpfr_is_applicable_field', function ( $should_apply_gpfr, $form, $field ) {
 	return true;
 }, 10, 3 );
+
+
+/**
+ * It is recommended to also register a filter callback for `gpfr_filename_template` to ensure that
+ * any file upload fields without a template set in the form settings will still get a valid template.
+ *
+ * Without inlcuding this, any file upload fields without a template set will automatically assume that the
+ * intended file name is an empty string which will likely cause unintended behavior.
+ */
+add_filter( 'gpfr_filename_template', function( $template, $file, $form, $field, $entry ) {
+	// if no template is set for this field, default to storing each file in a directory name by the entry id.
+	if ( empty( $template ) ) {
+		return '{entry_id}/{filename}';
+	}
+
+	return $template;
+}, 10, 5 );
