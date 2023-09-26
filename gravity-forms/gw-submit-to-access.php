@@ -57,6 +57,7 @@ class GW_Submit_Access {
 
 		add_action( 'gform_pre_submission', array( $this, 'add_submitted_form' ) );
 		add_filter( 'the_content', array( $this, 'maybe_hide_the_content' ) );
+		add_filter( 'elementor/frontend/the_content', array( $this, 'maybe_hide_the_content' ) );
 
 		add_action( 'wp_ajax_gwas_get_content', array( $this, 'ajax_get_content' ) );
 		add_action( 'wp_ajax_nopriv_gwas_get_content', array( $this, 'ajax_get_content' ) );
@@ -138,6 +139,12 @@ class GW_Submit_Access {
 	public function maybe_hide_the_content( $content ) {
 		global $post;
 
+		// Prevent a re-render of hidden content with Elementor.
+		static $render_once = false;
+		if ( $render_once ) {
+			return '';
+		}
+
 		if ( ! $this->requires_access( $post->ID ) ) {
 			return $content;
 		}
@@ -148,6 +155,7 @@ class GW_Submit_Access {
 			$content = $this->get_requires_submission_message( $post->ID );
 		}
 
+		$render_once = true;
 		return $content;
 	}
 
