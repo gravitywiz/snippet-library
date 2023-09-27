@@ -21,9 +21,10 @@ add_filter( 'gform_field_value_gpnf_parent_entry_id', function( $value, $field )
 		} else {
 			// The first time the parent form loads there will be no cookie. Create a hash and set it as the default
 			// hash for this cookie created for this form.
-			$value = $session->make_hashcode();
+			$value = $session->get_runtime_hashcode();
 			add_filter( "gpnf_session_script_data_{$field->formId}", function( $data ) use ( $value ) {
 				$data['hash'] = $value;
+				return $data;
 			} );
 		}
 	}
