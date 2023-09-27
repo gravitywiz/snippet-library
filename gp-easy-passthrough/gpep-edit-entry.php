@@ -106,6 +106,9 @@ class GPEP_Edit_Entry {
 				$session[ gp_easy_passthrough()->get_slug() . '_' . $form['id'] ] = null;
 				remove_action( 'gform_after_submission', array( gp_easy_passthrough(), 'store_entry_id' ) );
 			}
+			// If updating the entry, make sure to restart the Gravity Flow Workflow.
+			$api = new Gravity_Flow_API( $form['id'] );
+			$api->restart_workflow( GFAPI::get_entry( $update_entry_id ) );
 			return $update_entry_id;
 		}
 
