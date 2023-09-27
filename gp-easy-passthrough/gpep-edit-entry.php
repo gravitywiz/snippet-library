@@ -24,9 +24,10 @@ class GPEP_Edit_Entry {
 			return;
 		}
 
-		$this->form_id        = rgar( $options, 'form_id' );
-		$this->delete_partial = rgar( $options, 'delete_partial', true );
-		$this->refresh_token  = rgar( $options, 'refresh_token', false );
+		$this->form_id           = rgar( $options, 'form_id' );
+		$this->delete_partial    = rgar( $options, 'delete_partial', true );
+		$this->refresh_token     = rgar( $options, 'refresh_token', false );
+		$this->restart_workflow  = rgar( $options, 'restart_workflow', false );
 
 		add_filter( "gpep_form_{$this->form_id}", array( $this, 'capture_passed_through_entry_ids' ), 10, 3 );
 		add_filter( "gform_entry_id_pre_save_lead_{$this->form_id}", array( $this, 'update_entry_id' ), 10, 2 );
