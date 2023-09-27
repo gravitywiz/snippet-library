@@ -106,9 +106,11 @@ class GPEP_Edit_Entry {
 				$session[ gp_easy_passthrough()->get_slug() . '_' . $form['id'] ] = null;
 				remove_action( 'gform_after_submission', array( gp_easy_passthrough(), 'store_entry_id' ) );
 			}
-			// If updating the entry, make sure to restart the Gravity Flow Workflow.
-			$api = new Gravity_Flow_API( $form['id'] );
-			$api->restart_workflow( GFAPI::get_entry( $update_entry_id ) );
+			if ( $this->restart_workflow ) {
+				// If updating the entry, make sure to restart the Gravity Flow Workflow.
+				$api = new Gravity_Flow_API( $form['id'] );
+				$api->restart_workflow( GFAPI::get_entry( $update_entry_id ) );
+			}
 			return $update_entry_id;
 		}
 
@@ -190,4 +192,5 @@ new GPEP_Edit_Entry( array(
 	'form_id'        => 123,   // Set this to the form ID.
 	'delete_partial' => false, // Set this to false if you wish to preserve partial entries after an edit is submitted.
 	'refresh_token'  => true,  // Set this to true to generate a fresh Easy Passthrough token after updating an entry.
+	'restart_workflow' => true, // Set this to true to restart the workflow
 ) );
