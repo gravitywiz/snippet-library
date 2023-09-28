@@ -1,6 +1,10 @@
 /**
  * Gravity Perks // GP Address Autocomplete // Set Marker From Dynamic Address Field Input
  * https://gravitywiz.com/documentation/gravity-forms-address-autocomplete
+ * 
+ * Minimum Requirements:
+ *
+ * GP Address Autocomplete: 1.2.16
  *
  * Instructions:
  *     1. Install our free Custom JavaScript for Gravity Forms plugin.
