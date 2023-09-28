@@ -24,7 +24,7 @@
 		 var i = 1;
 		 while (i < 7) {
 			 var nextPart = jQuery(
-				 `#input_GFFORMID_${addressFieldId}_${i}`
+				['#input_GFFORMID', addressFieldId, i].join('_')
 			 ).val();
  
 			 if (nextPart) {
