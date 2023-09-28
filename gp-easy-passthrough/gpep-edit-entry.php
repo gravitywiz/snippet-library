@@ -193,5 +193,5 @@ new GPEP_Edit_Entry( array(
 	'form_id'          => 123,   // Set this to the form ID.
 	'delete_partial'   => false, // Set this to false if you wish to preserve partial entries after an edit is submitted.
 	'refresh_token'    => true,  // Set this to true to generate a fresh Easy Passthrough token after updating an entry.
-	'restart_workflow' => true,  // Set this to true to restart the workflow.
+	'restart_workflow' => true,  // Set this to true to restart the Gravity Flow workflow.
 ) );
