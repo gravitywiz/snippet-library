@@ -108,7 +108,7 @@ class GPEP_Edit_Entry {
 				remove_action( 'gform_after_submission', array( gp_easy_passthrough(), 'store_entry_id' ) );
 			}
 			// If restart workflow is enabled.
-			if ( $this->restart_workflow ) {
+			if ( $this->restart_workflow && class_exists( 'Gravity_Flow_API' ) ) {
 				$api = new Gravity_Flow_API( $form['id'] );
 				$api->restart_workflow( GFAPI::get_entry( $update_entry_id ) );
 			}
