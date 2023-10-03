@@ -47,7 +47,7 @@ function gwDisableDuplicates( $elem, $group, selected ) {
 	}
 
 	let value     = $elem.val();
-	let $targets  = $group.not( $elem ).not( '.gplc-disabled' ).not( '.gpi-disabled' );
+	let $targets  = $group.not( $elem ).not( '.gplc-disabled' ).not( '.gpi-disabled' ).not( '.gf_placeholder' );
 	let isChecked = $elem.is( ':checked' );
 
 	// We use this to instruct Gravity Forms not to re-enable disabled duplicate options when
