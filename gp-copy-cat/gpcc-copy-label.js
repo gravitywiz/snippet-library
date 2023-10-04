@@ -8,7 +8,7 @@
 * Use this snippet to copy the label instead of the value.
 *
 * Instructions:
-* 1. Install our free Custom Javascript for Gravity Forms plugin. 
+* 1. Install our free Custom Javascript for Gravity Forms plugin.
 *    Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
 * 2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
 */
@@ -16,8 +16,18 @@ gform.addFilter( 'gppc_copied_value', function( value, $elem, data ) {
     $source = jQuery( '#input_' + data.sourceFormId + '_' + data.source );
     if( $source.is( 'select' ) ) {
         value = $source.find( 'option:selected' ).text();
-    }  else if( $source.is( '.gfield_radio' ) ) {
+    } else if( $source.is( '.gfield_radio' ) ) {
         value = $( '.gfield-choice-input:checked + label' ).text();
+	} else if ( $source.is( '.gfield_checkbox') ) {
+		// Since multiple checkboxes maybe selected, make sure individual checkbox values do not have whitespaces.
+		values = value.split( ' ' );
+		var labelArray = [];
+		values.forEach( function ( value ) {
+			$input = $( 'input[value="' + value + '"]' );
+			var labelElement = $( 'label[for="' + $input.attr( 'id' ) + '"]' );
+			labelArray.push( labelElement.text() );
+		});
+		value = labelArray.join( ' ' );
 	}
     return value;
 } );
