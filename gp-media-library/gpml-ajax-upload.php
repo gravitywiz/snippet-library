@@ -11,7 +11,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-media-library/
  * Description:  Upload images to the Media Library as they are uploaded via the Gravity Forms Multi-file Upload field.
  * Author:       Gravity Wiz
- * Version:      0.13
+ * Version:      0.14
  * Author URI:   https://gravitywiz.com/
  */
 class GPML_Ajax_Upload {
@@ -64,6 +64,16 @@ class GPML_Ajax_Upload {
 		if ( is_wp_error( $id ) ) {
 			return;
 		}
+
+		/**
+		 * Fires after a file has been uploaded to the Media Library via AJAX.
+		 *
+		 * @param array               $id                Array of file IDs.
+		 * @param GF_Field_FileUpload $field             The File Upload field object.
+		 *
+		 * @since 0.14
+		 */
+		do_action( 'gpmlau_after_upload', $id, $field );
 
 		$key = sprintf( 'gpml_ids_%s', $field_uid );
 
