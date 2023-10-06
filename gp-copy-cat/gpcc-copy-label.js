@@ -13,21 +13,19 @@
 * 2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
 */
 gform.addFilter( 'gppc_copied_value', function( value, $elem, data ) {
-    $source = jQuery( '#input_' + data.sourceFormId + '_' + data.source );
-    if( $source.is( 'select' ) ) {
-        value = $source.find( 'option:selected' ).text();
-    } else if( $source.is( '.gfield_radio' ) ) {
-        value = $( '.gfield-choice-input:checked + label' ).text();
+	$source = jQuery( '#input_' + data.sourceFormId + '_' + data.source );
+	if( $source.is( 'select' ) ) {
+		value = $source.find( 'option:selected' ).text();
+	} else if( $source.is( '.gfield_radio' ) ) {
+		value = $( '.gfield-choice-input:checked + label' ).text();
 	} else if ( $source.is( '.gfield_checkbox') ) {
-		// Since multiple checkboxes maybe selected, make sure individual checkbox values do not have whitespaces.
-		values = value.split( ' ' );
-		var labelArray = [];
-		values.forEach( function ( value ) {
-			$input = $( 'input[value="' + value + '"]' );
-			var labelElement = $( 'label[for="' + $input.attr( 'id' ) + '"]' );
-			labelArray.push( labelElement.text() );
+		$inputs= $source.find( 'input:checked' );
+		var checkedLabels = [];
+		$inputs.each( function () {
+			var label = $(this).next('label').text();
+			checkedLabels.push( label );
 		});
-		value = labelArray.join( ' ' );
+		value = checkedLabels.join(' ');
 	}
-    return value;
+	return value;
 } );
