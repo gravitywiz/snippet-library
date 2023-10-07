@@ -18,13 +18,11 @@
  * Author URI:  http://gravitywiz.com
  */
 class GFRandomFields {
-
 	public $all_random_field_ids;
 	public $display_count;
 	public $selected_field_ids = array();
 	public $preserve_order;
 	public $restructure_pages;
-
 	public function __construct( $form_id, $display_count = 5, $random_field_ids = false, $preserve_order = false, $restructure_pages = true ) {
 
 		$this->_form_id             = (int) $form_id;
@@ -94,11 +92,13 @@ class GFRandomFields {
 			}
 		}
 
-		if ( $this->restructure_pages ) {
+		if ( $this->restructure_pages && GFCommon::has_pages( $form ) ) {
 			$filtered_fields = $this->handle_pagination( $filtered_fields, $form );
 		}
 
-		if ( ! $this->preserve_order ) {
+		// @todo Fix issue where randomized order is not preserved on subsequent form renders (e.g. pages, validation errors).
+		//       For now, let's preserve field order for paginated forms.
+		if ( ! $this->preserve_order && ( ! $this->restructure_pages || ! GFCommon::has_pages( $form ) ) ) {
 
 			$reordered_fields = array();
 			$random_index_key = $random_indexes;
@@ -126,13 +126,6 @@ class GFRandomFields {
 
 	public function handle_pagination( $filtered_fields, $form ) {
 
-		$pages = array();
-		foreach ( $form['fields'] as $field ) {
-			if ( $field->type === 'page' ) {
-				$pages[] = $field;
-			}
-		}
-
 		// Remove Section fields if they are the only fields left on a page after randomization.
 		foreach ( $filtered_fields as $index => $field ) {
 			if ( $field->type === 'section' && $this->is_only_field_on_page( $filtered_fields, $field ) ) {
@@ -153,7 +146,7 @@ class GFRandomFields {
 		foreach ( $page_numbers as $new_page_number => $old_page_number ) {
 
 			// $pages is still a 0-based indexed array; subtract 2 from the old page number to find the right page.
-			$page = rgar( $pages, $old_page_number - 2 );
+			$page = $this->get_page_by_page_number( $form, $old_page_number );
 			if ( ! $page ) {
 				continue;
 			}
