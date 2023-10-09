@@ -22,6 +22,8 @@ class GPML_Ajax_Upload {
 			'default_entry_id' => 1,
 		) );
 
+		$this->form_id = rgar( $args, 'form_id' );
+
 		add_action( 'init', array( $this, 'init' ), 11 );
 
 	}
@@ -43,15 +45,23 @@ class GPML_Ajax_Upload {
 
 	}
 
+	public function is_applicable_form( $form ) {
+		return empty( $this->form_id ) || (int) rgar( $form, 'id' ) === (int) $this->form_id;
+	}
+
 	public function gpml_gflow_next_step( $step, $current_step, $entry, $steps ) {
 		$form = GFAPI::get_form( $entry['form_id'] );
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $step;
+		}
+
 		$this->update_entry_field_values( $entry, $form );
 		return $step;
 	}
 
 	public function upload( $form, $field, $uploaded_filename, $tmp_file_name, $file_path ) {
 
-		if ( ! gp_media_library()->is_applicable_field( $field ) ) {
+		if ( ! gp_media_library()->is_applicable_field( $field ) || ! $this->is_applicable_form( $form ) ) {
 			return;
 		}
 
@@ -106,6 +116,10 @@ class GPML_Ajax_Upload {
 
 	public function update_entry_field_values( $entry, $form ) {
 
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $entry;
+		}
+
 		foreach ( $form['fields'] as $field ) {
 
 			if ( $field->get_input_type() != 'fileupload' || ! $field->multipleFiles ) {
@@ -151,5 +165,11 @@ class GPML_Ajax_Upload {
 }
 
 # Configuration
-
+// Apply to All Forms.
 new GPML_Ajax_Upload();
+
+// Apply to A Specific Form.
+new GPML_Ajax_Upload( array(
+		'form_id' => 292,
+	)
+);
