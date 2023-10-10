@@ -19,7 +19,7 @@ gform.addFilter( 'gppc_copied_value', function( value, $elem, data ) {
 	} else if( $source.is( '.gfield_radio' ) ) {
 		value = $( '.gfield-choice-input:checked + label' ).text();
 	} else if ( $source.is( '.gfield_checkbox') ) {
-		$inputs= $source.find( 'input:checked' );
+		$inputs = $source.find( 'input:checked' );
 		var checkedLabels = [];
 		$inputs.each( function () {
 			var label = $(this).next('label').text();
