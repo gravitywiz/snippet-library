@@ -14,27 +14,18 @@ add_action( 'init', function() {
      * without interfering with the Phone field's default UX.
 	 */
 	add_filter( 'gform_field_validation', function( $result, $value, $form, $field ) {
-		if ( $field->get_input_type() === 'phone' && $field->phoneFormat === 'standard' && ! $field->gpapfEnable ) {
-	        $field->gpapfEnable = true;
-            // GPAPF unsets the `phoneFormat` to avoid format-specific validation messages. We need to store the original
-            // format and reset it after GPAFP's validation. Unfortunately, since we need GF to initialize its input mask
-            // based on the `phoneFormat`, we have to allow it to output its format-specific validation message. Which we
-            // remove via DOM manipulation below.
-            $field->origPhoneFormat = $field->phoneFormat;
+		if ( $field->get_input_type() === 'phone'
+		     && $field->phoneFormat === 'standard'
+		     && ! $field->gpapfEnable
+		     && ! rgblank( $value )
+		) {
+			$cloned_field              = clone $field;
+			$cloned_field->gpapfEnable = true;
+			$parsed_phone_number       = '+1' . preg_replace( '/[^0-9]/', '', $value );
+			$result                    = gp_advanced_phone_field()->validation( $result, $parsed_phone_number, $form, $cloned_field );
         }
 		return $result;
-	}, 9, 4 );
-
-	/**
-	 * Disable GPAPF after validation so that it does not interfere with the default Phone field's input mask.
-	 */
-	add_filter( 'gform_field_validation', function( $result, $value, $form, $field ) {
-		if ( $field->origPhoneFormat ) {
-			$field->gpapfEnable = false;
-			$field->phoneFormat = $field->origPhoneFormat;
-		}
-		return $result;
-	}, 11, 4 );
+	}, 10, 4 );
 
 	/**
 	 * Remove the format-specific validation message that is added by Gravity Forms when a Phone field is marked as having
@@ -42,7 +33,7 @@ add_action( 'init', function() {
 	 */
     add_filter( 'gform_field_content', function( $content, $field ) {
 
-	    if ( $field->get_input_type() !== 'phone' || $field->phoneFormat !== 'standard' || $field->gpapfEnable ) {
+	    if ( $field->is_form_editor() || $field->get_input_type() !== 'phone' || $field->phoneFormat !== 'standard' || $field->gpapfEnable ) {
             return $content;
         }
 
