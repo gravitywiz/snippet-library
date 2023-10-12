@@ -48,6 +48,7 @@ class GW_Quantity_Decimal {
 			add_filter( 'gform_field_input', array( $this, 'modify_quantity_input_tag' ), 10, 5 );
 		}
 
+		add_filter( 'gform_field_content', array( $this, 'fix_content' ), 10, 5 );
 	}
 
 	function allow_quantity_float( $result, $value, $form, $field ) {
@@ -85,6 +86,11 @@ class GW_Quantity_Decimal {
 		$markup  = str_replace( $search, $replace, $markup );
 
 		return $markup;
+	}
+
+	function fix_content( $content, $field, $value, $lead_id, $form_id ) {
+		// ensure the quantity min attribute.
+		return preg_replace( '/\smin=["\']0["\']/', 'min="0" step="any"', $content );
 	}
 
 	function get_field_input( $field, $value, $form ) {
