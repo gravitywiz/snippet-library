@@ -193,10 +193,16 @@ class GFRandomFields {
 	 * @return int|mixed
 	 */
 	public function modify_target_page( $page_number, $form, $current_page ) {
-		// For a single page form, no need to modify target page.
-		if ( GFFormDisplay::get_max_page_number( $form ) === 0 ) {
+
+		// Ensure no repeat processing
+		static $_processing = false;
+
+		// If already processed; or for a single page form, no need to modify target page.
+		if ( $_processing || GFFormDisplay::get_max_page_number( $form ) === 0 ) {
 			return $page_number;
 		}
+
+		$_processing = true;
 
 		$page_number = intval( $page_number );
 		$form        = $this->pre_render( $form );
