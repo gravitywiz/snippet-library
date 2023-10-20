@@ -165,11 +165,10 @@ class GPML_Ajax_Upload {
 }
 
 # Configuration
-// Apply to All Forms.
+
 new GPML_Ajax_Upload();
 
-// Apply to A Specific Form.
-new GPML_Ajax_Upload( array(
-		'form_id' => 292,
-	)
-);
+# Apply to a specific Form.
+// new GPML_Ajax_Upload( array(
+// 	'form_id' => 292,
+// ) );
