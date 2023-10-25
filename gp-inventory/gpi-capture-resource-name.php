@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // Inventory // Capture Resource Name (as Field Value)
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
+ * 
+ * Instruction Video: https://www.loom.com/share/064577f9491a487d84e6bb594d3fd578
  *
  * If you intend to map different Resources to different fields throughout the life of your form, you may wish to capture
  * the current Resource at the time of submission and save that value to a field. This snippet can help.
