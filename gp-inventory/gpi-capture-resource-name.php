@@ -7,13 +7,13 @@
  * the current Resource at the time of submission and save that value to a field. This snippet can help.
  */
 // Update "123" to your form ID.
-add_action( 'gform_after_submission_475', function( $entry, $form ) {
+add_action( 'gform_after_submission_123', function( $entry, $form ) {
 
-	// Update "1" to your Product field ID.
-	$product_field_id = 1;
+	// Update "4" to your Product field ID.
+	$product_field_id = 4;
 
-	// Update "3" to a Hidden field ID that will capture the resource name.
-	$resource_field_id = 3;
+	// Update "5" to a Hidden field ID that will capture the resource name.
+	$resource_field_id = 5;
 
 	$product_field = GFAPI::get_field( $form, $product_field_id );
 	$resource = get_post( $product_field->gpiResource );
