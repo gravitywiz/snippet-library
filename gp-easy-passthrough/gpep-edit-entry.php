@@ -9,7 +9,7 @@
  * Plugin URI:   https://gravitywiz.com/edit-gravity-forms-entries-on-the-front-end/
  * Description:  Edit the entry that was passed through via GP Easy Passthrough rather than creating a new entry.
  * Author:       Gravity Wiz
- * Version:      1.4.2
+ * Version:      1.4.3
  * Author URI:   https://gravitywiz.com/
  */
 class GPEP_Edit_Entry {
@@ -30,6 +30,7 @@ class GPEP_Edit_Entry {
 
 		add_filter( "gpep_form_{$this->form_id}", array( $this, 'capture_passed_through_entry_ids' ), 10, 3 );
 		add_filter( "gform_entry_id_pre_save_lead_{$this->form_id}", array( $this, 'update_entry_id' ), 10, 2 );
+		add_filter( "gform_entry_post_save_{$this->form_id}", array( $this, 'delete_values_for_conditionally_hidden_fields' ), 10, 2 );
 
 		// Enable edit view in GP Inventory.
 		add_filter( "gpi_is_edit_view_{$this->form_id}", '__return_true' );
@@ -110,6 +111,67 @@ class GPEP_Edit_Entry {
 		}
 
 		return $entry_id;
+	}
+
+	/**
+	 * Delete values that exist for the entry in the database for fields that are now conditionally hidden.
+	 *
+	 * If we find any instance where a conditionally hidden field has a value, we'll update the DB with the passed entry,
+	 * which was just submitted and will not contain conditionally hidden values.
+	 *
+	 * Note: There's a good case for us to simply call GFAPI::update_entry() with the passed entry without all the other
+	 * fancy logic to that only makes the call if it identifies a conditionally hidden field with a DB value. A thought
+	 * for future us.
+	 *
+	 * @param $entry
+	 * @param $form
+	 *
+	 * @return mixed
+	 */
+	public function delete_values_for_conditionally_hidden_fields( $entry, $form ) {
+
+		// We'll only update the entry if we identify a field value that needs to be deleted.
+		$has_change = false;
+
+		// The passed entry does not reflect what is actually in the database.
+		$db_entry   = null;
+
+		/**
+		 * @var \GF_Field $field
+		 */
+		foreach ( $form['fields'] as $field ) {
+
+			if ( ! GFFormsModel::is_field_hidden( $form, $field, array(), $entry ) ) {
+				continue;
+			}
+
+			if ( ! $db_entry ) {
+				$db_entry = GFAPI::get_entry( $entry['id'] );
+			}
+
+			$inputs = $field->get_entry_inputs();
+			if ( ! $inputs ) {
+				$inputs = array(
+					array(
+						'id' => $field->id,
+					)
+				);
+			}
+
+			foreach ( $inputs as $input ) {
+				if ( ! empty( $db_entry[ $input['id'] ] ) ) {
+					$has_change = true;
+					break 2;
+				}
+			}
+
+		}
+
+		if ( $has_change ) {
+			GFAPI::update_entry( $entry );
+		}
+
+		return $entry;
 	}
 
 	public function get_passed_through_entries_input_name( $form_id ) {
