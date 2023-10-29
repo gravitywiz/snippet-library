@@ -249,7 +249,7 @@ class GW_Rename_Uploaded_Files {
 
 		// replace merge tags
 		$form     = GFAPI::get_form( $entry['form_id'] );
-		$filename = GFCommon::replace_variables( $template, $form, $entry, false, true, false, 'text' );
+		$filename = GFCommon::replace_variables( $filename, $form, $entry, false, true, false, 'text' );
 		// make sure filename is "clean". This includes removing any user inputted items such as "../", "/usr/bin" etc
 		$filename = $this->clean( $filename );
 
