@@ -134,7 +134,7 @@ class GPEP_Edit_Entry {
 		$has_change = false;
 
 		// The passed entry does not reflect what is actually in the database.
-		$db_entry   = null;
+		$db_entry = null;
 
 		/**
 		 * @var \GF_Field $field
@@ -154,7 +154,7 @@ class GPEP_Edit_Entry {
 				$inputs = array(
 					array(
 						'id' => $field->id,
-					)
+					),
 				);
 			}
 
@@ -164,7 +164,6 @@ class GPEP_Edit_Entry {
 					break 2;
 				}
 			}
-
 		}
 
 		if ( $has_change ) {
