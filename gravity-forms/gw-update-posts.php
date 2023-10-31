@@ -166,7 +166,7 @@ class GW_Update_Posts {
 
 		}
 
-		wp_update_post( $post );
+		wp_update_post( $post, false, false );
 
 	}
 
