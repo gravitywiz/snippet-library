@@ -13,7 +13,7 @@ add_filter( 'gform_form_args', function( $form_args ) {
 		}
 	}
 
-	$form_args['display_title'] = true;
+	$form_args['display_title']       = true;
 	$form_args['display_description'] = true;
 
 	return $form_args;

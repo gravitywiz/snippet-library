@@ -9,12 +9,12 @@
  * a capacity of 2 people while a pontoon may have a capacity of 8 people. If you populate the raw capacity as a choice
  * in the Quantity field, this snippet will then convert that single choice into a dynamic list of choices from 1 to the
  * specified capacity of the selected boat.
- * 
+ *
  * Instructions
- * 
+ *
  * 1. Install the snippet.
  *    https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
- * 
+ *
  * 2. Add the `gppa-dynamic-quantity-chocies` class to the desired field(s) "CSS Class Name" field setting.
  */
 add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
@@ -29,7 +29,7 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 	}
 
 	$choices = array();
-	while( $capacity > 0 ) {
+	while ( $capacity > 0 ) {
 		$choices[] = array(
 			'text'  => $capacity,
 			'value' => $capacity,
@@ -37,5 +37,5 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 		$capacity--;
 	}
 
-	return array_reverse( $choices);
+	return array_reverse( $choices );
 }, 10, 3 );

@@ -37,7 +37,6 @@ add_filter( 'gform_pre_render_123', function ( $form, $ajax, $field_values ) {
 		if ( $value && ( ! isset( $has_matching_choice ) || $has_matching_choice ) ) {
 			$field->visibility = 'hidden';
 		}
-
 	}
 
 	return $form;

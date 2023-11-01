@@ -2,7 +2,7 @@
 /**
  * Gravity Perks // Limit Submissions // Evaluate Feed Conditional Logic on Render
  * https://gravitywiz.com/documentation/gravity-forms-limit-submissions/
- * 
+ *
  * Use this snippet to evaluate a feed's conditional logic on render. This is useful if you're prepopulating a field
  * value that is used in the feed's conditional logic.
  *

@@ -2,7 +2,7 @@
 /**
  * Gravity Perks // Inventory // Capture Resource Name (as Field Value)
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
- * 
+ *
  * Instruction Video: https://www.loom.com/share/064577f9491a487d84e6bb594d3fd578
  *
  * If you intend to map different Resources to different fields throughout the life of your form, you may wish to capture
@@ -18,7 +18,7 @@ add_action( 'gform_after_submission_123', function( $entry, $form ) {
 	$resource_field_id = 5;
 
 	$product_field = GFAPI::get_field( $form, $product_field_id );
-	$resource = get_post( $product_field->gpiResource );
+	$resource      = get_post( $product_field->gpiResource );
 
 	GFAPI::update_entry_field( $entry['id'], $resource_field_id, $resource->post_title );
 

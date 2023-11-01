@@ -3,21 +3,21 @@
  * https://gravitywiz.com/documentation/gravity-forms-advanced-select/
  *
  * If your form container is configured to hide overflowing content and your Advanced-Select-enabled field
- * is near the bottom of the form, the dropdown can be cutoff when the field is selected. 
- * 
+ * is near the bottom of the form, the dropdown can be cutoff when the field is selected.
+ *
  * This snippet positions the dropdown statically (default is absolute) so that it pushes the form content
  * down instead of floating above it.
  *
  * Instructions:
  *
  * 1. Include this CSS snippet in your theme's stylesheet or wherever you include custom CSS code.
- * 2. Add the "gpadvs-static" class to the Custom CSS Class field setting to enable this for a field. 
+ * 2. Add the "gpadvs-static" class to the Custom CSS Class field setting to enable this for a field.
  */
 .gpadvs-static .ts-wrapper {
-    flex-wrap: wrap;
+	flex-wrap: wrap;
 }
 
 .gpadvs-static .ts-dropdown {
-    position: static !important;
-    transform: none !important;
+	position: static !important;
+	transform: none !important;
 }

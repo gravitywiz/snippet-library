@@ -43,7 +43,6 @@ function gppa_populate_checkboxes_as_choices( $choices, $field, $objects ) {
 					$source_choice = $source_field->get_selected_choice( $value );
 					$choices[]     = $source_choice;
 				}
-
 			}
 		}
 	}

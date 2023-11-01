@@ -5,7 +5,7 @@
  *
  * Replace the `\n` new line terminator with an actual new line in template values. This is particularly
  * useful in custom templates for Paragraph fields where you are outputting multiple object values.
- * 
+ *
  * Example:
  *
  * ID: {post:ID}\nAuthor: {post:post_author}\nDate: {post:post_date}

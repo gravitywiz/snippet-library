@@ -16,16 +16,16 @@ add_filter( 'gppa_input_choices_123_4', function( $choices, $field, $objects ) {
 
 	// Add first choice.
 	$choices[] = array(
-		'text'       => 'First Dynamic Option',
-		'value'      => 'first-dynamic-option',
-		'price'      => get_post_meta( $objects[0]->ID, 'my_first_choice', true ),
+		'text'  => 'First Dynamic Option',
+		'value' => 'first-dynamic-option',
+		'price' => get_post_meta( $objects[0]->ID, 'my_first_choice', true ),
 	);
 
 	// Add second choice.
 	$choices[] = array(
-		'text'       => 'Second Dynamic Option',
-		'value'      => 'second-dynamic-option',
-		'price'      => get_post_meta( $objects[0]->ID, 'my_second_choice', true ),
+		'text'  => 'Second Dynamic Option',
+		'value' => 'second-dynamic-option',
+		'price' => get_post_meta( $objects[0]->ID, 'my_second_choice', true ),
 	);
 
 	return $choices;
