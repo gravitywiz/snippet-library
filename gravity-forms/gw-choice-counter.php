@@ -77,6 +77,7 @@ class GW_Choice_Count {
 							$parentForm.off( 'change', choiceFieldSelector, self.updateChoiceEventHander );
 
 							if ( self.isCheckableField( $choiceField ) ) {
+								choiceFieldSelector = choiceFieldSelector.concat('_' + self.values[0]).replace("input", "choice");
 								$parentForm.on( 'click', choiceFieldSelector, self.updateChoiceEventHandler );
 							} else {
 								$parentForm.on( 'change', choiceFieldSelector, self.updateChoiceEventHandler );
