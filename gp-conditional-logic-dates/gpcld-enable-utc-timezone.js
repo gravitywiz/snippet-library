@@ -1,6 +1,6 @@
 /**
  * WARNING! THIS SNIPPET IS DEPRECATED. 🚧
- * Reason for deprecation.
+ * This snippet has been replaced by the `gpcld_use_visitor_timezone` filter.
  */
 /**
  * Gravity Perks // Conditional Logic Dates // Adjust User's Local Time to UTC
