@@ -13,7 +13,7 @@
  * Plugin URI:   https://gravitywiz.com/
  * Description:  Use the entry meta in conditional logic (e.g. payment status, approval status, etc).
  * Author:       Gravity Wiz
- * Version:      0.2
+ * Version:      0.3
  * Author URI:   https://gravitywiz.com
  */
 class GW_CL_Entry_Meta {
@@ -87,12 +87,18 @@ class GW_CL_Entry_Meta {
 
 		$form_ids = 0;
 
-		// Scope entry meta to the current form for GP Email Users.
-		if ( is_admin() && rgget( 'page' ) === 'gp-email-users' ) {
-			$form_ids = rgpost( '_gform_setting_form' );
-			if ( ! $form_ids ) {
-				$draft    = gp_email_users()->get_draft();
-				$form_ids = $draft['form'];
+		// Scope entry meta to the current form for GP Email Users and other admin screens
+		if ( is_admin() ) {
+			if ( rgget( 'page' ) === 'gp-email-users' ) {
+				$form_ids = rgpost( '_gform_setting_form' );
+				if ( ! $form_ids ) {
+					$draft    = gp_email_users()->get_draft();
+					$form_ids = $draft['form'];
+				}
+			}
+
+			if ( GFForms::get_page() && rgget( 'id' ) ) {
+				$form_ids = rgget( 'id' );
 			}
 		}
 
