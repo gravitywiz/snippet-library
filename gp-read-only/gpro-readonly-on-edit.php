@@ -28,8 +28,11 @@ if ( ! $is_block ) {
 	$is_block = class_exists( 'WP_Block_Supports' ) && rgar( WP_Block_Supports::$block_to_render, 'blockName' ) === 'gp-entry-blocks/edit-form';
 }
 
+$is_gravityview  = function_exists( 'gravityview' ) && gravityview()->request->is_edit_entry();
+$is_gravity_flow = rgget( 'lid' ) && rgget( 'page' ) == 'gravityflow-inbox';
+
 // disable the target field for GPEB, GravityView and Gravity Flow User Input step.
-if ( $is_block || ( function_exists( 'gravityview' ) && gravityview()->request->is_edit_entry() ) || ( rgget( 'lid' ) && rgget( 'page' ) == 'gravityflow-inbox' ) ) {
+if ( $is_block || $is_gravityview || $is_gravity_flow ) {
 	foreach ( $form['fields'] as &$field ) {
 		if ( strpos( $field->cssClass, 'gpeb-readonly-on-edit' ) !== false ) {
 			$field->gwreadonly_enable = true;
