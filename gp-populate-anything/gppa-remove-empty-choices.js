@@ -5,8 +5,7 @@
  * 1. Install this snippet with our free Custom JavaScript plugin.
  *    https://gravitywiz.com/gravity-forms-custom-javascript/
  */
-
- var $containers = $( '.gfield--type-choice' );
+var $containers = $( '.gfield--type-choice' );
  
 // On page load.
 $containers.each( function() {
