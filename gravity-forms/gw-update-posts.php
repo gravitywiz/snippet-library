@@ -166,6 +166,7 @@ class GW_Update_Posts {
 
 		}
 
+		// ensure the fires after hooks is set to false, so that doesn't override some of the normal rendering - GF confirmation for instance.
 		wp_update_post( $post, false, false );
 
 	}
