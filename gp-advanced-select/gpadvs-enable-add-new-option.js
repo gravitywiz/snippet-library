@@ -13,8 +13,23 @@
  *    NOTE: This step is not required if you are dynamically populating choices via Populate Anything.
  */
 gform.addFilter( 'gpadvs_settings', function( settings, gpadvs ) {
-	if ( gpadvs.formId == GFFORMID ) {
-		settings.create = true;
+	
+	if ( gpadvs.formId != GFFORMID ) {
+		return settings;	
 	}
+
+	settings.create = true;
+
+	/**
+     * Uncomment the below code to customize the display of the "Add New" option.
+	 */
+	// if ( ! settings.render ) {
+	// 	settings.render = {};
+	// }
+	
+	// settings.render.option_create = function( data, escape ) {
+	// 	return '<div class="create">Add <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+	// }
+	
 	return settings;
 } );
