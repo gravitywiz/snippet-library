@@ -3,23 +3,52 @@
  * Gravity Perks // Inventory // Capture Resource Name (as Field Value)
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
  *
- * Instruction Video: https://www.loom.com/share/064577f9491a487d84e6bb594d3fd578
- *
  * If you intend to map different Resources to different fields throughout the life of your form, you may wish to capture
  * the current Resource at the time of submission and save that value to a field. This snippet can help.
+ * 
+ * Instructions
+ *
+ * 1. Install the snippet.
+ *    https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
+ *
+ * 2. Enable "Allow field to be populated dynamically" option under the "Advanced" field settings for the field
+ *    in which you would like to capture the Resource name.
+ *
+ * 3. Set the parameter name to `gpi_capture_resource_1` replacing the "1" with the GPI-enabled field ID for which
+ *    you would like to capture the current resource.
  */
-// Update "123" to your form ID.
-add_action( 'gform_after_submission_123', function( $entry, $form ) {
+add_action( 'gform_field_value', function( $value, $field, $name ) {
 
-	// Update "4" to your Product field ID.
-	$product_field_id = 4;
+	if ( strpos( $name, 'gpi_capture_resource' ) !== false ) {
+		$resource = gpi_get_resource_by_parameter( $name, $field->formId );
+		$value    = $resource->post_title;
+	}
 
-	// Update "5" to a Hidden field ID that will capture the resource name.
-	$resource_field_id = 5;
+	return $value;
+}, 10, 3 );
 
-	$product_field = GFAPI::get_field( $form, $product_field_id );
-	$resource      = get_post( $product_field->gpiResource );
+add_action( 'gform_after_submission', function( $entry, $form ) {
 
-	GFAPI::update_entry_field( $entry['id'], $resource_field_id, $resource->post_title );
+	foreach ( $form['fields'] as &$field ) {
+		if ( strpos( $field->inputName, 'gpi_capture_resource' ) === false ) {
+			continue;
+		}
+
+		$resource = gpi_get_resource_by_parameter( $field->inputName, $field->formId );
+
+		GFAPI::update_entry_field( $entry['id'], $field->id, $resource->post_title );
+	}
 
 }, 10, 2 );
+
+if ( ! function_exists( 'gpi_get_resource_by_parameter' ) ) {
+	function gpi_get_resource_by_parameter( $parameter, $form_id ) {
+
+		$bits             = explode( '_', $parameter );
+		$product_field_id = array_pop( $bits );
+
+		$product_field = GFAPI::get_field( GFAPI::get_form( $form_id ), $product_field_id );
+
+		return get_post( $product_field->gpiResource );
+	}
+}
