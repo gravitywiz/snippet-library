@@ -320,6 +320,16 @@ class GW_Submit_Access {
 	}
 
 	public function requires_access( $post_id ) {
+
+		// Never require access for edit API requests. Interferes with the Block Editor.
+		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+			$route   = untrailingslashit( $GLOBALS['wp']->query_vars['rest_route'] ) ?: '/';
+			$request = new WP_REST_Request( $_SERVER['REQUEST_METHOD'], $route );
+			if ( $request->get_method() !== 'GET' || ( $request['context'] === 'edit' && current_user_can( 'edit_post', $post_id ) ) ) {
+				return false;
+			}
+		}
+
 		return get_post_meta( $post_id, 'gwsa_require_submission', true ) == true;
 	}
 
