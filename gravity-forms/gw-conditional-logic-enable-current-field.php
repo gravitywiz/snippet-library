@@ -23,7 +23,7 @@ add_action( 'admin_footer', function() {
 		<script>
 			gform.addFilter( 'gform_is_conditional_logic_field', function( isSupported, field ) {
 				// Only apply our logic in the form editor when the current field is selected and its visibility is not set to "administrative".
-				if ( GetSelectedField() && GetSelectedField().id == field.id && field.visibility !== 'administrative' ) {
+				if ( typeof GetSelectedField === "function" && GetSelectedField() && GetSelectedField().id == field.id && field.visibility !== 'administrative' ) {
 					var inputType = GetInputType( field );
 					isSupported = jQuery.inArray( inputType, GetConditionalLogicFields() ) !== -1;
 				}
