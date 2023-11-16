@@ -3,6 +3,8 @@
  * Gravity Perks // Limit Dates // Dynamically Set Exceptions from Another Form
  * https://gravitywiz.com/documentation/gravity-forms-limit-dates/
  *
+ * Instruction Video: https://www.loom.com/share/9c3e7dfdf1a941bfb270bc7e1b30b3e2
+ *
  * This snippet will dynamically populate the Limit Dates exception dates for a Date field on Form A from the entry data
  * for a Date field on Form B.
  */
