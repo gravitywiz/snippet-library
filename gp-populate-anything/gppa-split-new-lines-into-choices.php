@@ -1,9 +1,9 @@
 <?php
 /**
- * Gravity Perks // Populate Anything // Split New Lines into Chocies
+ * Gravity Perks // Populate Anything // Split New Lines into Choices
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
- * Instruction Video: Incoming...
+ * Instruction Video: https://www.loom.com/share/3a48db6585f842ffbc4e25286e104aa9
  *
  * Split new lines into separate choices when populating from Paragraph fields (or any other value that may contain new lines).
  */
