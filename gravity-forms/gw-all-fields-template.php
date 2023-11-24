@@ -440,6 +440,7 @@ class GW_All_Fields_Template {
 					}
 
 					$raw_field_value = RGFormsModel::get_lead_field_value( $lead, $field );
+					$format          = $field->type === 'email' ? 'text' : $format;
 					$field_value     = GFCommon::get_lead_field_display( $field, $raw_field_value, rgar( $lead, 'currency' ), $use_text, $format, 'email' );
 
 					$display_field = true;
