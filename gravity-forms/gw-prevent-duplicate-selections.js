@@ -28,22 +28,98 @@ $inputs.each( function( event ) {
 	gwDisableDuplicates( $( this ), $inputs );
 } );
 
+/**
+ * Cache for storing previous values of GP Advanced Select enabled multi-select
+ * fields. We use this to check against in order to determine which option was
+ * changed on a change event.
+ */
+const gpadvsPreviousValues = {};
+
+/**
+ * Given a select element, determines which option was changed.
+ * 
+ * @param {HTMLSelectElement} $select 
+ * @param {object} selected
+ * @param {string} selected.selected
+ * @param {string} selected.deselected
+ * @returns HTMLOptionElement
+ */
+function getChangedOptionElFromSelect( $select, selected ) {
+    /**
+     * Handle multi select fields with "Enhanced UI" enabled.
+     *
+	 * Multi Selects fields require Chosen to be enabled. It provides the `selected` data payload
+     * on the jQuery event which indicates which option was selected/deselected.
+     *
+     * - If the option was selected, then selected.selected will be the value of the selected option.
+     * - If the option was deselected, the selected.deslected will be the value of the deselected option. 
+     */
+	if ( selected ) {
+		let value = selected.selected ? selected.selected : selected.deselected;
+        return findOptionByValue( $select, value );
+	}
+    
+    /**
+     * Handle multi select fields with GP Advanced Select enabled.
+    */
+    if ($select.siblings('.ts-wrapper').length) {
+        const val = $select.val();
+
+        // this is a single select field so the value is a string
+        if ( typeof val === 'string' ) {
+            return findOptionByValue( $select, val );
+        }
+
+        const selectId = $select.attr('id');
+        const prevVal = gpadvsPreviousValues[selectId] || null;
+
+        // Cache the current value so that we can compare against it on
+        // on the next change event to determine whih option was changed.
+        gpadvsPreviousValues[selectId] = val;
+
+        let changedOptVal;
+
+        if ( ! prevVal ) {
+            changedOptVal = val[0];
+        } else if ( prevVal.length > val.length ) {
+            changedOptVal = getArrayDiff( prevVal, val );
+        } else {
+            changedOptVal = getArrayDiff( val, prevVal );
+        }
+
+        return findOptionByValue( $select, changedOptVal );
+    }
+
+    return $select.find( 'option:selected' );
+}
+
+/**
+ * Get the value that changed between two arrays.
+ * This expects that the length of array 1 is greater than the length of array 2.
+ *
+ * @param {array} arr1
+ * @param {array} arr2
+ *
+ * @returns {string}
+*/
+function getArrayDiff( arr1, arr2 ) {
+    return arr1.filter( x => ! arr2.includes( x ) )[ 0 ];
+}
+
+function findOptionByValue( $select, value ) {
+    return $select.find( '[value="' + value + '"]' );
+}
+
 function gwDisableDuplicates( $elem, $group, selected ) {
 
 	// Some elements have a parent element (e.g. a <select>) that contains the actual elements (e.g. <option>) we want enable/disable.
 	let $parent = $elem;
 
 	if ( $elem.is( 'select' ) ) {
-		// Multi Selects fields require Chosen to be enabled. It provides the `selected` variable which indicates which
-		// option was selected/deselected.
-		if ( selected ) {
-			let value = selected.selected ? selected.selected : selected.deselected;
-			$elem     = $elem.find( '[value="' + value + '"]' );
-		} else {
-			$elem = $elem.find( 'option:selected' );
-		}
-		// Note: This prevents selects from working with other field types.
-		$group = $group.find( 'option' );
+        $elem = getChangedOptionElFromSelect( $elem, selected );
+
+	    // Note: This prevents selects from working with other field types.
+	    $group = $group.find( 'option' );
 	}
 
 	let value     = $elem.val();
