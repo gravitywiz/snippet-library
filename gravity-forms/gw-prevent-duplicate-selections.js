@@ -74,7 +74,7 @@ function getChangedOptionElFromSelect( $select, selected ) {
         const prevVal = gpadvsPreviousValues[selectId] || null;
 
         // Cache the current value so that we can compare against it on
-        // on the next change event to determine whih option was changed.
+        // on the next change event to determine which option was changed.
         gpadvsPreviousValues[selectId] = val;
 
         let changedOptVal;
