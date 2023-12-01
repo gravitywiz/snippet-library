@@ -3,6 +3,8 @@
  * Gravity Perks // Populate Anything // Populate Notification as Choices & Send on Submission
  * http://gravitywiz.com/
  *
+ * Instruction Video: https://www.loom.com/share/8b133c4c75044eec96e0398cc4e7c5b9
+ *
  * Populate notifications available for a selected entry and send the selected notification when the form is submitted.
  *
  * Plugin Name:  Populate Anything – Notification Choices
