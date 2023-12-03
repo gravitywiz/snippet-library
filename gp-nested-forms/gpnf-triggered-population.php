@@ -76,10 +76,10 @@ class GPNF_Triggered_Population {
 
 						$form = $( '#gform_{0}'.format( self.formId ) );
 
-						$( '#field_{0}_{1}'.format( self.formId, self.triggerFieldId ) ).find( 'input' ).on( 'change', function() {
+						$( '#field_{0}_{1}'.format( self.formId, self.triggerFieldId ) ).find( ':input' ).on( 'change', function() {
 							var input = $( this );
 							var value = input.val();
-							var checked = input[0].checked;
+							var checked = ( input[0].nodeName === 'SELECT' && self.triggerFieldValue === value ) ? true : input[0].checked;
 
 							/*
 							 * Convert trigger field value to array if it's not an array so we can support multiple
@@ -99,10 +99,10 @@ class GPNF_Triggered_Population {
 					self.addChildEntry = function() {
 
 						/*
-						 * Prevent duplicate from being added if another valid choice is selected if
-						 * triggerFieldValue is an array
+						 * Prevent duplicate from being added if another valid choice is selected if triggerFieldValue is an array.
+						 * Duplicate check shouldn't flag a different Nested Form trigger instance from getting blocked.
 						 */
-						if ( window.gpnf_triggered_population_entry ) {
+						if ( window.gpnf_triggered_population_entry && window.gpnf_triggered_population_entry.fieldId == self.nestedFormFieldId ) {
 							return;
 						}
 
@@ -172,7 +172,7 @@ class GPNF_Triggered_Population {
 		);
 
 		$script = 'new GPNFTriggeredPopulation( ' . json_encode( $args ) . ' );';
-		$slug   = implode( '_', array( 'gpnf_triggered_population', $this->_args['form_id'], $this->_args['trigger_field_id'] ) );
+		$slug   = implode( '_', array( 'gpnf_triggered_population', $this->_args['form_id'], $this->_args['trigger_field_id'], $this->_args['nested_form_field_id'] ) );
 
 		GFFormDisplay::add_init_script( $this->_args['form_id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
 
