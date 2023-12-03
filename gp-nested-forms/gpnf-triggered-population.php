@@ -77,6 +77,8 @@ class GPNF_Triggered_Population {
 						$form = $( '#gform_{0}'.format( self.formId ) );
 
 						$( '#field_{0}_{1}'.format( self.formId, self.triggerFieldId ) ).find( 'input' ).on( 'change', function() {
+							// disable the field while entry creation is processing to avoid duplicate entries
+							$( '#field_{0}_{1}'.format( self.formId, self.triggerFieldId ) ).prop( 'disabled', true );
 							var input = $( this );
 							var value = input.val();
 							var checked = input[0].checked;
@@ -103,13 +105,38 @@ class GPNF_Triggered_Population {
 						 * triggerFieldValue is an array
 						 */
 						if ( window.gpnf_triggered_population_entry ) {
+							// re-enable the field if entry creation gets skipped
+							$( '#field_{0}_{1}'.format( self.formId, self.triggerFieldId ) ).removeAttr( 'disabled' );
 							return;
 						}
+
+						// serialize including disabled form data
+						$.fn.serializeWithDisabled = function() {
+							var data = {};
+
+							// iterate over all input fields, including disabled ones
+							$(this).find(':input').each(function() {
+								var name = $(this).attr('name');
+								var value = $(this).val();
+
+								if ($(this).is(':radio,:checkbox')) {
+									// for radio buttons and checkboxes, only include the selected option
+									if ($(this).is(':checked')) {
+										data[name] = value;
+									}
+								} else {
+									// for other input fields, include the value as-is
+									data[name] = value;
+								}
+							});
+
+							return $.param(data);
+						};
 
 						var request = {
 							action: 'gpnf_triggered_population_add_child_entry',
 							nonce: self.nonce,
-							data: $form.serialize(),
+							data: $form.serializeWithDisabled(),
 							hash: self.hash,
 						}
 
@@ -119,6 +146,8 @@ class GPNF_Triggered_Population {
 								window.gpnf_triggered_population_entry = response.data
 								GPNestedForms.loadEntry( response.data );
 							}
+							// re-enable the field after entry creation is complete
+							$( '#field_{0}_{1}'.format( self.formId, self.triggerFieldId ) ).removeAttr( 'disabled' );
 						} );
 
 					}
