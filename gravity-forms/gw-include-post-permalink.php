@@ -62,6 +62,21 @@ class GWPostPermalink {
 	}
 
 	function get_post_id_by_entry( $entry ) {
+		// retry logic to fetch the post_id
+		$retry_limit = 3;
+		$retry_count = 0;
+		$post_id     = 0;
+		while ( $post_id === 0 && $retry_count < $retry_limit ) {
+			// refresh entry and try to get post
+			$entry   = GFAPI::get_entry( $entry['id'] ) ;
+			$post_id = absint( rgar( $entry, 'post_id' ) );
+		
+			if ( $post_id === 0 ) {
+				sleep(1); // Wait for 1 second before retrying
+				$retry_count++;
+			}
+		}
+
 		$post_id = rgar( $entry, 'post_id' );
 		if ( ! $post_id && function_exists( 'gf_advancedpostcreation' ) ) {
 			$entry_post_ids = gform_get_meta( $entry['id'], gf_advancedpostcreation()->get_slug() . '_post_id' );
