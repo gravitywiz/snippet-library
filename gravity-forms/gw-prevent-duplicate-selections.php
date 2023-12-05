@@ -6,15 +6,15 @@
  * Prevent duplicate selections in choice-based fields. Currently works with Checkbox, Radio Button, Drop Down and
  * Enhanced-UI-enabled Multi Select fields.
  *
- * Plugin Name:  Prevent Duplicate Selections
+ * Plugin Name:  Gravity Forms Prevent Duplicate Selections
  * Plugin URI:   http://gravitywiz.com/
- * Description: Prevent duplicate selections in choice-based fields. Currently works with Checkbox, Radio Button, Drop Down and Enhanced-UI-enabled Multi Select fields.
+ * Description:  Prevent duplicate selections in choice-based fields. Currently works with Checkbox, Radio Button, Drop Down and Enhanced-UI-enabled Multi Select fields.
  * Author:       Gravity Wiz
  * Version:      0.1
  * Author URI:   http://gravitywiz.com
  */
 
-class GW_JS_Prevent_Duplicate_Selections {
+class GW_Prevent_Duplicate_Selections {
 	public function __construct() {
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
 		add_action( 'init', array( $this, 'init' ) );
@@ -214,4 +214,4 @@ class GW_JS_Prevent_Duplicate_Selections {
 }
 
 # Configuration
-new GW_JS_Prevent_Duplicate_Selections();
+new GW_Prevent_Duplicate_Selections();
