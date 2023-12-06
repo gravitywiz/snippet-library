@@ -48,9 +48,10 @@ if (danger.git.created_files.length) {
 		danger.git.diffForFile(createdFile).then(diff => {
 			const hasGFSnippetHeader = diff.added.match(/^\+\s+\*\s+Gravity Wiz \/\/ Gravity Forms \/\/ (.*)$/m);
 			const hasPerkSnippetHeader = diff.added.match(/^\+\s+\*\s+Gravity Perks \/\/ (.*) \/\/ (.*)$/m);
+			const hasEvolvedSnippetHeader = diff.added.match(/^.*This snippet has evolved!.*$/m);
 			const hasLoomVideo = diff.added.match(/loom.com\/share/m);
 
-			if (!hasGFSnippetHeader && !hasPerkSnippetHeader) {
+			if (!hasGFSnippetHeader && !hasPerkSnippetHeader && !hasEvolvedSnippetHeader) {
 				fail(createdFile + ": it looks like this file does not have the appropriate snippet header.")
 			}
 
