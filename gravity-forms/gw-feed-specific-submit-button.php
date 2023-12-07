@@ -87,7 +87,7 @@ class GW_Feed_Specific_Submit_Button {
 
 				gform.addAction( 'gform_frontend_feeds_evaluated', function( feeds, formId ) {
 
-					var $submitButton = $( '#gform_submit_button_{0}'.format( formId ) ),
+					var $submitButton = $( '#gform_submit_button_{0}'.gformFormat( formId ) ),
 						originalLabel = $submitButton.data( 'default-label' );
 
 					if( originalLabel ) {

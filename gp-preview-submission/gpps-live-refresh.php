@@ -64,8 +64,8 @@ class GPPS_Live_Refresh {
 
 					self.init = function() {
 
-						self.$form        = $( '#gform_wrapper_{0}'.format( self.formId ) );
-						self.$targetField = $( '#field_{0}_{1}'.format( self.formId, self.targetFieldId ) );
+						self.$form        = $( '#gform_wrapper_{0}'.gformFormat( self.formId ) );
+						self.$targetField = $( '#field_{0}_{1}'.gformFormat( self.formId, self.targetFieldId ) );
 
 						self.$form.find( 'input, select, textarea' ).on( 'change', function() {
 							self.refresh();

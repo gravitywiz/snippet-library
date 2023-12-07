@@ -74,9 +74,9 @@ class GPNF_Triggered_Population {
 
 					self.init = function() {
 
-						$form = $( '#gform_{0}'.format( self.formId ) );
+						$form = $( '#gform_{0}'.gformFormat( self.formId ) );
 
-						$( '#field_{0}_{1}'.format( self.formId, self.triggerFieldId ) ).find( 'input' ).on( 'change', function() {
+						$( '#field_{0}_{1}'.gformFormat( self.formId, self.triggerFieldId ) ).find( 'input' ).on( 'change', function() {
 							var input = $( this );
 							var value = input.val();
 							var checked = input[0].checked;

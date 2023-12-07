@@ -2,12 +2,12 @@
  * Gravity Perks // Auto List Field // Dynamic Row Labels for List Fields
  * https://gravitywiz.com/documentation/gravity-forms-auto-list-field/
  *
- * Dynamically populate the first column of a List field with a dynamic value that includes the row number. 
+ * Dynamically populate the first column of a List field with a dynamic value that includes the row number.
  * For example, if your List field represents attendees to an event, you could label each row, "Attendee #1,
  * Attendee #2, etc).
- 
+
  * Instructions:
- * 
+ *
  * 1. Install this snippet with our free Custom JavaScript plugin.
  *    https://gravitywiz.com/gravity-forms-custom-javascript/
  * 2. Update variables to match your form by following the inline instructions.
@@ -30,11 +30,11 @@ function gw_apply_list_field_value_template( $container, $row ) {
 		$( this )
 			.find( 'input' )
 			.eq( 0 )
-			.val( template.format( rowIndex + 1 ) );
+			.val( template.gformFormat( rowIndex + 1 ) );
 	} );
 }
 
-gw_apply_list_field_value_template( $( '#field_GFFORMID_{0}'.format( listFieldId ) ) );
+gw_apply_list_field_value_template( $( '#field_GFFORMID_{0}'.gformFormat( listFieldId ) ) );
 
 gform.addAction( 'gform_list_post_item_add', function ( $row, $container ) {
 	if ( gf_get_input_id_by_html_id( $container.parents( '.gfield' ).attr( 'id' ) ) == listFieldId ) {

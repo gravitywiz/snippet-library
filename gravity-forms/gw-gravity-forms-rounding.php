@@ -276,7 +276,7 @@ class GW_Rounding {
 								 * @param int value       Current input value to be rounded
 								 * @param int actionValue Custom value passed in CSS class name (e.g. gw-round-custom-10, actionValue = 10)
 								 */
-								value = window.gform.applyFilters( 'gw_round_{0}'.format(action), value, actionValue );
+								value = window.gform.applyFilters( 'gw_round_{0}'.gformFormat(action), value, actionValue );
 								break;
 						}
 

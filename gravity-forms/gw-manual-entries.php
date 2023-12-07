@@ -91,7 +91,7 @@ class GW_Manual_Entries {
 						a.title     = '<?php echo $button_label; ?>';
 						a.href      = '<?php echo $button_url; ?>';
 						var marginLeft = document.querySelectorAll( '.tablenav-pages.no-pages' ).length > 0 ? 'auto' : '0.375rem;'
-						a.style     = 'margin-left:{0};'.format( marginLeft );
+						a.style     = 'margin-left:{0};'.gformFormat( marginLeft );
 						a.className = 'button';
 						tableNavTop.appendChild( a );
 					}

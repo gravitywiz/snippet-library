@@ -19,7 +19,7 @@ add_action( 'gform_pre_enqueue_scripts_123', function() {
 		gform.addFilter( 'gpcc_copied_value', function( value, $targetElem, field ) {
 			// Update "4" to the field ID of your choice-based trigger field.
 			var triggerFieldId = 4;
-			if ( triggerFieldId == field.trigger && jQuery( '#choice_{0}_{1}_1'.format( field.targetFormId, triggerFieldId ) ).is( ':checked' ) ) {
+			if ( triggerFieldId == field.trigger && jQuery( '#choice_{0}_{1}_1'.gformFormat( field.targetFormId, triggerFieldId ) ).is( ':checked' ) ) {
 				value = '';
 			}
 			return value;

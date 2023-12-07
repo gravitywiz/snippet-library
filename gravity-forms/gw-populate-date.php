@@ -351,7 +351,7 @@ class GW_Populate_Date {
 							case 'field':
 								var inputId  = self.modifier.inputId,
 									value    = self.getFieldValue( inputId ),
-									modifier = value !== '' ? self.modifier.modifier.format( value ) : false;
+									modifier = value !== '' ? self.modifier.modifier.gformFormat( value ) : false;
 								break;
 						}
 
@@ -396,7 +396,7 @@ class GW_Populate_Date {
 						var fieldId    = gformExtractFieldId( inputId ),
 							inputIndex = gformExtractInputIndex( inputId ),
 							id         = inputIndex !== fieldId ? '#input_{0}_{1}' : '#input_{0}_{1}_{2}',
-							$input     = $( id.format( self.formId, fieldId, inputIndex ) );
+							$input     = $( id.gformFormat( self.formId, fieldId, inputIndex ) );
 
 						return $input;
 					};
@@ -1802,11 +1802,11 @@ class GW_Populate_Date {
 						l: 'dddd',
 						N: 'E',
 						S: function () {
-							return '[' + this.format('Do').replace(/\d*/g, '') + ']';
+							return '[' + this.gformFormat('Do').replace(/\d*/g, '') + ']';
 						},
 						w: 'd',
 						z: function () {
-							return this.format('DDD') - 1;
+							return this.gformFormat('DDD') - 1;
 						},
 						W: 'W',
 						F: 'MMMM',
@@ -1845,7 +1845,7 @@ class GW_Populate_Date {
 						P: 'Z',
 						T: '[T]', // deprecated in moment
 						Z: function () {
-							return parseInt(this.format('ZZ'), 10) * 36;
+							return parseInt(this.gformFormat('ZZ'), 10) * 36;
 						},
 						c: 'YYYY-MM-DD[T]HH:mm:ssZ',
 						r: 'ddd, DD MMM YYYY HH:mm:ss ZZ',
@@ -1856,7 +1856,7 @@ class GW_Populate_Date {
 				moment.fn.formatPHP = function (format) {
 					var that = this;
 
-					return this.format(format.replace(formatEx, function (phpStr) {
+					return this.gformFormat(format.replace(formatEx, function (phpStr) {
 						return typeof formatMap[phpStr] === 'function' ? formatMap[phpStr].call(that) : formatMap[phpStr];
 					}));
 				};

@@ -281,7 +281,7 @@ class GW_Value_Exists_Validation {
 					}
 
 					self.getIndicatorId = function( inputId ) {
-						return 'response_{0}_{1}'.format( self.targetFormId, inputId );
+						return 'response_{0}_{1}'.gformFormat( self.targetFormId, inputId );
 					}
 
 					self.getIndicatorTemplate = function() {
@@ -307,7 +307,7 @@ class GW_Value_Exists_Validation {
 					}
 
 					self.addIndicator = function( $elem, inputId, cssClass, icon ) {
-						$elem.after( self.getIndicatorTemplate().format( self.getIndicatorId( inputId ), cssClass, icon ) );
+						$elem.after( self.getIndicatorTemplate().gformFormat( self.getIndicatorId( inputId ), cssClass, icon ) );
 					}
 
 					self.spinner = function( elem, imageSrc, inlineStyles ) {

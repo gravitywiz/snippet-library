@@ -111,17 +111,17 @@ class GW_Dynamic_Range {
 
 					self.init = function() {
 
-						self.$target = $( '#input_{0}_{1}'.format( self.formId, self.fieldId ) );
+						self.$target = $( '#input_{0}_{1}'.gformFormat( self.formId, self.fieldId ) );
 
 						if ( self.minFieldId ) {
-							self.$min = $( '#input_{0}_{1}'.format( self.formId, self.minFieldId ) );
+							self.$min = $( '#input_{0}_{1}'.gformFormat( self.formId, self.minFieldId ) );
 							self.$min.on( 'change', function() {
 								self.setDynamicRange();
 							} );
 						}
 
 						if ( self.maxFieldId ) {
-							self.$max = $( '#input_{0}_{1}'.format( self.formId, self.maxFieldId ) );
+							self.$max = $( '#input_{0}_{1}'.gformFormat( self.formId, self.maxFieldId ) );
 							self.$max.on( 'change', function() {
 								self.setDynamicRange();
 							} );
@@ -192,23 +192,23 @@ class GW_Dynamic_Range {
 							message = self.messages.both
 								.replace( '%1$s', '{0}' )
 								.replace( '%2$s', '{1}' )
-								.format( '<strong>' + min + '</strong>', '<strong>' + max + '</strong>' );
+								.gformFormat( '<strong>' + min + '</strong>', '<strong>' + max + '</strong>' );
 						} else if ( min ) {
 							message = self.messages.min
 								.replace( '%s', '{0}' )
-								.format( '<strong>' + min + '</strong>' );
+								.gformFormat( '<strong>' + min + '</strong>' );
 						} else if ( max ) {
 							message = self.messages.max
 								.replace( '%s', '{0}' )
-								.format( '<strong>' + max + '</strong>' );
+								.gformFormat( '<strong>' + max + '</strong>' );
 						}
 
-						let $instruct = $( '#gfield_instruction_{0}_{1}'.format( self.formId, self.fieldId ) );
+						let $instruct = $( '#gfield_instruction_{0}_{1}'.gformFormat( self.formId, self.fieldId ) );
 						if ( ! $instruct.length ) {
-							$instruct = $( '#validation_message_{0}_{1}'.format( self.formId, self.fieldId ) );
+							$instruct = $( '#validation_message_{0}_{1}'.gformFormat( self.formId, self.fieldId ) );
 						}
 						if ( ! $instruct.length && message ) {
-							$instruct = $( '<div class="gfield_description instruction" id="gfield_instruction_{0}_{1}"></div>'.format( self.formId, self.fieldId ) );
+							$instruct = $( '<div class="gfield_description instruction" id="gfield_instruction_{0}_{1}"></div>'.gformFormat( self.formId, self.fieldId ) );
 							self.$target.after( $instruct );
 						}
 

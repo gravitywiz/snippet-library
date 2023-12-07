@@ -8,6 +8,6 @@
  *    https://gravitywiz.com/gravity-forms-custom-javascript/
  */
 $( '#gform_GFFORMID input:checkbox' ).on( 'change', function () {
-	var _GFCalc = rgars( window, 'gf_global/gfcalc/{0}'.format( GFFORMID ) );
+	var _GFCalc = rgars( window, 'gf_global/gfcalc/{0}'.gformFormat( GFFORMID ) );
 	_GFCalc.runCalcs( formId, _GFCalc.formulaFields );
 } );

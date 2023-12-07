@@ -14,12 +14,12 @@
 		return;
 	}
 
-	var $input = $( '#input_{0}_{1}'.format( GWConditionalPricing._formId, productId ) );
+	var $input = $( '#input_{0}_{1}'.gformFormat( GWConditionalPricing._formId, productId ) );
 	if ( ! $input.length ) {
 		return;
 	}
 
-	var $basePrice = $( '#base_price_{0}_{1}'.format( GWConditionalPricing._formId, productId ) );
+	var $basePrice = $( '#base_price_{0}_{1}'.gformFormat( GWConditionalPricing._formId, productId ) );
 
 	// Remove base price if there is no discounted price.
 	if ( $input.text() === basePrice ) {
@@ -27,7 +27,7 @@
 	}
 	// Otherwise, add base price if it has not been added.
 	else if ( ! $basePrice.length ) {
-		$basePrice = '<span id="base_price_{0}_{1}" style="text-decoration:line-through;margin-right:0.3rem">{2}</span>'.format( GWConditionalPricing._formId, productId, basePrice );
+		$basePrice = '<span id="base_price_{0}_{1}" style="text-decoration:line-through;margin-right:0.3rem">{2}</span>'.gformFormat( GWConditionalPricing._formId, productId, basePrice );
 		$input.before( $basePrice );
 	}
 

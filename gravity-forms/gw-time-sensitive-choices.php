@@ -77,9 +77,9 @@ class GW_Time_Sensitive_Choices {
 
 					self.init = function() {
 
-						self.$target = $( '#input_{0}_{1}'.format( self.formId, self.fieldId ) );
+						self.$target = $( '#input_{0}_{1}'.gformFormat( self.formId, self.fieldId ) );
 						if ( self.dateFieldId ) {
-							self.$date = $( '#input_{0}_{1}'.format( self.formId, self.dateFieldId ) );
+							self.$date = $( '#input_{0}_{1}'.gformFormat( self.formId, self.dateFieldId ) );
 							self.bindEvents();
 							setTimeout( function() {
 								self.initializeChoices();
@@ -95,14 +95,14 @@ class GW_Time_Sensitive_Choices {
 
 						gform.addAction( 'gpi_field_refreshed', function( $targetField, $triggerField, initialLoad ) {
 							if ( gf_get_input_id_by_html_id( self.$target.attr( 'id' ) ) == gf_get_input_id_by_html_id( $targetField.attr( 'id' ) ) ) {
-								self.$target = $targetField.find( '#input_{0}_{1}'.format( self.formId, self.fieldId ) );
+								self.$target = $targetField.find( '#input_{0}_{1}'.gformFormat( self.formId, self.fieldId ) );
 								self.initializeChoices();
 							}
 						} );
 
 						$( document ).on( 'gppa_updated_batch_fields', function ( event, formId, updatedFieldIds ) {
 							if ( updatedFieldIds.indexOf( gf_get_input_id_by_html_id( self.$target.attr( 'id' ) ) ) !== - 1 ) {
-								self.$target = $( '#input_{0}_{1}'.format( self.formId, self.fieldId ) );
+								self.$target = $( '#input_{0}_{1}'.gformFormat( self.formId, self.fieldId ) );
 								self.initializeChoices();
 							}
 						} );

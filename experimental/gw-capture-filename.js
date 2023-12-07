@@ -12,8 +12,8 @@ var uploadFieldId = 4;
 var targetFieldId = 5;
 var template = '{filename}';
 
-var $uploadField = $( '#input_GFFORMID_{0}'.format( uploadFieldId ) );
-var $targetField = $( '#input_GFFORMID_{0}'.format( targetFieldId ) );
+var $uploadField = $( '#input_GFFORMID_{0}'.gformFormat( uploadFieldId ) );
+var $targetField = $( '#input_GFFORMID_{0}'.gformFormat( targetFieldId ) );
 
 $uploadField.on( 'change', function() {
 	var filename = $( this ).val().split("\\").pop();

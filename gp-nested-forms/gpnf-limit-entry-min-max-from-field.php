@@ -154,7 +154,7 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 						gform.addAction( 'gform_input_change', function( el, formId, fieldId ) {
 							if ( el.id === maxFieldId ) {
 								// Force Knockout to recalculate the max when the number has changed
-								window[ 'GPNestedForms_{0}_{1}'.format( self.parentFormId, self.nestedFormFieldId ) ].viewModel.entries.valueHasMutated();
+								window[ 'GPNestedForms_{0}_{1}'.gformFormat( self.parentFormId, self.nestedFormFieldId ) ].viewModel.entries.valueHasMutated();
 							}
 						} );
 

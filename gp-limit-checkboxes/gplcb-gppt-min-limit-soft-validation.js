@@ -28,7 +28,7 @@ window.gform.addFilter('gppt_validation_result', function (result, gppt, formId)
 		var group = gplc.groups[i];
 		var fields = group.fields;
 		var fieldsVisible = true;
-		var groupValidationMessage = validationMessage.format(group.min);
+		var groupValidationMessage = validationMessage.gformFormat(group.min);
 
 		$(gplc.getSelector(group.fields)).each(function () {
 			var fieldVisible = $(this).is(':visible');
