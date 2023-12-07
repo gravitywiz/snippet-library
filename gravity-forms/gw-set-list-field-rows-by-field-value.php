@@ -83,7 +83,7 @@ class GWAutoListFieldRows {
 
 						// Hide add/remove buttons
 						// Also align list column title
-						$("#field_{0}_{1}".format( this.formId, this.listFieldId ) ).find( '.gfield_header_item--icons, .gfield_list_icons' ).hide();
+						$("#field_{0}_{1}".gformFormat( this.formId, this.listFieldId ) ).find( '.gfield_header_item--icons, .gfield_list_icons' ).hide();
 
 					}
 

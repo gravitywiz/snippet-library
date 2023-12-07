@@ -64,8 +64,8 @@ class GW_Prevent_Duplicate_Selections {
 
 				/**
 				 * Given a select element, determines which option was changed.
-				 * 
-				 * @param {HTMLSelectElement} $select 
+				 *
+				 * @param {HTMLSelectElement} $select
 				 * @param {object} selected
 				 * @param {string} selected.selected
 				 * @param {string} selected.deselected
@@ -79,7 +79,7 @@ class GW_Prevent_Duplicate_Selections {
 					 * on the jQuery event which indicates which option was selected/deselected.
 					 *
 					 * - If the option was selected, then selected.selected will be the value of the selected option.
-					 * - If the option was deselected, the selected.deslected will be the value of the deselected option. 
+					 * - If the option was deselected, the selected.deslected will be the value of the deselected option.
 					 */
 					if ( selected ) {
 						let value = selected.selected ? selected.selected : selected.deselected;
@@ -166,14 +166,14 @@ class GW_Prevent_Duplicate_Selections {
 						$elem.parents( '.gfield' ).data( 'previous-value', $elem.val() );
 						if ( previousValue ) {
 							$targets
-								.filter( '[value="{0}"]'.format( previousValue ) )
+								.filter( '[value="{0}"]'.gformFormat( previousValue ) )
 								.prop( 'disabled', false )
 								.removeClass( disabledClass );
 						}
 					}
 
 					let $filteredTargets = $targets
-						.filter( '[value="{0}"]'.format( value ) )
+						.filter( '[value="{0}"]'.gformFormat( value ) )
 						.prop( 'disabled', isChecked );
 
 					// For Drop Down and Multi Selects, we need to loop through each field and select the first available option - and -

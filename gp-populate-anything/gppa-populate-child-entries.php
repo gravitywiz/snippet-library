@@ -117,7 +117,7 @@ class GPPA_Populate_Child_Entries {
 
 					self.init = function() {
 
-						self.$peidField = $( '#input_{0}_{1}'.format( self.formId, self.fieldId ) );
+						self.$peidField = $( '#input_{0}_{1}'.gformFormat( self.formId, self.fieldId ) );
 
 						if ( typeof window[ 'gpnfSessionPromise_' + self.formId ] === 'undefined' ) {
 							gform.addAction( 'gpnf_session_initialized', function() {
@@ -131,7 +131,7 @@ class GPPA_Populate_Child_Entries {
 
 					self.setupPeidField = function() {
 
-						var gpnfCookie = $.parseJSON( self.getCookie( 'gpnf_form_session_{0}'.format( self.formId ) ) );
+						var gpnfCookie = $.parseJSON( self.getCookie( 'gpnf_form_session_{0}'.gformFormat( self.formId ) ) );
 
 						if ( ! self.$peidField.val() ) {
 							self.$peidField
@@ -140,7 +140,7 @@ class GPPA_Populate_Child_Entries {
 						}
 
 						for ( var i = 0; i < self.nestedFormFieldIds.length; i++ ) {
-							window[ 'GPNestedForms_{0}_{1}'.format( self.formId, self.nestedFormFieldIds[ i ] ) ].viewModel.entries.subscribe( function( entries ) {
+							window[ 'GPNestedForms_{0}_{1}'.gformFormat( self.formId, self.nestedFormFieldIds[ i ] ) ].viewModel.entries.subscribe( function( entries ) {
 								self.$peidField.data( 'lastValue', '' ).change();
 							} );
 						}

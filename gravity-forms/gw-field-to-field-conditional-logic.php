@@ -66,7 +66,7 @@ class GF_Field_To_Field_Conditional_Logic {
 					}
 					var value = '{:' + field.id + ':value}';
 					var isSelected = value === selectedValue;
-					fieldOptions.push( '<option value="{0}" {2}>{1}</option>'.format( value, GetLabel( field ), isSelected ? 'selected' : '' ) );
+					fieldOptions.push( '<option value="{0}" {2}>{1}</option>'.gformFormat( value, GetLabel( field ), isSelected ? 'selected' : '' ) );
 					if ( isSelected ) {
 						var $choiceSelect = jQuery( '<select>' + choiceOptions + '</select>' );
 						$choiceSelect.find( 'option:selected' ).remove();
@@ -75,7 +75,7 @@ class GF_Field_To_Field_Conditional_Logic {
 					}
 				}
 
-				markup = '{0}<optgroup label="Field Choices">{1}</optgroup><optgroup label="Fields">{2}</optgroup>{3}'.format(
+				markup = '{0}<optgroup label="Field Choices">{1}</optgroup><optgroup label="Fields">{2}</optgroup>{3}'.gformFormat(
 					match ? match[1] : '',
 					choiceOptions,
 					fieldOptions.join( "\n" ),

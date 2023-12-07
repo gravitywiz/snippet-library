@@ -69,7 +69,7 @@ class GPDTC_Format_Hours_Mins {
 								var hours = Math.floor( result );
 								var diff = hours - result;
 								var mins = Math.round( Math.abs( diff * 60 ) );
-								result = '{0} hours, {1} minutes'.format( hours, mins );
+								result = '{0} hours, {1} minutes'.gformFormat( hours, mins );
 							}
 							return result;
 						} );

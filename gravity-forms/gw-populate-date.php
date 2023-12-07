@@ -351,7 +351,7 @@ class GW_Populate_Date {
 							case 'field':
 								var inputId  = self.modifier.inputId,
 									value    = self.getFieldValue( inputId ),
-									modifier = value !== '' ? self.modifier.modifier.format( value ) : false;
+									modifier = value !== '' ? self.modifier.modifier.gformFormat( value ) : false;
 								break;
 						}
 
@@ -396,7 +396,7 @@ class GW_Populate_Date {
 						var fieldId    = gformExtractFieldId( inputId ),
 							inputIndex = gformExtractInputIndex( inputId ),
 							id         = inputIndex !== fieldId ? '#input_{0}_{1}' : '#input_{0}_{1}_{2}',
-							$input     = $( id.format( self.formId, fieldId, inputIndex ) );
+							$input     = $( id.gformFormat( self.formId, fieldId, inputIndex ) );
 
 						return $input;
 					};
