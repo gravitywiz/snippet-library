@@ -18,10 +18,17 @@
 class GWPostPermalink {
 
 	function __construct() {
-
+		add_filter( 'gform_is_feed_asynchronous', array( $this, 'disable_async' ), 10, 4 );
 		add_filter( 'gform_custom_merge_tags', array( $this, 'add_custom_merge_tag' ), 10, 4 );
 		add_filter( 'gform_replace_merge_tags', array( $this, 'replace_merge_tag' ), 10, 3 );
 
+	}
+
+	function disable_async ( $is_async, $feed, $entry, $form ) {
+		if ( rgar( $feed, 'addon_slug' ) === 'gravityformsadvancedpostcreation' ) {
+			return false;
+		}
+		return $is_async;
 	}
 
 	function add_custom_merge_tag( $merge_tags, $form_id, $fields, $element_id ) {
@@ -62,21 +69,6 @@ class GWPostPermalink {
 	}
 
 	function get_post_id_by_entry( $entry ) {
-		// retry logic to fetch the post_id
-		$retry_limit = 3;
-		$retry_count = 0;
-		$post_id     = 0;
-		while ( $post_id === 0 && $retry_count < $retry_limit ) {
-			// refresh entry and try to get post
-			$entry   = GFAPI::get_entry( $entry['id'] ) ;
-			$post_id = absint( rgar( $entry, 'post_id' ) );
-		
-			if ( $post_id === 0 ) {
-				sleep(1); // Wait for 1 second before retrying
-				$retry_count++;
-			}
-		}
-
 		$post_id = rgar( $entry, 'post_id' );
 		if ( ! $post_id && function_exists( 'gf_advancedpostcreation' ) ) {
 			$entry_post_ids = gform_get_meta( $entry['id'], gf_advancedpostcreation()->get_slug() . '_post_id' );
