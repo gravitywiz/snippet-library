@@ -9,7 +9,7 @@
  * Plugin URI:  http://gravitywiz.com/documentation/gp-limit-choices/
  * Description: Specify a group of fields that should create a unique choice to be limited.
  * Author:      Gravity Wiz
- * Version:     1.6.1
+ * Version:     1.7
  * Author URI:  http://gravitywiz.com
  */
 class GP_Limit_Choices_Field_Group {

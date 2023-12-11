@@ -10,7 +10,7 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Prevent duplicate selections in choice-based fields. Currently works with Checkbox, Radio Button, Drop Down and Enhanced-UI-enabled Multi Select fields.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   http://gravitywiz.com
  */
 

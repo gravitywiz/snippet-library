@@ -9,7 +9,7 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Compare fields in Gravity Forms conditional logic.
  * Author:       Gravity Wiz
- * Version:      0.9.1
+ * Version:      0.10
  * Author URI:   http://gravitywiz.com
  *
  * @todo
