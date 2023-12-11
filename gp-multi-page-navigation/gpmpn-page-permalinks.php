@@ -9,7 +9,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-multi-page-navigation/
  * Description:  Add permalinks for each page of your multi-page forms.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   https://gravitywiz.com
  */
 class GPMPN_Page_Permalinks {

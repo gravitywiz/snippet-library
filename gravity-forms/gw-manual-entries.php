@@ -12,7 +12,7 @@
  * Plugin URI: http://gravitywiz.com
  * Description: Create entries manually for Gravity Forms. Adds an "Add New" button next to the page title on all entry-related pages.
  * Author: Gravity Wiz
- * Version: 1.6
+ * Version: 1.7
  * Author URI: http://gravitywiz.com
  */
 class GW_Manual_Entries {

@@ -14,7 +14,7 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Set a Number field's minimum and maximum range by the values entered in to other fields.
  * Author:       Gravity Wiz
- * Version:      0.4
+ * Version:      0.5
  * Author URI:   http://gravitywiz.com
  */
 class GW_Dynamic_Range {

@@ -9,7 +9,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-preview-submission/
  * Description:  Live refresh the target field whenever a field changes.
  * Author:       Gravity Wiz
- * Version:      0.7
+ * Version:      0.8
  * Author URI:   https://gravitywiz.com/
  */
 class GPPS_Live_Refresh {

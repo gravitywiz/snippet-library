@@ -30,7 +30,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  * Description:  A brief description about this snippet and the functionality it provides. Might also include basic usage instructions if applicable.
  * Author:       Gravity Wiz
- * Version:      1.2
+ * Version:      1.3
  * Author URI:   http://gravitywiz.com
  */
 class GPPA_Populate_Child_Entries {

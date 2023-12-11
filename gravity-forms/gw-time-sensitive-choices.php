@@ -19,7 +19,7 @@
  * Plugin URI:  https://gravitywiz.com
  * Description: Filter time-based choices based on the current time.
  * Author:      David Smith
- * Version:     1.3.2
+ * Version:     1.4
  * Author URI:  https://gravitywiz.com
  */
 class GW_Time_Sensitive_Choices {
