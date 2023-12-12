@@ -18,6 +18,7 @@
 class GWPostPermalink {
 
 	function __construct() {
+		// we have to disable asynchronous feed to ensure post permalink merge tags are not rendered before post is actually created
 		add_filter( 'gform_is_feed_asynchronous', array( $this, 'disable_async' ), 10, 4 );
 		add_filter( 'gform_custom_merge_tags', array( $this, 'add_custom_merge_tag' ), 10, 4 );
 		add_filter( 'gform_replace_merge_tags', array( $this, 'replace_merge_tag' ), 10, 3 );
