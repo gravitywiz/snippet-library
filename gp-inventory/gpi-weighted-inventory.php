@@ -11,8 +11,9 @@
  * Known Limitations
  *
  * - Only works with Shared Inventory resources.
- * - Can only be applied to a single field in a resource.
- * - Does not work with the available inventory message.
+ * - Can only be applied to a single field per Shared Inventory resource even if fields are on different forms.
+ * - Does not work with the available inventory message – the available inventory will only show up correctly for the weighted field.
+ * – Does not work with choice-based fields.
  *
  * Plugin Name:  GP Inventory — Weighted Inventory
  * Plugin URI:   http://gravitywiz.com/documentation/gravity-forms-inventory/
