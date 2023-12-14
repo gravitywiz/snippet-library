@@ -4,7 +4,7 @@
  *
  * Include custom Javascript with your form.
  *
- * @version  1.6.1
+ * @version  1.6.2
  * @author   David Smith <david@gravitywiz.com>
  * @license  GPL-2.0+
  * @link     http://gravitywiz.com/
@@ -13,7 +13,7 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Include custom Javascript with your form.
  * Author:       Gravity Wiz
- * Version:      1.6.1
+ * Version:      1.6.2
  * Author URI:   http://gravitywiz.com
  *
  * Usage:
@@ -94,7 +94,9 @@ class GF_Custom_JS {
 	}
 
 	public function add_custom_js_setting( $form_settings, $form ) {
-		if ( rgget( 'subview' ) !== 'settings' ) {
+		$is_settings_view = rgget( 'view' ) === 'settings';
+		$subview          = rgget( 'subview' );
+		if ( ! $is_settings_view || ( $subview && $subview !== 'settings' ) ) {
 			return $form_settings;
 		}
 		$form_settings['Custom Code'] = array(
