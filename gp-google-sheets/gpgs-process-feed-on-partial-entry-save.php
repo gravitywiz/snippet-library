@@ -2,8 +2,7 @@
 /**
  * Gravity Perks // GP Google Sheets // Process Feed when Partial Entry is Saved.
  *
- * This snippet processes google sheet feed for partial entries as well.
- *
+ * Process Google Sheet feeds when a partial entry is saved.
  */
 add_action( 'gform_partialentries_post_entry_saved', 'send_to_google_sheet_on_partial_entry_saved', 10, 2 );
 function send_to_google_sheet_on_partial_entry_saved( $partial_entry, $form ) {
