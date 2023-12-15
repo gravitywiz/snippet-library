@@ -1,0 +1,14 @@
+/**
+ * Gravity Perks // Multi-Page Navigation // Disable Multi-Page Navigation Links via CSS
+ * https://gravitywiz.com/documentation/gravity-forms-multi-page-navigation/
+ *
+ * This CSS disables Mulit-page Naviation's page links whenever GP Populate Anything disables the form navigation.
+*/
+.gppa-navigation-disabled .gwmpn-page-link {
+	cursor: not-allowed;
+	opacity: 0.5;
+	color: currentColor;
+	display: inline-block;  /* For IE11/ MS Edge bug */
+	pointer-events: none;
+	text-decoration: none;
+}

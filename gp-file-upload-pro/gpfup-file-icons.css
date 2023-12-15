@@ -1,0 +1,20 @@
+/**
+ * Gravity Perks // File Upload Pro // Icons for Each File Type
+ * https://gravitywiz.com/documentation/gravity-forms-file-upload-pro/
+ *
+ * Add unique icons for each file type. Currently supports doc, docx, pdf, and zip. Let us know what other file
+ * types we should support [via support](https://gravitywiz.com/support/)!
+ */
+.gpfup__file-icon svg {
+	visibility: hidden;
+}
+.gpfup__file[data-file-ext="zip"] .gpfup__file-icon {
+	background: url( https://cdn.jsdelivr.net/npm/pretty-file-icons@2.2.1/svg/zip.svg );
+}
+.gpfup__file[data-file-ext="doc"] .gpfup__file-icon,
+.gpfup__file[data-file-ext="docx"] .gpfup__file-icon {
+	background: url( https://cdn.jsdelivr.net/npm/pretty-file-icons@2.2.1/svg/doc.svg );
+}
+.gpfup__file[data-file-ext="pdf"] .gpfup__file-icon {
+	background: url( https://cdn.jsdelivr.net/npm/pretty-file-icons@2.2.1/svg/pdf.svg );
+}

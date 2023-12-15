@@ -1,0 +1,21 @@
+name: PHP Lint
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  PHPCS:
+    name: PHPCS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          composer install --dev --prefer-dist --no-progress --no-suggest
+          composer require --dev staabm/annotate-pull-request-from-checkstyle
+
+      - name: Run phpcs
+        run: ./vendor/bin/phpcs -q --report=checkstyle | ./vendor/bin/cs2pr --graceful-warnings

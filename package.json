@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "@types/node": "^18.7.23",
+    "danger": "^11.1.2"
+  }
+}

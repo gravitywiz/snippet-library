@@ -1,0 +1,253 @@
+{
+	"USD": {
+		"name": "U.S. Dollar",
+		"symbol_left": "$",
+		"symbol_right": "",
+		"symbol_padding": "",
+		"thousand_separator": ",",
+		"decimal_separator": ".",
+		"decimals": 2,
+		"code": "USD"
+	},
+	"GBP": {
+		"name": "Pound Sterling",
+		"symbol_left": "£",
+		"symbol_right": "",
+		"symbol_padding": " ",
+		"thousand_separator": ",",
+		"decimal_separator": ".",
+		"decimals": 2,
+		"code": "GBP"
+	},
+	"EUR": {
+		"name": "Euro",
+		"symbol_left": "",
+		"symbol_right": "€",
+		"symbol_padding": " ",
+		"thousand_separator": ".",
+		"decimal_separator": ",",
+		"decimals": 2,
+		"code": "EUR"
+	},
+	"AUD": {
+		"name": "Australian Dollar",
+		"symbol_left": "$",
+		"symbol_right": "",
+		"symbol_padding": " ",
+		"thousand_separator": ",",
+		"decimal_separator": ".",
+		"decimals": 2,
+		"code": "AUD"
+	},
+	"BRL": {
+		"name": "Brazilian Real",
+		"symbol_left": "R$",
+		"symbol_right": "",
+		"symbol_padding": " ",
+		"thousand_separator": ".",
+		"decimal_separator": ",",
+		"decimals": 2,
+		"code": "BRL"
+	},
+	"CAD": {
+		"name": "Canadian Dollar",
+		"symbol_left": "$",
+		"symbol_right": "CAD",
+		"symbol_padding": " ",
+		"thousand_separator": ",",
+		"decimal_separator": ".",
+		"decimals": 2,
+		"code": "CAD"
+	},
+	"CZK": {
+		"name": "Czech Koruna",
+		"symbol_left": "",
+		"symbol_right": "Kč",
+		"symbol_padding": " ",
+		"thousand_separator": " ",
+		"decimal_separator": ",",
+		"decimals": 2,
+		"code": "CZK"
+	},
+	"DKK": {
+		"name": "Danish Krone",
+		"symbol_left": "",
+		"symbol_right": "kr.",
+		"symbol_padding": " ",
+		"thousand_separator": ".",
+		"decimal_separator": ",",
+		"decimals": 2,
+		"code": "DKK"
+	},
+	"HKD": {
+		"name": "Hong Kong Dollar",
+		"symbol_left": "HK$",
+		"symbol_right": "",
+		"symbol_padding": "",
+		"thousand_separator": ",",
+		"decimal_separator": ".",
+		"decimals": 2,
+		"code": "HKD"
+	},
+	"HUF": {
+		"name": "Hungarian Forint",
+		"symbol_left": "",
+		"symbol_right": "Ft",
+		"symbol_padding": " ",
+		"thousand_separator": ".",
+		"decimal_separator": ",",
+		"decimals": 2,
+		"code": "HUF"
+	},
+	"ILS": {
+		"name": "Israeli New Sheqel",
+		"symbol_left": "₪",
+		"symbol_right": "",
+		"symbol_padding": " ",
+		"thousand_separator": ",",
+		"decimal_separator": ".",
+		"decimals": 2,
+		"code": "ILS"
+	},
+	"JPY": {
+		"name": "Japanese Yen",
+		"symbol_left": "¥",
+		"symbol_right": "",
+		"symbol_padding": " ",
+		"thousand_separator": ",",
+		"decimal_separator": "",
+		"decimals": 0,
+		"code": "JPY"
+	},
+	"MYR": {
+		"name": "Malaysian Ringgit",
+		"symbol_left": "RM",
+		"symbol_right": "",
+		"symbol_padding": " ",
+		"thousand_separator": ",",
+		"decimal_separator": ".",
+		"decimals": 2,
+		"code": "MYR"
+	},
+	"MXN": {
+		"name": "Mexican Peso",
+		"symbol_left": "$",
+		"symbol_right": "",
+		"symbol_padding": " ",
+		"thousand_separator": ",",
+		"decimal_separator": ".",
+		"decimals": 2,
+		"code": "MXN"
+	},
+	"NOK": {
+		"name": "Norwegian Krone",
+		"symbol_left": "Kr",
+		"symbol_right": "",
+		"symbol_padding": " ",
+		"thousand_separator": ".",
+		"decimal_separator": ",",
+		"decimals": 2,
+		"code": "NOK"
+	},
+	"NZD": {
+		"name": "New Zealand Dollar",
+		"symbol_left": "$",
+		"symbol_right": "",
+		"symbol_padding": " ",
+		"thousand_separator": ",",
+		"decimal_separator": ".",
+		"decimals": 2,
+		"code": "NZD"
+	},
+	"PHP": {
+		"name": "Philippine Peso",
+		"symbol_left": "Php",
+		"symbol_right": "",
+		"symbol_padding": " ",
+		"thousand_separator": ",",
+		"decimal_separator": ".",
+		"decimals": 2,
+		"code": "PHP"
+	},
+	"PLN": {
+		"name": "Polish Zloty",
+		"symbol_left": "zł",
+		"symbol_right": "",
+		"symbol_padding": " ",
+		"thousand_separator": ".",
+		"decimal_separator": ",",
+		"decimals": 2,
+		"code": "PLN"
+	},
+	"RUB": {
+		"name": "Russian Ruble",
+		"symbol_left": "",
+		"symbol_right": "py\u0431",
+		"symbol_padding": " ",
+		"thousand_separator": " ",
+		"decimal_separator": ".",
+		"decimals": 2,
+		"code": "RUB"
+	},
+	"SGD": {
+		"name": "Singapore Dollar",
+		"symbol_left": "$",
+		"symbol_right": "",
+		"symbol_padding": " ",
+		"thousand_separator": ",",
+		"decimal_separator": ".",
+		"decimals": 2,
+		"code": "SGD"
+	},
+	"ZAR": {
+		"name": "South African Rand",
+		"symbol_left": "R",
+		"symbol_right": "",
+		"symbol_padding": "",
+		"thousand_separator": ",",
+		"decimal_separator": ".",
+		"decimals": 2,
+		"code": "ZAR"
+	},
+	"SEK": {
+		"name": "Swedish Krona",
+		"symbol_left": "",
+		"symbol_right": "Kr",
+		"symbol_padding": " ",
+		"thousand_separator": " ",
+		"decimal_separator": ",",
+		"decimals": 2,
+		"code": "SEK"
+	},
+	"CHF": {
+		"name": "Swiss Franc",
+		"symbol_left": "CHF",
+		"symbol_right": "",
+		"symbol_padding": " ",
+		"thousand_separator": "'",
+		"decimal_separator": ".",
+		"decimals": 2,
+		"symbol_old": "Fr.",
+		"code": "CHF"
+	},
+	"TWD": {
+		"name": "Taiwan New Dollar",
+		"symbol_left": "$",
+		"symbol_right": "",
+		"symbol_padding": " ",
+		"thousand_separator": ",",
+		"decimal_separator": ".",
+		"decimals": 2,
+		"code": "TWD"
+	},
+	"THB": {
+		"name": "Thai Baht",
+		"symbol_left": "฿",
+		"symbol_right": "",
+		"symbol_padding": " ",
+		"thousand_separator": ",",
+		"decimal_separator": ".",
+		"decimals": 2,
+		"code": "THB"
+	}
+}

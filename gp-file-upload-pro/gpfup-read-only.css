@@ -1,0 +1,22 @@
+/**
+ * Gravity Perks // File Upload Pro // Read Only
+ * https://gravitywiz.com/documentation/gravity-forms-file-upload-pro/
+ *
+ * Disable interactions on fields using File Upload Pro. This snippet hides the delete button, drop area,
+ * upload button, drag handle, and crop button. This can be useful if the field is going to be hydrated from
+ * another source such as GF User Registration and you are wanting to provide a way to display what's already
+ * been uploaded.
+ *
+ * Instructions:
+ *   1. Copy and paste these styles into your theme's style.css file (or anywhere your theme allows custom CSS).
+ *   2. Enable File Upload Pro on your File Upload field.
+ *   3. Add "gpfup-read-only" to the "Custom CSS Class" setting (on the Appearance tab).
+ */
+.gpfup-read-only .gform_fileupload_rules,
+.gpfup-read-only .gpfup__droparea,
+.gpfup-read-only .gpfup__delete,
+.gpfup-read-only .gpfup__drag-handle,
+.gpfup-read-only .gpfup__edit
+{
+	display: none !important;
+}
