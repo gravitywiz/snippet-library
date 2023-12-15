@@ -10,7 +10,7 @@
 // Update "123" to your form ID and "4" to your Unique ID field ID.
 add_filter( 'gpui_unique_id_attributes_123_4', function ( $atts, $form_id, $field_id, $entry ) {
 
-	$prefix = (int) GFCommon::replace_variables( $atts['prefix'], GFAPI::get_form( $form_id ), $entry, false, true, false, 'text' );
+	$prefix = GFCommon::replace_variables( $atts['prefix'], GFAPI::get_form( $form_id ), $entry, false, true, false, 'text' );
 
 	$atts['slug'] = "seq-by-prefix-{$prefix}";
 
