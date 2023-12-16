@@ -4,7 +4,7 @@
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
  * Make Nested Entry feed processing process with Parent Entry feed processing.
-
+ *
  * @todo
  *     - Make all parameters optional. Would allow this snippet to apply to any child feed for which a parent feed of the same type was present for any Gravity Flow step.
  */
@@ -33,18 +33,17 @@ class GPNF_GFlow_Delay_Child_Feed {
 	}
 
 	function addon_should_process( $should_process_feed, $feed, $context, $parent_form, $nested_form_field, $entry ) {
-		// disable immediate processing of Addon Feed for the nested entries.
+		// Disable immediate processing of add-on Feed for the nested entries.
 		return false;
 	}
 
 	function handle_gravityflow_step_completion( $step_id, $entry_id, $form_id, $status ) {
-		// Update 6 to the Addon Workflow Step on the Parent Form
 		if ( $step_id == $this->_args['step_id'] && $status == 'complete' ) {
-			// When Addon Workflow step is complete on Parent from
+			// When add-on workflow step is complete on parent form.
 			$entry       = GFAPI::get_entry( $entry_id );
 			$parent_form = GFAPI::get_form( $form_id );
 
-			// get all nested entries
+			// Get all nested entries.
 			$nested_entries = array();
 			foreach ( $parent_form['fields'] as $field ) {
 				if ( $field instanceof GP_Field_Nested_Form ) {
@@ -54,7 +53,7 @@ class GPNF_GFlow_Delay_Child_Feed {
 			}
 			$nested_entries = array_unique( $nested_entries );
 
-			// process each nested entry
+			// Process each nested entry.
 			foreach ( $nested_entries as $nested_entry_id ) {
 				$nested_entry = GFAPI::get_entry( $nested_entry_id );
 				if ( empty( $nested_entry_id ) || empty( $nested_entry ) || is_wp_error( $nested_entry ) ) {
