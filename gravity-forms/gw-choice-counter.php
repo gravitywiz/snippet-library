@@ -74,7 +74,7 @@ class GW_Choice_Count {
 								$parentForm         = $choiceField.parents('form');
 
 							// Do not disable previous select event for multi-select because we may have multiple instances on same choice fields.
-							if ( $choiceField.attr('multiple') !== 'multiple' ) { 
+							if ( $choiceField.attr('multiple') !== 'multiple'  && !Boolean( $choiceField.find(':checkbox').length ) ) { 
 								$parentForm.off( 'click', choiceFieldSelector, self.updateChoiceEventHander );
 								$parentForm.off( 'change', choiceFieldSelector, self.updateChoiceEventHander );
 							}
