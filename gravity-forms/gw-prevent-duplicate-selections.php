@@ -6,6 +6,14 @@
  * Prevent duplicate selections in choice-based fields. Currently works with Checkbox, Radio Button, Drop Down and
  * Enhanced-UI-enabled Multi Select fields.
  *
+ * Instructions:
+ *
+ * 1. Install this snippet with our free Custom JavaScript plugin.
+ *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *
+ * 2. Add 'gw-prevent-duplicates' to the CSS Class Name setting for any field in which duplicate selections
+ *    should be prevented.
+ *
  * Plugin Name:  Gravity Forms Prevent Duplicate Selections
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Prevent duplicate selections in choice-based fields. Currently works with Checkbox, Radio Button, Drop Down and Enhanced-UI-enabled Multi Select fields.
