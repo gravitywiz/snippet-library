@@ -9,7 +9,7 @@
  * will revisit.
  */
 add_filter( 'gform_validation', function( $result ) {
-	if ( rgpost( 'gspc_product_price' ) && ! $result['is_valid'] && $result['form']['fields'][0]['validation_message'] = esc_html__( 'At least one field must be filled out', 'gravityforms' ) ) {
+	if ( rgpost( 'gspc_product_price' ) && ! $result['is_valid'] && $result['form']['fields'][0]['validation_message'] == esc_html__( 'At least one field must be filled out', 'gravityforms' ) ) {
 		$result['is_valid'] = true;
 		foreach ( $result['form']['fields'] as &$field ) {
 			$field->failed_validation  = false;

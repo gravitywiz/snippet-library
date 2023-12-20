@@ -11,8 +11,8 @@ function gpls_include_field_value_in_validation_message( $message, $gpls_enforce
 	$bits = explode( '_', current_filter() );
 	if ( count( $bits ) === 6 ) {
 		$field_id = array_pop( $bits );
-    // Update your validation message as desired.
-		$message  = sprintf( 'You have entered "%s" in this field before.', rgpost( "input_{$field_id}" ) );
+		// Update your validation message as desired.
+		$message = sprintf( 'You have entered "%s" in this field before.', rgpost( "input_{$field_id}" ) );
 	}
 	return $message;
 }

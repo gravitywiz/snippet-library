@@ -5,7 +5,7 @@
  *
  * If you intend to map different Resources to different fields throughout the life of your form, you may wish to capture
  * the current Resource at the time of submission and save that value to a field. This snippet can help.
- * 
+ *
  * Instructions
  *
  * 1. Install the snippet.

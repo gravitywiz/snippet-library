@@ -15,10 +15,10 @@ add_filter( 'gpld_limit_dates_options_123_4', function( $field_options, $form, $
 		$field_options['exceptions'] = array();
 	}
 
-  // Update "124" to the ID of the form from which the exceptions should be pulled.
-	$source_form_id  = 124;
+	// Update "124" to the ID of the form from which the exceptions should be pulled.
+	$source_form_id = 124;
 
-  // Update "5" to the ID of the field on the source form from which the exceptions should be pulled.
+	// Update "5" to the ID of the field on the source form from which the exceptions should be pulled.
 	$source_field_id = 5;
 
 	$field_options['exceptionMode'] = 'disable';
@@ -26,18 +26,22 @@ add_filter( 'gpld_limit_dates_options_123_4', function( $field_options, $form, $
 	$query_args = array(
 		'field_filters' => array(
 			array(
-				'key' => $source_field_id,
-				'value' => gmdate( 'Y-m-d' ),
+				'key'      => $source_field_id,
+				'value'    => gmdate( 'Y-m-d' ),
 				'operator' => '>=',
 			),
 		),
 	);
 
-	$paging = array( 'offset' => 0, 'page_size' => 50 );
+	$paging = array(
+		'offset'    => 0,
+		'page_size' => 50,
+	);
 
-	$entries  = GFAPI::get_entries( $source_form_id, $query_args, null, $paging );
+	$entries = GFAPI::get_entries( $source_form_id, $query_args, null, $paging );
 
 	foreach ( $entries as $entry ) {
+		// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 		$field_options['exceptions'][] = date( 'm/d/Y', strtotime( rgar( $entry, $source_field_id ) ) );
 	}
 

@@ -13,7 +13,7 @@
 // Update "123" to your form ID and "4" to your field ID.
 add_filter( 'gppa_input_choices_123_4', function( $choices ) {
 	foreach ( $choices as &$choice ) {
-    // Update ' - ' to the value you are using between merge tags in your custom label template.
+		// Update ' - ' to the value you are using between merge tags in your custom label template.
 		$delimiter      = ' - ';
 		$bits           = array_filter( array_map( 'trim', explode( $delimiter, $choice['text'] ) ) );
 		$choice['text'] = implode( $delimiter, $bits );

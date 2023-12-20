@@ -3,23 +3,23 @@
  * https://gravitywiz.com/documentation/gravity-forms-file-upload-pro/
  *
  * Instructions:
- * 
+ *
  * 1. Add the following code to your theme's stylesheet or wherever you include custom CSS.
  * 2. Add the "gpfup-reverse-order" class to your File Upload field's CSS Class Name setting.
  */
-.gpfup-reverse-order .gpfup__files { 
-    display: flex;
-    flex-direction: column-reverse;
+.gpfup-reverse-order .gpfup__files {
+	display: flex;
+	flex-direction: column-reverse;
 }
 
 .gpfup-reverse-order .gpfup__files li {
-    flex: 0 0 auto;
+	flex: 0 0 auto;
 }
 
 .gpfup-reverse-order .gpfup__file {
-    border-bottom: 1px solid rgba( 0, 0, 0, 0.15 );
+	border-bottom: 1px solid rgba( 0, 0, 0, 0.15 );
 }
 
 .gpfup-reverse-order .gpfup__file:first-of-type {
-    border: 0;
+	border: 0;
 }

@@ -19,8 +19,8 @@ class GPPA_Notification_Choices {
 	public function __construct( $args = array() ) {
 
 		$this->_args = wp_parse_args( $args, array(
-			'form_id' => null,
-			'entry_field_id' => null,
+			'form_id'               => null,
+			'entry_field_id'        => null,
 			'notification_field_id' => null,
 		) );
 

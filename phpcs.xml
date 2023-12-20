@@ -35,10 +35,11 @@
         <exclude name="WordPress.PHP.StrictComparisons" />
         <exclude name="WordPress.PHP.StrictInArray" />
         <exclude name="WordPress.PHP.StrictInArray.MissingTrueStrict" />
-    </rule>
 
-    <!-- Change certain errors to warnings -->
-    <rule ref="WordPress.PHP.DontExtract.extract_extract">
-        <type>warning</type>
+		<!-- We frequently use extract() to make code more readable. -->
+        <exclude name="WordPress.PHP.DontExtract.extract_extract" />
+
+		<!-- Allow shorthand ternary operators -->
+		<exclude name="WordPress.PHP.DisallowShortTernary.Found" />
     </rule>
 </ruleset>

@@ -15,9 +15,9 @@ add_action( 'init', function() {
 	 */
 	add_filter( 'gform_field_validation', function( $result, $value, $form, $field ) {
 		if ( $field->get_input_type() === 'phone'
-			 && $field->phoneFormat === 'standard'
-			 && ! $field->gpapfEnable
-			 && ! rgblank( $value )
+				&& $field->phoneFormat === 'standard'
+				&& ! $field->gpapfEnable
+				&& ! rgblank( $value )
 		) {
 			$cloned_field              = clone $field;
 			$cloned_field->gpapfEnable = true;

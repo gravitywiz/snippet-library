@@ -16,7 +16,7 @@ add_filter( 'gppa_input_choices', function ( $choices, $field ) {
 	}
 
 	$object = rgar( $choices[0], 'object' );
-	if ( ! $object|| ! is_a( $object, 'WP_Post' ) || $object->post_type !== 'acf-field' ) {
+	if ( ! $object || ! is_a( $object, 'WP_Post' ) || $object->post_type !== 'acf-field' ) {
 		return $choices;
 	}
 

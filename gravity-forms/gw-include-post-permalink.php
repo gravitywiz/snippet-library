@@ -25,7 +25,7 @@ class GWPostPermalink {
 
 	}
 
-	function disable_async ( $is_async, $feed, $entry, $form ) {
+	function disable_async( $is_async, $feed, $entry, $form ) {
 		if ( rgar( $feed, 'addon_slug' ) === 'gravityformsadvancedpostcreation' ) {
 			return false;
 		}
