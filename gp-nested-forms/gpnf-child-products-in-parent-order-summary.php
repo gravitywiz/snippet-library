@@ -26,7 +26,7 @@ add_filter( 'gform_product_info', function( $product_info, $form, $entry ) {
 
 			list( ,$nested_form_field_id,, ) = $match;
 
-			$nested_form_field = GFFormsModel::get_field( $form, $nested_form_field_id );
+			$nested_form_field = GFAPI::get_field( $form, $nested_form_field_id );
 			if ( ! $nested_form_field ) {
 				continue;
 			}
