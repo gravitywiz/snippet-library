@@ -196,7 +196,7 @@ class GW_All_Fields_Template {
 
 			switch ( $modifier ) {
 				case 'filter':
-					if ( in_array( $field->id, $field_ids ) ) {
+					if ( ! empty( $field->id ) && in_array( $field->id, $field_ids ) ) {
 						// Check for input-specific filters.
 						if ( is_array( $raw_value ) && ! in_array( $field->id, $input_ids ) ) {
 							$filtered_values = array();
@@ -214,7 +214,7 @@ class GW_All_Fields_Template {
 					} else {
 						$value = false;
 					}
-					break;
+						break;
 				case 'include':
 					if ( in_array( $field->id, $field_ids ) ) {
 						$value = $this->get_all_fields_field_value( $field, $value );
@@ -371,7 +371,7 @@ class GW_All_Fields_Template {
 	}
 
 	public function get_submitted_fields( $form, $lead, $display_empty = false, $use_text = false, $format = 'html', $use_admin_label = false, $merge_tag = '', $modifiers = '' ) {
-
+		$hidden_items = array();
 		$items = array();
 
 		//$field_data = '';
@@ -436,6 +436,11 @@ class GW_All_Fields_Template {
 						}
 					} elseif ( GFFormsModel::is_field_hidden( $form, $field, array(), $lead ) ) {
 						// ignore fields hidden by conditional logic
+						$hidden_items[] = array(
+							'label' => $field_label,
+							'value' => '',
+							'field' => $field,
+						);
 						break;
 					}
 
@@ -510,7 +515,7 @@ class GW_All_Fields_Template {
 				);
 			}
 		}
-
+		$items = array_merge( $items, $hidden_items );
 		return $items;
 	}
 
