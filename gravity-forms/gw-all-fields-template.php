@@ -196,7 +196,7 @@ class GW_All_Fields_Template {
 
 			switch ( $modifier ) {
 				case 'filter':
-					if ( ! empty( $field->id ) && in_array( $field->id, $field_ids ) ) {
+					if ( in_array( $field->id, $field_ids ) ) {
 						// Check for input-specific filters.
 						if ( is_array( $raw_value ) && ! in_array( $field->id, $input_ids ) ) {
 							$filtered_values = array();
@@ -214,7 +214,7 @@ class GW_All_Fields_Template {
 					} else {
 						$value = false;
 					}
-						break;
+					break;
 				case 'include':
 					if ( in_array( $field->id, $field_ids ) ) {
 						$value = $this->get_all_fields_field_value( $field, $value );
