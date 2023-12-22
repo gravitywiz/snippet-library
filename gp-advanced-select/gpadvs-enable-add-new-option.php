@@ -7,11 +7,9 @@
  *
  * Instructions:
  *
- * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ * 1. Install this snippet by following the instructions here: https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  *
- * 2. Enable "Allow field to be populated dynamically" option under your Advanced-Select-enabled field's Advanced settings.
- *    NOTE: This step is not required if you are dynamically populating choices via Populate Anything.
+ * 2. Customize the form_id and field_id properties at the bottom of this snippet.
  */
 class GPASVS_Enable_Add_New_Option {
 
@@ -53,30 +51,32 @@ class GPASVS_Enable_Add_New_Option {
 
 		<script type="text/javascript">
 
-			( function( $ ) {
-
-				window.GPADVSEnableAddNewOption = function( args ) {
-					gform.addFilter( 'gpadvs_settings', function( settings, gpadvs ) {
-						if ( (gpadvs.formId && gpadvs.formId != args.formId) || (gpadvs.fieldId && gpadvs.fieldId != args.fieldId) ) {
-							return settings;
-						}
-
-						settings.create = true;
-
-						/**
-						 * Uncomment the below code to customize the display of the "Add New" option.
-						 */
-						// if ( ! settings.render ) {
-						// 	settings.render = {};
-						// }
-
-						// settings.render.option_create = function( data, escape ) {
-						// 	return '<div class="create">Add <strong>' + escape(data.input) + '</strong>&hellip;</div>';
-						// }
-
+			window.GPADVSEnableAddNewOption = function( args ) {
+				gform.addFilter( 'gpadvs_settings', function( settings, gpadvs ) {
+					if ( args.formId && gpadvs.formId != args.formId ) {
 						return settings;
-					} );
-				} )( jQuery );
+					}
+
+					if ( args.fieldId && gpadvs.fieldId != args.fieldId ) {
+						return settings;
+					}
+
+					settings.create = true;
+
+					/**
+					 * Uncomment the below code to customize the display of the "Add New" option.
+					 */
+					// if ( ! settings.render ) {
+					// 	settings.render = {};
+					// }
+
+					// settings.render.option_create = function( data, escape ) {
+					// 	return '<div class="create">Add <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+					// }
+
+					return settings;
+				} );
+			}
 
 		</script>
 
@@ -86,7 +86,7 @@ class GPASVS_Enable_Add_New_Option {
 	public function add_init_script( $form ) {
 
 		if ( ! $this->is_applicable_form( $form ) ) {
-			return;
+			return $form;
 		}
 
 		$args = array(
@@ -99,6 +99,8 @@ class GPASVS_Enable_Add_New_Option {
 
 		GFFormDisplay::add_init_script( $this->_args['form_id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
 
+		return $form;
+
 	}
 
 	public function is_applicable_form( $form ) {
@@ -109,8 +111,17 @@ class GPASVS_Enable_Add_New_Option {
 	}
 
 	public function allow_created_choices_in_save_and_continue( $form, $ajax, $field_values ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $form;
+		}
+
 		foreach ( $form['fields'] as &$field ) {
 			if ( ! gp_advanced_select()->is_advanced_select_field( $field ) ) {
+				continue;
+			}
+
+			// Check if this instance is targeting all Advanced Select fields or a specific field.
+			if ( ! empty( $this->_args['field_id'] ) && $this->_args['field_id'] != $field->id ) {
 				continue;
 			}
 
@@ -141,4 +152,7 @@ class GPASVS_Enable_Add_New_Option {
 
 # Configuration
 
-new GPASVS_Enable_Add_New_Option();
+new GPASVS_Enable_Add_New_Option(array(
+	'form_id' => 123,
+    // 'field_id' => 4,
+));
