@@ -8,8 +8,8 @@
  *
  * Instructions:
  *
- * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ * 1. Install this snippet.
+ *    https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  *
  * 2. Add 'gw-prevent-duplicates' to the CSS Class Name setting for any field in which duplicate selections
  *    should be prevented.
