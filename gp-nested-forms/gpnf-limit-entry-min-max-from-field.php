@@ -131,8 +131,8 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 
 					self.init = function () {
 
-						var attrReadyMaxFieldId = self.maxFieldId.replace( '.', '_' );
-						var maxFieldId = 'input_' + self.parentFormId + '_' + attrReadyMaxFieldId;
+						//var attrReadyMaxFieldId = self.maxFieldId.replace( '.', '_' );
+						var maxFieldId = 'input_' + self.parentFormId + '_' + self.maxFieldId;
 
 						// GF uses "1" for the input index in the HTML id attribute for Single Product fields. Weird.
 						var $maxField = $( '#input_' + self.parentFormId + '_' + parseInt( self.maxFieldId ) );
@@ -146,7 +146,13 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 							}
 
 							var $maxField = $( '#' + maxFieldId );
-							var value = parseInt($maxField.val());
+							
+							// Getting values of Radio Choices works slightly differently
+							if ( $maxField.hasClass('gfield_radio') ){
+								var value = parseInt($("input[id^='choice_" + self.parentFormId + "_" + self.maxFieldId + "_']:checked").val());
+							} else {
+								var value = parseInt($maxField.val());
+							}
 
 							return value ? value : self.defaultMax;
 						});
