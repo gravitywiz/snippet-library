@@ -97,9 +97,13 @@ class GW_Update_Posts {
 		}
 
 		if ( $this->_args['post_date'] ) {
-			$new_date_time       = $this->get_post_date( $entry, $form );
-			$post->post_date     = $new_date_time;
-			$post->post_date_gmt = get_gmt_from_date( $new_date_time );
+			$new_date_time = $this->get_post_date( $entry, $form );
+			if ( $this->_args['post_date']['date'] ) {
+				$post->post_date = $new_date_time;
+			}
+			if ( $this->_args['post_date']['time'] ) {
+				$post->post_date_gmt = get_gmt_from_date( $new_date_time );
+			}
 		}
 
 		if ( $this->_args['featured_image'] && is_callable( 'gp_media_library' ) ) {
