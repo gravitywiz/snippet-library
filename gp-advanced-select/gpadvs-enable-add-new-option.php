@@ -7,7 +7,8 @@
  *
  * Instructions:
  *
- * 1. Install this snippet by following the instructions here: https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
+ * 1. Install this snippet by following the instructions here:
+ *    https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  *
  * 2. Customize the form_id and field_id properties at the bottom of this snippet.
  */
@@ -28,9 +29,11 @@ class GPASVS_Enable_Add_New_Option {
 
 	public function init() {
 
-		// time for hooks
 		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
-		add_action( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
+
+		// Advanced Select has to beat GF's default Chosen init script to the punch so uses `gform_pre_render` to register
+		// its init script early. We need to beat it to the punch, so we use the same filter on a higher priority.
+		add_filter( 'gform_pre_render', array( $this, 'add_init_script' ), 9, 2 );
 
 		add_filter( 'gform_pre_render', array( $this, 'allow_created_choices_in_save_and_continue' ), 10, 3 );
 
@@ -52,6 +55,7 @@ class GPASVS_Enable_Add_New_Option {
 		<script type="text/javascript">
 
 			window.GPADVSEnableAddNewOption = function( args ) {
+				console.log( 'gwiz' );
 				gform.addFilter( 'gpadvs_settings', function( settings, gpadvs ) {
 					if ( args.formId && gpadvs.formId != args.formId ) {
 						return settings;
@@ -125,9 +129,12 @@ class GPASVS_Enable_Add_New_Option {
 				continue;
 			}
 
-			$incomplete_submission_info = GFFormsModel::get_draft_submission_values( $_GET['gf_token'] );
-			$submission_details_json    = $incomplete_submission_info['submission'];
-			$submission_details         = json_decode( $submission_details_json, true );
+			$incomplete_submission_info = GFFormsModel::get_draft_submission_values( rgget( 'gf_token' ) );
+			if ( ! $incomplete_submission_info ) {
+				continue;
+			}
+
+			$submission_details = json_decode( $incomplete_submission_info['submission'], true );
 
 			/*
 			 * If there is a value for this field in $field_values that is not present in $field->choices, add it and mark
