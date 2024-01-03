@@ -78,7 +78,7 @@ class GW_Advanced_Merge_Tags {
 		add_action( 'gform_pre_render', array( $this, 'support_dynamic_population_merge_tags' ) );
 
 		add_action( 'gform_merge_tag_filter', array( $this, 'support_html_field_merge_tags' ), 10, 4 );
-		add_action( 'gform_replace_merge_tags', array( $this, 'replace_merge_tags' ), 10, 3 );
+		add_action( 'gform_replace_merge_tags', array( $this, 'replace_merge_tags' ), 12, 3 );
 		add_action( 'gform_pre_replace_merge_tags', array( $this, 'replace_get_variables' ), 10, 5 );
 		add_action( 'gform_merge_tag_filter', array( $this, 'handle_field_modifiers' ), 10, 6 );
 
