@@ -11,6 +11,8 @@
  */
 class GW_Update_Posts {
 
+	protected $_args;
+
 	public function __construct( $args = array() ) {
 
 		// Set our default arguments, parse against the provided arguments, and store for use throughout the class.
@@ -96,10 +98,15 @@ class GW_Update_Posts {
 			$post->post_name = rgar( $entry, $this->_args['slug'] );
 		}
 
-		if ( $this->_args['post_date'] ) {
+		if (
+			( ! is_array( $this->_args['post_date'] ) && ! empty( $this->_args['post_date'] ) ) ||
+				rgars( $this->_args, 'post_date/date' )
+		) {
 			$new_date_time       = $this->get_post_date( $entry, $form );
-			$post->post_date     = $new_date_time;
-			$post->post_date_gmt = get_gmt_from_date( $new_date_time );
+			if ( $new_date_time ) {
+				$post->post_date     = $new_date_time;
+				$post->post_date_gmt = get_gmt_from_date( $new_date_time );
+			}
 		}
 
 		if ( $this->_args['featured_image'] && is_callable( 'gp_media_library' ) ) {
@@ -223,7 +230,7 @@ class GW_Update_Posts {
 			}
 		} else {
 			$post_date['date'] = $this->_args['post_date']['date'];
-			$post_date['time'] = $this->_args['post_date']['time'];
+			$post_date['time'] = rgar( $this->_args['post_date'], 'time' );
 		}
 
 		$date = rgar( $entry, $post_date['date'], gmdate( 'm/d/Y' ) );
