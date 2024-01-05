@@ -371,7 +371,7 @@ class GW_All_Fields_Template {
 	}
 
 	public function get_submitted_fields( $form, $lead, $display_empty = false, $use_text = false, $format = 'html', $use_admin_label = false, $merge_tag = '', $modifiers = '' ) {
-		$hidden_items = array();
+
 		$items = array();
 
 		//$field_data = '';
@@ -434,14 +434,6 @@ class GW_All_Fields_Template {
 						if ( $display_product_summary ) {
 							break;
 						}
-					} elseif ( GFFormsModel::is_field_hidden( $form, $field, array(), $lead ) ) {
-						// ignore fields hidden by conditional logic
-						$hidden_items[] = array(
-							'label' => $field_label,
-							'value' => '',
-							'field' => $field,
-						);
-						break;
 					}
 
 					$raw_field_value = RGFormsModel::get_lead_field_value( $lead, $field );
@@ -515,7 +507,7 @@ class GW_All_Fields_Template {
 				);
 			}
 		}
-		$items = array_merge( $items, $hidden_items );
+
 		return $items;
 	}
 
