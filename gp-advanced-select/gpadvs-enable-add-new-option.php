@@ -55,7 +55,7 @@ class GPASVS_Enable_Add_New_Option {
 		<script type="text/javascript">
 
 			window.GPADVSEnableAddNewOption = function( args ) {
-				console.log( 'gwiz' );
+
 				gform.addFilter( 'gpadvs_settings', function( settings, gpadvs ) {
 					if ( args.formId && gpadvs.formId != args.formId ) {
 						return settings;
