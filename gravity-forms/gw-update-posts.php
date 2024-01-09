@@ -192,7 +192,6 @@ class GW_Update_Posts {
 			} elseif ( $this->_args['delete_if_empty'] ) {
 				delete_post_meta( $post_id, $key );
 			}
-
 		}
 
 		return $meta_input;
