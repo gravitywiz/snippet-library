@@ -4,7 +4,7 @@
  *
  * Update existing post title, content, author and custom fields with values from Gravity Forms.
  *
- * @version 0.4.3
+ * @version 0.5
  * @author  Scott Ryer <scott@gravitywiz.com>
  * @license GPL-2.0+
  * @link    http://gravitywiz.com
@@ -134,48 +134,82 @@ class GW_Update_Posts {
 		}
 
 		if ( $this->_args['meta'] ) {
-
-			$meta_input = array();
-
-			// Assign custom fields.
-			foreach ( $this->_args['meta'] as $key => $value ) {
-
-				$meta_value = rgar( $entry, $value );
-
-				$field = GFAPI::get_field( $form, $value );
-
-				// Support mapping all checkboxes of a Checkbox field to a custom field.
-				if ( $field->get_input_type() === 'checkbox' ) {
-					$meta_value = $field->get_value_export( $entry );
-					if ( is_callable( 'acf_get_field' ) ) {
-						$acf_field = acf_get_field( $key );
-						if ( $acf_field ) {
-							$meta_value = array_map( 'trim', explode( ',', $meta_value ) );
-						}
-					}
-				}
-
-				// Check for ACF image-like custom fields. Integration powered by GP Media Library.
-				$acf_field = is_callable( 'gp_media_library' ) && is_callable( 'acf_get_field' ) ? acf_get_field( $key ) : false;
-				if ( $acf_field && in_array( $acf_field['type'], array( 'image', 'file', 'gallery' ), true ) ) {
-					gp_media_library()->acf_update_field( $post->ID, $key, GFAPI::get_field( $form, $value ), $entry );
-				} else {
-					// Map all other custom fields generically.
-					if ( ! rgblank( $meta_value ) ) {
-						$meta_input[ $key ] = $meta_value;
-					} elseif ( $this->_args['delete_if_empty'] ) {
-						delete_post_meta( $post->ID, $key );
-					}
-				}
-			}
-
-			$post->meta_input = $meta_input;
-
+			$post->meta_input = $this->prepare_meta_input( $this->_args['meta'], $post->ID, $entry, $form );
 		}
 
 		// ensure the fires after hooks is set to false, so that doesn't override some of the normal rendering - GF confirmation for instance.
 		wp_update_post( $post, false, false );
 
+	}
+
+	/**
+	 * @param $meta
+	 * @param $post_id
+	 * @param $entry
+	 * @param $form
+	 * @param $meta_input
+	 * @param $group string|null Used to handle populating ACF fields within a group.
+	 *
+	 * @return array|mixed
+	 */
+	public function prepare_meta_input( $meta, $post_id, $entry, $form, $meta_input = array(), $group = null ) {
+
+		foreach ( $meta as $key => $value ) {
+
+			if ( is_array( $value ) ) {
+				$meta_input = $this->prepare_meta_input( $value, $post_id, $entry, $form, $meta_input, $key );
+				continue;
+			}
+
+			$meta_value = rgar( $entry, $value );
+
+			$field = GFAPI::get_field( $form, $value );
+
+			// Support mapping all checkboxes of a Checkbox field to a custom field.
+			if ( $field->get_input_type() === 'checkbox' ) {
+				$meta_value = $field->get_value_export( $entry );
+				if ( is_callable( 'acf_get_field' ) ) {
+					$acf_field = acf_get_field( $key );
+					if ( $acf_field ) {
+						$meta_value = array_map( 'trim', explode( ',', $meta_value ) );
+					}
+				}
+			}
+
+			// Check for ACF image-like custom fields. Integration powered by GP Media Library. We use `acf_maybe_get_field()`
+			// here which supports fetching fields within a group by combined key (e.g. "group_name_field_name" );
+			$acf_field = is_callable( 'gp_media_library' ) ? $this->acf_get_field_object_by_name( $key, $group ) : false;
+			if ( $acf_field && in_array( $acf_field['type'], array( 'image', 'file', 'gallery' ), true ) ) {
+				$meta_value = gp_media_library()->acf_get_field_value( 'id', $entry, GFAPI::get_field( $form, $value ) );
+			}
+
+			if ( $group ) {
+				$key = sprintf( '%s_%s', $group, $key );
+			}
+
+			if ( ! rgblank( $meta_value ) ) {
+				$meta_input[ $key ] = $meta_value;
+			} elseif ( $this->_args['delete_if_empty'] ) {
+				delete_post_meta( $post_id, $key );
+			}
+		}
+
+		return $meta_input;
+	}
+
+	function acf_get_field_object_by_name( $field_name, $group_name = false ) {
+
+		if ( ! is_callable( 'acf_get_field' ) ) {
+			return null;
+		}
+
+		if ( ! $group_name ) {
+			return acf_get_field( $field_name );
+		}
+
+		$group = acf_get_field( $group_name );
+
+		return acf_get_field( $field_name, $group['ID'] );
 	}
 
 	/**
