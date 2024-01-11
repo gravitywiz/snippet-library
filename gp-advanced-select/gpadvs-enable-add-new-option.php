@@ -29,6 +29,10 @@ class GPASVS_Enable_Add_New_Option {
 
 	public function init() {
 
+		if ( ! is_callable( 'gp_advanced_select' ) ) {
+			return;
+		}
+
 		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
 
 		// Advanced Select has to beat GF's default Chosen init script to the punch so uses `gform_pre_render` to register
@@ -37,6 +41,7 @@ class GPASVS_Enable_Add_New_Option {
 
 		add_filter( 'gform_pre_render', array( $this, 'allow_created_choices_in_save_and_continue' ), 10, 3 );
 
+		add_filter( 'gform_pre_render', array( $this, 'disable_state_validation_for_advanced_select_field' ), 10, 1 );
 	}
 
 	public function load_form_script( $form, $is_ajax_enabled ) {
@@ -114,18 +119,26 @@ class GPASVS_Enable_Add_New_Option {
 		return empty( $this->_args['form_id'] ) || (int) $form_id == (int) $this->_args['form_id'];
 	}
 
+	public function is_applicable_field( $field ) {
+		if ( ! gp_advanced_select()->is_advanced_select_field( $field ) ) {
+			return false;
+		}
+
+		// Check if this instance is targeting all Advanced Select fields or a specific field.
+		if ( ! empty( $this->_args['field_id'] ) && $this->_args['field_id'] != $field->id ) {
+			return false;
+		}
+
+		return true;
+	}
+
 	public function allow_created_choices_in_save_and_continue( $form, $ajax, $field_values ) {
 		if ( ! $this->is_applicable_form( $form ) ) {
 			return $form;
 		}
 
 		foreach ( $form['fields'] as &$field ) {
-			if ( ! gp_advanced_select()->is_advanced_select_field( $field ) ) {
-				continue;
-			}
-
-			// Check if this instance is targeting all Advanced Select fields or a specific field.
-			if ( ! empty( $this->_args['field_id'] ) && $this->_args['field_id'] != $field->id ) {
+			if ( ! $this->is_applicable_field( $field ) ) {
 				continue;
 			}
 
@@ -150,6 +163,22 @@ class GPASVS_Enable_Add_New_Option {
 					'isSelected' => true,
 				);
 			}
+		}
+
+		return $form;
+	}
+
+	public function disable_state_validation_for_advanced_select_field( $form ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $form;
+		}
+
+		foreach ( $form['fields'] as &$field ) {
+			if ( ! $this->is_applicable_field( $field ) ) {
+				continue;
+			}
+
+			$field->validateState = false;
 		}
 
 		return $form;
