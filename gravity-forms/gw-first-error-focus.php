@@ -31,11 +31,16 @@ function gw_first_error_focus_script() {
 					// We need to reset our flag so that we can still do our focus action when the form conditional logic
 					// has been re-evaluated.
 					window['gwfef'] = false;
+					var y = 0;
+					// For a multiple page form after page 1, we need to render on the gform wrapper
+					if ($('.gf_step_current_page') && $('.gf_step_current_page').text() > 1) {
+						y = $('.gform_wrapper').offset().top;
+					}
 					var hasError = gwFirstErrorFocus().length;
 
 					if (!hasError) {
 						requestAnimationFrame(function() {
-							window.scrollTo(0, 0);
+							window.scrollTo(0, y);
 						});
 					}
 				});
