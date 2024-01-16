@@ -35,7 +35,7 @@ function gw_first_error_focus_script() {
 
 					if (!hasError) {
 						requestAnimationFrame(function() {
-							window.scrollTo(0, $('.gform_wrapper').offset().top);
+							window.scrollTo(0, 0);
 						});
 					}
 				});
