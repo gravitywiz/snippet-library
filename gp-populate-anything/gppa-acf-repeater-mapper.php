@@ -23,7 +23,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  * Description:  Populate all rows from an ACF Repeater into a choice-based field.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   https://gravitywiz.com
  */
 add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
@@ -57,20 +57,15 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 
 		if ( $rows ) {
 			foreach ( $rows as $row ) {
+				$choice = array(
+					'value'           => apply_filters( 'gppa_acfrm_value', rgar( $row, $map['value'] ), $row, $map['value'] ),
+					'text'            => apply_filters( 'gppa_acfrm_label', rgar( $row, $map['label'] ), $row, $map['label'] ),
+					'inventory_limit' => apply_filters( 'gppa_acfrm_inventory_limit', rgar( $row, $map['inventory_limit'] ), $row, $map['inventory_limit'] ),
+				);
 				if ( isset( $map['price'] ) ) {
-					$choices[] = array(
-						'value'           => rgar( $row, $map['value'] ),
-						'text'            => rgar( $row, $map['label'] ),
-						'price'           => rgar( $row, $map['price'] ),
-						'inventory_limit' => rgar( $row, $map['inventory_limit'] ),
-					);
-				} else {
-					$choices[] = array(
-						'value'           => rgar( $row, $map['value'] ),
-						'text'            => rgar( $row, $map['label'] ),
-						'inventory_limit' => rgar( $row, $map['inventory_limit'] ),
-					);
+					$choice['price'] = apply_filters( 'gppa_acfrm_price', rgar( $row, $map['price'] ), $row, $map['price'] );
 				}
+				$choices[] = $choice;
 			}
 		}
 	}
