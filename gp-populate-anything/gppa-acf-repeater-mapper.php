@@ -36,7 +36,7 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 
 	foreach ( $field->{'gppa-choices-templates'} as $template => $key ) {
 		// Look for ACF repeater meta: repeater_name_0_subfield_name
-		if ( preg_match( '/meta_([^0-9]+)_([0-9]+)_(.+)/', $key, $matches ) ) {
+		if ( preg_match( '/^meta_(.*?)_([^_]+)_([^_]+)$/', $key, $matches ) ) {
 			list( , $repeater, $index, $subfield ) = $matches;
 			$map[ $template ]                      = $subfield;
 		}
