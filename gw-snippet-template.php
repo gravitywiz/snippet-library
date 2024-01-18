@@ -93,7 +93,7 @@ class GW_JS_Snippet_Template {
 
 			( function( $ ) {
 
-				window.GWJSSnippetTemplate = function( args ) {
+				window.<?php echo __CLASS__; ?> = function( args ) {
 
 					var self = this;
 
@@ -104,7 +104,36 @@ class GW_JS_Snippet_Template {
 						}
 					}
 
+					self.isApplicableField = function(fieldId) {
+						if ( typeof fieldId !== 'number' ) {
+							fieldId = parseInt( fieldId );
+						}
+
+						if ( ! self.fieldId ) {
+							return true;
+						}
+
+						if ( typeof self.fieldId !== 'object' ) {
+							self.fieldId = [ self.fieldId ];
+						}
+
+						// Ensure fieldIds are all numbers
+						self.fieldId = self.fieldId.map( function( fieldId ) {
+							if ( typeof fieldId === 'string' ) {
+								fieldId = parseInt( fieldId );
+							}
+
+							return fieldId;
+						} );
+
+						return self.fieldId.indexOf( fieldId ) !== -1;
+					}
+
 					self.init = function() {
+
+						// if ( ! self.isApplicableField( fieldId ) ) {
+						// 	return;
+						// }
 
 						console.log( 'doing the magic!' );
 
@@ -132,10 +161,10 @@ class GW_JS_Snippet_Template {
 			'fieldId' => $this->_args['field_id'],
 		);
 
-		$script = 'new GWJSSnippetTemplate( ' . json_encode( $args ) . ' );';
-		$slug   = implode( '_', array( 'gw_js_snippet_template', $this->_args['form_id'], $this->_args['field_id'] ) );
+		$script = 'new ' . __CLASS__ . '( ' . json_encode( $args ) . ' );';
+		$slug   = implode( '_', array( strtolower( __CLASS__ ), $this->_args['form_id'], $this->_args['field_id'] ) );
 
-		GFFormDisplay::add_init_script( $this->_args['form_id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
+		GFFormDisplay::add_init_script( $form['id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
 
 	}
 
@@ -151,3 +180,17 @@ class GW_JS_Snippet_Template {
 # Configuration
 
 new GW_JS_Snippet_Template();
+
+//new GW_JS_Snippet_Template( array(
+//	'form_id'  => 1,
+//) );
+//
+//new GW_JS_Snippet_Template( array(
+//	'form_id'  => 1,
+//	'field_id' => 6,
+//) );
+//
+//new GW_JS_Snippet_Template( array(
+//	'form_id'  => 1,
+//	'field_id' => array( 5, 6 ),
+//) );
