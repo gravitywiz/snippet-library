@@ -138,9 +138,22 @@ class GF_Field_To_Field_Conditional_Logic {
 							}
 
 							rule.value = GFMergeTag.getMergeTagValue( formId, mergeTags[0][1], mergeTags[0][3] );
+							rule.value = convertIfNumberWithCommas( rule.value );
 
 							return rule;
 						} );
+
+						function convertIfNumberWithCommas( str ) {
+							// Regex to check if the string is a number with commas.
+							var regex = /^\d{1,3}(,\d{3})*$/;
+
+							// If it's a number with commas, remove them.
+							if ( regex.test( str ) ) {
+								str = str.replace( /,/g, '' );
+							}
+
+							return str;
+						}
 
 					};
 
