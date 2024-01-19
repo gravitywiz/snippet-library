@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Wiz // Gravity Forms // Field Notes
  * https://gravitywiz.com/
