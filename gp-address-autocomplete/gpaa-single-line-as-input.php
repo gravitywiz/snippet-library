@@ -54,7 +54,7 @@ class GPAA_Single_Line_Input {
 			( function( $ ) {
 				window.GPAASingleLineInput = function( args ) {
 
-					gform.addFilter('gpaa_values', function (values, place) {
+					gform.addFilter('gpaa_values', function (values, place, instance) {
 						if ( args.useFullAddress ) {
 							// Logic borrowed from https://github.com/gravitywiz/snippet-library/pull/730
 							var fullAddress     = instance.inputs.autocomplete.value;
