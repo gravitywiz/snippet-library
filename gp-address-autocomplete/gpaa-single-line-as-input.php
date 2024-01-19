@@ -115,5 +115,5 @@ new GPAA_Single_Line_Input( array(
 	'form_id'              => 123,     // The ID of your form.
 	'address_field_id'     => 4,       // The ID of the Address field.
 	'single_line_field_id' => 5,       // The ID of the Single Line Text field.
-	// 'use_full_address'     => true,    // Uncomment to use the full street address if you don't want an abbreviated street address. 
+	// 'use_full_address'     => true,    // Uncomment to use the full street address if you don't want an abbreviated street address.
 ) );
