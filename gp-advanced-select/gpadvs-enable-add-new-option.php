@@ -42,6 +42,8 @@ class GPASVS_Enable_Add_New_Option {
 		add_filter( 'gform_pre_render', array( $this, 'allow_created_choices_in_save_and_continue' ), 10, 3 );
 
 		add_filter( 'gform_pre_render', array( $this, 'disable_state_validation_for_advanced_select_field' ), 10, 1 );
+
+		add_filter( 'gform_pre_render', array( $this, 'add_new_option_to_choices' ), 10, 1 );
 	}
 
 	public function load_form_script( $form, $is_ajax_enabled ) {
@@ -160,6 +162,55 @@ class GPASVS_Enable_Add_New_Option {
 				$field->choices[] = array(
 					'text'       => $field_value,
 					'value'      => $field_value,
+					'isSelected' => true,
+				);
+			}
+		}
+
+		return $form;
+	}
+
+	/**
+	 * Add whatever new option the user entered to the list of choices so it is not removed on multi-page forms.
+	 *
+	 * @param array $form The form object currently being processed.
+	 *
+	 * @return array
+	 */
+	public function add_new_option_to_choices( $form ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $form;
+		}
+
+		foreach ( $form['fields'] as &$field ) {
+			if ( ! $this->is_applicable_field( $field ) ) {
+				continue;
+			}
+
+			// Get the value of the field from the $_POST data.
+			$field_value = rgpost( 'input_' . $field->id );
+
+			if ( empty( $field_value ) ) {
+				continue;
+			}
+
+			// Convert non-multi select fields to an array of values so we can treat them all the same.
+			if ( $field->get_input_type() !== 'multiselect' ) {
+				$field_value = array( $field_value );
+			}
+
+			$existing_choice_values = wp_list_pluck( $field->choices, 'value' );
+
+			// Add the new options to the list of choices.
+			foreach ( $field_value as $value ) {
+				// If the value is already in the list of choices, don't add it again.
+				if ( in_array( $value, $existing_choice_values ) ) {
+					continue;
+				}
+
+				$field->choices[] = array(
+					'text'       => $value,
+					'value'      => $value,
 					'isSelected' => true,
 				);
 			}
