@@ -13,6 +13,9 @@ class GW_Populate_Date {
 
 	protected static $is_script_output = false;
 
+	private $args          = array();
+	private $_field_values = array();
+
 	public function __construct( $args = array() ) {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class

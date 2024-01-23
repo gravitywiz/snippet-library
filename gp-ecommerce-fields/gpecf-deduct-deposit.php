@@ -17,6 +17,8 @@
  */
 class GW_Deduct_Deposit {
 
+	private $args = array();
+
 	public function __construct( $args ) {
 
 		$this->_args = wp_parse_args( $args, array(
