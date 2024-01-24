@@ -17,7 +17,7 @@
  */
 class GW_Deduct_Deposit {
 
-	private $args = array();
+	private $_args = array();
 
 	public function __construct( $args ) {
 

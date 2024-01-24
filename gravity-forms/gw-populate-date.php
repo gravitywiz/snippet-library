@@ -13,7 +13,7 @@ class GW_Populate_Date {
 
 	protected static $is_script_output = false;
 
-	private $args          = array();
+	private $_args         = array();
 	private $_field_values = array();
 
 	public function __construct( $args = array() ) {

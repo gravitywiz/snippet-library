@@ -16,7 +16,7 @@ class GW_Choice_Count {
 
 	private static $is_script_output;
 
-	private $args = array();
+	private $_args = array();
 
 	function __construct( $args ) {
 

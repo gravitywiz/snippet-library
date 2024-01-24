@@ -14,7 +14,7 @@
  */
 class GW_Minimum_Characters {
 
-	private $args = array();
+	private $_args = array();
 
 	public function __construct( $args = array() ) {
 

@@ -14,7 +14,7 @@
  */
 class GW_GPNF_Delay_Child_Notifications {
 
-	private $args = array();
+	private $_args = array();
 
 	public function __construct( $args = array() ) {
 
