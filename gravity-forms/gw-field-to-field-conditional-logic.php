@@ -138,6 +138,10 @@ class GF_Field_To_Field_Conditional_Logic {
 							}
 
 							rule.value = GFMergeTag.getMergeTagValue( formId, mergeTags[0][1], mergeTags[0][3] );
+							var fieldNumberFormat = gf_get_field_number_format( rule.fieldId, formId, 'value' );
+							if( fieldNumberFormat ) {
+								rule.value = gf_format_number( rule.value, fieldNumberFormat );
+							}
 
 							return rule;
 						} );
