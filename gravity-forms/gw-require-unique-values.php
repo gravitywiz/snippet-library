@@ -16,7 +16,7 @@
  */
 class GW_Require_Unique_Values {
 
-	private $args = array();
+	private $_args = array();
 
 	public function __construct( $args = array() ) {
 
