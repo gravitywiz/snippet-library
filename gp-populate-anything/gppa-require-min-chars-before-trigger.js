@@ -2,6 +2,8 @@
  * Gravity Perks // Populate Anything // Require a Minimum Character Count Before Triggering a Change
  * https://gravitywiz.comhttps://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
+ * Instruction Video: https://www.loom.com/share/ddad3d1b44dc48048b2655f5c46c6a74
+ * 
  * 1. Install this snippet with our free Custom JavaScript plugin.
  *    https://gravitywiz.com/gravity-forms-custom-javascript/
  */
