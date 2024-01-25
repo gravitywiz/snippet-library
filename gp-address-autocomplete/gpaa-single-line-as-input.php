@@ -54,9 +54,15 @@ class GPAA_Single_Line_Input {
 			( function( $ ) {
 				window.GPAASingleLineInput = function( args ) {
 
-					gform.addFilter('gpaa_values', function (values, place) {
-						values.autocomplete = place.formatted_address;
-
+					gform.addFilter('gpaa_values', function (values, place, instance) {
+						if ( args.useFullAddress ) {
+							// Logic borrowed from https://github.com/gravitywiz/snippet-library/pull/730
+							var fullAddress     = instance.inputs.autocomplete.value;
+							values.autocomplete = fullAddress;
+							values.address1     = fullAddress.split(',')[0].trim();
+						} else {
+							values.autocomplete = place.formatted_address;
+						}
 						return values;
 					});
 				}
@@ -77,6 +83,7 @@ class GPAA_Single_Line_Input {
 			'formId'            => $this->_args['form_id'],
 			'addressFieldId'    => $this->_args['address_field_id'],
 			'singleLineFieldId' => $this->_args['single_line_field_id'],
+			'useFullAddress'    => $this->_args['use_full_address'],
 		);
 
 		$script = 'new GPAASingleLineInput( ' . json_encode( $args ) . ' );';
@@ -107,5 +114,6 @@ class GPAA_Single_Line_Input {
 new GPAA_Single_Line_Input( array(
 	'form_id'              => 123,     // The ID of your form.
 	'address_field_id'     => 4,       // The ID of the Address field.
-	'single_line_field_id' => 5,        // The ID of the Single Line Text field.
+	'single_line_field_id' => 5,       // The ID of the Single Line Text field.
+	// 'use_full_address'     => true,    // Uncomment to use the full street address if you don't want an abbreviated street address.
 ) );
