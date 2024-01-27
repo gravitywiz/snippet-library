@@ -35,8 +35,12 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 	$map = array();
 
 	foreach ( $field->{'gppa-choices-templates'} as $template => $key ) {
-		// Look for ACF repeater meta: repeater_name_0_subfield_name
-		// Known Limitation: We cannot have a number on the repeater field name.
+		/**
+		 * Look for ACF repeater meta: repeater_name_0_subfield_name
+		 * 
+		 * Known limitation: This cannot have a number on the repeater field name. For an enumerator, it is
+		 * recommended to use alphabets like, repeater_name_a_0_name, repeater_name_b_1_name,etc.
+		 */ 
 		if ( preg_match( '/meta_([^0-9]+)_([0-9]+)_(.+)/', $key, $matches ) ) {
 			list( , $repeater, $index, $subfield ) = $matches;
 			$map[ $template ]                      = $subfield;
