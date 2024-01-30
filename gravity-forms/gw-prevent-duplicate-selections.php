@@ -47,7 +47,7 @@ class GW_Prevent_Duplicate_Selections {
 
 		<script type="text/javascript" defer>
 
-			jQuery( function( $ ) {
+			function process_duplicate_selections($) {
 				window.gform.addFilter( 'gplc_excluded_input_selectors', function( selectors ) {
 					selectors.push( '.gw-disable-duplicates-disabled' );
 					return selectors;
@@ -203,7 +203,14 @@ class GW_Prevent_Duplicate_Selections {
 					}
 
 				}
-			} );
+			}
+
+			// Loading at the time of form loading.
+			jQuery( process_duplicate_selections );
+			// Loading when selections are updated via GP Populate Anything.
+			jQuery( document ).on( 'gppa_updated_batch_fields', function( event, formId, fieldIds ) {
+				jQuery( process_duplicate_selections );
+			})
 		</script>
 
 		<?php
