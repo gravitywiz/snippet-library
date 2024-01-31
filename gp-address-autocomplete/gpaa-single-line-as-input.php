@@ -5,13 +5,13 @@
  *
  * Instruction Video: https://www.loom.com/share/2a8b9d546bf345cfa2e18294af0dbfdb
  *
- * Use a single line text field as autocomplete input and populate the single line text field with the full address.
+ * Use a Single Line Text field as autocomplete input and populate the Single Line Text field with the full address.
  *
  * Plugin Name:  GP Address Autocomplete - Use Single Line Text field as Autocomplete Input
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-address-autocomplete/
  * Description:  Use a single line text field as autocomplete input and populate the single line text field with the full address.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   https://gravitywiz.com/
  */
 class GPAA_Single_Line_Input {
@@ -54,11 +54,26 @@ class GPAA_Single_Line_Input {
 			( function( $ ) {
 				window.GPAASingleLineInput = function( args ) {
 
-					gform.addFilter('gpaa_values', function (values, place) {
-						values.autocomplete = place.formatted_address;
+					let $input = $('#input_' + args.formId + '_' + args.singleLineFieldId );
+
+					gform.addFilter('gpaa_values', function (values, place, gpaa, formId, fieldId) {
+						if ( args.formId == formId && args.addressFieldId == fieldId ) {
+							values.autocomplete = place.formatted_address;
+							$input.data('gpaa-filled-value', place.formatted_address);
+						}
 
 						return values;
 					});
+
+					$input.on('blur', function () {
+						var filledValue = $(this).data('gpaa-filled-value');
+						if (!filledValue) {
+							filledValue = '';
+						}
+
+						$(this).val(filledValue);
+					})
+
 				}
 			} )( jQuery );
 
@@ -80,7 +95,7 @@ class GPAA_Single_Line_Input {
 		);
 
 		$script = 'new GPAASingleLineInput( ' . json_encode( $args ) . ' );';
-		$slug   = implode( '_', array( 'gw_js_snippet_template', $this->_args['form_id'], $this->_args['address_field_id'] ) );
+		$slug   = implode( '_', array( 'gppa_single_line_input', $this->_args['form_id'], $this->_args['address_field_id'] ) );
 
 		GFFormDisplay::add_init_script( $this->_args['form_id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
 
