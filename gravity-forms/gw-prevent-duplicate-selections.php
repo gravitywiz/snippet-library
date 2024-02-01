@@ -22,7 +22,7 @@
  * Author URI:   http://gravitywiz.com
  */
 
- class GW_Prevent_Duplicate_Selections {
+class GW_Prevent_Duplicate_Selections {
 	public function __construct() {
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
 		add_action( 'init', array( $this, 'init' ) );
