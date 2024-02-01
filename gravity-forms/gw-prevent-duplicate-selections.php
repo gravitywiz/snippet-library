@@ -22,7 +22,7 @@
  * Author URI:   http://gravitywiz.com
  */
 
-class GW_Prevent_Duplicate_Selections {
+ class GW_Prevent_Duplicate_Selections {
 	public function __construct() {
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
 		add_action( 'init', array( $this, 'init' ) );
@@ -30,6 +30,7 @@ class GW_Prevent_Duplicate_Selections {
 
 	public function init() {
 		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
+		add_action( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
 	}
 
 	public function load_form_script( $form, $is_ajax_enabled ) {
@@ -42,25 +43,45 @@ class GW_Prevent_Duplicate_Selections {
 		return $form;
 	}
 
+	public function add_init_script( $form ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return;
+		}
+
+		$args = array();
+
+		$script = 'new ' . __CLASS__ . '( ' . json_encode( $args ) . ' );';
+		$slug   = implode( '_', array( strtolower( __CLASS__ ) ) );
+
+		GFFormDisplay::add_init_script( $form['id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
+	}
+
 	public function output_script() {
 		?>
 
-		<script type="text/javascript" defer>
+		<script type="text/javascript">
+			window.<?php echo __CLASS__; ?> = function() {
+				var $ = jQuery;
 
-			function process_duplicate_selections($) {
+				$( document ).on( 'gppa_updated_batch_fields', function( event, formId, fieldIds ) {
+					$( gwDisableDuplicates );
+				})
+
 				window.gform.addFilter( 'gplc_excluded_input_selectors', function( selectors ) {
 					selectors.push( '.gw-disable-duplicates-disabled' );
 					return selectors;
 				});
 
-				$inputs = $( '.gw-prevent-duplicates' ).find( 'input, select' );
-
-				$inputs.change( function( event, selected ) {
-					gwDisableDuplicates( $( this ), $inputs, selected );
+				// Bind events, use .on with delegation and always get fresh selectors for AJAX-refreshed fields
+				$( '.gw-prevent-duplicates' ).on( 'change', 'input, select', function( event, selected ) {
+					gwDisableDuplicates( $( this ), $( '.gw-prevent-duplicates' ).find( 'input, select' ), selected );
 				} );
 
+				// Handle on-load
+				$inputs = $( '.gw-prevent-duplicates' ).find( 'input, select' );
+
 				$inputs.each( function( event ) {
-					gwDisableDuplicates( $( this ), $inputs );
+					gwDisableDuplicates( $( this ), $inputs.not('.gw-disable-duplicates-disabled') );
 				} );
 
 				/**
@@ -96,7 +117,7 @@ class GW_Prevent_Duplicate_Selections {
 
 					/**
 					 * Handle multi select fields with GP Advanced Select enabled.
-					*/
+					 */
 					if ($select.siblings('.ts-wrapper').length) {
 						const val = $select.val();
 
@@ -136,7 +157,7 @@ class GW_Prevent_Duplicate_Selections {
 				 * @param {array} arr2
 				 *
 				 * @returns {string}
-				*/
+				 */
 				function getArrayDiff( arr1, arr2 ) {
 					return arr1.filter( x => ! arr2.includes( x ) )[ 0 ];
 				}
@@ -146,7 +167,6 @@ class GW_Prevent_Duplicate_Selections {
 				}
 
 				function gwDisableDuplicates( $elem, $group, selected ) {
-
 					// Some elements have a parent element (e.g. a <select>) that contains the actual elements (e.g. <option>) we want enable/disable.
 					let $parent = $elem;
 
@@ -203,14 +223,7 @@ class GW_Prevent_Duplicate_Selections {
 					}
 
 				}
-			}
-
-			// Loading at the time of form loading.
-			jQuery( process_duplicate_selections );
-			// Loading when selections are updated via GP Populate Anything.
-			jQuery( document ).on( 'gppa_updated_batch_fields', function( event, formId, fieldIds ) {
-				jQuery( process_duplicate_selections );
-			})
+			};
 		</script>
 
 		<?php
