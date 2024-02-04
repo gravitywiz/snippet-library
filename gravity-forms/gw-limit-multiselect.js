@@ -63,6 +63,12 @@ function limitMultiSelect( $select, max ) {
 			.find( 'option:not(:checked)' )
 			.prop( 'disabled', selectedCount >= max )
 			.trigger( 'chosen:updated' );
+
+		// For Tom Select (GP Advanced Select)
+		// Update "1" to the ID of your Multi Select field.
+		if ( $( '#input_GFFORMID_1-ts-dropdown' ) ) {
+			$( '#input_GFFORMID_1-ts-dropdown .option' ).removeAttr( 'data-selectable' );
+		}
 	}
 }
 
