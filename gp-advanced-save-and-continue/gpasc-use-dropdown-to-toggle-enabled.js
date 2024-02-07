@@ -57,7 +57,6 @@ window.gform.addAction('gpasc_js_init', function (formId) {
 });
 
 $(dropdownSelector).on('change', function(event) {
-	console.log({ event })
 	if (event.target.value === dropdownEnableValue) {
 		enableGPASC();
 	} else {
