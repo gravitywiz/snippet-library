@@ -9,7 +9,7 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Compare fields in Gravity Forms conditional logic.
  * Author:       Gravity Wiz
- * Version:      0.11
+ * Version:      0.12
  * Author URI:   http://gravitywiz.com
  *
  * @todo
@@ -232,12 +232,6 @@ class GF_Field_To_Field_Conditional_Logic {
 		static $_rule_cache;
 
 		if ( $_is_modifying_rule ) {
-			$entry_id = rgar( $entry, 'id' );
-
-			if ( $entry_id && isset( $_rule_cache[ $entry_id ][ $rule['value'] ] ) ) {
-				$rule['value'] = $_rule_cache[ $entry_id ][ $rule['value'] ];
-			}
-
 			return $rule;
 		}
 
