@@ -3,6 +3,8 @@
  * Gravity Perks // File Renamer // Set Custom File Path in Dropbox
  * https://gravitywiz.com/documentation/gravity-forms-file-renamer/
  *
+ * Instruction Video: https://www.loom.com/share/27c13dda5ad349f7a9efb20bd0b1d654
+ *
  * Activate this snippet to honor custom file paths (defined in GPFR's Filename Template setting) are honored when a
  * file is uploaded to Dropbox (via the GF Drobox add-on).
  */
