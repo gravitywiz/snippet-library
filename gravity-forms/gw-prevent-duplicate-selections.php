@@ -77,6 +77,26 @@ class GW_Prevent_Duplicate_Selections {
 					gwDisableDuplicates( $( this ), $( '.gw-prevent-duplicates' ).find( 'input, select' ), selected );
 				} );
 
+                // Event listener for post conditional logic
+				$(document).on('gform_post_conditional_logic', function(event, formId, fields, isInit){
+					// Check each field affected by conditional logic
+					$.each(fields, function(index, fieldId){
+						var $field = $('#field_' + formId + '_' + fieldId);
+						var $inputs = $field.find('input, select');
+
+						// Check if the field contains input/select elements and if has been hidden or is now visible
+						if($inputs.length > 0 && $field.is(':hidden') ){
+							// Field has been hidden
+							$('.gw-disable-duplicates-disabled').removeClass('gw-disable-duplicates-disabled gf-default-disabled').prop('disabled', false);
+							gwDisableDuplicates($inputs, $('.gw-prevent-duplicates').find('input, select').not($field.find('input, select')));
+						}
+						if($inputs.length > 0 && ! $field.is(':hidden') ){
+							// Field has been shown
+							gwDisableDuplicates($inputs, $('.gw-prevent-duplicates').find('input, select'));
+						}
+					});
+				});
+
 				// Handle on-load
 				$inputs = $( '.gw-prevent-duplicates' ).find( 'input, select' );
 
@@ -170,7 +190,7 @@ class GW_Prevent_Duplicate_Selections {
 					// Some elements have a parent element (e.g. a <select>) that contains the actual elements (e.g. <option>) we want enable/disable.
 					let $parent = $elem;
 
-					if ( $elem.is( 'select' ) ) {
+					if ( $elem.is( 'select' ) && !$elem.is(':hidden') ) {
 						$elem = getChangedOptionElFromSelect( $elem, selected );
 
 						// Note: This prevents selects from working with other field types.
