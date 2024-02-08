@@ -9,7 +9,7 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Compare fields in Gravity Forms conditional logic.
  * Author:       Gravity Wiz
- * Version:      0.10
+ * Version:      0.11
  * Author URI:   http://gravitywiz.com
  *
  * @todo
@@ -227,17 +227,40 @@ class GF_Field_To_Field_Conditional_Logic {
 	 */
 	public function modify_rule( $rule, $form, $logic, $field_values, $entry ) {
 
+		static $_current_entry;
 		static $_is_modifying_rule;
 		static $_rule_cache;
 
 		if ( $_is_modifying_rule ) {
+			$entry_id = rgar( $entry, 'id' );
+
+			if ( $entry_id && isset( $_rule_cache[ $entry_id ][ $rule['value'] ] ) ) {
+				$rule['value'] = $_rule_cache[ $entry_id ][ $rule['value'] ];
+			}
+
 			return $rule;
 		}
 
 		if ( $entry === null ) {
-			$_is_modifying_rule = true;
-			$entry              = GFFormsModel::get_current_lead();
-			$_is_modifying_rule = false;
+			if ( ! $_current_entry ) {
+				$_is_modifying_rule = true;
+				$_current_entry     = GFFormsModel::get_current_lead();
+				$_is_modifying_rule = false;
+
+				/*
+				 * Clear the GF visibility cache for this form. When we get the current lead, the visibility is cached
+				 * without the logic from this snippet.
+				 *
+				 * This then caches some fields into a hidden state which causes them to not be validated.
+				 */
+				if ( ! empty( $form['fields'] ) && is_array( $form['fields'] ) ) {
+					foreach ( $form['fields'] as $field ) {
+						GFCache::delete( 'GFFormsModel::is_field_hidden_' . $form['id'] . '_' . $field->id );
+					}
+				}
+			}
+
+			$entry = $_current_entry;
 		}
 
 		$entry_id = rgar( $entry, 'id' );
