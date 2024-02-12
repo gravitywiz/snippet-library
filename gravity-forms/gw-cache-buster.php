@@ -41,10 +41,11 @@ class GW_Cache_Buster {
 
 		add_filter( 'gform_shortcode_form', array( $this, 'shortcode' ), 10, 3 );
 		add_filter( 'gform_save_and_continue_resume_url', array( $this, 'filter_resume_link' ), 15, 4 );
+		add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_embed_url' ), 10, 4 );
+		add_action( 'gform_after_submission', array( $this, 'entry_source_url' ), 10, 2 );
 
 		add_action( 'wp_ajax_nopriv_gfcb_get_form', array( $this, 'ajax_get_form' ) );
 		add_action( 'wp_ajax_gfcb_get_form', array( $this, 'ajax_get_form' ) );
-
 	}
 
 	public function shortcode( $markup, $attributes, $content ) {
@@ -144,7 +145,7 @@ class GW_Cache_Buster {
 			array(
 				'action'              => 'gfcb_get_form',
 				'form_id'             => $form_id,
-				'form_request_origin' => rawurlencode( $_SERVER['REQUEST_URI'] ),
+				'form_request_origin' => rgpost( 'gwcb_form_request_origin' ),
 			),
 			$ajax_url
 		);
@@ -232,6 +233,7 @@ class GW_Cache_Buster {
 		 * Priority of this filter is set aggressively high to ensure it will take priority.
 		 */
 		add_filter( 'gform_init_scripts_footer', '__return_true', 987 );
+		add_filter( 'gform_form_tag_' . $form_id, array( $this, 'add_hidden_inputs' ), 10, 2 );
 
 		$atts = json_decode( rgpost( 'atts' ), true );
 
@@ -242,6 +244,7 @@ class GW_Cache_Buster {
 		$_POST = array();
 
 		gravity_form( $form_id, filter_var( rgar( $atts, 'title', true ), FILTER_VALIDATE_BOOLEAN ), filter_var( rgar( $atts, 'description', true ), FILTER_VALIDATE_BOOLEAN ), false, $field_values, true /* default to true; add support for non-ajax in the future */, rgar( $atts, 'tabindex' ) );
+		remove_filter( 'gform_form_tag_' . $form_id , array( $this, 'add_hidden_inputs' ) );
 
 		die();
 	}
@@ -271,6 +274,58 @@ class GW_Cache_Buster {
 		return add_query_arg( array( 'gf_token' => $resume_token ), $referer );
 	}
 
+	/**
+	 * Replace `{embed_url}` merge tag correctly
+	 *
+	 * @param string $text The current text with merge tags.
+	 * @param array $form The current form.
+	 * @param array $entry The current entry.
+	 * @param boolean $url_encode The URLs need to be encoded or not.
+	 *
+	 * @return string
+	 */
+	public function replace_embed_url( $text, $form, $entry, $url_encode ) {
+		// Check if the text contains the {embed_url} merge tag
+		if ( strpos( $text, '{embed_url}' ) !== false ) {
+			$original_url = GFCommon::openssl_decrypt( rgpost( 'gwcb_form_request_origin' ) );
+
+			// Replace the {embed_url} merge tag with the original URL
+			$text = str_replace( '{embed_url}', $original_url, $text );
+		}
+
+		return $text;
+	}
+
+	/**
+	 * Append hidden inputs to store the entry url.
+	 *
+	 * @param array $entry The current entry.
+	 * @param array $form The current form.
+	 */
+	function entry_source_url( $entry, $form ) {
+		$entry['source_url'] = GFCommon::openssl_decrypt( rgpost( 'gwcb_form_request_origin' ) );
+		if ( $entry['source_url'] ) {
+			GFAPI::update_entry( $entry );
+		}
+	}
+
+	/**
+	 * Append hidden inputs to store the entry url.
+	 *
+	 * @param string $form_tag The form opening tag.
+	 * @param array $form The current form.
+	 *
+	 * @return string
+	 */
+	public function add_hidden_inputs( $form_tag, $form ) {
+
+		if ( strpos( $form_tag, 'gwcb_form_request_origin') !== false) {
+			return $form_tag;
+		}
+
+		$form_tag .= '<input type="hidden" value="' . GFCommon::openssl_encrypt( $_SERVER['HTTP_REFERER'] ) . '" name="gwcb_form_request_origin" />';
+		return $form_tag;
+	}
 }
 
 # Configuration
