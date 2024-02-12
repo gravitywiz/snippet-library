@@ -103,6 +103,16 @@ class GW_Limit_Multi_Select {
 							} );
 						}
 
+						let namespace = `gwlms_${self.formId}_${self.fieldId}`;
+
+						$( document )
+							.off( `gppa_updated_batch_fields.${namespace}` )
+							.on( `gppa_updated_batch_fields.${namespace}`, function( e, formId ) {
+								if ( parseInt( formId ) === parseInt( self.formId ) ) {
+									self.init();
+								}
+							} );
+
 					};
 
 					self.limitMultiSelect = function( $select, max ) {
@@ -236,3 +246,12 @@ new GW_Limit_Multi_Select( array(
 	'min'      => 5,
 	'max'      => 6,
 ) );
+
+# Set Limits by Field
+
+// new GW_Limit_Multi_Select( array(
+// 	'form_id'      => 123,
+// 	'field_id'     => 4,
+// 	'min_field_id' => 5,
+// 	'max_field_id' => 6,
+// ) );
