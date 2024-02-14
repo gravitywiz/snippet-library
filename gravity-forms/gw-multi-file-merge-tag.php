@@ -155,6 +155,9 @@ class GW_Multi_File_Merge_Tag {
 
 					$files = array_slice( $files, $offset, $length );
 
+				} elseif ( count( $modifiers ) > 0 ) {
+					/* Skip fields with a modifier other than "index" */
+					continue;
 				}
 
 				$value = '';
