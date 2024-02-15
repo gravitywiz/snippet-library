@@ -30,18 +30,6 @@ add_filter( 'gp_template_output_nested-entries-detail-simple', function( $markup
 	?>
 
 	<div class="gpnf-nested-entries-container-<?php echo $field->formId; ?>-<?php echo $field->id; ?> gpnf-nested-entries-container gpnf-entry-view ginput_container">
-
-		<style>
-			@scope {
-				.gpnf-nested-entries tbody td {
-					border-left: 1px solid rgba( 0, 0, 0, 0.1 );
-				}
-				.gpnf-nested-entries tbody tr:last-child td {
-					border-bottom: 1px solid rgba( 0, 0, 0, 0.1 );
-				}
-			}
-		</style>
-
 		<table class="gpnf-nested-entries gpnf-nested-entries-simple">
 
 			<?php foreach ( $nested_fields as $nested_field ) : ?>
