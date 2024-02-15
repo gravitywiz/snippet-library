@@ -21,7 +21,7 @@ add_filter( 'gform_dropbox_folder_path', function ( $folder_path, $form, $field_
 			// are date-sensitive.
 			$upload_roots = GF_Field_FileUpload::get_default_upload_roots( $form['id'] );
 			$path         = dirname( str_replace( $upload_roots['url'], '', $file_url ) );
-			$folder_path  .= "/{$path}";
+			$folder_path  = trailingslashit( $folder_path ) . $path;
 		}
 	}
 
