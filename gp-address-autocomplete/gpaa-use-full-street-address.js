@@ -14,6 +14,23 @@
  */
 window.gform.addFilter('gpaa_values', function(values, place, instance) {
 	var fullAddress = instance.inputs.address1.value;
-	values.address1 = fullAddress.split(',')[0].trim();
+	var extractedAddress = '';
+	// Split the address parts over comma.
+	var parts = fullAddress.split(',');
+	var commaCount = parts.length - 1;
+
+	// For long Multi-Comma Addresses like: Via Luigi Einaudi, 2/4, Barletta, Province of Barletta-Andria-Trani, Italy
+	if (commaCount >= 4) {
+		// get the address before the last couple commas
+		extractedAddress = parts.slice(0, -3).join(',');
+	} else {
+		// For Most addresses.
+		extractedAddress = fullAddress.split(',')[0];
+		// For addresses like "Erzsébet park 2, Kecskemét" which return city name first "Kecskemét, Erzsébet Street 2, Hungary"
+		if ( extractedAddress == values.city ) {
+			extractedAddress = fullAddress.split(',')[1];
+		}
+	}
+	values.address1 = extractedAddress.trim();
 	return values;
 });
