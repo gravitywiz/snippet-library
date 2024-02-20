@@ -69,17 +69,9 @@ class GW_Coupons_Exclude_Products {
 
 				if( window.gform ) {
 
-					gform.addFilter( 'gform_coupons_discount_amount', function( discount, couponType, couponAmount, price, totalDiscount ) {
+					gform.addFilter( 'gform_coupons_discount_amount', function( discount, couponType, couponAmount, price, totalDiscount, formId ) {
 
-						// pretty hacky... work our way up the chain to see if the 4th func up is the expected func
-						var caller = arguments.callee.caller.caller.caller.caller;
-
-						if( caller.name != 'PopulateDiscountInfo' ) {
-							return discount;
-						}
-
-						var formId = caller.arguments[1],
-							price  = price - getExcludedAmount( formId );
+						var price  = price - getExcludedAmount( formId );
 
 						if( couponType == 'percentage' ) {
 							discount = price * Number( ( couponAmount / 100 ) );
