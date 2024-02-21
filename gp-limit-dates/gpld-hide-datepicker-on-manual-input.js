@@ -7,7 +7,7 @@
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  */
 $( '.datepicker' ).on( 'keypress', function() {
 	$( this ).datepicker( 'hide' );

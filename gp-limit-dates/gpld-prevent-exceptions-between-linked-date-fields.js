@@ -13,8 +13,8 @@
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
- * 
+ *    https://gravitywiz.com/gravity-forms-code-chest/
+ *
  * 2. Set the **Maximum Date** of your end Date field to the start Date field, then set the modifier value
  *    to `next exception`.
  */

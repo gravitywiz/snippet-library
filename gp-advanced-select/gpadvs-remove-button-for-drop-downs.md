@@ -2,13 +2,13 @@
 https://gravitywiz.com/documentation/gravity-forms-advanced-select/
 
 Advanced Select will automatically display a remove button for items in a Multi Select field. Use this snippet to activate a remove button for Drop Down fields too.
- 
+
 ## Instructions
 
-1. Install this snippet with our free [Custom JavaScript](https://gravitywiz.com/gravity-forms-custom-javascript/) plugin.
-   
+1. Install this snippet with our free [Custom JavaScript](https://gravitywiz.com/gravity-forms-code-chest/) plugin.
+
     ```js
-    gform.addFilter( 'gpadvs_settings', function( settings, gpadvs ) {	
+    gform.addFilter( 'gpadvs_settings', function( settings, gpadvs ) {
         if ( gpadvs.formId == GFFORMID ) {
             settings.plugins.remove_button = {
                 title:'Remove this item',

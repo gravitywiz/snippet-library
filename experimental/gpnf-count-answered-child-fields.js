@@ -1,8 +1,8 @@
 /**
  * Gravity Perks // Nested Forms // Count the Number of "Answered" Child Fields
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
- * 
- * This is designed for use with our [GF Custom Javascript](https://gravitywiz.com/gravity-forms-custom-javascript/) plugin.
+ *
+ * This is designed for use with our [GF Custom Javascript](https://gravitywiz.com/gravity-forms-code-chest/) plugin.
  */
 // Update "1" to your Nested Form field ID.
 var gpnf = window.GPNestedForms_GFFORMID_1;
@@ -23,11 +23,11 @@ function gwUpdateEntryValueCounts( entries ) {
 				continue;
 			}
 			if ( entry[ fieldId ].value ) {
-				count++;	
+				count++;
 			}
 		}
 	} );
-		
+
 	if ( $target.val() != count ) {
 		$target.val( count ).change();
 	}

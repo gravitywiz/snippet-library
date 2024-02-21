@@ -4,7 +4,7 @@
  *
  * Instructions:
  *     1. Install our free Custom Javascript for Gravity Forms plugin.
- *        Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
+ *        Download the plugin here: https://gravitywiz.com/gravity-forms-code-chest/
  *     2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
  */
  gform.addAction( 'gpcp_after_update_pricing', function( productId, GWConditionalPricing ) {

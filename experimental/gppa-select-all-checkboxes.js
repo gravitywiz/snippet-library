@@ -4,7 +4,7 @@
  *
  * Instructions:
  *     1. Install our free Custom Javascript for Gravity Forms plugin.
- *        Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
+ *        Download the plugin here: https://gravitywiz.com/gravity-forms-code-chest/
  *     2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
  *.    3. This snippet is meant to be a starting point. You will need to update the selectors accordingly
  */
@@ -19,7 +19,7 @@ jQuery(document).on('gppa_updated_batch_fields', function(event, formId, fieldId
 	if (formId != GFFORMID) {
 		return;
 	}
-	
+
 	jQuery('#button_2_select_all').each(function() {
 		gformToggleCheckboxes(this);
 	});

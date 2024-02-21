@@ -5,7 +5,7 @@
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  */
  gform.addFilter( 'gpaa_values', function( values, place ) {
 	values.postcode = values.postcode.split( '-' )[0];

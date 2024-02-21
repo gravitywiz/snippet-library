@@ -3,9 +3,9 @@
  * https://gravitywiz.com/documentation/gravity-forms-advanced-save-continue/
  *
  * This snippet allows you to toggle GPASC client side with a dropdown.
- * 
+ *
  * Instructions:
- *  1. Add snippet to form using https://gravitywiz.com/gravity-forms-custom-javascript/
+ *  1. Add snippet to form using https://gravitywiz.com/gravity-forms-code-chest/
  *  2. Customize formId to match the form you want to use this with.
  *  3. Customize the dropdownFieldId to match the DropdownField you want to use this with.
  *  4. Customize dropdownEnableValue to the HTML "value" attribute which you want GPASC to

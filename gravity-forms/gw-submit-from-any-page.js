@@ -1,15 +1,15 @@
 /**
  * Gravity Wiz // Gravity Forms // Submit from Any Page
  * https://gravitywiz.com/
- * 
+ *
  * Allow submission of a form from any page by adding a "Submit Now" button to each page.
  * This can be particularly useful when editing an existing entry and wanting to allow the
  * user to submit those edits from whichever page they've edited.
- * 
+ *
  * Instructions:
- * 
+ *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  */
 $( '.gform_next_button' ).each( function() {
 	var fieldId = gf_get_input_id_by_html_id( $( this ).attr( 'id' ) );

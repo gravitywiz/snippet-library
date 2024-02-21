@@ -9,7 +9,7 @@
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  * 2. Update variables to match your form by following the inline instructions.
  */
 // Update to your List field's ID.

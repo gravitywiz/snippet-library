@@ -1,12 +1,12 @@
 /**
  * Gravity Perks // Multi-Page Navigation // Load all links for Edit Entry
  * https://gravitywiz.com/documentation/gravity-forms-multi-page-navigation/
- * 
+ *
  * Use the snippet with Gravity Perks Easy Pass Through Edit Entry Snippet
  * https://github.com/gravitywiz/snippet-library/blob/master/gp-easy-passthrough/gpep-edit-entry.php
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  */
 
 var $formElem = $( 'form#gform_GFFORMID' );

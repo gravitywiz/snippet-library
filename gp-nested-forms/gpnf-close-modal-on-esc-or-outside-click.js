@@ -5,7 +5,7 @@
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  * 2. Also add "Load Init Scripts Early" snippet to your theme's functions.php.
  *    https://github.com/gravitywiz/snippet-library/blob/master/experimental/gfjs-early-init-scripts.php
  */

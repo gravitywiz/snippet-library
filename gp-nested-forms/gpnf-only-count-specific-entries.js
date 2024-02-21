@@ -4,7 +4,7 @@
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  * 2. Install https://github.com/gravitywiz/snippet-library/blob/master/experimental/gfjs-early-init-scripts.php
  * 3. Install accompanying `gpnf-only-count-specific-entries.php` PHP snippet
  * 4. Customize form ID, field ID(s), and value check

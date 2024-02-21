@@ -7,8 +7,8 @@
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
- * 
+ *    https://gravitywiz.com/gravity-forms-code-chest/
+ *
  * 2. Follow the inline instructions to update the snippet for your form.
  */
 var variationMap = {
@@ -27,11 +27,11 @@ for (let key in variationMap) {
 function mapVariation( variation, fieldId ) {
 	let $variation = $( '#' + variation );
 	let $targetField = $( '#input_GFFORMID_' + fieldId );
-	
+
 	if ( ! $variation.length || ! $targetField.length ) {
 		return;
 	}
-	
+
 	$variation.on( 'change', function() {
 		$targetField.val( $variation.val() );
 	} );

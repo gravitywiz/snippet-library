@@ -4,10 +4,10 @@
  *
  * Instruction Video: https://www.loom.com/share/e35cf2da108b4064b3b33ea5d65ed021
  *
- * Use this snippet alongside our free [Gravity Forms Custom JavaScript][1] plugin to disable 
+ * Use this snippet alongside our free [Gravity Forms Custom JavaScript][1] plugin to disable
  * the submit button while files are being uploaded.
  *
- * [1]: https://gravitywiz.com/gravity-forms-custom-javascript/
+ * [1]: https://gravitywiz.com/gravity-forms-code-chest/
  */
 gform.addAction( 'gpfup_uploader_ready', function( gpfup ) {
 	gpfup.Uploader.bind( 'UploadFile', function() {

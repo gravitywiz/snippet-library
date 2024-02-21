@@ -3,10 +3,10 @@
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  */
 var $containers = $( '.gfield--type-choice' );
- 
+
 // On page load.
 $containers.each( function() {
 	gwizRemoveEmptyChoices( $( this ) );
@@ -18,7 +18,7 @@ $containers.bind( 'DOMNodeInserted DOMNodeRemoved', function() {
 } );
 
 function gwizRemoveEmptyChoices( $elem ) {
-	$elem.find( 'input[type="checkbox"], input[type="radio"]' ).each( function() { 
+	$elem.find( 'input[type="checkbox"], input[type="radio"]' ).each( function() {
 		if( ! $( this ).val() ) {
 			$( this ).parent().hide();
 		}

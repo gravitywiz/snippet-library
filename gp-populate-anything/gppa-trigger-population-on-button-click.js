@@ -4,7 +4,7 @@
  * Instead of automatically populating fields when an input is changed, trigger the population when a button is clicked.
  *
  * Instructions:
- *  1. Add snippet to form using https://gravitywiz.com/gravity-forms-custom-javascript/
+ *  1. Add snippet to form using https://gravitywiz.com/gravity-forms-code-chest/
  *  2. Customize inputButton and optionally buttonSelector to match your form the desired field
  *  3. Add HTML field to your form and add the following code to the HTML field:
  *      <button class="trigger-gppa">Click Me</button>

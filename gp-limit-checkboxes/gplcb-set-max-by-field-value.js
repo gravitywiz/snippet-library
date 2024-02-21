@@ -8,7 +8,7 @@
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  * 2. Configure based on the inline instructions.
  */
 gform.addFilter( 'gplc_group', function( group, fieldId, $elem, gplc ) {

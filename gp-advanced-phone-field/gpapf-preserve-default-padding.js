@@ -4,7 +4,7 @@
  *
  * By default, the `intlTelInput` library sets 6px of padding between the flag and the content of
  * the input. Gravity Forms pads its inputs with 8px of padding.
- * 
+ *
  * Since this isn't a setting in `intlTelInput`, we must override it with JavaScript.
  *
  * This snippet will automatically adjust the padding to match the input's default padding on
@@ -15,8 +15,8 @@
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
- * 
+ *    https://gravitywiz.com/gravity-forms-code-chest/
+ *
  * 2. Update the Phone field ID per the inline instructions.
  */
 // Update "4" to your Phone field ID.

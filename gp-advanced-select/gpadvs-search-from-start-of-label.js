@@ -9,7 +9,7 @@
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  */
 gform.addFilter( 'gpadvs_settings', function( settings, gpadvs ) {
 	settings.score = function(search) {

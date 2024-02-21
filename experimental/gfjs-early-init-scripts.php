@@ -1,7 +1,7 @@
 <?php
 /**
  * Gravity Forms // Custom Javascript // Load Init Scripts Early
- * https://gravitywiz.com/gravity-forms-custom-javascript/
+ * https://gravitywiz.com/gravity-forms-code-chest/
  *
  * Some perks (e.g. Copy Cat, Address Autocomplete) allow their initialization options to be filtered but the Custom JS
  * plugin outputs its scripts too late. This changes bumps GF Custom JS scripts to be output first.

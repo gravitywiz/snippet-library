@@ -4,7 +4,7 @@
  *
  * Instructions:
  *    Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  */
 $("#gform_GFFORMID")
 	.find(".gform_save_link")

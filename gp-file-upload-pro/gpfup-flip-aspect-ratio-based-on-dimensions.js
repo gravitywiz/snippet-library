@@ -8,9 +8,9 @@
  *    DO NOT set the "Aspect Ratio" setting.
  *
  * 2. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  *
- * 3. Update the `landscapeRatio` variable per the inline instructions. 
+ * 3. Update the `landscapeRatio` variable per the inline instructions.
  */
 // Update "3/2" to the desired ratio for landscape images. Portraits will automatically have the ratio flipped (e.g. "2/3").
 let currentFile;
@@ -18,7 +18,7 @@ let currentFileDimensions;
 let landscapeRatio = 3/2;
 
 gform.addFilter( 'gpfup_cropper_options', function( options, formId, fieldId ) {
-	
+
 	if ( typeof options.stencilProps === 'undefined' ) {
 		options.stencilProps = { 'aspectRatio': landscapeRatio };
 	}
@@ -32,6 +32,6 @@ gform.addFilter( 'gpfup_cropper_options', function( options, formId, fieldId ) {
 	} else {
 		options.stencilProps.aspectRatio = landscapeRatio;
 	}
-	
+
 	return options;
 } );

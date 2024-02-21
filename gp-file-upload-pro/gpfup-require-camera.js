@@ -2,14 +2,14 @@
  * Gravity Perks // File Upload Pro // Require Camera for Uploads
  * https://gravitywiz.com/documentation/gravity-forms-file-upload-pro/
  *
- * Want to ensure that the user is uploaded a fresh image taken directly from their camera? 
+ * Want to ensure that the user is uploaded a fresh image taken directly from their camera?
  * This snippet will force use of the camera and prevent selecting an existing image on
  * mobile devices.
  *
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  */
 gform.addAction( 'gpfup_uploader_ready', function( gpfup ) {
 	gpfup.Uploader.bind( 'PostInit', function() {

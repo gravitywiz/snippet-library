@@ -7,8 +7,8 @@
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
- * 
+ *    https://gravitywiz.com/gravity-forms-code-chest/
+ *
  * 2. Follow the inline instructions to configure this for your specific field.
  */
 gform.addFilter( 'gpaa_autocomplete_options', function( autocompleteOptions, gpaa, formId, fieldId ) {

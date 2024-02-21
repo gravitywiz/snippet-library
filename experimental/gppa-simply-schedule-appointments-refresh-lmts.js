@@ -1,6 +1,6 @@
 /**
  * --- STOP! ---
- * 
+ *
  * This snippet is deprecated and no longer required if you are using the latest version of Simply Schedule Appointments.
  */
 /**
@@ -15,7 +15,7 @@
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  */
 var observer = new MutationObserver( function ( mutationList ) {
 	mutationList.forEach( function () {

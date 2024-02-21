@@ -1,11 +1,11 @@
 /**
  * Gravity Perks // Reload Form // Reload Form in Magnific Modal
  * https://gravitywiz.com/automatically-reload-gravity-form-modal-closed/
- * 
+ *
  * Instructions:
- * 
+ *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  * 2. Two examples are included below. Remove the example that does not match your use case.
  */
 // Example #1 – Initialize a new Magnific Popup that will automatically reload the form when the modal is closed.

@@ -1,15 +1,15 @@
 /**
  * Gravity Perks // Nested Forms // Delete Child Entries When Parent Value Changes
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
- * 
+ *
  * Overview Video:
  * https://www.loom.com/share/304641c3136049d0a8d1cf58c7041df5
  *
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
- * 
+ *    https://gravitywiz.com/gravity-forms-code-chest/
+ *
  * 2. Configure the snippet for your form/fields based on the inline instructions.
  */
 // Update "4" to the ID of the field on the parent that when changed should delete the child entries.

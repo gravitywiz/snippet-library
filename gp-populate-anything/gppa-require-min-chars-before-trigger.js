@@ -3,7 +3,7 @@
  * https://gravitywiz.comhttps://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  */
 window.gform.addFilter('gppa_should_trigger_change', function( triggerChange, formId, inputId, $el, event ) {
 	// Update "1" to the field ID.
@@ -13,6 +13,6 @@ window.gform.addFilter('gppa_should_trigger_change', function( triggerChange, fo
 			return false;
 		}
 	}
-	
+
 	return triggerChange;
 } );

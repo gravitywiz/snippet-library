@@ -1,15 +1,15 @@
 /**
  * Gravity Perks // Copy Cat // Copy Multiple Checkbox Fields to a List Field
  * https://gravitywiz.com/documentation/gravity-forms-copy-cat/
- * 
- * Copy checked checkbox values from multiple Checkbox fields to a single List field. 
+ *
+ * Copy checked checkbox values from multiple Checkbox fields to a single List field.
  * [Screenshot](https://gwiz.io/3hhPeXH).
- * 
+ *
  * Instructions:
- * 
+ *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
- * 
+ *    https://gravitywiz.com/gravity-forms-code-chest/
+ *
  * 2. Update snippet based on inline instructions.
  */
 gform.addFilter( 'gpcc_field_group', function( $group, field, groupType, $field ) {

@@ -5,9 +5,9 @@
  * When using the QR scanner, automatically launch the scanner after the form has rendered.
  *
  * Instructions:
- * 
+ *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  */
 setTimeout( function() {
 	$( '.gpqr-scanner-button' ).click();
