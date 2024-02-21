@@ -28,3 +28,20 @@ function gspc_get_choice_label( $value, $field ) {
 
 	return $value;
 }
+
+// Choice-based Product fields must be handled uniquely.
+add_filter( 'gspc_addons', function( $addons, $object, $form, $entry ) {
+	$products = GFCommon::get_product_fields( $form, $entry );
+	foreach ( $addons as &$addon ) {
+		$product_field = GFAPI::get_field( $form, $addon['field_id'] );
+		$addon_product = rgars( $products, "products/{$addon['field_id']}" );
+		if ( ! $addon_product ) {
+			continue;
+		}
+		$choice_label = gspc_get_choice_label( $addon_product['name'], $product_field );
+		if ( $choice_label !== $addon_product['name'] ) {
+			$addon['value'] = str_replace( $addon_product['name'], $choice_label, $addon['value'] );
+		}
+	}
+	return $addons;
+}, 10, 4 );
