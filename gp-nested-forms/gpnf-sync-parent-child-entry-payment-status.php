@@ -92,6 +92,9 @@ if ( ! function_exists( 'gpnf_has_product_field' ) ) {
 
 if ( ! function_exists( 'gpnf_get_parent_entry_and_sync_child_entries_payment_details' ) ) {
 	function gpnf_get_parent_entry_and_sync_child_entries_payment_details( $entry_id ) {
+		if ( ! is_scalar( $entry_id ) ) {
+			return;
+		}
 		$entry = GFAPI::get_entry( $entry_id );
 		gpnf_sync_child_entries_payment_details( $entry );
 	}
