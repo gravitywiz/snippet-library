@@ -39,7 +39,7 @@
  * Plugin Name: Gravity Forms Advanced Merge Tags
  * Plugin URI: https://gravitywiz.com
  * Description: Provides a host of new ways to work with Gravity Forms merge tags.
- * Version: 1.4
+ * Version: 1.5
  * Author: Gravity Wiz
  * Author URI: https://gravitywiz.com/
  */
@@ -79,7 +79,16 @@ class GW_Advanced_Merge_Tags {
 
 		add_action( 'gform_merge_tag_filter', array( $this, 'support_html_field_merge_tags' ), 10, 4 );
 		add_action( 'gform_replace_merge_tags', array( $this, 'replace_merge_tags' ), 12, 3 );
+
+		/**
+		 * `gform_pre_replace_merge_tags` is only called if GFCommon::replace_variables() is called whereas
+		 * `gform_replace_merge_tags` is called if GFCommon::replace_variables() is called or if
+		 * GFCommon::replace_variables_prepopulate() is called independently. Ideally, we want to replace {get} merge
+		 * tags as early as possible so we need to bind to both functions.
+		 */
 		add_action( 'gform_pre_replace_merge_tags', array( $this, 'replace_get_variables' ), 10, 5 );
+		add_action( 'gform_replace_merge_tags', array( $this, 'replace_get_variables' ), 10, 5 );
+
 		add_action( 'gform_merge_tag_filter', array( $this, 'handle_field_modifiers' ), 10, 6 );
 
 		if ( $this->_args['save_source_post_id'] ) {
