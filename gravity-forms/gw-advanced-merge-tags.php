@@ -402,9 +402,17 @@ class GW_Advanced_Merge_Tags {
 
 		foreach ( $matches as $match ) {
 
-			list( $search, $property ) = $match;
+			list( $search, $modifiers ) = $match;
+
+			$modifiers = $this->parse_modifiers( $modifiers );
+			$property  = array_shift( $modifiers );
 
 			$value = stripslashes_deep( rgget( $property, $get ) );
+
+			$whitelist = rgar( $modifiers, 'whitelist', array() );
+			if ( $whitelist && ! in_array( $value, $whitelist ) ) {
+				$value = null;
+			}
 
 			$glue  = gf_apply_filters( array( 'gpamt_get_glue', $property ), ', ', $property );
 			$value = is_array( $value ) ? implode( $glue, $value ) : $value;
@@ -485,6 +493,30 @@ class GW_Advanced_Merge_Tags {
 		$first = array( array_shift( $chars ) );
 		$last  = array( array_pop( $chars ) );
 		return implode( '', array_merge( $first, array_pad( array(), count( $chars ), '*' ), $last ) );
+	}
+
+	public function parse_modifiers( $modifiers_str ) {
+
+		preg_match_all( '/([a-z_]+)(?:(?:\[(.+?)\])|,?)/i', $modifiers_str, $modifiers, PREG_SET_ORDER );
+		$parsed = array();
+
+		foreach ( $modifiers as $modifier ) {
+
+			list( $match, $modifier, $value ) = array_pad( $modifier, 3, null );
+			if ( $value === null ) {
+				$value = $modifier;
+			}
+
+			// Split '1,2,3' into array( 1, 2, 3 ).
+			if ( strpos( $value, ',' ) !== false ) {
+				$value = array_map( 'trim', explode( ',', $value ) );
+			}
+
+			$parsed[ strtolower( $modifier ) ] = $value;
+
+		}
+
+		return $parsed;
 	}
 
 }
