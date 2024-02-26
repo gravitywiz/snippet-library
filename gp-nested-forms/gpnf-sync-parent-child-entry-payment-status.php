@@ -22,7 +22,10 @@ add_action( 'gform_post_update_entry', function( $entry, $original_entry ) {
 	gpnf_sync_child_entries_payment_details( $entry );
 }, 10, 2 );
 
-add_action( 'gform_after_update_entry', 'gpnf_get_parent_entry_and_sync_child_entries_payment_details' );
+add_action( 'gform_after_update_entry', function( $form, $entry_id, $original_entry ) {
+	gpnf_get_parent_entry_and_sync_child_entries_payment_details( $entry_id );
+}, 10, 3 );
+
 add_action( 'gform_update_payment_status', 'gpnf_get_parent_entry_and_sync_child_entries_payment_details' );
 add_action( 'gform_update_payment_date', 'gpnf_get_parent_entry_and_sync_child_entries_payment_details' );
 add_action( 'gform_update_transaction_id', 'gpnf_get_parent_entry_and_sync_child_entries_payment_details' );
@@ -92,9 +95,6 @@ if ( ! function_exists( 'gpnf_has_product_field' ) ) {
 
 if ( ! function_exists( 'gpnf_get_parent_entry_and_sync_child_entries_payment_details' ) ) {
 	function gpnf_get_parent_entry_and_sync_child_entries_payment_details( $entry_id ) {
-		if ( ! is_scalar( $entry_id ) ) {
-			return;
-		}
 		$entry = GFAPI::get_entry( $entry_id );
 		gpnf_sync_child_entries_payment_details( $entry );
 	}
