@@ -180,8 +180,13 @@ class GW_Cache_Buster {
 					// GF is using it as their standard for triggering the `gform_post_render` event, I figured we should follow suit.
 					gform.initializeOnLoaded( function() {
 						// Form has been rendered. Trigger post render to initialize scripts.
-						jQuery( document ).trigger( 'gform_post_render', [ formId, 1 ] );
-						gform.utils.trigger({ event: 'gform/postRender', native: false, data: { formId: formId, currentPage: 1 } });
+						<?php
+							echo 'gform.initializeOnLoaded( function() {' . GFFormDisplay::post_render_script(
+								$form_id,
+								GFFormDisplay::get_current_page( $form_id )
+								) .
+								'} );';
+						?>
 					} );
 				} );
 			} )( jQuery );
@@ -197,7 +202,6 @@ class GW_Cache_Buster {
 	}
 
 	public function suppress_default_post_render_event( $form_string, $form, $current_page ) {
-
 		$searches = array(
 			"gform.initializeOnLoaded( function() { jQuery(document).trigger('gform_post_render', [{$form['id']}, {$current_page}]) } );",
 			"gform.initializeOnLoaded( function() {jQuery(document).trigger('gform_post_render', [{$form['id']}, {$current_page}]);gform.utils.trigger({ event: 'gform/postRender', native: false, data: { formId: {$form['id']}, currentPage: {$current_page} } });} );",
@@ -206,6 +210,13 @@ class GW_Cache_Buster {
 		foreach ( $searches as $search ) {
 			$search      = GFCommon::get_inline_script_tag( $search );
 			$form_string = str_replace( $search, '', $form_string );
+		}
+
+		if ( is_callable( 'GFFormDisplay::post_render_script' ) ) {
+			$post_render_script = GFFormDisplay::post_render_script( $form['id'], $current_page );
+			$post_render_script = preg_quote( $post_render_script, '/' ); // Escape special characters
+			$pattern            = '/gform\.initializeOnLoaded\(\s*function\(\)\s*\{\s*(' . $post_render_script . ')\s*\}\s*\);/';
+			$form_string        = preg_replace( $pattern, '', $form_string );
 		}
 
 		return $form_string;
