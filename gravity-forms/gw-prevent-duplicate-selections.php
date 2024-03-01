@@ -62,6 +62,12 @@ class GW_Prevent_Duplicate_Selections {
 		<script type="text/javascript">
 			window.<?php echo __CLASS__; ?> = function() {
 				var $ = jQuery;
+				/**
+				 * Cache for storing previous values of GP Advanced Select enabled multi-select
+				 * fields. We use this to check against in order to determine which option was
+				 * changed on a change event.
+				 */
+				const gpadvsPreviousValues = {};
 
 				window.gform.addFilter( 'gplc_excluded_input_selectors', function( selectors ) {
 					selectors.push( '.gw-disable-duplicates-disabled' );
@@ -79,13 +85,6 @@ class GW_Prevent_Duplicate_Selections {
 				$inputs.each( function( event ) {
 					gwDisableDuplicates( $( this ), $inputs.not('.gw-disable-duplicates-disabled') );
 				} );
-
-				/**
-				 * Cache for storing previous values of GP Advanced Select enabled multi-select
-				 * fields. We use this to check against in order to determine which option was
-				 * changed on a change event.
-				 */
-				const gpadvsPreviousValues = {};
 
 				/**
 				 * Given a select element, determines which option was changed.
