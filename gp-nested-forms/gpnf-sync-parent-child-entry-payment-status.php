@@ -92,6 +92,11 @@ if ( ! function_exists( 'gpnf_has_product_field' ) ) {
 
 if ( ! function_exists( 'gpnf_get_parent_entry_and_sync_child_entries_payment_details' ) ) {
 	function gpnf_get_parent_entry_and_sync_child_entries_payment_details( $entry_id ) {
+		// When editing entry, get the entry_id from $_GET.
+		if ( rgar( $_GET, 'view' ) === 'entry' ) {
+			$entry_id = rgar( $_GET, 'lid' );
+		}
+
 		$entry = GFAPI::get_entry( $entry_id );
 		gpnf_sync_child_entries_payment_details( $entry );
 	}
