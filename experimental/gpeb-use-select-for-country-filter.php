@@ -27,21 +27,21 @@ add_filter( 'gpeb_filter_form_field', function ( $field ) {
 			$country_choices = array_map( function ( $country ) {
 				return array(
 					'text'  => $country,
-					'value' => $country
+					'value' => $country,
 				);
 			}, $field['gpebFilterInputField']->get_countries() );
 
 			// Change the field to a select and populate it with countries from the address field.
 			$new_field = new \GF_Field_Select( array(
-				'id'               => $field['id'],
-				'label'            => $field['label'],
-				'gpebFilterSearch' => $field['gpebFilterSearch'],
+				'id'                   => $field['id'],
+				'label'                => $field['label'],
+				'gpebFilterSearch'     => $field['gpebFilterSearch'],
 				'gpebFilterInputField' => $field['gpebFilterInputField'],
-				'size'             => $field['size'],
-				'inputs'           => $field['inputs'],
-				'formId'           => $field['formId'],
-				'type'    => 'select',
-				'choices' => $country_choices
+				'size'                 => $field['size'],
+				'inputs'               => $field['inputs'],
+				'formId'               => $field['formId'],
+				'type'                 => 'select',
+				'choices'              => $country_choices,
 			) );
 			return $new_field;
 	}

@@ -102,7 +102,7 @@ class GW_Update_Posts {
 			( ! is_array( $this->_args['post_date'] ) && ! empty( $this->_args['post_date'] ) ) ||
 				rgars( $this->_args, 'post_date/date' )
 		) {
-			$new_date_time       = $this->get_post_date( $entry, $form );
+			$new_date_time = $this->get_post_date( $entry, $form );
 			if ( $new_date_time ) {
 				$post->post_date     = $new_date_time;
 				$post->post_date_gmt = get_gmt_from_date( $new_date_time );

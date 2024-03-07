@@ -10,7 +10,7 @@ class GSPC_Remove_Addons_in_Order_Email {
 	public function __construct( $args = array() ) {
 
 		$this->_args = wp_parse_args( $args, array(
-			'form_id'  => false,
+			'form_id' => false,
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded

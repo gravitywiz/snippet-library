@@ -7,7 +7,7 @@ add_filter( 'gpfr_filename', function( $renamed_file, $file, $entry, $form, $fie
 
 	$directory_path    = dirname( $renamed_file );
 	$filename          = basename( $renamed_file );
-	$modified_filename = str_replace( '-', '', $filename);
+	$modified_filename = str_replace( '-', '', $filename );
 
 	return $directory_path . '/' . $modified_filename;
 }, 10, 5 );

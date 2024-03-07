@@ -20,7 +20,7 @@ class GSPC_Include_WC_Product_Quantity_In_Total {
 
 		// Set default arguments, parse against the provided arguments, and store for use throughout the class.
 		$this->_args = wp_parse_args( $args, array(
-			'form_id'  => false,
+			'form_id' => false,
 		) );
 
 		add_action( 'init', array( $this, 'init' ) );
@@ -90,7 +90,7 @@ class GSPC_Include_WC_Product_Quantity_In_Total {
 		}
 
 		$args = array(
-			'formId'  => $this->_args['form_id'],
+			'formId' => $this->_args['form_id'],
 		);
 
 		$script = 'new ' . __CLASS__ . '( ' . json_encode( $args ) . ' );';
@@ -126,6 +126,6 @@ class GSPC_Include_WC_Product_Quantity_In_Total {
 
 // Configuration
 new GSPC_Include_WC_Product_Quantity_In_Total( array(
-  // Update "123" to your form ID
-	'form_id'  => 123,
+	// Update "123" to your form ID
+	  'form_id' => 123,
 ) );

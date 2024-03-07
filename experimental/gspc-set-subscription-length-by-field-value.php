@@ -6,8 +6,8 @@
 add_action( 'woocommerce_checkout_create_subscription', function ( $subscription ) {
 
 	// Update "123" to the ID of the form attached to the Subscription product.
-	$target_form_id      = 123;
-	
+	$target_form_id = 123;
+
 	// Update "4" to the field ID that will determine the subscription length (in months).
 	$sub_length_field_id = 4;
 
@@ -16,7 +16,7 @@ add_action( 'woocommerce_checkout_create_subscription', function ( $subscription
 	foreach ( $subscription_items as $subscription_item ) {
 
 		$gspc_order_item = new GS_Product_Configurator\WC_Order_Item( $subscription_item );
-		$entries = $gspc_order_item->get_entries();
+		$entries         = $gspc_order_item->get_entries();
 		if ( empty( $entries ) || rgars( $entries, '0/form_id' ) != $target_form_id ) {
 			continue;
 		}

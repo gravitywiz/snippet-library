@@ -30,7 +30,8 @@ add_filter( 'gform_field_value', function( $value, $field, $name ) {
 		$limit            = (int) $choice['inventory_limit'];
 		$count            = (int) rgar( $choice_counts, $choice['value'] );
 		$available        = $limit - $count;
-		$total_available += $available;;
+		$total_available += $available;
+
 	}
 
 	return $total_available;

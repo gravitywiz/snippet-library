@@ -4,7 +4,7 @@
  * https://gravitywiz.com/documentation/gravity-forms-read-only/
  *
  * Instructions
- * 
+ *
  * 1. Enable the "Read-only" setting in your Address field's field settings.
  *
  * 2. Install this snippet.
@@ -14,7 +14,7 @@
  */
 // Update "123" to your form ID and "4" to your Address field ID.
 add_filter( 'gform_field_input_123_4', function( $input, $field, $value, $lead_id, $form_id ) {
-	// Update these numbers to the input indexes that should NOT be read-only. 
+	// Update these numbers to the input indexes that should NOT be read-only.
 	$input_ids = array( 1, 2, 3, 5 );
 	foreach ( $input_ids as $input_id ) {
 		$input = str_replace( "readonly='readonly' type='text' name='input_{$field->id}.{$input_id}'", "type='text' name='input_{$field->id}.{$input_id}'", $input );

@@ -37,10 +37,10 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 	foreach ( $field->{'gppa-choices-templates'} as $template => $key ) {
 		/**
 		 * Look for ACF repeater meta: repeater_name_0_subfield_name
-		 * 
+		 *
 		 * Known limitation: This cannot have a number on the repeater field name. For an enumerator, it is
 		 * recommended to use alphabets like, repeater_name_a_0_name, repeater_name_b_1_name,etc.
-		 */ 
+		 */
 		if ( preg_match( '/meta_([^0-9]+)_([0-9]+)_(.+)/', $key, $matches ) ) {
 			list( , $repeater, $index, $subfield ) = $matches;
 			$map[ $template ]                      = $subfield;
@@ -63,8 +63,8 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 		if ( $rows ) {
 			foreach ( $rows as $row ) {
 				$choice = array(
-					'value'           => apply_filters( 'gppa_acfrm_value', rgar( $row, $map['value'] ), $row, $map['value'] ),
-					'text'            => apply_filters( 'gppa_acfrm_label', rgar( $row, $map['label'] ), $row, $map['label'] ),
+					'value' => apply_filters( 'gppa_acfrm_value', rgar( $row, $map['value'] ), $row, $map['value'] ),
+					'text'  => apply_filters( 'gppa_acfrm_label', rgar( $row, $map['label'] ), $row, $map['label'] ),
 				);
 				if ( isset( $map['inventory_limit'] ) ) {
 					$choice['inventory_limit'] = apply_filters( 'gppa_acfrm_inventory_limit', rgar( $row, $map['inventory_limit'] ), $row, $map['inventory_limit'] );

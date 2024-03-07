@@ -10,7 +10,7 @@
  *
  * Requires the Display Table Format for All Fields snippet and only works if the `:gpnf_table` modifier is set on the
  * {all_fields} merge tag or Nested Form field merge tag.
- * 
+ *
  * [Display Table Format for All Fields](https://github.com/gravitywiz/snippet-library/blob/master/gp-nested-forms/gpnf-display-child-entries-table-format.php)
  */
 add_filter( 'gp_template_output_nested-entries-detail-simple', function( $markup, $located_template, $load, $args ) {
@@ -52,12 +52,13 @@ add_filter( 'gp_template_output_nested-entries-detail-simple', function( $markup
 						<?php echo GFCommon::get_label( $nested_field ); ?>
 					</th>
 					<?php foreach ( $entries as $entry ) : ?>
-						<?php $field_values = gp_nested_forms()->get_entry_display_values( $entry, $nested_form, $nested_field_ids );
+						<?php
+						$field_values    = gp_nested_forms()->get_entry_display_values( $entry, $nested_form, $nested_field_ids );
 							$field_value = rgars( $field_values, "{$nested_field['id']}/label" );
-							?>
+						?>
 							<td class="gpnf-field"
-							    data-heading="<?php echo GFCommon::get_label( $nested_field ); ?>"
-							    data-value="<?php echo esc_attr( $field_value ); ?>">
+								data-heading="<?php echo GFCommon::get_label( $nested_field ); ?>"
+								data-value="<?php echo esc_attr( $field_value ); ?>">
 								<?php echo $field_value; ?>
 							</td>
 					<?php endforeach; ?>

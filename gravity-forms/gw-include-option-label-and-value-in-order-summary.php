@@ -7,8 +7,8 @@
  * to include both the label and value wherever the order summary is displayed (e.g. Entry Detail, {all_fields}, etc).
  */
 add_filter( 'gform_product_info', function( $product_info, $form ) {
-	foreach( $product_info['products'] as &$product ) {
-		foreach( $product['options'] as &$option ) {
+	foreach ( $product_info['products'] as &$product ) {
+		foreach ( $product['options'] as &$option ) {
 			$field = GFAPI::get_field( $form, $option['id'] );
 			foreach ( $field->choices as $choice ) {
 				if ( $choice['text'] !== $choice['value'] && in_array( $option['option_name'], array( $choice['text'], $choice['value'] ) ) ) {

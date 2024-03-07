@@ -32,7 +32,7 @@ add_action( 'init', function() {
 
 	// Check if the entry was created more than 72 hours ago
 	$date_created = strtotime( $entry['date_created'] );
-	$hours_diff = ( time() - $date_created ) / 3600;
+	$hours_diff   = ( time() - $date_created ) / 3600;
 
 	if ( $hours_diff > 72 ) {
 		// Delete the EP token meta from the entry.

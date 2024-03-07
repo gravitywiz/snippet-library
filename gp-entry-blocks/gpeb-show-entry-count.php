@@ -28,7 +28,7 @@ function gpeb_show_entry_count( $block_content, $block, $instance ) {
 
 	// Display the count before and after the table.
 	$entry_label = _n( 'entry', 'entries', $queryer->total_count, 'gp-entry-blocks' );
-	$count = '<div class="gpeb-entry-count"><span>' . $queryer->total_count . '</span> ' . $entry_label . ' found.</div>';
+	$count       = '<div class="gpeb-entry-count"><span>' . $queryer->total_count . '</span> ' . $entry_label . ' found.</div>';
 
 	// If you want it to show before the table
 	// return $count . $block_content;
