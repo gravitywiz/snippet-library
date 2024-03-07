@@ -220,8 +220,10 @@ class GW_All_Fields_Template {
 						$value = $this->get_all_fields_field_value( $field, $value );
 					}
 					break;
+				case 'nopricingfields':
 				case 'exclude':
-					if ( in_array( (int) $field->id, $field_ids, true ) ) {
+					// exclude the fields marked to be excluded, or exclude all pricing fields if 'nopricingfields' merge tag is used.
+					if ( in_array( (int) $field->id, $field_ids, true ) || ( $modifier == 'nopricingfields' && GFCommon::is_product_field( $field->type ) ) ) {
 
 						$exclude_full_value = true;
 
