@@ -127,5 +127,5 @@ class GSPC_Include_WC_Product_Quantity_In_Total {
 // Configuration
 new GSPC_Include_WC_Product_Quantity_In_Total( array(
 	// Update "123" to your form ID
-	  'form_id' => 123,
+	'form_id' => 123,
 ) );

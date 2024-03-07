@@ -208,10 +208,10 @@ class GW_Limit_Multi_Select {
 
 		if ( $count < $min ) {
 			$result['is_valid'] = false;
-			$result['message']  = __( "Please select {$min} or more options." );
+			$result['message']  = "Please select {$min} or more options.";
 		} elseif ( $count > $max ) {
 			$result['is_valid'] = false;
-			$result['message']  = __( "Please select less than {$max} options." );
+			$result['message']  = "Please select less than {$max} options.";
 		}
 
 		return $result;

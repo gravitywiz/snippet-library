@@ -21,7 +21,9 @@ add_action( 'woocommerce_checkout_create_subscription', function ( $subscription
 			continue;
 		}
 
-		$sub_length   = 3;//rgars( $entries, "0/{$sub_length_field_id}" );
+		$sub_length = 3; // rgars( $entries, "0/{$sub_length_field_id}" );
+
+		// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 		$sub_end_date = date( 'Y-m-d H:i:s', strtotime( "+{$sub_length} months" ) );
 
 		$subscription->update_dates( array( 'end' => $sub_end_date ) );

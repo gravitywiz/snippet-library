@@ -3,7 +3,7 @@
  * Gravity Shop // Product Configurator // Remove GSPC Product Add-ons in WC Order Email
  * https://gravitywiz.com/documentation/gravity-shop-product-configurator/
  */
-class GSPC_Remove_Addons_in_Order_Email {
+class GSPC_Remove_Addons_In_Order_Email {
 
 	private $_args;
 
@@ -49,6 +49,6 @@ class GSPC_Remove_Addons_in_Order_Email {
 
 # Configuration
 
-new GSPC_Remove_Addons_in_Order_Email( array(
+new GSPC_Remove_Addons_In_Order_Email( array(
 	'form_id' => 123,
 ) );
