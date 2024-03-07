@@ -141,11 +141,12 @@ class GW_Cache_Buster {
 		// Include original query parameters (with some exclusions) in the AJAX call to preserve dynamic population via query string.
 		$exclude_params = array( 'action', 'form_id', 'atts' );
 		$ajax_url       = remove_query_arg( $exclude_params, add_query_arg( $_GET, admin_url( 'admin-ajax.php' ) ) );
-		$ajax_url       = add_query_arg(
+
+		// Still needed for the AJAX submission.
+		$ajax_url = add_query_arg(
 			array(
-				'action'              => 'gfcb_get_form',
-				'form_id'             => $form_id,
-				'form_request_origin' => rgpost( 'gwcb_form_request_origin' ),
+				'action'  => 'gfcb_get_form',
+				'form_id' => $form_id,
 			),
 			$ajax_url
 		);
@@ -162,7 +163,8 @@ class GW_Cache_Buster {
 				$.post( '<?php echo $ajax_url; ?>', {
 					action: 'gfcb_get_form',
 					form_id: '<?php echo $form_id; ?>',
-					atts: '<?php echo json_encode( $attributes ); ?>',
+					atts: '<?php echo esc_js( json_encode( $attributes ) ); ?>',
+					form_request_origin: '<?php echo esc_js( GFCommon::openssl_encrypt( GFFormsModel::get_current_page_url() ) ); ?>',
 					lang: '<?php echo $lang; ?>'
 				}, function( response ) {
 					$( '#gf-cache-buster-form-container-<?php echo $form_id; ?>' ).html( response ).fadeIn();
@@ -217,8 +219,8 @@ class GW_Cache_Buster {
 		}
 
 		add_filter( 'gpasc_new_draft_form_path', function( $form_path, $form ) {
-			return rgget( 'form_request_origin' )
-				? remove_query_arg( 'gf_token', rgget( 'form_request_origin' ) )
+			return rgpost( 'form_request_origin' )
+				? remove_query_arg( 'gf_token', GFCommon::openssl_decrypt( rgpost( 'form_request_origin' ) ) )
 				: $form_path;
 		}, 10, 2 );
 
@@ -234,6 +236,7 @@ class GW_Cache_Buster {
 		 */
 		add_filter( 'gform_init_scripts_footer', '__return_true', 987 );
 		add_filter( 'gform_form_tag_' . $form_id, array( $this, 'add_hidden_inputs' ), 10, 2 );
+		add_filter( 'gform_pre_render_' . $form_id, array( $this, 'replace_embed_url_for_field_default_values' ) );
 
 		$atts = json_decode( rgpost( 'atts' ), true );
 
@@ -241,10 +244,13 @@ class GW_Cache_Buster {
 		$field_values = wp_parse_args( rgar( $atts, 'field_values' ) );
 
 		// If `$_POST` is not an empty array GF 2.5 fails to select default values for checkbox fields. See HS#26188
-		$_POST = array();
+		$GLOBALS['GWCB_POST'] = $_POST;
+		$_POST                = array();
 
 		gravity_form( $form_id, filter_var( rgar( $atts, 'title', true ), FILTER_VALIDATE_BOOLEAN ), filter_var( rgar( $atts, 'description', true ), FILTER_VALIDATE_BOOLEAN ), false, $field_values, true /* default to true; add support for non-ajax in the future */, rgar( $atts, 'tabindex' ) );
-		remove_filter( 'gform_form_tag_' . $form_id , array( $this, 'add_hidden_inputs' ) );
+
+		remove_filter( 'gform_form_tag_' . $form_id, array( $this, 'add_hidden_inputs' ) );
+		remove_filter( 'gform_pre_render_' . $form_id, array( $this, 'replace_embed_url_for_field_default_values' ) );
 
 		die();
 	}
@@ -275,7 +281,7 @@ class GW_Cache_Buster {
 	}
 
 	/**
-	 * Replace `{embed_url}` merge tag correctly
+	 * Replace `{embed_url}` merge tag for notifications, confirmations, etc.
 	 *
 	 * @param string $text The current text with merge tags.
 	 * @param array $form The current form.
@@ -287,10 +293,14 @@ class GW_Cache_Buster {
 	public function replace_embed_url( $text, $form, $entry, $url_encode ) {
 		// Check if the text contains the {embed_url} merge tag
 		if ( strpos( $text, '{embed_url}' ) !== false ) {
-			$original_url = GFCommon::openssl_decrypt( rgpost( 'gwcb_form_request_origin' ) );
+			$origin = $this->get_form_request_origin();
+
+			if ( ! $origin ) {
+				return $text;
+			}
 
 			// Replace the {embed_url} merge tag with the original URL
-			$text = str_replace( '{embed_url}', $original_url, $text );
+			$text = str_replace( '{embed_url}', $origin, $text );
 		}
 
 		return $text;
@@ -303,10 +313,58 @@ class GW_Cache_Buster {
 	 * @param array $form The current form.
 	 */
 	function entry_source_url( $entry, $form ) {
-		$entry['source_url'] = GFCommon::openssl_decrypt( rgpost( 'gwcb_form_request_origin' ) );
-		if ( $entry['source_url'] ) {
-			GFAPI::update_entry( $entry );
+		$origin = $this->get_form_request_origin();
+
+		if ( ! $origin ) {
+			return;
 		}
+
+		GFAPI::update_entry_property( $entry['id'], 'source_url', $origin );
+	}
+
+	/**
+	 * Replace {embed_url} merge tag for field default values. We have to do this using gform_pre_render as
+	 * gform_pre_replace_merge_tags is not called for field default values.
+	 *
+	 * @param array $form The current form.
+	 */
+	public function replace_embed_url_for_field_default_values( $form ) {
+		foreach ( $form['fields'] as &$field ) {
+			if ( strpos( $field->defaultValue, '{embed_url}' ) !== false ) {
+				$origin = $this->get_form_request_origin();
+
+				if ( ! $origin ) {
+					continue;
+				}
+
+				$field->defaultValue = str_replace( '{embed_url}', $origin, $field->defaultValue );
+			}
+		}
+
+		return $form;
+	}
+
+	/**
+	 * Helper method to get the form request origin.
+	 */
+	public function get_form_request_origin() {
+		static $form_request_origin;
+
+		if ( $form_request_origin ) {
+			return $form_request_origin;
+		}
+
+		$origin = rgpost( 'gwcb_form_request_origin' );
+		$origin = $origin ?: rgpost( 'form_request_origin' );
+		$origin = $origin ?: rgars( $GLOBALS, 'GWCB_POST/form_request_origin' );
+
+		if ( $origin ) {
+			$form_request_origin = GFCommon::openssl_decrypt( $origin );
+		} else {
+			$form_request_origin = null;
+		}
+
+		return $form_request_origin;
 	}
 
 	/**
@@ -318,12 +376,11 @@ class GW_Cache_Buster {
 	 * @return string
 	 */
 	public function add_hidden_inputs( $form_tag, $form ) {
-
-		if ( strpos( $form_tag, 'gwcb_form_request_origin') !== false) {
+		if ( strpos( $form_tag, 'gwcb_form_request_origin' ) !== false ) {
 			return $form_tag;
 		}
 
-		$form_tag .= '<input type="hidden" value="' . GFCommon::openssl_encrypt( $_SERVER['HTTP_REFERER'] ) . '" name="gwcb_form_request_origin" />';
+		$form_tag .= '<input type="hidden" value="' . esc_attr( rgars( $GLOBALS, 'GWCB_POST/form_request_origin' ) ) . '" name="gwcb_form_request_origin" />';
 		return $form_tag;
 	}
 }
