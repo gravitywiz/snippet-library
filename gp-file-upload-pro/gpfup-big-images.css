@@ -8,7 +8,7 @@
 }
 
 .gpfup-big-images .gpfup__file {
-	width: calc( 50% - 1rem );
+	width: max( calc(50% - 1rem), 300px );
 	border: 0 !important;
 	padding: 0;
 	margin: 0 0.5rem 1rem !important;
