@@ -213,7 +213,7 @@ class GW_Cache_Buster {
 		if ( is_callable( 'GFFormDisplay::post_render_script' ) ) {
 			$post_render_script = GFFormDisplay::post_render_script( $form['id'], $current_page );
 			$post_render_script = preg_quote( $post_render_script, '/' ); // Escape special characters
-			$pattern            = '/gform\.initializeOnLoaded\(\s*function\(\)\s*\{\s*(' . $post_render_script . ')\s*\}\s*\);/';
+			$pattern            = '/<script>\s*gform\.initializeOnLoaded\(\s*function\(\)\s*\{\s*(' . $post_render_script . ')\s*\}\s*\);\s*<\/script>/';
 			$form_string        = preg_replace( $pattern, '', $form_string );
 		}
 
