@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // Entry Blocks // Remove Copy Cat on Edit.
+ * Gravity Perks // Entry Blocks // Disable Copy Cat When Editing.
  * https://gravitywiz.com/documentation/gravity-forms-entry-blocks/
  *
  * Removes copy cat functionality on Entry Blocks' Edit Page.
