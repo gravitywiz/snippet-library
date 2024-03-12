@@ -19,7 +19,7 @@
  */
 add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 
-	if ( strpos( $field->cssClass, 'gppa-dynamic-quantity-choices' ) === false || empty( $choices ) {
+	if ( strpos( $field->cssClass, 'gppa-dynamic-quantity-choices' ) === false || empty( $choices ) ) {
 		return $choices;
 	}
 
