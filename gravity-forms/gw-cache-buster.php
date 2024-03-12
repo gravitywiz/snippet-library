@@ -181,11 +181,12 @@ class GW_Cache_Buster {
 					gform.initializeOnLoaded( function() {
 						// Form has been rendered. Trigger post render to initialize scripts.
 						<?php
-							echo 'gform.initializeOnLoaded( function() {' . GFFormDisplay::post_render_script(
-								$form_id,
-								GFFormDisplay::get_current_page( $form_id )
-								) .
-								'} );';
+							echo sprintf(
+								'gform.initializeOnLoaded(function() {%s});',
+								GFFormDisplay::post_render_script(
+									$form_id,
+									GFFormDisplay::get_current_page( $form_id )
+							) );
 						?>
 					} );
 				} );
