@@ -32,8 +32,8 @@ function gw_first_error_focus_script() {
 					// has been re-evaluated.
 					window['gwfef'] = false;
 					var hasError = gwFirstErrorFocus().length;
-
-					if (!hasError) {
+					var onSubsequentPage = $('.gf_step_current_page') && $('.gf_step_current_page').text() > 1;
+					if (!hasError && onSubsequentPage) {
 						requestAnimationFrame(function() {
 							window.scrollTo(0, $('.gform_wrapper').offset().top);
 						});
