@@ -163,7 +163,7 @@ class GW_Cache_Buster {
 				$.post( '<?php echo $ajax_url; ?>', {
 					action: 'gfcb_get_form',
 					form_id: '<?php echo $form_id; ?>',
-					atts: '<?php echo esc_js( json_encode( $attributes ) ); ?>',
+					atts: '<?php echo wp_json_encode( $attributes ); ?>',
 					form_request_origin: '<?php echo esc_js( GFCommon::openssl_encrypt( GFFormsModel::get_current_page_url() ) ); ?>',
 					lang: '<?php echo $lang; ?>'
 				}, function( response ) {
