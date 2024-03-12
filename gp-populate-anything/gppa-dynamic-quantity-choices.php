@@ -15,7 +15,7 @@
  * 1. Install the snippet.
  *    https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  *
- * 2. Add the `gppa-dynamic-quantity-chocies` class to the desired field(s) "CSS Class Name" field setting.
+ * 2. Add the `gppa-dynamic-quantity-$choices` class to the desired field(s) "CSS Class Name" field setting.
  */
 add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 
