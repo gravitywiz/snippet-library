@@ -5,11 +5,13 @@
  */
 add_action( 'woocommerce_checkout_create_subscription', function ( $subscription ) {
 
-	// Update "123" to the ID of the form attached to the Subscription product.
-	$target_form_id = 123;
-
-	// Update "4" to the field ID that will determine the subscription length (in months).
-	$sub_length_field_id = 4;
+	$form_field_map = array(
+		// Update "123" to the ID of the form attached to the Subscription product and "4" to the field ID
+		// that will determine the subscription length (in months).
+		123 => 4,
+		// Repeat that process for as many form/field pairs as you'd like.
+		124 => 5,
+	);
 
 	$subscription_items = $subscription->get_items();
 
@@ -17,11 +19,17 @@ add_action( 'woocommerce_checkout_create_subscription', function ( $subscription
 
 		$gspc_order_item = new GS_Product_Configurator\WC_Order_Item( $subscription_item );
 		$entries         = $gspc_order_item->get_entries();
-		if ( empty( $entries ) || rgars( $entries, '0/form_id' ) != $target_form_id ) {
+		if ( empty( $entries ) ) {
 			continue;
 		}
 
-		$sub_length = 3; // rgars( $entries, "0/{$sub_length_field_id}" );
+		$form_id             = rgars( $entries, '0/form_id' );
+		$sub_length_field_id = rgar( $form_field_map, $form_id );	
+		if ( ! $sub_length_field_id ) {
+			continue;
+		}
+		
+		$sub_length = rgars( $entries, "0/{$sub_length_field_id}" );
 
 		// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 		$sub_end_date = date( 'Y-m-d H:i:s', strtotime( "+{$sub_length} months" ) );
