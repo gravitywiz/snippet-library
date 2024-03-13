@@ -4,7 +4,7 @@
  * https://gravitywiz.com/documentation/gravity-forms-advanced-select/
  *
  * Preserve Choice Order with Multi Select Fields using GP Advanced Select.
- * 
+ *
  * Instruction Video: https://www.loom.com/share/d2ad3fea02234f02871ac9b1efe20b53
  *
  * Instructions:
@@ -20,12 +20,12 @@ function preserve_choice_order_with_advanced_select( $value, $lead, $field, $for
 	}
 
 	// Decode JSON "value" string to an array.
-	$value_array = json_decode($value, true);
+	$value_array = json_decode( $value, true );
 
 	// Create a map of choice values to their respective index, and sort with that.
 	$value_indices = array_flip( array_column( $field->choices, 'value' ) );
-	usort( $value_array, function ( $a, $b ) use ( $value_indices ) {
-		return $value_indices[$a] - $value_indices[$b];
+	usort( $value_array, function ( $x, $y ) use ( $value_indices ) {
+		return $value_indices[ $x ] - $value_indices[ $y ];
 	});
 
 	// Encode back to JSON string.
