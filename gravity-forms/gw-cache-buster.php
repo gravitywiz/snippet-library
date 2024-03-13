@@ -163,7 +163,7 @@ class GW_Cache_Buster {
 				$.post( '<?php echo $ajax_url; ?>', {
 					action: 'gfcb_get_form',
 					form_id: '<?php echo $form_id; ?>',
-					atts: '<?php echo wp_json_encode( $attributes ); ?>',
+					atts: <?php echo wp_json_encode( $attributes ); ?>,
 					form_request_origin: '<?php echo esc_js( GFCommon::openssl_encrypt( GFFormsModel::get_current_page_url() ) ); ?>',
 					lang: '<?php echo $lang; ?>'
 				}, function( response ) {
@@ -250,7 +250,7 @@ class GW_Cache_Buster {
 		add_filter( 'gform_form_tag_' . $form_id, array( $this, 'add_hidden_inputs' ), 10, 2 );
 		add_filter( 'gform_pre_render_' . $form_id, array( $this, 'replace_embed_url_for_field_default_values' ) );
 
-		$atts = json_decode( rgpost( 'atts' ), true );
+		$atts = rgpost( 'atts' );
 
 		// GF expects an associative array for field values. Parse them before passing it on.
 		$field_values = wp_parse_args( rgar( $atts, 'field_values' ) );
