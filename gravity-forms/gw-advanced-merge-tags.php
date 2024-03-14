@@ -432,6 +432,17 @@ class GW_Advanced_Merge_Tags {
 	public function support_html_field_merge_tags( $value, $tag, $modifiers, $field ) {
 		if ( $field->type == 'html' && ( $tag != 'all_fields' || in_array( 'allowHtmlFields', explode( ',', $modifiers ) ) ) ) {
 			$value = $field->content;
+
+			// Support for LMTs with GP Post Content Merge Tags
+			if ( class_exists( 'GP_Populate_Anything_Live_Merge_Tags' ) && is_callable( 'gp_post_content_merge_tags' ) && rgget( 'eid' ) ) {
+				$gppa_lmt = GP_Populate_Anything_Live_Merge_Tags::get_instance();
+				if ( $gppa_lmt->has_live_merge_tag( $value ) ) {
+					$form  = GFAPI::get_form( $field->formId );
+					$entry = gp_post_content_merge_tags()->get_entry();
+					$gppa_lmt->populate_lmt_whitelist( $form );
+					$value = $gppa_lmt->replace_live_merge_tags_static( $value, $form, $entry );
+				}
+			}
 		}
 
 		return $value;
