@@ -24,9 +24,10 @@ class GPEP_Edit_Entry {
 			return;
 		}
 
-		$this->form_id        = rgar( $options, 'form_id' );
-		$this->delete_partial = rgar( $options, 'delete_partial', true );
-		$this->refresh_token  = rgar( $options, 'refresh_token', false );
+		$this->form_id           = rgar( $options, 'form_id' );
+		$this->delete_partial    = rgar( $options, 'delete_partial', true );
+		$this->refresh_token     = rgar( $options, 'refresh_token', false );
+		$this->restart_workflow  = rgar( $options, 'restart_workflow', false );
 
 		add_filter( "gpep_form_{$this->form_id}", array( $this, 'capture_passed_through_entry_ids' ), 10, 3 );
 		add_filter( "gform_entry_id_pre_save_lead_{$this->form_id}", array( $this, 'update_entry_id' ), 10, 2 );
@@ -106,6 +107,11 @@ class GPEP_Edit_Entry {
 				$session = gp_easy_passthrough()->session_manager();
 				$session[ gp_easy_passthrough()->get_slug() . '_' . $form['id'] ] = null;
 				remove_action( 'gform_after_submission', array( gp_easy_passthrough(), 'store_entry_id' ) );
+			}
+			// If restart workflow is enabled.
+			if ( $this->restart_workflow && class_exists( 'Gravity_Flow_API' ) ) {
+				$api = new Gravity_Flow_API( $form['id'] );
+				$api->restart_workflow( GFAPI::get_entry( $update_entry_id ) );
 			}
 			return $update_entry_id;
 		}
@@ -245,7 +251,8 @@ class GPEP_Edit_Entry {
 
 // Configurations
 new GPEP_Edit_Entry( array(
-	'form_id'        => 123,   // Set this to the form ID.
-	'delete_partial' => false, // Set this to false if you wish to preserve partial entries after an edit is submitted.
-	'refresh_token'  => true,  // Set this to true to generate a fresh Easy Passthrough token after updating an entry.
+	'form_id'          => 123,   // Set this to the form ID.
+	'delete_partial'   => false, // Set this to false if you wish to preserve partial entries after an edit is submitted.
+	'refresh_token'    => true,  // Set this to true to generate a fresh Easy Passthrough token after updating an entry.
+	'restart_workflow' => false,  // Set this to true to restart the Gravity Flow workflow.
 ) );
