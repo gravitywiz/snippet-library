@@ -8,7 +8,7 @@
  * Plugin URI:   https://gravitywiz.com/gravity-forms-all-fields-template/
  * Description:  Modify the {all_fields} merge tag output via a template file.
  * Author:       Gravity Wiz
- * Version:      0.10
+ * Version:      0.11
  * Author URI:   http://gravitywiz.com
  *
  * Usage:
@@ -175,6 +175,7 @@ class GW_All_Fields_Template {
 			 */
 			if ( $context == 'nested' ) {
 
+				$input_ids = array();
 				$nested_form_field_id = rgar( $modifiers, 'parent', false );
 				if ( ! $nested_form_field_id ) {
 					break;
@@ -198,7 +199,7 @@ class GW_All_Fields_Template {
 				case 'filter':
 					if ( in_array( $field->id, $field_ids ) ) {
 						// Check for input-specific filters.
-						if ( is_array( $raw_value ) && ! in_array( $field->id, $input_ids ) ) {
+						if ( is_array( $raw_value ) && ! empty( $input_ids ) && ! in_array( $field->id, $input_ids ) ) {
 							$filtered_values = array();
 
 							foreach ( $input_ids as $input_id ) {
