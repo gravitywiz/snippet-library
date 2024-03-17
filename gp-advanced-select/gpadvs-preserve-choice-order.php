@@ -22,10 +22,13 @@ add_filter( 'gform_save_field_value', function ( $value, $lead, $field, $form ) 
 	$value_array = json_decode( $value, true );
 
 	// Create a map of choice values to their respective index, and sort with that.
-	$value_indices = array_flip( array_column( $field->choices, 'value' ) );
-	usort( $value_array, function ( $x, $y ) use ( $value_indices ) {
-		return $value_indices[ $x ] - $value_indices[ $y ];
-	});
+	if ( is_array( $field->choices ) && ! empty( $field->choices ) && $value_array ) {
+		// Avoid PHP notices for non-string, non-integer values with `array_flip()` by casting everything to a string and ensuring the result is an array.
+		$value_indices = (array) array_flip( array_map( 'strval', array_column( $field->choices, 'value' ) ) );
+		usort( $value_array, function ( $x, $y ) use ( $value_indices ) {
+			return $value_indices[ $x ] - $value_indices[ $y ];
+		} );
+	}
 
 	// Encode back to JSON string.
 	$value = json_encode( $value_array );
