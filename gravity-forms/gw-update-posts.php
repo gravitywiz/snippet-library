@@ -68,8 +68,13 @@ class GW_Update_Posts {
 
 	public function update_post_by_entry( $entry, $form ) {
 
+		$post_id = rgar( $entry, $this->_args['post_id'] );
+		// If post not selected or post not available, return.
+		if ( empty( $post_id ) ) {
+			return;
+		}
 		// Get the post and, if the current user has capabilities, update post with new content.
-		$post = get_post( rgar( $entry, $this->_args['post_id'] ) );
+		$post = get_post( $post_id );
 		if ( ! current_user_can( 'edit_post', $post->ID ) ) {
 			return;
 		}
