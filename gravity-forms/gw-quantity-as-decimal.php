@@ -58,9 +58,16 @@ class GW_Quantity_Decimal {
 			$this->is_enabled_field( $field ) &&
 			in_array( $field->type, array( 'product', 'quantity' ) ) &&
 			in_array( $field->validation_message, array( __( 'Please enter a valid quantity. Quantity cannot contain decimals.', 'gravityforms' ), __( 'Please enter a valid quantity', 'gravityforms' ) ) ) ) {
-			$is_numeric_decimal_dot   = $field->type == 'product' ? GFCommon::is_numeric( rgpost( "input_{$field['id']}_3" ), 'decimal_dot' ) : GFCommon::is_numeric( rgpost( "input_{$field['id']}" ), 'decimal_dot' );
-			$is_numeric_decimal_comma = $field->type == 'product' ? GFCommon::is_numeric( rgpost( "input_{$field['id']}_3" ), 'decimal_comma' ) : GFCommon::is_numeric( rgpost( "input_{$field['id']}" ), 'decimal_comma' );
-			if ( $is_numeric_decimal_dot || $is_numeric_decimal_comma ) {
+
+			$posted_value = $field->type == 'product' ? rgpost( "input_{$field['id']}_3" ) : rgpost( "input_{$field['id']}" );
+			// We trim in case HTML5 is turned off, else type="number" doesn't allow space
+			$posted_value = trim( $posted_value );
+
+			$is_numeric_decimal_dot   = GFCommon::is_numeric( $posted_value, 'decimal_dot' );
+			$is_numeric_decimal_comma = GFCommon::is_numeric( $posted_value, 'decimal_comma' );
+			$is_valid_float           = preg_match( '/^[0-9]*[.,]?[0-9]+$/', $posted_value );
+
+			if ( $is_numeric_decimal_dot || $is_numeric_decimal_comma || $is_valid_float ) {
 				$result['is_valid'] = true;
 			}
 		}
