@@ -4,7 +4,7 @@
  *
  * Update existing post title, content, author and custom fields with values from Gravity Forms.
  *
- * @version 0.5
+ * @version 0.6
  * @author  Scott Ryer <scott@gravitywiz.com>
  * @license GPL-2.0+
  * @link    http://gravitywiz.com
