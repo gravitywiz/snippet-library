@@ -14,6 +14,14 @@
  * As an example, this snippet is configured to duplicate child entries for Nested Form fields 1 and 2 in form 17.
  */
 add_action( 'gravityview/duplicate-entry/duplicated', function ( $duplicated_entry, $original_entry ) {
+	gpnf_duplicate_child_entries( $duplicated_entry, $original_entry );
+}, 10, 2 );
+
+add_action( 'gpeb_entry_duplicated', function ( $original_entry ) {
+	gpnf_duplicate_child_entries( GFAPI::get_entry( $GLOBALS['gpeb_duplicated_entry'] ), $original_entry );
+});
+
+function gpnf_duplicate_child_entries( $duplicated_entry, $original_entry ) {
 	if ( ! class_exists( 'GPNF_Entry' ) || ! function_exists( 'gp_nested_forms' ) ) {
 		return;
 	}
@@ -64,4 +72,4 @@ add_action( 'gravityview/duplicate-entry/duplicated', function ( $duplicated_ent
 
 		GFAPI::update_entry( $duplicated_entry, $duplicated_entry['id'] );
 	}
-}, 10, 2 );
+}
