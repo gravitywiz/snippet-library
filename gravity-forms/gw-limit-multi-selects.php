@@ -197,14 +197,15 @@ class GW_Limit_Multi_Select {
 
 	public function validate( $result, $value, $form, $field ) {
 
-		if ( ! $this->is_applicable_field( $field ) || ! is_array( $value ) ) {
+		if ( ! $this->is_applicable_field( $field ) ) {
 			return $result;
 		}
 
 		$min = $this->get_min();
 		$max = $this->get_max();
 
-		$count = count( $value );
+		// if nothing is selected, $value will be an empty string so $count must be "0".
+		$count = empty( $value ) ? 0 : count( $value );
 
 		if ( $count < $min ) {
 			$result['is_valid'] = false;
