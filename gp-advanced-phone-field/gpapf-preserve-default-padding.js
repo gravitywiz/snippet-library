@@ -20,18 +20,28 @@
  * 2. Update the Phone field ID per the inline instructions.
  */
 // Update "4" to your Phone field ID.
-var $telInput = $( '#input_GFFORMID_4_raw' );
 
-$telInput[0].addEventListener( 'countrychange', function() {
-	gpapfAdjustInputPadding( this );
-} );
+gform.addAction( 'gpapf_post_init', function( formId, fieldId, GPAPF ) {
+	if ( formId == GFFORMID && fieldId == 4 ) {
+		const iti = GPAPF.iti;
 
-gpapfAdjustInputPadding( $telInput[0] );
+		GPAPF.$telInput.addEventListener( 'countrychange', gpapfAdjustInputPadding );
+		GPAPF.$telInput.addEventListener( 'blur', gpapfAdjustInputPadding );
+		gpapfAdjustInputPadding();
 
-function gpapfAdjustInputPadding( element ) {
-	// intlTelInput adds 6px of padding by default.
-	var flagPadding = parseFloat( getComputedStyle( element ).paddingLeft ) - 6;
-	element.style.paddingLeft = null;
-	var basePadding = parseFloat( getComputedStyle( element ).paddingLeft );
-	element.style.paddingLeft = flagPadding + basePadding + 'px';
-}
+		function gpapfAdjustInputPadding() {
+			if ( iti.options.separateDialCode ) {
+
+				const selectedFlagWidth =
+					iti.selectedFlag.offsetWidth || iti._getHiddenSelectedFlagWidth();
+
+				// Add 8px of padding
+				if ( iti.isRTL ) {
+					iti.telInput.style.paddingRight = `${selectedFlagWidth + 8}px`;
+				} else {
+					iti.telInput.style.paddingLeft = `${selectedFlagWidth + 8}px`;
+				}
+			}
+		}
+	}
+});
