@@ -121,6 +121,8 @@ class GW_Choice_Count {
 							for ( var i = 0; i < choiceFieldIds.length; i++ ) {
 
 								var $choiceField = $( '#input_' + formId + '_' + choiceFieldIds[ i ] );
+								if ( !$choiceField.is( ':visible' ) ) { continue; }
+
 								if ( ! values ) {
 									// If no values provided in the config, just get the number of checkboxes checked.
 									if ( self.isCheckableField( $choiceField ) ) {
