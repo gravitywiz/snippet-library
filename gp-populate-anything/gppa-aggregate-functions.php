@@ -80,6 +80,7 @@ class GPPA_Aggregate_Functions {
 				$template_value = str_replace( $full_match, $sum, $template_value );
 			}
 		}
+		remove_filter( 'gppa_process_template', array( $this, 'replace_template_sum_merge_tags' ), 2 );
 		return $template_value;
 	}
 
@@ -101,6 +102,7 @@ class GPPA_Aggregate_Functions {
 				$template_value = str_replace( $full_match, $avg, $template_value );
 			}
 		}
+		remove_filter( 'gppa_process_template', array( $this, 'replace_template_avg_merge_tags' ), 2 );
 		return $template_value;
 	}
 
@@ -126,6 +128,7 @@ class GPPA_Aggregate_Functions {
 				$template_value = str_replace( $full_match, $min, $template_value );
 			}
 		}
+		remove_filter( 'gppa_process_template', array( $this, 'replace_template_min_merge_tags' ), 2 );
 		return $template_value;
 	}
 
@@ -151,6 +154,7 @@ class GPPA_Aggregate_Functions {
 				$template_value = str_replace( $full_match, $max, $template_value );
 			}
 		}
+		remove_filter( 'gppa_process_template', array( $this, 'replace_template_max_merge_tags' ), 2 );
 		return $template_value;
 	}
 
