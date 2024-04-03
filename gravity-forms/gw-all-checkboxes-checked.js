@@ -13,7 +13,7 @@
 var checkboxFieldId = 1;
 var hiddenFieldId   = 2;
 
-$('#input_GFFORMID_' + checkboxFieldId + ' input[type="checkbox"]').change(function() {
+gform.addFilter( 'gppa_should_trigger_change', function( triggerChange, formId, inputId, $el, event ) {
 	var totalCheckboxes   = $('#input_GFFORMID_' + checkboxFieldId + ' input[type="checkbox"]').length;
 	var checkedCheckboxes = $('#input_GFFORMID_' + checkboxFieldId + ' input[type="checkbox"]:checked').length;
 
@@ -26,4 +26,6 @@ $('#input_GFFORMID_' + checkboxFieldId + ' input[type="checkbox"]').change(funct
 
 	// Trigger conditional logic re-eval
 	$(document).trigger('gform_post_render', [GFFORMID, 1]);
+
+	return triggerChange;
 });
