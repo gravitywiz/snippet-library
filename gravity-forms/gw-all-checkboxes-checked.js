@@ -2,7 +2,7 @@
  * Gravity Wiz // Gravity Forms // Evaluate if All Checkboxes are Checked.
  * https://gravitywiz.com/
  *
- * Instruction Video: https://www.loom.com/share/5c55fe7fa415428aa48b249d6ead071f
+ * Instruction Video: https://www.loom.com/share/e69c545358ca44748735ec98eee76a40
  *
  * * Instructions:
  *     1. Install our free Custom Javascript for Gravity Forms plugin.
