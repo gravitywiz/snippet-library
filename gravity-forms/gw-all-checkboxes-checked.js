@@ -13,19 +13,21 @@
 var checkboxFieldId = 1;
 var hiddenFieldId   = 2;
 
-gform.addFilter( 'gppa_should_trigger_change', function( triggerChange, formId, inputId, $el, event ) {
-	var totalCheckboxes   = $('#input_GFFORMID_' + checkboxFieldId + ' input[type="checkbox"]').length;
-	var checkedCheckboxes = $('#input_GFFORMID_' + checkboxFieldId + ' input[type="checkbox"]:checked').length;
+function checkCheckboxCounts() {
+	var $checkboxField = $( `#input_GFFORMID_${checkboxFieldId}` );
+	$checkboxField.find( 'input' ).on( 'change', function() { 
+		var totalCheckboxes   = $checkboxField.find( 'input' ).length;
+		var checkedCheckboxes = $checkboxField.find( 'input:checked' ).length;
+		if ( totalCheckboxes === checkedCheckboxes ) {
+			$('#input_GFFORMID_' + hiddenFieldId).val(1).trigger( 'change' );
+		} else {
+			$('#input_GFFORMID_' + hiddenFieldId).val(0).trigger( 'change' );
+		}
+	} );
+}
 
-	// If all checkboxes are checked, set Hidden Field to 1, else set it to 0
-	if (totalCheckboxes === checkedCheckboxes) {
-		$('#input_GFFORMID_' + hiddenFieldId).val(1);
-	} else {
-		$('#input_GFFORMID_' + hiddenFieldId).val(0);
-	}
+$( document ).on( 'gppa_updated_batch_fields', function() {
+	checkCheckboxCounts();
+} );
 
-	// Trigger conditional logic re-eval
-	$(document).trigger('gform_post_render', [GFFORMID, 1]);
-
-	return triggerChange;
-});
+checkCheckboxCounts();
