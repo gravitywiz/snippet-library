@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // Populate Anything // Increase Max String Length of the Form Editor.
+ * Gravity Perks // Populate Anything // Disable Max String Length for Option Labels
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  */
 add_filter( 'gform_admin_pre_render', function ( $form ) {
