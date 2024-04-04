@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // Entry Blocks // Disable Field Conditional Logic When Editing.
+ * Gravity Perks // Entry Blocks // Disable Field Conditional Logic When Editing
  * https://gravitywiz.com/documentation/gravity-forms-entry-blocks/
  *
  * Removes conditional logic functionality on Entry Blocks' Edit Page.
