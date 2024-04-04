@@ -4,7 +4,7 @@
  *
  * Create coupons via Gravity Forms submissions. Map the coupon code to a field on the GF form and voila!
  *
- * @version 1.2.1
+ * @version 1.2.2
  * @author  David Smith <david@gravitywiz.com>
  * @license GPL-2.0+
  * @link    WooCommerce:   http://gravitywiz.com/creating-coupons-woocommerce-gravity-forms/
@@ -25,6 +25,7 @@ class GW_Create_Coupon {
 			'amount'          => 0,
 			'type'            => '', // accepts: 'fixed_cart', 'percent', 'fixed_product', 'percent_product'
 			'meta'            => array(),
+			'required_fields' => array(),
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -45,7 +46,7 @@ class GW_Create_Coupon {
 
 	public function create_coupon( $entry, $form ) {
 
-		if ( ! $this->is_applicable_form( $form ) ) {
+		if ( ! $this->is_applicable_form( $form ) || $this->should_abort( $entry ) ) {
 			return;
 		}
 
@@ -238,6 +239,22 @@ class GW_Create_Coupon {
 		return (int) $form_id === (int) $this->_args['form_id'];
 	}
 
+	public function should_abort( $entry ) {
+		if ( empty( $this->_args['required_fields'] ) ) {
+			return false;
+		}
+
+		foreach ( $this->_args['required_fields'] as $field_id ) {
+			$value = rgar( $entry, (string) $field_id );
+
+			if ( rgblank( $value ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 }
 
 # Configuration
@@ -255,4 +272,6 @@ new GW_Create_Coupon( array(
 	'type'            => '',
 	// amount of the coupon discount
 	'amount'          => 10,
+	// The IDs of the fields that must not be empty, else the coupon won't be created
+	'required_fields' => array( 1, 2, 1.3 ),
 ) );
