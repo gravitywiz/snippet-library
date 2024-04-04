@@ -31,7 +31,7 @@ add_filter( 'gpep_target_field_value', function ( $field_value, $form_id, $targe
 	}
 
 	// Ensure both the source field and target field are Nested Form fields.
-	if ( $source_field->type !== 'form' || $target_field_id !== $source_field->id ) {
+	if ( $source_field->type != 'form' || $target_field_id != $source_field->id ) {
 		return $field_value;
 	}
 
