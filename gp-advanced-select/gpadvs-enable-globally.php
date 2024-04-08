@@ -18,7 +18,7 @@ class GPASVS_Enable_Globally {
 	public function __construct( $args = array() ) {
 
 		$this->_args = wp_parse_args( $args, array(
-			'form_id'  => false,
+			'form_id' => false,
 		) );
 
 		add_action( 'init', array( $this, 'init' ) );
