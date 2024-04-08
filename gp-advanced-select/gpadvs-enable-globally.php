@@ -4,7 +4,7 @@
  * https://gravitywiz.com/documentation/gravity-forms-advanced-select/
  *
  * Enable Advanced Select on all supported fields automatically.
- * 
+ *
  * Instructions:
  *
  * 1. Install this snippet by following the instructions here:
