@@ -39,6 +39,7 @@ class GPASVS_Enable_Globally {
 
 		add_filter( 'gform_pre_render', array( $this, 'enable_gpadvs_for_all_fields' ) );
 		add_filter( 'gform_pre_validation', array( $this, 'enable_gpadvs_for_all_fields' ) );
+		add_action( 'gform_pre_enqueue_scripts', array( $this, 'enable_gpadvs_for_all_fields' ) );
 	}
 
 	public function enable_gpadvs_for_all_fields( $form ) {
