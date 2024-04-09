@@ -65,6 +65,10 @@ class GPPA_Aggregate_Functions {
 	}
 
 	public function replace_template_sum_merge_tags( $template_value, $field, $template, $populate, $object, $object_type, $objects ) {
+		if ( ! is_string( $template_value ) ) {
+			return $template_value;
+		}
+
 		preg_match_all( self::$sum_regex, $template_value, $matches, PREG_SET_ORDER );
 		if ( $matches ) {
 			foreach ( $matches as $match ) {
@@ -80,11 +84,14 @@ class GPPA_Aggregate_Functions {
 				$template_value = str_replace( $full_match, $sum, $template_value );
 			}
 		}
-		remove_filter( 'gppa_process_template', array( $this, 'replace_template_sum_merge_tags' ), 2 );
 		return $template_value;
 	}
 
 	public function replace_template_avg_merge_tags( $template_value, $field, $template, $populate, $object, $object_type, $objects ) {
+		if ( ! is_string( $template_value ) ) {
+			return $template_value;
+		}
+
 		preg_match_all( self::$avg_regex, $template_value, $matches, PREG_SET_ORDER );
 		if ( $matches ) {
 			foreach ( $matches as $match ) {
@@ -102,11 +109,14 @@ class GPPA_Aggregate_Functions {
 				$template_value = str_replace( $full_match, $avg, $template_value );
 			}
 		}
-		remove_filter( 'gppa_process_template', array( $this, 'replace_template_avg_merge_tags' ), 2 );
 		return $template_value;
 	}
 
 	public function replace_template_min_merge_tags( $template_value, $field, $template, $populate, $object, $object_type, $objects ) {
+		if ( ! is_string( $template_value ) ) {
+			return $template_value;
+		}
+
 		preg_match_all( self::$min_regex, $template_value, $matches, PREG_SET_ORDER );
 		if ( $matches ) {
 			foreach ( $matches as $match ) {
@@ -128,11 +138,14 @@ class GPPA_Aggregate_Functions {
 				$template_value = str_replace( $full_match, $min, $template_value );
 			}
 		}
-		remove_filter( 'gppa_process_template', array( $this, 'replace_template_min_merge_tags' ), 2 );
 		return $template_value;
 	}
 
 	public function replace_template_max_merge_tags( $template_value, $field, $template, $populate, $object, $object_type, $objects ) {
+		if ( ! is_string( $template_value ) ) {
+			return $template_value;
+		}
+
 		preg_match_all( self::$max_regex, $template_value, $matches, PREG_SET_ORDER );
 		if ( $matches ) {
 			foreach ( $matches as $match ) {
@@ -154,7 +167,6 @@ class GPPA_Aggregate_Functions {
 				$template_value = str_replace( $full_match, $max, $template_value );
 			}
 		}
-		remove_filter( 'gppa_process_template', array( $this, 'replace_template_max_merge_tags' ), 2 );
 		return $template_value;
 	}
 
