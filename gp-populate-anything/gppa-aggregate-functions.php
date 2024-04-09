@@ -17,7 +17,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  * Description:  Perform calculations on the values in a field/column and return a single value.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   https://gravitywiz.com/
  */
 class GPPA_Aggregate_Functions {
