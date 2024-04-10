@@ -9,7 +9,7 @@
  * Plugin URI:   https://gravitywiz.com/gravity-forms-date-merge-tags/
  * Description:  Adds merge tag modifiers for formatting date merge tags using PHP Date Formats.
  * Author:       Gravity Wiz
- * Version:      0.3
+ * Version:      0.4
  * Author URI:   https://gravitywiz.com
  */
 add_filter( 'gform_pre_replace_merge_tags', function( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ) {
@@ -39,6 +39,9 @@ add_filter( 'gform_pre_replace_merge_tags', function( $text, $form, $entry, $url
 
 		$format      = $field->dateFormat ? $field->dateFormat : 'mdy';
 		$parsed_date = GFCommon::parse_date( $value, $format );
+
+		// On the Notifications/Confirmation side, & gets encoded to &amp;. Decode it back.
+		$modifier = htmlspecialchars_decode( $modifier );
 
 		// For whatever reason, Populate Anything's LMTs works better with `&comma` than `&#44;`. But... date() doesn't
 		// like it so let's replace it before we pass it to date().
