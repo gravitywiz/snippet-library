@@ -8,7 +8,7 @@
  * Plugin URI:  https://gravitywiz.com/submit-gravity-form-access-content/
  * Description: Require that a form be submitted before a post or page can be accessed.
  * Author:      Gravity Wiz
- * Version:     1.13
+ * Version:     1.14
  * Author URI:  https://gravitywiz.com
  */
 class GW_Submit_Access {
