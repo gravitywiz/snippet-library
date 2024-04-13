@@ -15,6 +15,8 @@ class GW_Submit_Access {
 
 	private static $instance = null;
 
+	public static $_args = array();
+
 	private function __construct( $args = array() ) {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
