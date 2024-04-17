@@ -7,5 +7,5 @@
  * displaying child entries in Nested Form fields via the {all_fields} and Nested Form field merge tags.
  */
 add_filter( 'gp_template_output_nested-entry', function( $output, $template, $load, $args ) {
-	return gw_all_fields_template()->replace_merge_tags( '{all_fields}', $args['nested_form'], $args['entry'], false, false, false, 'html' );
+	return gw_all_fields_template()->replace_merge_tags( "{all_fields:{$args['modifiers']}}", $args['nested_form'], $args['entry'], false, false, false, 'html' );
 }, 10, 4 );
