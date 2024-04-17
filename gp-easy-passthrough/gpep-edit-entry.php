@@ -40,6 +40,9 @@ class GPEP_Edit_Entry {
 
 		add_filter( "gpi_query_{$this->form_id}", array( $this, 'exclude_edit_entry_from_inventory' ), 10, 2 );
 
+		// If we need to reprocess any feeds on 'edit'.
+		add_filter( 'gform_is_feed_asynchronous', array( $this, 'check_feed_async' ), 10, 2 );
+		add_filter( 'gform_entry_post_save', array( $this, 'process_feeds' ), 10, 2 );
 	}
 
 	public function capture_passed_through_entry_ids( $form, $values, $passed_through_entries ) {
@@ -239,6 +242,19 @@ class GPEP_Edit_Entry {
 		$query['where'] .= $wpdb->prepare( "\nAND em.entry_id != %d", $current_entry_id );
 
 		return $query;
+	}
+
+	public function check_feed_async( $is_async, $feed ) {
+		return false;
+	}
+
+	public function process_feeds( $entry, $form ) {
+		foreach ( GFAddOn::get_registered_addons( true ) as $addon ) {
+			if ( method_exists( $addon, 'maybe_process_feed' ) && $addon->get_slug() != 'gp-easy-passthrough' ) {
+				$addon->maybe_process_feed( $entry, $form );
+			}
+		}
+		return $entry;
 	}
 
 }
