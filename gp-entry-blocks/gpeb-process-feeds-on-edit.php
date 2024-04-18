@@ -30,7 +30,7 @@ add_filter( 'gform_entry_post_save', function( $entry, $form ) {
 	foreach ( $addons as $addon ) {
 		$addon = call_user_func( array( $addon, 'get_instance' ) );
 		if ( $addon instanceof \GFFeedAddOn ) {
-			$addon->maybe_d( $entry, $form );
+			$addon->maybe_process_feed( $entry, $form );
 		}
 	}
 
