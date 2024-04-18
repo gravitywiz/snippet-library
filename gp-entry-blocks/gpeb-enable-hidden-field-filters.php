@@ -3,9 +3,7 @@
  * Gravity Perks // Entry Blocks // Enable Hidden Field Filters
  * https://gravitywiz.com/documentation/gravity-forms-entry-blocks/
  *
- * Rather than displaying 50 checkboxes when using a Checkbox field in the Filter block, allow Entry Blocks
- * to convert the Checkbox field to a Single Line Text field in the Filter block context. Users can then
- * search for any checkbox value.
+ * Hidden Fields are not displayed as Entry Blocks Filters by default. This snippet overrides that to enable Hidden Fields on Filters.
  */
 add_filter( 'gpeb_filter_form', function ( $form ) {
 
