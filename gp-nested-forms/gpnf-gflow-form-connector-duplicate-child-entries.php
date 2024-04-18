@@ -9,28 +9,28 @@
 add_action( 'gravityflowformconnector_post_new_entry', function( $entry_id, $entry, $form, $step_new_entry ) {
 
 	if ( ! class_exists( 'GPNF_Entry' ) || ! function_exists( 'gp_nested_forms' ) ) {
-        return;
-    }
+		return;
+	}
 
 	$new_entry = GFAPI::get_entry( $entry_id );
 
-    // Loop through each field in the form
-    foreach ( $form['fields'] as $field ) {
+	// Loop through each field in the form
+	foreach ( $form['fields'] as $field ) {
 
 		// Check if it's a Nested Form field
-        if ( $field->get_input_type() !== 'form' ) {
+		if ( $field->get_input_type() !== 'form' ) {
 			continue;
-        }
+		}
 
-	    $child_entries = ( new GPNF_Entry( $new_entry ) )->get_child_entries( $field->id );
+		$child_entries = ( new GPNF_Entry( $new_entry ) )->get_child_entries( $field->id );
 		if ( empty( $child_entries ) ) {
 			continue;
 		}
 
-	    $duplicated_child_entries = array();
+		$duplicated_child_entries = array();
 
-	    // Duplicate the child entries and associate them with this new entry
-	    foreach ( $child_entries as $child_entry ) {
+		// Duplicate the child entries and associate them with this new entry
+		foreach ( $child_entries as $child_entry ) {
 
 			$child_entry[ GPNF_Entry::ENTRY_PARENT_KEY ]            = $new_entry['id'];
 			$child_entry[ GPNF_Entry::ENTRY_PARENT_FORM_KEY ]       = $new_entry['form_id'];
@@ -38,12 +38,12 @@ add_action( 'gravityflowformconnector_post_new_entry', function( $entry_id, $ent
 			// @todo Add support for fetching Nested Form ID from target Nested Form field.
 			//$child_entry['form_id']                                 = $field->gpnfForm;
 
-		    $duplicated_child_entry     = GFAPI::add_entry( $child_entry );
-		    $duplicated_child_entries[] = $duplicated_child_entry;
-	    }
+			$duplicated_child_entry     = GFAPI::add_entry( $child_entry );
+			$duplicated_child_entries[] = $duplicated_child_entry;
+		}
 
-	    // Update Nested Form Field value on parent form to use the newly duplicated child entries.
-	    GFAPI::update_entry_field( $new_entry['id'], $field->id, implode( ',', $duplicated_child_entries ) );
+		// Update Nested Form Field value on parent form to use the newly duplicated child entries.
+		GFAPI::update_entry_field( $new_entry['id'], $field->id, implode( ',', $duplicated_child_entries ) );
 
-    }
+	}
 }, 10, 4 );

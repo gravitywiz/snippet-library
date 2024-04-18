@@ -24,11 +24,11 @@ add_action( 'woocommerce_checkout_create_subscription', function ( $subscription
 		}
 
 		$form_id             = rgars( $entries, '0/form_id' );
-		$sub_length_field_id = rgar( $form_field_map, $form_id );	
+		$sub_length_field_id = rgar( $form_field_map, $form_id );
 		if ( ! $sub_length_field_id ) {
 			continue;
 		}
-		
+
 		$sub_length = rgars( $entries, "0/{$sub_length_field_id}" );
 
 		// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date

@@ -43,8 +43,8 @@ add_filter( 'gp_template_output_nested-entries', function( $markup, $located_tem
 			<tr data-bind="attr: { 'data-entryid': id }">
 				<?php foreach ( $nested_fields as $nested_field ) : ?>
 					<td class="gpnf-field"
-					    data-bind="html: f<?php echo $nested_field['id']; ?>.label, attr: { 'data-value': f<?php echo $nested_field['id']; ?>.label }"
-					    data-heading="<?php echo GFCommon::get_label( $nested_field ); ?>"
+						data-bind="html: f<?php echo $nested_field['id']; ?>.label, attr: { 'data-value': f<?php echo $nested_field['id']; ?>.label }"
+						data-heading="<?php echo GFCommon::get_label( $nested_field ); ?>"
 					>&nbsp;</td>
 				<?php endforeach; ?>
 				<td class="gpnf-row-actions" style="display: none;" data-bind="visible: true">

@@ -18,11 +18,11 @@ add_filter( 'gform_product_info', function( $product_info, $form, $entry ) {
 	$order = $order_item->get_order();
 
 	if ( $order_item->get_subtotal() !== $order_item->get_total() ) {
-		$product_info['products'][ \GS_Product_Configurator\WC_Product_Form_Display::BASE_PRICE_PRODUCT_FIELD_ID . '.discount' ] = [
+		$product_info['products'][ \GS_Product_Configurator\WC_Product_Form_Display::BASE_PRICE_PRODUCT_FIELD_ID . '.discount' ] = array(
 			'name'     => __( 'Discount' ),
 			'price'    => wc_price( wc_format_decimal( ( $order_item->get_subtotal() - $order_item->get_total() ) * -1, '' ), array( 'currency' => $order->get_currency() ) ),
 			'quantity' => 1,
-		];
+		);
 	}
 
 	return $product_info;

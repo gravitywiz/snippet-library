@@ -12,7 +12,7 @@ add_filter( 'gpnf_submitted_entry_ids', function( $entry_ids, $form, $field ) {
 	$session  = new GPNF_Session( $form['id'] );
 	$_entries = $session->get( 'nested_entries' );
 	if ( ! empty( $_entries[ $field->id ] ) ) {
-		$entry_ids = array_merge( $entry_ids, $_entries[ $field->id ]);
+		$entry_ids = array_merge( $entry_ids, $_entries[ $field->id ] );
 	}
 
 	return $entry_ids;
