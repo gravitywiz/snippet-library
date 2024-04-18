@@ -41,7 +41,6 @@ class GPEP_Edit_Entry {
 		add_filter( "gpi_query_{$this->form_id}", array( $this, 'exclude_edit_entry_from_inventory' ), 10, 2 );
 
 		// If we need to reprocess any feeds on 'edit'.
-		add_filter( 'gform_is_feed_asynchronous', array( $this, 'check_feed_async' ), 10, 2 );
 		add_filter( 'gform_entry_post_save', array( $this, 'process_feeds' ), 10, 2 );
 	}
 
@@ -244,16 +243,22 @@ class GPEP_Edit_Entry {
 		return $query;
 	}
 
-	public function check_feed_async( $is_async, $feed ) {
-		return false;
-	}
-
 	public function process_feeds( $entry, $form ) {
+		/**
+		 * Disable asynchronous feed process on edit otherwise async feeds will not be re-ran due to a check in
+		 * class-gf-feed-processor.php that checks `gform_get_meta( $entry_id, 'processed_feeds' )` and there isn't
+		 * a way to bypass it.
+		 */
+		$filter_priority = rand( 100000, 999999 );
+		add_filter( 'gform_is_feed_asynchronous', '__return_false', $filter_priority );
+
 		foreach ( GFAddOn::get_registered_addons( true ) as $addon ) {
 			if ( method_exists( $addon, 'maybe_process_feed' ) && $addon->get_slug() != 'gp-easy-passthrough' ) {
 				$addon->maybe_process_feed( $entry, $form );
 			}
 		}
+
+		remove_filter( 'gform_is_feed_asynchronous', '__return_false', $filter_priority );
 		return $entry;
 	}
 
