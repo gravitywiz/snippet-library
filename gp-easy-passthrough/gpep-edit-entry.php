@@ -27,6 +27,7 @@ class GPEP_Edit_Entry {
 		$this->form_id        = rgar( $options, 'form_id' );
 		$this->delete_partial = rgar( $options, 'delete_partial', true );
 		$this->refresh_token  = rgar( $options, 'refresh_token', false );
+		$this->process_feeds  = rgar( $options, 'process_feeds', false );
 
 		add_filter( "gpep_form_{$this->form_id}", array( $this, 'capture_passed_through_entry_ids' ), 10, 3 );
 		add_filter( "gform_entry_id_pre_save_lead_{$this->form_id}", array( $this, 'update_entry_id' ), 10, 2 );
@@ -40,6 +41,8 @@ class GPEP_Edit_Entry {
 
 		add_filter( "gpi_query_{$this->form_id}", array( $this, 'exclude_edit_entry_from_inventory' ), 10, 2 );
 
+		// If we need to reprocess any feeds on 'edit'.
+		add_filter( 'gform_entry_post_save', array( $this, 'process_feeds' ), 10, 2 );
 	}
 
 	public function capture_passed_through_entry_ids( $form, $values, $passed_through_entries ) {
@@ -241,11 +244,35 @@ class GPEP_Edit_Entry {
 		return $query;
 	}
 
+	public function process_feeds( $entry, $form ) {
+		if ( ! $this->process_feeds ) {
+			return $entry;
+		}
+
+		/**
+		 * Disable asynchronous feed process on edit otherwise async feeds will not be re-ran due to a check in
+		 * class-gf-feed-processor.php that checks `gform_get_meta( $entry_id, 'processed_feeds' )` and there isn't
+		 * a way to bypass it.
+		 */
+		$filter_priority = rand( 100000, 999999 );
+		add_filter( 'gform_is_feed_asynchronous', '__return_false', $filter_priority );
+
+		foreach ( GFAddOn::get_registered_addons( true ) as $addon ) {
+			if ( method_exists( $addon, 'maybe_process_feed' ) && ( $this->process_feeds === true || strpos( $this->process_feeds, $addon->get_slug() ) !== false ) ) {
+				$addon->maybe_process_feed( $entry, $form );
+			}
+		}
+
+		remove_filter( 'gform_is_feed_asynchronous', '__return_false', $filter_priority );
+		return $entry;
+	}
+
 }
 
 // Configurations
 new GPEP_Edit_Entry( array(
 	'form_id'        => 123,   // Set this to the form ID.
 	'delete_partial' => false, // Set this to false if you wish to preserve partial entries after an edit is submitted.
-	'refresh_token'  => true,  // Set this to true to generate a fresh Easy Passthrough token after updating an entry.
+	'refresh_token'  => false,  // Set this to true to generate a fresh Easy Passthrough token after updating an entry.
+	'process_feeds'  => false,  // Set this to true to process all feed addons on Edit Entry, or provide a comma separated list of addon slugs like 'gravityformsuserregistration', etc.
 ) );
