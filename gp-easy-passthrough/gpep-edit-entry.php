@@ -273,6 +273,6 @@ class GPEP_Edit_Entry {
 new GPEP_Edit_Entry( array(
 	'form_id'        => 123,   // Set this to the form ID.
 	'delete_partial' => false, // Set this to false if you wish to preserve partial entries after an edit is submitted.
-	'refresh_token'  => true,  // Set this to true to generate a fresh Easy Passthrough token after updating an entry.
-	'process_feeds'  => true,  // Set this to true to process all feed addons on Edit Entry, or provide a comma separated list of addon slugs like 'gravityformsuserregistration', etc.
+	'refresh_token'  => false,  // Set this to true to generate a fresh Easy Passthrough token after updating an entry.
+	'process_feeds'  => false,  // Set this to true to process all feed addons on Edit Entry, or provide a comma separated list of addon slugs like 'gravityformsuserregistration', etc.
 ) );
