@@ -15,5 +15,7 @@ add_filter( 'gpnf_submitted_entry_ids', function( $entry_ids, $form, $field ) {
 		$entry_ids = array_merge( $entry_ids, $_entries[ $field->id ] );
 	}
 
-	return $entry_ids;
+	// When traversing multi-page forms, entry IDs will be duplicated from the session and the posted entry ID values.
+	// Ensure each unique entry ID is only included once.
+	return array_unique( $entry_ids );
 }, 10, 3 );
