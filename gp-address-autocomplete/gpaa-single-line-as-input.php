@@ -7,6 +7,8 @@
  *
  * Use a Single Line Text field as autocomplete input and populate the Single Line Text field with the full address.
  *
+ * Note: This snippet will require the user to make a selection from the auto-suggested addresses. 
+ *
  * Plugin Name:  GP Address Autocomplete - Use Single Line Text field as Autocomplete Input
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-address-autocomplete/
  * Description:  Use a single line text field as autocomplete input and populate the single line text field with the full address.
