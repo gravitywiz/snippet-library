@@ -114,11 +114,54 @@ class GW_Update_Posts {
 			}
 		}
 
-		if ( $this->_args['featured_image'] && is_callable( 'gp_media_library' ) ) {
+		if ( $this->_args['featured_image'] ) {
 			if ( rgar( $entry, $this->_args['featured_image'] ) ) {
-				$image_id = gp_media_library()->get_file_ids( $entry['id'], $this->_args['featured_image'], 0 );
-				if ( $image_id ) {
-					set_post_thumbnail( $post, $image_id );
+				$target_field = array();
+				foreach ( $form['fields'] as $field ) {
+					if ( $field->id == $this->_args['featured_image'] ) {
+						$target_field = $field;
+					}
+				}
+				
+				if ( ! rgar( $target_field, 'uploadMediaLibrary' ) ) {
+					// Support Feature Image to work with File Upload and other Media Field Types like File Hopper (without GPML enabled)
+					$image_url = rgar( $entry, $this->_args['featured_image'] );
+					if ( preg_match('/"(.*?)"/', $image_url, $matches ) ) {
+						$image_url = $matches[1];
+					}
+					$image_url = str_replace( '\/', '/', $image_url );
+					if ( preg_match( '/\b(?:https?|ftp):\/\/[^\s]+/', $image_url ) ) {
+						$image_data = file_get_contents( $image_url );
+						if ( $image_data ) {
+							$filename = basename($image_url);
+							$upload   = wp_upload_bits($filename, null, $image_data);
+							if ( !$upload['error'] ) {
+								$file_path = $upload['file'];
+								$file_type = wp_check_filetype($filename, null);
+
+								$attachment = array(
+									'post_mime_type' => $file_type['type'],
+									'post_title' => sanitize_file_name( $filename ),
+									'post_content' => '',
+									'post_status' => 'inherit'
+								);
+
+								$attach_id = wp_insert_attachment( $attachment, $file_path );
+								if ( ! is_wp_error( $attach_id ) ) {
+									delete_post_meta( $post->ID, '_thumbnail_id' );
+									$thumbnail_id = set_post_thumbnail( $post->ID, $attach_id );
+									if ( $thumbnail_id ) {
+										set_post_thumbnail( $post, $thumbnail_id );
+									}
+								}	
+							}
+						}
+					}
+				} elseif ( rgar( $target_field, 'uploadMediaLibrary' ) && is_callable( 'gp_media_library' ) ) {
+					$image_id = gp_media_library()->get_file_ids( $entry['id'], $this->_args['featured_image'], 0 );
+					if ( $image_id ) {
+						set_post_thumbnail( $post, $image_id );
+					}
 				}
 			} elseif ( $this->_args['delete_if_empty'] ) {
 				delete_post_meta( $post->ID, '_thumbnail_id' );
