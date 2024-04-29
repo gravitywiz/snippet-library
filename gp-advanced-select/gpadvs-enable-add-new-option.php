@@ -4,6 +4,8 @@
  * https://gravitywiz.com/documentation/gravity-forms-advanced-select/
  *
  * Enable Advanced Select's "Add New" option that allows users to create new items that aren't in the initial list of options.
+ * If the options are been populating from a taxonomy term using GPPA, enabling the `insert_new_option` setting will create
+ * a new taxonomy term.
  *
  * Instructions:
  *
@@ -18,8 +20,9 @@ class GPASVS_Enable_Add_New_Option {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
 		$this->_args = wp_parse_args( $args, array(
-			'form_id'  => false,
-			'field_id' => false,
+			'form_id'           => false,
+			'field_id'          => false,
+			'insert_new_option' => false,
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -44,6 +47,8 @@ class GPASVS_Enable_Add_New_Option {
 		add_filter( 'gform_pre_render', array( $this, 'disable_state_validation_for_advanced_select_field' ), 10, 1 );
 
 		add_filter( 'gform_pre_render', array( $this, 'add_new_option_to_choices' ), 10, 1 );
+
+		add_action( 'gform_after_submission', array( $this, 'create_new_option' ), 10, 2 );
 	}
 
 	public function load_form_script( $form, $is_ajax_enabled ) {
@@ -235,6 +240,57 @@ class GPASVS_Enable_Add_New_Option {
 		return $form;
 	}
 
+	public function create_new_option( $entry, $form ) {
+		if (
+			! $this->is_applicable_form( $form ) ||
+			! $this->_args['insert_new_option'] ||
+			! class_exists( '\GP_Populate_Anything' )
+		) {
+			return;
+		}
+
+		foreach ( $form['fields'] as &$field ) {
+			if ( ! $this->is_applicable_field( $field ) || $field['gppa-choices-object-type'] != 'term' ) {
+				continue;
+			}
+
+			$tax_filter            = false;
+			$choice_template_value = $field['gppa-choices-templates']['value'];
+			$filter_groups         = $field['gppa-choices-filter-groups'];
+			if ( ! empty( $filter_groups ) ) {
+				foreach ( $filter_groups as $group_filter ) {
+					$tax_filter = current(
+						array_filter( $group_filter, function( $item ) {
+							return $item['property'] == 'taxonomy' && $item['operator'] == 'is';
+						} )
+					);
+				}
+			}
+
+			if ( ! $tax_filter || ! in_array( $choice_template_value, array( 'name', 'term_id', 'slug' ) ) ) {
+				return;
+			}
+
+			$field_value = rgar( $entry, $field->id );
+			$taxonomy    = $tax_filter['value'];
+			// check if new option
+			$term = get_term_by( $choice_template_value, $field_value, $taxonomy );
+			if ( $term ) {
+				return;
+			}
+
+			$inserted_term = wp_insert_term( $field_value, $taxonomy );
+			if ( is_wp_error( $inserted_term ) ) {
+				return;
+			}
+
+			$term = get_term( $inserted_term['term_id'], $taxonomy );
+			// Update entry
+			gform_update_meta( $entry['id'], $field->id, $term->$choice_template_value, $form['id'] );
+			$gppa_choice_labels = array( $field->id => array( $term->$choice_template_value => $field_value ) );
+			gform_update_meta( $entry['id'], 'gppa_choices', $gppa_choice_labels, $form['id'] );
+		}
+	}
 }
 
 # Configuration
