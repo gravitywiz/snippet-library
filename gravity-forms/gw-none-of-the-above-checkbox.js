@@ -11,7 +11,7 @@
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  *
  * 2. Add a new choice to your Checkbox field to act as the "None of the Above" choice.
  *    This must be the last choice in the field.

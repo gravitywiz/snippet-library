@@ -8,7 +8,7 @@
  * that logic for you.
  *
  * We recommend installing this snippet with our free Custom Javascript plugin:
- * https://gravitywiz.com/gravity-forms-custom-javascript/
+ * https://gravitywiz.com/gravity-forms-code-chest/
  */
 gform.addAction( 'gpqr_on_scan_success', function( decodedText, decodedResult, gpqrObj ) {
 	$( document ).off( 'gppa_updated_batch_fields.gpqr' );

@@ -1,14 +1,14 @@
 /**
  * Gravity Wiz // Gravity Forms // Add "Select All" Button for Multi Select Field
  * https://gravitywiz.com/
- * 
+ *
  * Works with [GP Advanced Select](https://gravitywiz.com/documentation/gravity-forms-advanced-select/)!
  *
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
- * 
+ *    https://gravitywiz.com/gravity-forms-code-chest/
+ *
  * 2. Configure per the inline instructions.
  */
 // Update "4" to your Multi Select field ID.

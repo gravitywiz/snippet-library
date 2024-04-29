@@ -16,6 +16,8 @@ class GW_Choice_Count {
 
 	private static $is_script_output;
 
+	private $_args = array();
+
 	function __construct( $args ) {
 
 		$this->_args = wp_parse_args( $args, array(

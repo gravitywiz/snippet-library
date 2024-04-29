@@ -3,15 +3,15 @@
  * https://gravitywiz.com/path/to/article/
  *
  * Use this snippet to count the number of Sundays between a start and end date, including those dates themselves.
- * 
+ *
  * Note: This is a JavaScript snippet and there is no server-side validation to ensure that the calculated value
  * has not been tampered with prior to submission.
  *
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
- * 
+ *    https://gravitywiz.com/gravity-forms-code-chest/
+ *
  * 2. Update the required field IDs to match your own by following the inline instructions.
  */
 // Update "1" with the ID of your start Date field.

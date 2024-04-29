@@ -1,9 +1,9 @@
 /**
  * Gravity Shop // Product Configurator // Update product price when form total changes
  * https://gravitywiz.com/documentation/gravity-shop-product-configurator/
- * 
+ *
  * Instructions:
- *  1. Add to form using https://gravitywiz.com/gravity-forms-custom-javascript/
+ *  1. Add to form using https://gravitywiz.com/gravity-forms-code-chest/
  */
 jQuery('.ginput_total_GFFORMID').on('change', function() {
   var total = jQuery(this).val();

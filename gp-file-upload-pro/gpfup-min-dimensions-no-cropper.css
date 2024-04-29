@@ -1,0 +1,16 @@
+/**
+ * Gravity Perks // File Upload Pro
+ * https://gravitywiz.com/documentation/gravity-forms-file-upload-pro/
+ *
+ * Want to set a minimum with without allowing users to crop? This lil hack gets the job done by
+ * simply hiding the "edit" button which would open the cropper.
+ *
+ * Instructions:
+ *
+ * 1. Include this custom CSS wherever your theme supports it.
+ * 2. Add the "gpfup-disable-cropper" class to the target field's CSS Class Name setting.
+ */
+.gpfup-disable-cropper .gpfup__file:hover .gpfup__edit,
+.gpfup-disable-cropper .gpfup__file:focus-within .gpfup__edit {
+	display: none;
+}

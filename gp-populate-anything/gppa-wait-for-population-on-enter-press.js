@@ -11,7 +11,7 @@
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  *
  * 2. Add "gppa-wait-for-pop" to the CSS Class Name setting for field that will trigger the population.
  */

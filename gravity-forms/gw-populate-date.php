@@ -13,6 +13,9 @@ class GW_Populate_Date {
 
 	protected static $is_script_output = false;
 
+	private $_args         = array();
+	private $_field_values = array();
+
 	public function __construct( $args = array() ) {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
@@ -1730,7 +1733,7 @@ class GW_Populate_Date {
 							case 'time':
 								var hours   = isNaN( date.getHours() ) ? '' : date.getHours(),
 									minutes = isNaN( date.getMinutes() )  ? '' : date.getMinutes(),
-									hasAMPM = $inputs.length === 3,
+									hasAMPM = $inputs.filter( 'select' ).length === 1,
 									isPM    = false;
 
 								if ( hasAMPM ) {

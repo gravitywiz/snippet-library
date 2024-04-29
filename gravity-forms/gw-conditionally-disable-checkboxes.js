@@ -1,16 +1,16 @@
 /**
  * Gravity Wiz // Gravity Forms // Conditionally Disable Checkboxes
  * https://gravitywiz.com/
- * 
+ *
  * Disable checkboxes in one Checkbox field depending on the values checked in another.
- * 
- * Instructions: 
- * 
+ *
+ * Instructions:
+ *
  * 1. Watch this video:
  *    https://www.loom.com/share/b3ebfdc6b6b2440f917e3b431c615e21
  *
  * 2. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  */
 // Update "1" to your first Checkbox field's ID.
 var $cbs1 = $( '#input_GFFORMID_1' );

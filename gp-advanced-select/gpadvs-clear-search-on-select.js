@@ -7,9 +7,9 @@
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  */
-gform.addFilter( 'gpadvs_settings', function( settings, gpadvs ) {	
+gform.addFilter( 'gpadvs_settings', function( settings, gpadvs ) {
 	if ( gpadvs.formId == GFFORMID ) {
 		settings.onItemAdd = function(){
 			this.setTextboxValue('');

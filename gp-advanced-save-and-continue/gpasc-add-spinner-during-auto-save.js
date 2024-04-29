@@ -4,9 +4,9 @@
  *
  * This snippet allows you to add a spinner during an auto save request and then remove it
  * once the request is complete.
- * 
+ *
  * Instructions:
- *  1. Add snippet to form using https://gravitywiz.com/gravity-forms-custom-javascript/
+ *  1. Add snippet to form using https://gravitywiz.com/gravity-forms-code-chest/
  *  2. Profit.
  */
 gform.addAction( 'gpasc_auto_save_started', function( formId, gpasc ) {

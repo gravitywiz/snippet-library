@@ -7,7 +7,7 @@
  * Instructions:
  *
  * 1. Install this snippet on your parent form with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  * 2. This will automatically apply to all Nested Form fields for the parent form
  *    on which it is installed.
  */

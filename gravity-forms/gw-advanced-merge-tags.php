@@ -39,7 +39,7 @@
  * Plugin Name: Gravity Forms Advanced Merge Tags
  * Plugin URI: https://gravitywiz.com
  * Description: Provides a host of new ways to work with Gravity Forms merge tags.
- * Version: 1.4
+ * Version: 1.6
  * Author: Gravity Wiz
  * Author URI: https://gravitywiz.com/
  */
@@ -66,26 +66,38 @@ class GW_Advanced_Merge_Tags {
 	}
 
 	private function __construct( $args ) {
-
-		if ( ! class_exists( 'GFForms' ) ) {
-			return;
-		}
-
 		$this->_args = wp_parse_args( $args, array(
 			'save_source_post_id' => false,
 		) );
+
+		add_action( 'plugins_loaded', array( $this, 'add_hooks' ) );
+	}
+
+	public function add_hooks() {
+		if ( ! class_exists( 'GFForms' ) ) {
+			return;
+		}
 
 		add_action( 'gform_pre_render', array( $this, 'support_dynamic_population_merge_tags' ) );
 
 		add_action( 'gform_merge_tag_filter', array( $this, 'support_html_field_merge_tags' ), 10, 4 );
 		add_action( 'gform_replace_merge_tags', array( $this, 'replace_merge_tags' ), 12, 3 );
+
+		/**
+		 * `gform_pre_replace_merge_tags` is only called if GFCommon::replace_variables() is called whereas
+		 * `gform_replace_merge_tags` is called if GFCommon::replace_variables() is called or if
+		 * GFCommon::replace_variables_prepopulate() is called independently. Ideally, we want to replace {get} merge
+		 * tags as early as possible so we need to bind to both functions.
+		 */
+
 		add_action( 'gform_pre_replace_merge_tags', array( $this, 'replace_get_variables' ), 10, 5 );
+		add_action( 'gform_replace_merge_tags', array( $this, 'replace_get_variables' ), 10, 5 );
+
 		add_action( 'gform_merge_tag_filter', array( $this, 'handle_field_modifiers' ), 10, 6 );
 
 		if ( $this->_args['save_source_post_id'] ) {
 			add_filter( 'gform_entry_created', array( $this, 'save_source_post_id' ), 10, 2 );
 		}
-
 	}
 
 	public function support_dynamic_population_merge_tags( $form ) {
@@ -393,9 +405,17 @@ class GW_Advanced_Merge_Tags {
 
 		foreach ( $matches as $match ) {
 
-			list( $search, $property ) = $match;
+			list( $search, $modifiers ) = $match;
+
+			$modifiers = $this->parse_modifiers( $modifiers );
+			$property  = array_shift( $modifiers );
 
 			$value = stripslashes_deep( rgget( $property, $get ) );
+
+			$whitelist = rgar( $modifiers, 'whitelist', array() );
+			if ( $whitelist && ! in_array( $value, $whitelist ) ) {
+				$value = null;
+			}
 
 			$glue  = gf_apply_filters( array( 'gpamt_get_glue', $property ), ', ', $property );
 			$value = is_array( $value ) ? implode( $glue, $value ) : $value;
@@ -476,6 +496,30 @@ class GW_Advanced_Merge_Tags {
 		$first = array( array_shift( $chars ) );
 		$last  = array( array_pop( $chars ) );
 		return implode( '', array_merge( $first, array_pad( array(), count( $chars ), '*' ), $last ) );
+	}
+
+	public function parse_modifiers( $modifiers_str ) {
+
+		preg_match_all( '/([a-z_]+)(?:(?:\[(.+?)\])|,?)/i', $modifiers_str, $modifiers, PREG_SET_ORDER );
+		$parsed = array();
+
+		foreach ( $modifiers as $modifier ) {
+
+			list( $match, $modifier, $value ) = array_pad( $modifier, 3, null );
+			if ( $value === null ) {
+				$value = $modifier;
+			}
+
+			// Split '1,2,3' into array( 1, 2, 3 ).
+			if ( strpos( $value, ',' ) !== false ) {
+				$value = array_map( 'trim', explode( ',', $value ) );
+			}
+
+			$parsed[ strtolower( $modifier ) ] = $value;
+
+		}
+
+		return $parsed;
 	}
 
 }

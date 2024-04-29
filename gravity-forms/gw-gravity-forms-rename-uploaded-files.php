@@ -13,12 +13,14 @@
  *  + add a prefix or suffix to file uploads
  *  + include identifying submitted data in the file name like the user's first and last name
  *
- * @version   2.5.3
+ * @version   2.6
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/rename-uploaded-files-for-gravity-form/
  */
 class GW_Rename_Uploaded_Files {
+
+	public $_args;
 
 	public function __construct( $args = array() ) {
 

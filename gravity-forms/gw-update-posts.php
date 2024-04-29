@@ -4,7 +4,7 @@
  *
  * Update existing post title, content, author and custom fields with values from Gravity Forms.
  *
- * @version 0.5
+ * @version 0.6
  * @author  Scott Ryer <scott@gravitywiz.com>
  * @license GPL-2.0+
  * @link    http://gravitywiz.com
@@ -68,8 +68,13 @@ class GW_Update_Posts {
 
 	public function update_post_by_entry( $entry, $form ) {
 
+		$post_id = rgar( $entry, $this->_args['post_id'] );
+		// If post not selected or post not available, return.
+		if ( empty( $post_id ) ) {
+			return;
+		}
 		// Get the post and, if the current user has capabilities, update post with new content.
-		$post = get_post( rgar( $entry, $this->_args['post_id'] ) );
+		$post = get_post( $post_id );
 		if ( ! current_user_can( 'edit_post', $post->ID ) ) {
 			return;
 		}
@@ -102,7 +107,7 @@ class GW_Update_Posts {
 			( ! is_array( $this->_args['post_date'] ) && ! empty( $this->_args['post_date'] ) ) ||
 				rgars( $this->_args, 'post_date/date' )
 		) {
-			$new_date_time       = $this->get_post_date( $entry, $form );
+			$new_date_time = $this->get_post_date( $entry, $form );
 			if ( $new_date_time ) {
 				$post->post_date     = $new_date_time;
 				$post->post_date_gmt = get_gmt_from_date( $new_date_time );
@@ -156,9 +161,16 @@ class GW_Update_Posts {
 
 		foreach ( $meta as $key => $value ) {
 
+			$append = false;
+
 			if ( is_array( $value ) ) {
-				$meta_input = $this->prepare_meta_input( $value, $post_id, $entry, $form, $meta_input, $key );
-				continue;
+				if ( ! isset( $value['field_id'] ) ) {
+					$meta_input = $this->prepare_meta_input( $value, $post_id, $entry, $form, $meta_input, $key );
+					continue;
+				} else {
+					$append = rgar( $value, 'append', false );
+					$value  = $value['field_id'];
+				}
 			}
 
 			$meta_value = rgar( $entry, $value );
@@ -180,7 +192,14 @@ class GW_Update_Posts {
 			// here which supports fetching fields within a group by combined key (e.g. "group_name_field_name" );
 			$acf_field = is_callable( 'gp_media_library' ) ? $this->acf_get_field_object_by_name( $key, $group ) : false;
 			if ( $acf_field && in_array( $acf_field['type'], array( 'image', 'file', 'gallery' ), true ) ) {
-				$meta_value = gp_media_library()->acf_get_field_value( 'id', $entry, GFAPI::get_field( $form, $value ) );
+				$is_gallery = $acf_field['type'] === 'gallery';
+				$meta_value = gp_media_library()->acf_get_field_value( 'id', $entry, $field, $is_gallery );
+				if ( $meta_value && $is_gallery && $append ) {
+					$current_value = get_field( $acf_field['key'], $post_id, false );
+					if ( is_array( $current_value ) ) {
+						$meta_value = array_unique( array_merge( $meta_value, $current_value ) );
+					}
+				}
 			}
 
 			if ( $group ) {

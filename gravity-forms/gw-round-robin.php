@@ -154,6 +154,11 @@ class GW_Round_Robin {
 			$field->choices = gp_limit_choices()->apply_choice_limits( $field->choices, $field, $form );
 		}
 
+		// Add support for GP Inventory Choices.
+		if ( is_callable( 'gp_inventory_type_choices' ) ) {
+			$field->choices = gp_inventory_type_choices()->apply_choice_limits( $field->choices, $field, $form );
+		}
+
 		$rotation = array_filter( wp_list_pluck( $field->choices, 'value' ) );
 
 		return $rotation;

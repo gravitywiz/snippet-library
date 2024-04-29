@@ -6,8 +6,8 @@
 * Use this snippet to target different source fields by specifying the source field IDs as choices of a radio button trigger field.
 *
 * Instructions:
-* 1. Install our free Custom Javascript for Gravity Forms plugin. 
-*    Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
+* 1. Install our free Custom Javascript for Gravity Forms plugin.
+*    Download the plugin here: https://gravitywiz.com/gravity-forms-code-chest/
 * 2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
 */
 gform.addFilter( 'gpcc_copied_value', function( value, $elem, data ) {
@@ -26,6 +26,6 @@ gform.addFilter( 'gpcc_copied_value', function( value, $elem, data ) {
 			value = newValue;
 		}
 	});
-    
+
     return value;
 } );
