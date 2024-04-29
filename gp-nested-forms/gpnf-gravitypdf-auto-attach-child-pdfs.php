@@ -21,7 +21,7 @@ add_filter( 'gform_notification', function ( $notification, $form, $entry ) {
 		if ( $field->get_input_type() !== 'form' ) {
 			continue;
 		}
-		
+
 		$child_entries = $parent_entry->get_child_entries( $field->id );
 
 		foreach ( $child_entries as $child_entry ) {
