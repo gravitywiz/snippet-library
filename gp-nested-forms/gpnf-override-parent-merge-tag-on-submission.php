@@ -117,6 +117,10 @@ class GPNF_Override_Parent_Merge_Tags {
 
 		$child_entry_ids = explode( ',', rgar( $entry, $field->id ) );
 		foreach ( $child_entry_ids as $child_entry_id ) {
+			// If any child entry merge tag is present, replace it with the child entry value before replacing with the Parent merge tag values.
+			$child_entry = GFAPI::get_entry( $child_entry_id );
+			$child_form  = GFAPI::get_form( $child_entry['form_id'] );
+			$value       = GFCommon::replace_variables( $value, $child_form, $child_entry );
 			GFAPI::update_entry_field( $child_entry_id, $input_id, $value );
 		}
 
