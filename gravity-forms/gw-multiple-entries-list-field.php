@@ -3,6 +3,8 @@
  * Gravity Wiz // Gravity Forms // Multiple Entries by List Field
  * https://gravitywiz.com/
  *
+ * Instruction Video: https://www.loom.com/share/e253325af6d24cefa20cfd2bdb44fb61
+ *
  * Create multiple entries based on the rows of a List field. All other field data will be duplicated for each entry.
  * List field inputs are mapped to Admin-only fields on the form.
  *
@@ -10,8 +12,15 @@
  * Plugin URI:   https://gravitywiz.com/
  * Description:  Create multiple by entries based on the rows of a List field.
  * Author:       Gravity Wiz
- * Version:      0.7
+ * Version:      0.8
  * Author URI:   https://gravitywiz.com/
+ *
+ * Usage:
+ *
+ * 1. With `append_list_data` set to false (the default), the first row of the list data is actually appended - counter-intuitive, uh? - to the main entry via the admin-only fields and not stored as a separate entry. Subsequent rows are always stored as separate entries.
+ * 2. Feeds are processed per list data row when `process_feeds` is `true`.
+ * 3. Use the admin-only fields - NOT the original List field - in the field maps for feeds.
+ * 4. The original List field data is also stored in the 'child' entries when `preserve_list_data` is `true`.
  */
 class GW_Multiple_Entries_List_Field {
 
@@ -28,6 +37,7 @@ class GW_Multiple_Entries_List_Field {
 				return $value;
 			},
 			'send_notifications' => false,
+			'process_feeds'      => false,
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -42,14 +52,14 @@ class GW_Multiple_Entries_List_Field {
 			return;
 		}
 
-		// carry on
-		add_filter( 'gform_entry_post_save', array( $this, 'create_multiple_entries' ) );
+		// We use 5 to ensure that this runs before the ones in GF core.
+		add_filter( 'gform_entry_post_save', array( $this, 'create_multiple_entries' ), 5, 2 );
 		add_filter( 'gform_entry_meta', array( $this, 'register_entry_meta' ), 10, 2 );
 		add_filter( 'gform_entries_field_value', array( $this, 'display_entry_meta' ), 10, 4 );
-
+		add_filter( "gform_disable_notification_{$this->_args['form_id']}", array( $this, 'maybe_disable_parent_notification' ), 10, 4 );
 	}
 
-	public function create_multiple_entries( $entry ) {
+	public function create_multiple_entries( $entry, $form ) {
 
 		if ( ! $this->is_applicable_form( $entry['form_id'] ) ) {
 			return $entry;
@@ -62,7 +72,6 @@ class GW_Multiple_Entries_List_Field {
 
 		$data          = maybe_unserialize( $data );
 		$working_entry = $entry;
-		$form          = GFAPI::get_form( $entry['form_id'] );
 
 		if ( ! $this->_args['preserve_list_data'] ) {
 			$working_entry[ $this->_args['field_id'] ] = null;
@@ -76,32 +85,33 @@ class GW_Multiple_Entries_List_Field {
 				$working_entry[ (string) $field_id ] = $this->_args['formatter']( $row[ $column - 1 ], $field_id, $this );
 			}
 
-			// by default, original entry is updated with list field data; if append_list_data is true,
 			if ( $index == 0 && ! $this->_args['append_list_data'] ) {
 
 				GFAPI::update_entry( $working_entry );
-
-				gform_add_meta( $working_entry['id'], 'gwmelf_parent_entry', true );
-				gform_add_meta( $working_entry['id'], 'gwmelf_group_entry_id', $working_entry['id'] );
 
 				/**
 				 * Sync the parent entry with our working entry so when it is passed onto other plugins using this filter,
 				 * it is up-to-date and if the entry is updated via this filter (looking at you, GFPaymentAddOn::entry_post_save()),
 				 * our changes will be preserved.
 				 */
-				$entry                          = $working_entry;
-				$entry['gwmelf_parent_entry']   = true;
-				$entry['gwmelf_group_entry_id'] = $working_entry['id'];
+				$entry = $working_entry;
 
 			} else {
 
 				$working_entry['id'] = null;
 				$entry_id            = GFAPI::add_entry( $working_entry );
 
+				if ( $this->_args['process_feeds'] ) {
+					remove_filter( 'gform_entry_post_save', array( $this, 'create_multiple_entries' ), 5 );
+
+					gf_apply_filters( array( 'gform_entry_post_save', $form['id'] ), GFAPI::get_entry( $entry_id ), $form );
+
+					add_filter( 'gform_entry_post_save', array( $this, 'create_multiple_entries' ), 5, 2 );
+				}
+
 				// group entry ID refers to the parent entry ID that created the group of entries
 				gform_add_meta( $entry_id, 'gwmelf_parent_entry', false );
 				gform_add_meta( $entry_id, 'gwmelf_group_entry_id', $entry['id'] );
-
 			}
 
 			// send Gravity Forms notifications, if enabled
@@ -110,7 +120,44 @@ class GW_Multiple_Entries_List_Field {
 			}
 		}
 
+		gform_add_meta( $entry['id'], 'gwmelf_parent_entry', true );
+		gform_add_meta( $entry['id'], 'gwmelf_group_entry_id', $entry['id'] );
+
+		// Update the passed entry for other filters
+		// that it may be passed to afterwards.
+		$entry['gwmelf_parent_entry']   = true;
+		$entry['gwmelf_group_entry_id'] = $entry['id'];
+
+		if ( $this->_args['append_list_data'] && $this->_args['process_feeds'] ) {
+			/**
+			 * 1st row of list data is added to the DB as a separate entry
+			 * so feed shouldn't be processed for the parent, else we get
+			 * e.g. (for GPGS) an extra row with empty list column values.
+			 */
+			add_filter( "gform_addon_pre_process_feeds_{$form['id']}", '__return_empty_array' );
+		}
+
 		return $entry;
+	}
+
+	public function maybe_disable_parent_notification( $disable, $notification, $form, $entry ) {
+		// Do a check for notifications that existed (before this snippet) that might be re-triggered.
+		if ( ! array_key_exists( 'gwmelf_parent_entry', $entry ) ) {
+			return $disable;
+		}
+
+		if ( rgar( $entry, 'gwmelf_parent_entry' )
+			&& ! $this->_args['append_list_data']
+			&& $this->_args['preserve_list_data']
+			&& $this->_args['send_notifications'] ) {
+			/**
+			 * The 'parent' & the first row notifications will have exactly the same
+			 * content - unnecessary duplication. Disable the 'parent' notification.
+			 */
+			$disable = true;
+		}
+
+		return $disable;
 	}
 
 	public function register_entry_meta( $entry_meta, $form_id ) {
