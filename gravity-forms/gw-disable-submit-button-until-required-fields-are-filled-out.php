@@ -66,8 +66,10 @@ class GW_Disable_Submit {
 
 						if( self.areRequiredPopulated() ) {
 							submitButton.attr( 'disabled', false ).removeClass( 'gwds-disabled' );
+							submitButton.attr( 'value', 'Submit' );
 						} else {
 							submitButton.attr( 'disabled', true ).addClass( 'gwds-disabled' );
+							submitButton.attr( 'value', 'Submit Disabled. Please fill all required fields.' );
 						}
 
 					}
@@ -127,7 +129,7 @@ class GW_Disable_Submit {
 
 	public function get_required_input_html_ids( $form ) {
 
-		$html_ids = '';
+		$html_ids = array();
 
 		foreach ( $form['fields'] as &$field ) {
 
@@ -135,7 +137,7 @@ class GW_Disable_Submit {
 				continue;
 			}
 
-			$input_ids = false;
+			$input_ids = array();
 
 			switch ( GFFormsModel::get_input_type( $field ) ) {
 
