@@ -23,7 +23,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  * Description:  Populate all rows from an ACF Repeater into a choice-based field.
  * Author:       Gravity Wiz
- * Version:      0.3
+ * Version:      0.4
  * Author URI:   https://gravitywiz.com
  */
 add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
@@ -32,7 +32,8 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 		return $choices;
 	}
 
-	$map = array();
+	$map        = array();
+	$custom_map = array();
 
 	foreach ( $field->{'gppa-choices-templates'} as $template => $key ) {
 		/**
@@ -44,6 +45,8 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 		if ( preg_match( '/meta_([^0-9]+)_([0-9]+)_(.+)/', $key, $matches ) ) {
 			list( , $repeater, $index, $subfield ) = $matches;
 			$map[ $template ]                      = $subfield;
+		} else {
+			$custom_map[ $template ] = $key;
 		}
 	}
 
@@ -64,16 +67,27 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 
 		if ( $rows ) {
 			foreach ( $rows as $row ) {
+				$label = isset( $map['label'] ) ?
+						apply_filters( 'gppa_acfrm_label', rgar( $row, $map['label'] ), $row, $map['label'] ) :
+						str_replace( 'gf_custom:', '', $custom_map['label'] );
+
+				$value = isset( $map['value'] ) ?
+						apply_filters( 'gppa_acfrm_value', rgar( $row, $map['value'] ), $row, $map['value'] ) :
+						str_replace( 'gf_custom:', '', $custom_map['value'] );
+
 				$choice = array(
-					'value' => apply_filters( 'gppa_acfrm_value', rgar( $row, $map['value'] ), $row, $map['value'] ),
-					'text'  => apply_filters( 'gppa_acfrm_label', rgar( $row, $map['label'] ), $row, $map['label'] ),
+					'value' => $value,
+					'text'  => $label,
 				);
+
 				if ( isset( $map['inventory_limit'] ) ) {
 					$choice['inventory_limit'] = apply_filters( 'gppa_acfrm_inventory_limit', rgar( $row, $map['inventory_limit'] ), $row, $map['inventory_limit'] );
 				}
-				if ( isset( $map['price'] ) ) {
-					$choice['price'] = apply_filters( 'gppa_acfrm_price', rgar( $row, $map['price'] ), $row, $map['price'] );
-				}
+
+				$choice['price'] = isset( $map['price'] ) ?
+								apply_filters( 'gppa_acfrm_price', rgar( $row, $map['price'] ), $row, $map['price'] ) :
+								str_replace( 'gf_custom:', '', $custom_map['price'] );
+
 				$choices[] = $choice;
 			}
 		}
