@@ -207,7 +207,12 @@ class GW_Update_Posts {
 			}
 
 			if ( ! rgblank( $meta_value ) ) {
-				$meta_input[ $key ] = $meta_value;
+				$acf_field = $this->acf_get_field_object_by_name( $key, $group );
+				if ( $acf_field ) {
+					update_field( $key, $meta_value, $post_id );
+				} else {
+					$meta_input[ $key ] = $meta_value;
+				}
 			} elseif ( $this->_args['delete_if_empty'] ) {
 				delete_post_meta( $post_id, $key );
 			}
