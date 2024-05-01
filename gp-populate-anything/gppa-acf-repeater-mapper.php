@@ -32,7 +32,7 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 		return $choices;
 	}
 
-	$map		= array();
+	$map        = array();
 	$custom_map = array();
 
 	foreach ( $field->{'gppa-choices-templates'} as $template => $key ) {
@@ -44,7 +44,7 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 		 */
 		if ( preg_match( '/meta_([^0-9]+)_([0-9]+)_(.+)/', $key, $matches ) ) {
 			list( , $repeater, $index, $subfield ) = $matches;
-			$map[ $template ]					  = $subfield;
+			$map[ $template ]                      = $subfield;
 		} else {
 			$custom_map[ $template ] = $key;
 		}
@@ -68,13 +68,13 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 		if ( $rows ) {
 			foreach ( $rows as $row ) {
 				$label = isset( $map['label'] ) ?
-						apply_filters( 'gppa_acfrm_label', rgar($row, $map['label']), $row, $map['label'] ) :
+						apply_filters( 'gppa_acfrm_label', rgar( $row, $map['label'] ), $row, $map['label'] ) :
 						str_replace( 'gf_custom:', '', $custom_map['label'] );
 
 				$value = isset( $map['value'] ) ?
-						apply_filters( 'gppa_acfrm_value', rgar( $row, $map['value']), $row, $map['value'] ) :
+						apply_filters( 'gppa_acfrm_value', rgar( $row, $map['value'] ), $row, $map['value'] ) :
 						str_replace( 'gf_custom:', '', $custom_map['value'] );
-				
+
 				$choice = array(
 					'value' => $value,
 					'text'  => $label,
