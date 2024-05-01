@@ -95,7 +95,7 @@ class GPNF_Override_Parent_Merge_Tags {
 				}
 
 				foreach ( $inputs as $input ) {
-					$this->override_child_entry_input_value( $entry, $field, $input['id'], rgar( $input, 'defaultValue' ) );
+					$this->override_child_entry_input_value( $entry, $field, $child_form, $input['id'], rgar( $input, 'defaultValue' ) );
 				}
 			}
 		}
@@ -103,7 +103,7 @@ class GPNF_Override_Parent_Merge_Tags {
 		return $entry;
 	}
 
-	function override_child_entry_input_value( $entry, $field, $input_id, $default_value ) {
+	function override_child_entry_input_value( $entry, $field, $child_form, $input_id, $default_value ) {
 
 		preg_match_all( '/{Parent:(\d+(\.\d+)?)[^}]*}/i', $default_value, $matches, PREG_SET_ORDER );
 		if ( empty( $matches ) ) {
@@ -115,12 +115,12 @@ class GPNF_Override_Parent_Merge_Tags {
 			$value = str_replace( $match[0], rgar( $entry, $match[1] ), $value );
 		}
 
+		$default_value   = $value;
 		$child_entry_ids = explode( ',', rgar( $entry, $field->id ) );
 		foreach ( $child_entry_ids as $child_entry_id ) {
 			// If any child entry merge tag is present, replace it with the child entry value before replacing with the Parent merge tag values.
 			$child_entry = GFAPI::get_entry( $child_entry_id );
-			$child_form  = GFAPI::get_form( $child_entry['form_id'] );
-			$value       = GFCommon::replace_variables( $value, $child_form, $child_entry );
+			$value       = GFCommon::replace_variables( $default_value, $child_form, $child_entry );
 			GFAPI::update_entry_field( $child_entry_id, $input_id, $value );
 		}
 
