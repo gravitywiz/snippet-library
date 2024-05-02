@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // Entry Blocks // Add Entry Button
+ * Gravity Perks // Entry Blocks // Show Edit Entry Timestamp on Entries Block.
  * http://gravitywiz.com/
  *
  * Instruction Video: https://www.loom.com/share/af4e456263324971b3463ff344c77830
