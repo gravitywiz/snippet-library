@@ -14,7 +14,7 @@ class GW_Disable_Submit {
 
 	public static $script_output = false;
 
-	public $form_id;	
+	public $form_id;
 
 	public function __construct( $form_id ) {
 
@@ -27,7 +27,7 @@ class GW_Disable_Submit {
 
 	public function maybe_output_script( $form ) {
 
-		if ( $form['id'] !== $this->form_id ) {
+		if ( $form['id'] != $this->form_id ) {
 			return $form;
 		}
 
@@ -70,9 +70,8 @@ class GW_Disable_Submit {
 
 					self.runCheck = function() {
 
-						var submitButton = $( '#gform_submit_button_' + self.formId );
-						// For using this snippet with GSPC, remove above line and replace with the line below.
-						// var submitButton = $( '.single_add_to_cart_button' );
+						var $form        = $( '#gform_' + self.formId );
+						var submitButton = $form.find( 'input[type="submit"], input[type="button"], button[type="submit"]' );
 						if( self.areRequiredPopulated() ) {
 							submitButton.attr( 'disabled', false ).removeClass( 'gwds-disabled' );
 						} else {
@@ -122,7 +121,7 @@ class GW_Disable_Submit {
 
 	public function add_init_script( $form ) {
 
-		if ( $form['id'] !== $this->form_id ) {
+		if ( $form['id'] != $this->form_id ) {
 			return $form;
 		}
 
