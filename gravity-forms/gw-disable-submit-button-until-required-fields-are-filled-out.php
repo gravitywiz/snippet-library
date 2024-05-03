@@ -4,7 +4,7 @@
 *
 * Disable submit buttones until all required fields have been filled out. Currently only supports single-page forms.
 *
-* @version   1.0
+* @version   1.1
 * @author    David Smith <david@gravitywiz.com>
 * @license   GPL-2.0+
 * @link      http://gravitywiz.com/...
@@ -14,14 +14,22 @@ class GW_Disable_Submit {
 
 	public static $script_output = false;
 
+	public $form_id;
+
 	public function __construct( $form_id ) {
 
-		add_action( "gform_pre_render_{$form_id}", array( $this, 'maybe_output_script' ) );
-		add_action( "gform_register_init_scripts_{$form_id}", array( $this, 'add_init_script' ) );
+		$this->form_id = $form_id;
+
+		add_action( 'gform_pre_render', array( $this, 'maybe_output_script' ) );
+		add_action( 'gform_register_init_scripts', array( $this, 'add_init_script' ) );
 
 	}
 
 	public function maybe_output_script( $form ) {
+
+		if ( $form['id'] != $this->form_id ) {
+			return $form;
+		}
 
 		if ( ! self::$script_output ) {
 			$this->script();
@@ -62,8 +70,8 @@ class GW_Disable_Submit {
 
 					self.runCheck = function() {
 
-						var submitButton = $( '#gform_submit_button_' + self.formId );
-
+						var $form        = $( '#gform_' + self.formId );
+						var submitButton = $form.find( 'input[type="submit"], input[type="button"], button[type="submit"]' );
 						if( self.areRequiredPopulated() ) {
 							submitButton.attr( 'disabled', false ).removeClass( 'gwds-disabled' );
 						} else {
@@ -91,8 +99,8 @@ class GW_Disable_Submit {
 
 							if( $.trim( $( this ).val() ) ) {
 								fullCount += 1;
-							} else {
-								return false;
+							} else if ( $( this ).find( 'input:checked' ).length ) {
+								fullCount += 1;
 							}
 
 						} );
@@ -113,6 +121,10 @@ class GW_Disable_Submit {
 
 	public function add_init_script( $form ) {
 
+		if ( $form['id'] != $this->form_id ) {
+			return $form;
+		}
+
 		$args = array(
 			'formId'       => $form['id'],
 			'inputHtmlIds' => $this->get_required_input_html_ids( $form ),
@@ -127,7 +139,7 @@ class GW_Disable_Submit {
 
 	public function get_required_input_html_ids( $form ) {
 
-		$html_ids = '';
+		$html_ids = array();
 
 		foreach ( $form['fields'] as &$field ) {
 
@@ -135,7 +147,7 @@ class GW_Disable_Submit {
 				continue;
 			}
 
-			$input_ids = false;
+			$input_ids = array();
 
 			switch ( GFFormsModel::get_input_type( $field ) ) {
 
