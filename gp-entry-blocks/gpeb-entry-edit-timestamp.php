@@ -41,7 +41,7 @@ class GPEB_Entry_Edit_Log {
 
 		$log[ $time ] = array(
 			'time' => $time,
-			'user' => get_current_user_id()
+			'user' => get_current_user_id(),
 		);
 
 		gform_update_meta( $entry_id, self::META_KEY, $log );
@@ -104,7 +104,7 @@ class GPEB_Entry_Edit_Log {
 		$log_formatted = '<ul>';
 
 		foreach ( $log as $edit ) {
-			$user = get_user_by( 'id', $edit['user'] );
+			$user           = get_user_by( 'id', $edit['user'] );
 			$log_formatted .= sprintf( '<li>Entry updated at %s by %s.</li>', mysql2date( 'Y-m-d H:i:s', $edit['time'] ), $user->display_name );
 		}
 
