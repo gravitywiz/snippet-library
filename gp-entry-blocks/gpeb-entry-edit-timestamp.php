@@ -2,9 +2,9 @@
 /**
  * Gravity Perks // Entry Blocks // Show Edit Entry Timestamp on Entries Block.
  * http://gravitywiz.com/
- * 
+ *
  * Adds `{entry_edit_timestamp}` merge tag to display Edit Entry Timestamp.
- * 
+ *
  * Also adds `{last_edited_by}` merge tag to display the User who last edited the entry.
  *
  * Instruction Video: https://www.loom.com/share/af4e456263324971b3463ff344c77830
