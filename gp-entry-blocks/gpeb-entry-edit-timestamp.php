@@ -19,10 +19,10 @@ function update_entry_meta( $entry_id ) {
 	$timestamp_meta = gform_get_meta( $entry_id, $timestamp );
 	$current_user   = get_userdata( get_current_user_id() );
 	$username       = $current_user->user_login;
-	$current_value  = 'Entry updated at ' . current_datetime()->format( 'Y-m-d H:i:s' ) . ' by ' . $username . '.<br>';
+	$current_value  = 'Entry updated at ' . GFCommon::replace_variables_prepopulate( '{date_updated:time}' ) . ' by ' . $username . '.<br>';
 	$timestamp_meta = $current_value . $timestamp_meta;
 	gform_update_meta( $entry_id, $timestamp, $timestamp_meta );	
-	gform_update_meta( $entry_id, 'gf_entry_editor', get_current_user_id() );	
+	gform_update_meta( $entry_id, 'last_edit_by', get_current_user_id() );	
 }
 
 add_filter( 'gform_replace_merge_tags', function ( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ) {
@@ -31,10 +31,10 @@ add_filter( 'gform_replace_merge_tags', function ( $text, $form, $entry, $url_en
 	if ( strpos( $text, $custom_merge_tag ) === false ) {
 		return $text;
 	}
- 
-	$download_link = gform_get_meta( $entry['id'], 'gf_entry_editor' );
 
-	return str_replace( $custom_merge_tag, $download_link, $text );
+	$last_edit_by = gform_get_meta( $entry['id'], 'last_edit_by' );
+
+	return str_replace( $custom_merge_tag, $last_edit_by, $text );
 }, 10, 7 );
 
 add_filter( 'gform_replace_merge_tags', function ( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ) {
@@ -43,8 +43,8 @@ add_filter( 'gform_replace_merge_tags', function ( $text, $form, $entry, $url_en
 	if ( strpos( $text, $custom_merge_tag ) === false ) {
 		return $text;
 	}
-	$timestamp = 'timestamp_' . $entry['id'];
-	$download_link = gform_get_meta( $entry['id'], $timestamp );
+	$timestamp       = 'timestamp_' . $entry['id'];
+	$timestamp_value = gform_get_meta( $entry['id'], $timestamp );
 	
-	return str_replace( $custom_merge_tag, $download_link, $text );
+	return str_replace( $custom_merge_tag, $timestamp_value, $text );
 }, 10, 7 );
