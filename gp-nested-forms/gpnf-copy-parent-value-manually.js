@@ -2,8 +2,8 @@
  * Gravity Perks // Nested Forms // Copy Parent Value Manually
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
- * Manually copy a parent value into a child form field. The {Parent} merge tag would typically be used
- * for this but when you are embedding a child form into multiple parent forms, the {Parent} merge tag
+ * Manually copy a parent value into a child form field. The `{Parent}` merge tag would typically be used
+ * for this but when you are embedding a child form into multiple parent forms, the `{Parent}` merge tag
  * cannot differentiate between them and will populate incorrect values.
  */
 gform.addAction( 'gpnf_init_nested_form', function( childFormId, gpnf ) {
