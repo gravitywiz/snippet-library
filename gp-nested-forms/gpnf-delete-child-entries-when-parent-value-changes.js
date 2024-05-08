@@ -15,8 +15,9 @@
 // Update "4" to the ID of the field on the parent that when changed should delete the child entries.
 $( '#input_GFFORMID_4' ).on( 'change', function() {
 	// Update "5" to the ID of the Nested Form field on the parent form.
-	window.GPNestedForms_GFFORMID_5.viewModel.entries().forEach( function( item ) {
+	var gpnfA = window.GPNestedForms_GFFORMID_5;
+	gpnfA.viewModel.entries().forEach( function( item ) {
 		var $deleteButton = $( 'tr[data-entryid=' + item.id + ']' ).find( '.delete-button' );
-		GPNestedForms.deleteEntry( item, $deleteButton );
+		gpnfA.deleteEntry( item, $deleteButton );
 	} );
 } );
