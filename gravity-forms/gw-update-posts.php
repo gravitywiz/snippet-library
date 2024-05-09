@@ -173,12 +173,16 @@ class GW_Update_Posts {
 				}
 			}
 
+			$field      = GFAPI::get_field( $form, $value );
+			$field_type = $field->get_input_type();
 			$meta_value = rgar( $entry, $value );
-
-			$field = GFAPI::get_field( $form, $value );
+			// Address input
+			if ( $field_type == 'address' ) {
+				$meta_value = $field->get_value_export( $entry, $value );
+			}
 
 			// Support mapping all checkboxes of a Checkbox field to a custom field.
-			if ( $field->get_input_type() === 'checkbox' ) {
+			if ( $field_type === 'checkbox' ) {
 				$meta_value = $field->get_value_export( $entry );
 				if ( is_callable( 'acf_get_field' ) ) {
 					$acf_field = acf_get_field( $key );
@@ -209,6 +213,11 @@ class GW_Update_Posts {
 			if ( ! rgblank( $meta_value ) ) {
 				$acf_field = $this->acf_get_field_object_by_name( $key, $group );
 				if ( $acf_field ) {
+					$meta_value = $acf_field['type'] == 'google_map' && $field_type == 'address' ? array(
+						'address' => $meta_value,
+						'lat'     => rgar( $entry, "gpaa_lat_{$field->id}" ),
+						'lng'     => rgar( $entry, "gpaa_lng_{$field->id}" ),
+					) : $meta_value;
 					update_field( $key, $meta_value, $post_id );
 				} else {
 					$meta_input[ $key ] = $meta_value;
