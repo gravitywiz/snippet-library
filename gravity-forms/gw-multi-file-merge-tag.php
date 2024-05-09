@@ -173,8 +173,9 @@ class GW_Multi_File_Merge_Tag {
 
 			if ( $has_value ) {
 				$markup_settings = $this->get_markup_settings( $form['id'] );
-				if ( $markup_settings['container'] ) {
-					$value = sprintf( $markup_settings['container'], $value );
+				$container       = rgar( $markup_settings, 'container' );
+				if ( $container ) {
+					$value = sprintf( $container, $value );
 				}
 			}
 
