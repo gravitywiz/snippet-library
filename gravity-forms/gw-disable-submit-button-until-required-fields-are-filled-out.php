@@ -4,7 +4,7 @@
 *
 * Disable submit buttones until all required fields have been filled out. Currently only supports single-page forms.
 *
-* @version   1.1
+* @version   1.2
 * @author    David Smith <david@gravitywiz.com>
 * @license   GPL-2.0+
 * @link      http://gravitywiz.com/...
@@ -64,6 +64,19 @@ class GW_Disable_Submit {
 							self.runCheck();
 						} );
 
+						// Check for newly uploaded files
+						const fileUploadInput = document.querySelector( 'input[name="gform_uploaded_files"]' );
+						if ( fileUploadInput ) {
+							const observer = new MutationObserver( function( mutationsList, observer ) {
+								mutationsList.forEach( mutation => {
+									if ( mutation.type === 'attributes' && mutation.attributeName === 'value' ) {
+										self.runCheck();
+									}
+								});
+							});
+							observer.observe( fileUploadInput, { attributes: true });
+						}
+
 						self.runCheck();
 
 					}
@@ -97,9 +110,10 @@ class GW_Disable_Submit {
 								return;
 							}
 
-							if( $.trim( $( this ).val() ) ) {
-								fullCount += 1;
-							} else if ( $( this ).find( 'input:checked' ).length ) {
+							if( $.trim( $( this ).val() ) ||
+								 $( this ).find( 'input:checked' ).length ||
+								 $( this ).find( '.ginput_preview' ).length
+								) {
 								fullCount += 1;
 							}
 
@@ -158,6 +172,12 @@ class GW_Disable_Submit {
 				case 'name':
 					$input_ids = array( 1, 2, 3, 4, 5, 6 );
 					break;
+
+				case 'fileupload':
+					if ( rgar( $field, 'multipleFiles' ) ) {
+						$html_ids[] = "#gform_preview_{$form['id']}_{$field['id']}";
+						break;
+					}
 
 				default:
 					$html_ids[] = "#input_{$form['id']}_{$field['id']}";
