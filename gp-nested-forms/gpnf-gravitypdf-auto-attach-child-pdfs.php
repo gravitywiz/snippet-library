@@ -5,7 +5,7 @@
  */
 add_filter( 'gform_notification', function ( $notification, $form, $entry ) {
 
-	if ( ! class_exists( 'GPNF_Entry' ) || ! class_exists( 'GFPDF\Model\Model_PDF' ) ) {
+	if ( ! class_exists( 'GPNF_Entry' ) || ! class_exists( 'GPDFAPI' ) ) {
 		return $notification;
 	}
 
@@ -14,7 +14,6 @@ add_filter( 'gform_notification', function ( $notification, $form, $entry ) {
 		$notification['attachments'] = array();
 	}
 
-	$attachments  =& $notification['attachments'];
 	$parent_entry = new GPNF_Entry( $entry );
 
 	foreach ( $form['fields'] as $field ) {
@@ -23,23 +22,22 @@ add_filter( 'gform_notification', function ( $notification, $form, $entry ) {
 			continue;
 		}
 
-		$child_form    = GFAPI::get_form( $field->gpnfForm );
 		$child_entries = $parent_entry->get_child_entries( $field->id );
 
 		foreach ( $child_entries as $child_entry ) {
+			$pdfs = GPDFAPI::get_entry_pdfs( $child_entry['id'] );
 
-			$pdf_model = GPDFAPI::get_mvc_class( 'Model_PDF' );
-			$pdfs      = isset( $child_form['gfpdf_form_settings'] ) ? $pdf_model->get_active_pdfs( $child_form['gfpdf_form_settings'], $child_entry ) : array();
+			if ( is_wp_error( $pdfs ) ) {
+				continue;
+			}
 
 			foreach ( $pdfs as $pdf ) {
-				$settings = $child_form['gfpdf_form_settings'][ $pdf['id'] ];
+				// Generate PDF
+				$pdf_path = GPDFAPI::create_pdf( $child_entry['id'], $pdf['id'] );
 
-				// Generate our PDF.
-				$filename = $pdf_model->generate_and_save_pdf( $child_entry, $settings );
-
-				if ( ! is_wp_error( $filename ) ) {
+				if ( ! is_wp_error( $pdf_path ) ) {
 					// Add PDF to notification PDFs.
-					$attachments[] = $filename;
+					$notification['attachments'][] = $pdf_path;
 				}
 			}
 		}
