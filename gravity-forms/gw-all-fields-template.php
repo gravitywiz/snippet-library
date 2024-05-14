@@ -36,7 +36,7 @@
  *
  * ## Filtering Usage
  *
- * `:filter`
+ * - **`:filter`**
  *
  *    Filtering will only include the specified fields and exclude all others. It cannot be combined with the include
  *    exclude filters.
@@ -44,7 +44,7 @@
  *    `{all_fields:filter[1]}`<br>
  *    `{all_fields:filter[1,2]}`
  *
- * `:include`
+ * - **`:include`**
  *
  *    Including will include fields with types that are typically not supported by the `{all_fields}` merge tag
  *    (e.g., HTML fields).
@@ -53,7 +53,7 @@
  *    `{all_fields:include[3,4]}`<br>
  *    `{all_fields:include[3,4],exclude[5]}`
  *
- * `:exclude`
+ * - **`:exclude`**
  *
  *    Excluding will exclude specific fields from being included in the `{all_fields}` output.
  *
