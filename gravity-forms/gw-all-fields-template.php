@@ -16,14 +16,17 @@
  * - `{all_fields}`
  *
  *    By default, enabling this plugin will look for this template:
+ 
  *    `<theme>/gravity-forms/all-fields.php`
  *
  *    Override the `{all_fields}` template for a specific form by specifying the form ID:
+ 
  *    `<theme>/gravity-forms/all-fields-<formId>.php`
  *
  * - `{all_fields:template[custom]}`
  *
  *    Specify a custom template suffix. This is useful for allowing specific forms to use the same template.
+ 
  *    `<theme>/gravity-forms/all-fields-custom.php`
  *
  * - `{all_fields:notemplate}`
