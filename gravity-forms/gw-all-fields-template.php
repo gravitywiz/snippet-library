@@ -15,27 +15,27 @@
  *
  * - `{all_fields}`
  *
- *    By default, enabling this plugin will look for this template:
+ *     By default, enabling this plugin will look for this template:
  
- *    `<theme>/gravity-forms/all-fields.php`
+ *     `<theme>/gravity-forms/all-fields.php`
  *
- *    Override the `{all_fields}` template for a specific form by specifying the form ID:
+ *     Override the `{all_fields}` template for a specific form by specifying the form ID:
  
- *    `<theme>/gravity-forms/all-fields-<formId>.php`
+ *     `<theme>/gravity-forms/all-fields-<formId>.php`
  *
  * - `{all_fields:template[custom]}`
  *
- *    Specify a custom template suffix. This is useful for allowing specific forms to use the same template.
+ *     Specify a custom template suffix. This is useful for allowing specific forms to use the same template.
  
- *    `<theme>/gravity-forms/all-fields-custom.php`
+ *     `<theme>/gravity-forms/all-fields-custom.php`
  *
  * - `{all_fields:notemplate}`
  *
- *    Will always load the default Gravity Forms `{all_fields}` markup.
+ *     Will always load the default Gravity Forms `{all_fields}` markup.
  *
  * - `{all_fields:nopricingfields}`
  *
- *    Hide all pricing fields (i.e. order summary).
+ *     Hide all pricing fields (i.e. order summary).
  *
  * ## Filtering Usage
  *
