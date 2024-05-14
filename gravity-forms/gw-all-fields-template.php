@@ -13,53 +13,53 @@
  *
  * Usage:
  *
- * {all_fields}
+ * `{all_fields}`
  *
- *     By default, enabling this plugin will look for this template:
- *     <theme>/gravity-forms/all-fields.php
+ *    By default, enabling this plugin will look for this template:
+ *    `<theme>/gravity-forms/all-fields.php`
  *
- *     Override the {all_fields} template for a specific form by specifying the form ID:
- *     <theme>/gravity-forms/all-fields-<formId>.php
+ *    Override the `{all_fields}` template for a specific form by specifying the form ID:
+ *    `<theme>/gravity-forms/all-fields-<formId>.php`
  *
- * {all_fields:template[custom]}
+ * `{all_fields:template[custom]}`
  *
- *     Specify a custom template suffix. This is useful for allowing specific forms to use the same template.
- *     <theme>/gravity-forms/all-fields-custom.php
+ *    Specify a custom template suffix. This is useful for allowing specific forms to use the same template.
+ *    `<theme>/gravity-forms/all-fields-custom.php`
  *
- * {all_fields:notemplate}
+ * `{all_fields:notemplate}`
  *
- *     Will always load the default Gravity Forms {all_fields} markup.
+ *    Will always load the default Gravity Forms `{all_fields}` markup.
  *
- * {all_fields:nopricingfields}
+ * `{all_fields:nopricingfields}`
  *
- *     Hide all pricing fields (i.e. order summary).
+ *    Hide all pricing fields (i.e. order summary).
  *
- * Filtering Usage:
+ * ## Filtering Usage:
  *
- * :filter
+ * `:filter`
  *
- *     Filtering will only include the specified fields and exclude all others. It cannot be combined with the include
- *     exclude filters.
+ *    Filtering will only include the specified fields and exclude all others. It cannot be combined with the include
+ *    exclude filters.
  *
- *     {all_fields:filter[1]}
- *     {all_fields:filter[1,2]}
+ *    `{all_fields:filter[1]}`
+ *    `{all_fields:filter[1,2]}`
  *
- * :include
+ * `:include`
  *
- *     Including will include fields with types that are typically not supported by the {all_fields} merge tag
- *     (e.g., HTML fields).
+ *    Including will include fields with types that are typically not supported by the `{all_fields}` merge tag
+ *    (e.g., HTML fields).
  *
- *     {all_fields:include[3]}
- *     {all_fields:include[3,4]}
- *     {all_fields:include[3,4],exclude[5]}
+ *    `{all_fields:include[3]}`
+ *    `{all_fields:include[3,4]}`
+ *    `{all_fields:include[3,4],exclude[5]}`
  *
- * :exclude
+ * `:exclude`
  *
- *     Excluding will exclude specific fields from being included in the {all_fields} output.
+ *    Excluding will exclude specific fields from being included in the `{all_fields}` output.
  *
- *     {all_fields:exclude[5]}
- *     {all_fields:exclude[5,6]}
- *     {all_fields:exclude[5],include[3,4]}
+ *    `{all_fields:exclude[5]}`
+ *    `{all_fields:exclude[5,6]}`
+ *    `{all_fields:exclude[5],include[3,4]}`
  *
  */
 class GW_All_Fields_Template {
