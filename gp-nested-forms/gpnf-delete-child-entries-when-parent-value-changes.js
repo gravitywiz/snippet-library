@@ -2,9 +2,7 @@
  * Gravity Perks // Nested Forms // Delete Child Entries When Parent Value Changes
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
- * Instruction Video:
- * 
- * https://www.loom.com/share/304641c3136049d0a8d1cf58c7041df5
+ * Instruction Video: https://www.loom.com/share/304641c3136049d0a8d1cf58c7041df5
  *
  * Instructions:
  *
