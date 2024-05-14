@@ -15,18 +15,15 @@
  *
  * - `{all_fields}`
  *
- *     By default, enabling this plugin will look for this template:
- 
+ *     By default, enabling this plugin will look for this template:<br>
  *     `<theme>/gravity-forms/all-fields.php`
  *
- *     Override the `{all_fields}` template for a specific form by specifying the form ID:
- 
+ *     Override the `{all_fields}` template for a specific form by specifying the form ID:<br>
  *     `<theme>/gravity-forms/all-fields-<formId>.php`
  *
  * - `{all_fields:template[custom]}`
  *
- *     Specify a custom template suffix. This is useful for allowing specific forms to use the same template.
- 
+ *     Specify a custom template suffix. This is useful for allowing specific forms to use the same template.<br>
  *     `<theme>/gravity-forms/all-fields-custom.php`
  *
  * - `{all_fields:notemplate}`
@@ -44,7 +41,7 @@
  *    Filtering will only include the specified fields and exclude all others. It cannot be combined with the include
  *    exclude filters.
  *
- *    `{all_fields:filter[1]}`
+ *    `{all_fields:filter[1]}`<br>
  *    `{all_fields:filter[1,2]}`
  *
  * `:include`
@@ -52,16 +49,16 @@
  *    Including will include fields with types that are typically not supported by the `{all_fields}` merge tag
  *    (e.g., HTML fields).
  *
- *    `{all_fields:include[3]}`
- *    `{all_fields:include[3,4]}`
+ *    `{all_fields:include[3]}`<br>
+ *    `{all_fields:include[3,4]}`<br>
  *    `{all_fields:include[3,4],exclude[5]}`
  *
  * `:exclude`
  *
  *    Excluding will exclude specific fields from being included in the `{all_fields}` output.
  *
- *    `{all_fields:exclude[5]}`
- *    `{all_fields:exclude[5,6]}`
+ *    `{all_fields:exclude[5]}`<br>
+ *    `{all_fields:exclude[5,6]}`<br>
  *    `{all_fields:exclude[5],include[3,4]}`
  *
  */
