@@ -11,7 +11,7 @@
  * Version:      0.10
  * Author URI:   http://gravitywiz.com
  *
- * ## Usage
+ * Usage:
  *
  * - `{all_fields}`
  *
