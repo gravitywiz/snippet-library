@@ -7,13 +7,6 @@
  *
  * This snippet uses a Product field to create a deposit field and deducts the deposit from Order Summary.
  * To use the snippet, you'll have to update the Form ID and the deposit field ID within the snippet.
- *
- * Plugin Name:  GP eCommerce Fields - Deduct Deposit from Order Summary
- * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-ecommerce-fields/
- * Description:  This snippet uses a Produdct field to create a deposit field and deducts the deposit from Order Summary
- * Author:       Gravity Wiz
- * Version:      0.3
- * Author URI:   https://gravitywiz.com
  */
 class GW_Deduct_Deposit {
 
