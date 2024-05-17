@@ -103,7 +103,7 @@ class GW_Deduct_Deposit {
 		}
 
 		$args = array(
-			'formId' => $this->_args['form_id'],
+			'formId'         => $this->_args['form_id'],
 			'depositFieldId' => $this->_args['deposit_field_id'],
 		);
 
