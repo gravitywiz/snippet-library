@@ -4,7 +4,7 @@
 *
 * Disable submit buttones until all required fields have been filled out. Currently only supports single-page forms.
 *
-* @version   1.1
+* @version   1.2
 * @author    David Smith <david@gravitywiz.com>
 * @license   GPL-2.0+
 * @link      http://gravitywiz.com/...
@@ -64,6 +64,25 @@ class GW_Disable_Submit {
 							self.runCheck();
 						} );
 
+						// Check for newly uploaded files
+						args.inputHtmlIds.forEach(function (inputHtmlId){
+							let searchTerm = "#gform_preview";
+							let index	   = inputHtmlId.indexOf(searchTerm);
+							if ( index !== -1 ) {
+								let fieldId = inputHtmlId.substring(index + searchTerm.length).trim();
+								window.gfMultiFileUploader.uploaders['gform_multifile_upload' + fieldId].bind('StateChanged', function() {
+									if ( window.gfMultiFileUploader.uploaders['gform_multifile_upload' + fieldId].state == 1 ) {
+										self.runCheck();
+									}
+								});
+							}
+						});
+
+						// Check if field becomes empty on deleting file(s)
+						$(document).on( 'click', '.gform_delete_file', function() {
+							self.runCheck();
+						});
+
 						self.runCheck();
 
 					}
@@ -97,9 +116,10 @@ class GW_Disable_Submit {
 								return;
 							}
 
-							if( $.trim( $( this ).val() ) ) {
-								fullCount += 1;
-							} else if ( $( this ).find( 'input:checked' ).length ) {
+							if( $.trim( $( this ).val() ) ||
+								$( this ).find( 'input:checked' ).length ||
+								$( this ).find( '.ginput_preview' ).length
+								) {
 								fullCount += 1;
 							}
 
@@ -158,6 +178,13 @@ class GW_Disable_Submit {
 				case 'name':
 					$input_ids = array( 1, 2, 3, 4, 5, 6 );
 					break;
+
+				case 'fileupload':
+					// Only multiple files enabled File Upload field has to be handled differently.
+					if ( rgar( $field, 'multipleFiles' ) ) {
+						$html_ids[] = "#gform_preview_{$form['id']}_{$field['id']}";
+						break;
+					}
 
 				default:
 					$html_ids[] = "#input_{$form['id']}_{$field['id']}";
