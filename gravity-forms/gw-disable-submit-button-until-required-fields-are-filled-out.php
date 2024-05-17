@@ -65,17 +65,23 @@ class GW_Disable_Submit {
 						} );
 
 						// Check for newly uploaded files
-						const fileUploadInput = document.querySelector( 'input[name="gform_uploaded_files"]' );
-						if ( fileUploadInput ) {
-							const observer = new MutationObserver( function( mutationsList, observer ) {
-								mutationsList.forEach( mutation => {
-									if ( mutation.type === 'attributes' && mutation.attributeName === 'value' ) {
+						args.inputHtmlIds.forEach(function (inputHtmlId){
+							let searchTerm = "#gform_preview";
+							let index	   = inputHtmlId.indexOf(searchTerm);
+							if ( index !== -1 ) {
+								let fieldId = inputHtmlId.substring(index + searchTerm.length).trim();
+								window.gfMultiFileUploader.uploaders['gform_multifile_upload' + fieldId].bind('StateChanged', function() {
+									if ( window.gfMultiFileUploader.uploaders['gform_multifile_upload' + fieldId].state == 1 ) {
 										self.runCheck();
 									}
 								});
-							});
-							observer.observe( fileUploadInput, { attributes: true });
-						}
+							}
+						});
+
+						// Check if field becomes empty on deleting file(s)
+						$(document).on( 'click', '.gform_delete_file', function() {
+							self.runCheck();
+						});
 
 						self.runCheck();
 
@@ -111,8 +117,8 @@ class GW_Disable_Submit {
 							}
 
 							if( $.trim( $( this ).val() ) ||
-								 $( this ).find( 'input:checked' ).length ||
-								 $( this ).find( '.ginput_preview' ).length
+								$( this ).find( 'input:checked' ).length ||
+								$( this ).find( '.ginput_preview' ).length
 								) {
 								fullCount += 1;
 							}
@@ -174,6 +180,7 @@ class GW_Disable_Submit {
 					break;
 
 				case 'fileupload':
+					// Only multiple files enabled File Upload field has to be handled differently.
 					if ( rgar( $field, 'multipleFiles' ) ) {
 						$html_ids[] = "#gform_preview_{$form['id']}_{$field['id']}";
 						break;
