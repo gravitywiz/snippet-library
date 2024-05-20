@@ -1,7 +1,7 @@
 <?php
 /**
  * Gravity Perks // Limit Submissions // Dynamically Set Limit by User Meta
- * http://gravitywiz.com/gravity-forms-limit-submissions/
+ * http://gravitywiz.com/documentation/gravity-forms-limit-submissions/
  */
 // Update "123" to your form ID.
 add_filter( 'gpls_rule_groups_123', function ( $rule_groups ) {
