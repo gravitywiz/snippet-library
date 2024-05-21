@@ -85,8 +85,8 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 				}
 
 				$choice['price'] = isset( $map['price'] ) ?
-								  apply_filters( 'gppa_acfrm_price', rgar($row, $map['price']), $row, $map['price'] ) :
-								  str_replace( 'gf_custom:', '', $custom_map['price'] );
+								apply_filters( 'gppa_acfrm_price', rgar( $row, $map['price'] ), $row, $map['price'] ) :
+								str_replace( 'gf_custom:', '', $custom_map['price'] );
 
 				$choices[] = $choice;
 			}
