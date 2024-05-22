@@ -11,7 +11,7 @@
  *
  * 1. First convert your shortcode into a merge tag.
  *
- *     Shortcode: `[gravityforms action="remaining" id="123" input_id="4.3" limit="100"]` \
+ *     Shortcode: `[gravityforms action="remaining" id="123" input_id="4.3" limit="100"]`
  *     Merge Tag: `{shortcode:gravityforms&action=remaining&id=123&input_id=4.3&limit=100}`
  *
  * 2. Use your merge tag in as the default value in a field - or - in the GF conditional shortcode `merge_tag` parameter.
