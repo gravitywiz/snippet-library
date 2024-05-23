@@ -13,7 +13,7 @@ gform.addFilter( 'gpadvs_settings', function( settings, gpadvs ) {
 	if ( gpadvs.formId == GFFORMID ) {
 		settings.onItemAdd = function(){
 			this.setTextboxValue('');
-			this.refreshOptions();
+			this.close();
 		};
 	}
 	return settings;
