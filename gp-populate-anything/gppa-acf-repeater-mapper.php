@@ -8,7 +8,7 @@
  * Instructions
  *
  * 1. Enable "Populate choices dynamically" on any choice-based field.
- * 2. Select the "Post, User or Term" object type.
+ * 2. Select the "Post", "User" or "Term" object type.
  * 3. Apply any desired filters to determine which post(s) should have their repeater data populated.
  * 4. Use the "Choice Template" to match each choice property to a repeater subfield.
  *    For example, if your repeater is labeled "parts" and you want to populate the "name" subfield as the choice label,
