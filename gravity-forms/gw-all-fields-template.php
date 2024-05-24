@@ -8,7 +8,7 @@
  * Plugin URI:   https://gravitywiz.com/gravity-forms-all-fields-template/
  * Description:  Modify the {all_fields} merge tag output via a template file.
  * Author:       Gravity Wiz
- * Version:      0.10
+ * Version:      0.11
  * Author URI:   http://gravitywiz.com
  *
  * Usage:
@@ -111,7 +111,7 @@ class GW_All_Fields_Template {
 		}
 
 		$modifiers = $this->parse_modifiers( $modifiers );
-		$whitelist = array( 'filter', 'include', 'exclude', 'nopricingfields' );
+		$whitelist = array( 'filter', 'include', 'exclude', 'nopricingfields', 'format' );
 		$context   = rgar( $modifiers, 'context', false );
 
 		foreach ( $modifiers as $modifier => $mod_values ) {
@@ -259,6 +259,12 @@ class GW_All_Fields_Template {
 						if ( $exclude_full_value ) {
 							$value = false;
 						}
+					}
+					break;
+				case 'format':
+					// Use the raw_value for when text format is defined
+					if ( $mod_value == 'text' ) {
+						$value = $raw_value;
 					}
 					break;
 			}
