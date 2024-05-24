@@ -42,8 +42,11 @@ class GW_Quantity_Decimal {
 
 		if ( $this->global ) {
 			add_filter( 'gform_field_validation', array( $this, 'allow_quantity_float' ), 10, 4 );
+			add_filter( 'gform_submission_data_pre_process_payment', array( $this, 'modify_submission_data' ), 10, 4 );
 		} else {
 			add_filter( 'gform_field_validation_' . $this->form_id, array( $this, 'allow_quantity_float' ), 10, 4 );
+			add_filter( 'gform_submission_data_pre_process_payment_' . $this->form_id, array( $this, 'modify_submission_data' ), 10, 4 );
+
 		}
 
 		if ( GFFormsModel::is_html5_enabled() ) {
@@ -88,6 +91,114 @@ class GW_Quantity_Decimal {
 		$markup  = str_replace( $search, $replace, $markup );
 
 		return $markup;
+	}
+
+	function modify_submission_data( $submission_data, $feed, $form, $entry ) {
+
+		$products = GFCommon::get_product_fields( $form, $entry );
+
+		$key             = rgars( $feed, 'meta/transactionType' ) === 'subscription' ? 'recurringAmount' : 'paymentAmount';
+		$payment_field   = rgars( $feed, 'meta/' . $key, 'form_total' );
+		$setup_fee_field = rgar( $feed['meta'], 'setupFee_enabled' ) ? $feed['meta']['setupFee_product'] : false;
+		$trial_field     = rgar( $feed['meta'], 'trial_enabled' ) ? rgars( $feed, 'meta/trial_product' ) : false;
+
+		$amount       = 0;
+		$line_items   = array();
+		$discounts    = array();
+		$fee_amount   = 0;
+		$trial_amount = 0;
+		foreach ( $products['products'] as $field_id => $product ) {
+
+			$quantity      = isset( $product['quantity'] ) ? $product['quantity'] : 1;
+			$product_price = GFCommon::to_number( $product['price'], $entry['currency'] );
+
+			$options = array();
+			if ( is_array( rgar( $product, 'options' ) ) ) {
+				foreach ( $product['options'] as $option ) {
+					$options[]      = $option['option_name'];
+					$product_price += $option['price'];
+				}
+			}
+
+			$is_trial_or_setup_fee = false;
+
+			if ( ! empty( $trial_field ) && $trial_field == $field_id ) {
+
+				$trial_amount          = $product_price * $quantity;
+				$is_trial_or_setup_fee = true;
+
+			} elseif ( ! empty( $setup_fee_field ) && $setup_fee_field == $field_id ) {
+
+				$fee_amount            = $product_price * $quantity;
+				$is_trial_or_setup_fee = true;
+			}
+
+			// Do not add to line items if the payment field selected in the feed is not the current field.
+			if ( is_numeric( $payment_field ) && $payment_field != $field_id ) {
+				continue;
+			}
+
+			// Do not add to line items if the payment field is set to "Form Total" and the current field was used for trial or setup fee.
+			if ( $is_trial_or_setup_fee && ! is_numeric( $payment_field ) ) {
+				continue;
+			}
+
+			$amount += $product_price * $quantity;
+
+			$description = '';
+			if ( ! empty( $options ) ) {
+				$description = esc_html__( 'options: ', 'gravityforms' ) . ' ' . implode( ', ', $options );
+			}
+
+			if ( $product_price >= 0 ) {
+				$line_items[] = array(
+					'id'          => $field_id,
+					'name'        => $product['name'],
+					'description' => $description,
+					'quantity'    => $quantity,
+					'unit_price'  => GFCommon::to_number( $product_price, $entry['currency'] ),
+					'options'     => rgar( $product, 'options' ),
+				);
+			} else {
+				$discounts[] = array(
+					'id'          => $field_id,
+					'name'        => $product['name'],
+					'description' => $description,
+					'quantity'    => $quantity,
+					'unit_price'  => GFCommon::to_number( $product_price, $entry['currency'] ),
+					'options'     => rgar( $product, 'options' ),
+				);
+			}
+		}
+
+		if ( $trial_field == 'enter_amount' ) {
+			$trial_amount = rgar( $feed['meta'], 'trial_amount' ) ? GFCommon::to_number( rgar( $feed['meta'], 'trial_amount' ), $entry['currency'] ) : 0;
+		}
+
+		if ( ! empty( $products['shipping']['name'] ) && ! is_numeric( $payment_field ) ) {
+			$line_items[] = array(
+				'id'          => $products['shipping']['id'],
+				'name'        => $products['shipping']['name'],
+				'description' => '',
+				'quantity'    => 1,
+				'unit_price'  => GFCommon::to_number( $products['shipping']['price'], $entry['currency'] ),
+				'is_shipping' => 1,
+			);
+			$amount      += $products['shipping']['price'];
+		}
+
+		// Round amount to resolve floating point precision issues.
+		$currency = RGCurrency::get_currency( $entry['currency'] );
+		$decimals = rgar( $currency, 'decimals', 0 );
+		$amount   = GFCommon::round_number( $amount, $decimals );
+
+		$submission_data['payment_amount'] = $amount;
+		$submission_data['setup_fee']      = $fee_amount;
+		$submission_data['trial']          = $trial_amount;
+		$submission_data['line_items']     = $line_items;
+		$submission_data['discounts']      = $discounts;
+
+		return $submission_data;
 	}
 
 	function get_field_input( $field, $value, $form ) {
