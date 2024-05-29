@@ -11,7 +11,7 @@
  * Plugin URI:   https://gravitywiz.com/gravity-forms-require-unique-values-for-different-fields/
  * Description:  Require two or more fields on the same form to be different from each other.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   https://gravitywiz.com/
  */
 class GW_Require_Unique_Values {
