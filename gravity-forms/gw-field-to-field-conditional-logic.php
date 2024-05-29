@@ -182,10 +182,6 @@ class GF_Field_To_Field_Conditional_Logic {
 		foreach ( $object as $prop => $value ) {
 			if ( $prop === 'conditionalLogic' && ! empty( $value ) ) {
 				foreach ( $object[ $prop ]['rules'] as $rule ) {
-					// GF core only supports comparing fields to values but Gravity Perks supports other comparisons.
-					if ( ! is_numeric( $rule['fieldId'] ) ) {
-						continue;
-					}
 					$matches = $this->parse_merge_tags( $rule['value'] );
 					if ( ! empty( $matches ) ) {
 						$tag_field_id = $matches[0][1];
