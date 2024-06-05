@@ -5,7 +5,7 @@
  *
  * Store the Map generated on Map Field as a Static Google Map in Entry Meta.
  *
- * Plugin Name:  GP Address Autocomplete — ACF Google Maps Support
+ * Plugin Name:  GP Address Autocomplete
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-address-autocomplete/
  * Description:  Store the Map generated on Map Field as a Static Google Map in Entry Meta.
  * Author:       Gravity Wiz
