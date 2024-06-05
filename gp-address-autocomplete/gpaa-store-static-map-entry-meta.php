@@ -28,8 +28,8 @@ add_action( 'gform_after_submission', function ( $entry, $form ) {
 		return;
 	}
 
-	$latitude  = $entry['gpaa_lat_' . $field_id];
-	$longitude = $entry['gpaa_lng_' . $field_id];
+	$latitude  = $entry[ 'gpaa_lat_' . $field_id ];
+	$longitude = $entry[ 'gpaa_lng_' . $field_id ];
 	$url       = "https://maps.googleapis.com/maps/api/staticmap?center={$latitude},{$longitude}&zoom={$zoom}&size={$width}x{$height}&maptype=roadmap&key={$api_key}";
 
 	gform_update_meta( $entry['id'], 'gppa_' . $field_id, $url );
