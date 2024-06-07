@@ -24,7 +24,8 @@ add_filter( 'gppa_input_choices_123_4', function ( $choices, $field, $objects ) 
 				$last_name  = $entry['3.6'];
 				break;
 		}
-		$choice['text'] = sprintf( '%s %s', $first_name, $last_name );
+		$choice['text']  = sprintf( '%s %s', $first_name, $last_name );
+		$choice['value'] = sprintf( '%s %s', $first_name, $last_name );
 	}
 
 	return $choices;
