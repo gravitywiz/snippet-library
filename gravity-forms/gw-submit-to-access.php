@@ -15,7 +15,7 @@ class GW_Submit_Access {
 
 	private static $instance = null;
 
-	public static $_args = array();
+	public $_args = array();
 
 	private function __construct( $args = array() ) {
 
