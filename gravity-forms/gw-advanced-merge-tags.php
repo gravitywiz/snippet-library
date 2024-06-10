@@ -485,11 +485,6 @@ class GW_Advanced_Merge_Tags {
 						// Example: "hello my old friend" → "h*****************d".
 						return $this->mask_value( $value );
 					}
-				case 'abbr':
-					// When used on address field returns two letter code of the selected country.
-					// Example {My Address Field:1.6:abbr}
-					$default_countries = array_flip( GF_Fields::get( 'address' )->get_default_countries() );
-					return rgar( $default_countries, $value );
 			}
 		}
 
