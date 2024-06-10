@@ -490,6 +490,13 @@ class GW_Advanced_Merge_Tags {
 					// Example {My Address Field:1.6:abbr}
 					$default_countries = array_flip( GF_Fields::get( 'address' )->get_default_countries() );
 					return rgar( $default_countries, $value );
+				default:
+					// 'selected' can be used over 'Checkbox' field to target the selected checkbox by its zero-based index.
+					if ( $field->type == 'checkbox' && preg_match( '/selected\[(\d+)\]/', $modifier, $matches ) ) {
+						$index       = $matches[1];
+						$value_array = explode( ',', $value );
+						return rgar( $value_array, $index );
+					}
 			}
 		}
 
