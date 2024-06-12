@@ -4,7 +4,7 @@
  * https://gravitywiz.com/documentation/gravity-forms-advanced-select/
  *
  * Enable Advanced Select's "Add New" option that allows users to create new items that aren't in the initial list of options.
- * If the options are been populating from a taxonomy term using GPPA, enabling the `insert_new_option` setting will create
+ * If the options are being populated from a taxonomy term using GPPA, enabling the `insert_new_option` setting will create
  * a new taxonomy term.
  *
  * Instructions:
