@@ -1,8 +1,8 @@
 <?php
 /**
-* Gravity Wiz // Gravity Forms // Disable Submit Button Until Required Fields are Field Out
+* Gravity Wiz // Gravity Forms // Disable Submit Button Until Required Fields are Filled Out
 *
-* Disable submit buttones until all required fields have been filled out. Currently only supports single-page forms.
+* Disable submit buttons until all required fields have been filled out. Currently only supports single-page forms.
 *
 * @version   1.2
 * @author    David Smith <david@gravitywiz.com>
@@ -208,4 +208,5 @@ class GW_Disable_Submit {
 
 # Configuration
 
-new GW_Disable_Submit( 534 );
+// Update 123 to your form ID.
+new GW_Disable_Submit( 123 );
