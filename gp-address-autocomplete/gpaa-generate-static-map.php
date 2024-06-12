@@ -28,7 +28,7 @@ class GPAA_Generate_Static_Map {
 			'zoom'    => 13,
 			'width'   => 640,
 			'height'  => 480,
-			'api_key' => 'YOUR_API_KEY_HERE'
+			'api_key' => 'YOUR_API_KEY_HERE',
 		) );
 
 		// Register Map Meta
@@ -57,8 +57,8 @@ class GPAA_Generate_Static_Map {
 			return;
 		}
 
-		$latitude  = $entry['gpaa_lat_' . $this->_field_id];
-		$longitude = $entry['gpaa_lng_' . $this->_field_id];
+		$latitude  = $entry[ 'gpaa_lat_' . $this->_field_id ];
+		$longitude = $entry[ 'gpaa_lng_' . $this->_field_id ];
 		$url       = sprintf(
 			'https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=%d&size=%dx%d&maptype=roadmap&key=%s',
 			$latitude,
@@ -66,11 +66,11 @@ class GPAA_Generate_Static_Map {
 			$this->_args['zoom'],
 			$this->_args['width'],
 			$this->_args['height'],
-			$this->_args['api_key'],
+			$this->_args['api_key']
 		);
 
-		gform_update_meta( $entry['id'], 'gpaa_map_' . $this->_field_id, $url );	
-		$entry[ 'gpaa_map_' . $this->_field_id ] = $url;	
+		gform_update_meta( $entry['id'], 'gpaa_map_' . $this->_field_id, $url );
+		$entry[ 'gpaa_map_' . $this->_field_id ] = $url;
 
 		return $entry;
 	}
