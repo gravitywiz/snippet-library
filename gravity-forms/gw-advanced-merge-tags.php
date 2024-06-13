@@ -492,8 +492,8 @@ class GW_Advanced_Merge_Tags {
 					return rgar( $default_countries, $value );
 				default:
 					// 'selected' can be used over 'Checkbox' field to target the selected checkbox by its zero-based index.
-					if ( $field->type == 'checkbox' && preg_match( '/selected\[(\d+)\]/', $modifier, $matches ) ) {
-						$index       = $matches[1];
+					if ( $field->type == 'checkbox' && strpos( $modifier, 'selected[' ) === 0 ) {
+						$index       = rgar( $this->parse_modifiers( $modifier ), 'selected' );
 						$value_array = explode( ',', $value );
 						return rgar( $value_array, $index );
 					}
