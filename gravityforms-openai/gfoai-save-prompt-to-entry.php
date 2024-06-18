@@ -23,7 +23,7 @@ class GFOAI_Save_Prompt_To_Entry {
 			'feed_id'  => false,
 		) );
 
-		$this->_message  = '';
+		$this->_message = '';
 
 		add_filter( 'gf_openai_request_body', array( $this, 'save_request_body' ), 10, 3 );
 		add_action( 'gform_post_process_feed', array( $this, 'process_feed' ), 10, 2 );
