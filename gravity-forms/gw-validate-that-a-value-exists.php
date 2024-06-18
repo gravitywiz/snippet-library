@@ -222,7 +222,7 @@ class GW_Value_Exists_Validation {
 									break;
 								}
 							}
-							values[ inputId ] = $( this ).val();
+							values[ sourceFieldId ? sourceFieldId : inputId ] = $( this ).val();
 						} );
 						return values;
 					}
