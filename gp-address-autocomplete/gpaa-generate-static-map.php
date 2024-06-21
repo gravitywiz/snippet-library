@@ -5,7 +5,7 @@
  *
  * Instruction Video: https://www.loom.com/share/3f849ad53c0745e082caf55adaedbe9d
  *
- * Generate Static Map for the Entered Address.
+ * Generate a static map based on the address entered into a GPAA-enabled Address field.
  */
 class GPAA_Generate_Static_Map {
 
@@ -25,10 +25,10 @@ class GPAA_Generate_Static_Map {
 
 		// Default values for zoom, width, and height.
 		$this->_args = wp_parse_args( $args, array(
-			'zoom'    => 13,
+			'zoom'    => 15,
 			'width'   => 640,
-			'height'  => 480,
-			'api_key' => 'YOUR_API_KEY_HERE',
+			'height'  => 350,
+			'api_key' => null,
 		) );
 
 		// Register Map Meta
@@ -60,7 +60,7 @@ class GPAA_Generate_Static_Map {
 		$latitude  = $entry[ 'gpaa_lat_' . $this->_field_id ];
 		$longitude = $entry[ 'gpaa_lng_' . $this->_field_id ];
 		$url       = sprintf(
-			'https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=%d&size=%dx%d&maptype=roadmap&key=%s',
+			'https://maps.googleapis.com/maps/api/staticmap?markers=%s,%s&zoom=%d&size=%dx%d&maptype=roadmap&key=%s&style=feature:poi|visibility:off',
 			$latitude,
 			$longitude,
 			$this->_args['zoom'],
@@ -80,8 +80,8 @@ class GPAA_Generate_Static_Map {
 			return $meta_boxes;
 		}
 
-		$meta_boxes['custom_map_box'] = array(
-			'title'    => 'Custom Map Box',
+		$meta_boxes[ "gpaa_map_{$this->_field_id}" ] = array(
+			'title'    => __( 'Map' ),
 			'callback' => array( $this, 'custom_map_box_content' ),
 			'context'  => 'normal',
 		);
@@ -94,7 +94,12 @@ class GPAA_Generate_Static_Map {
 
 		// Retrieve the custom meta value using gform_get_meta
 		$map_url = gform_get_meta( $entry['id'], "gpaa_map_{$this->_field_id}" );
-		echo '<img src="' . esc_url( $map_url ) . '"/>';
+		$map_url = str_replace(
+			sprintf( 'size=%dx%d', $this->_args['width'], $this->_args['height'] ),
+			sprintf( 'size=%dx%d', 640, 640 / 1.77 ),
+			$map_url
+		);
+		echo '<img src="' . esc_url( $map_url ) . '" style="display:block;margin:0 auto;max-width:100%;" />';
 	}
 }
 
