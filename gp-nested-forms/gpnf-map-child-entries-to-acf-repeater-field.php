@@ -47,7 +47,7 @@ class GPNF_Map_Child_Entries_To_ACF_Repeater {
 	'form_id'                  => 7, // Set this to the parent form ID
 	'nested_form_field_id'     => 18, // Update to the ID of the Nested Form field.
 	'field_map'                => array(
-		'nom_comedien'         => 1,
+		'num_comedien'         => 1,
 		'role_comedien'        => 3,
 	), // The field map contains "field_name" => "child_entry_field_id" pairs. The field name is the name of the fields in
 	// the ACF Repeater field. The child entry field ID is the field ID from the child form.
