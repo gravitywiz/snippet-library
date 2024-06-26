@@ -248,7 +248,7 @@ class GW_Cache_Buster {
 		 */
 		add_filter( 'gform_init_scripts_footer', '__return_true', 987 );
 		add_filter( 'gform_form_tag_' . $form_id, array( $this, 'add_hidden_inputs' ), 10, 2 );
-		add_filter( 'gform_pre_render_' . $form_id, array( $this, 'replace_embed_url_for_field_default_values' ) );
+		add_filter( 'gform_pre_render_' . $form_id, array( $this, 'replace_embed_tag_for_field_default_values' ) );
 
 		$atts = rgpost( 'atts' );
 
@@ -262,7 +262,7 @@ class GW_Cache_Buster {
 		gravity_form( $form_id, filter_var( rgar( $atts, 'title', true ), FILTER_VALIDATE_BOOLEAN ), filter_var( rgar( $atts, 'description', true ), FILTER_VALIDATE_BOOLEAN ), false, $field_values, true /* default to true; add support for non-ajax in the future */, rgar( $atts, 'tabindex' ) );
 
 		remove_filter( 'gform_form_tag_' . $form_id, array( $this, 'add_hidden_inputs' ) );
-		remove_filter( 'gform_pre_render_' . $form_id, array( $this, 'replace_embed_url_for_field_default_values' ) );
+		remove_filter( 'gform_pre_render_' . $form_id, array( $this, 'replace_embed_tag_for_field_default_values' ) );
 
 		die();
 	}
@@ -335,21 +335,39 @@ class GW_Cache_Buster {
 	}
 
 	/**
-	 * Replace {embed_url} merge tag for field default values. We have to do this using gform_pre_render as
+	 * Replace {embed_url} and {embed_post} merge tag for field default values. We have to do this using gform_pre_render as
 	 * gform_pre_replace_merge_tags is not called for field default values.
 	 *
 	 * @param array $form The current form.
 	 */
-	public function replace_embed_url_for_field_default_values( $form ) {
+	public function replace_embed_tag_for_field_default_values( $form ) {
 		foreach ( $form['fields'] as &$field ) {
-			if ( strpos( $field->defaultValue, '{embed_url}' ) !== false ) {
-				$origin = $this->get_form_request_origin();
+			$text    = $field->defaultValue;
+			$origin  = $this->get_form_request_origin();
+			$post_id = url_to_postid( $origin );
 
+			if ( strpos( $text, '{embed_url}' ) !== false ) {
 				if ( ! $origin ) {
 					continue;
 				}
 
-				$field->defaultValue = str_replace( '{embed_url}', $origin, $field->defaultValue );
+				$field->defaultValue = str_replace( '{embed_url}', $origin, $text );
+			}
+
+			preg_match_all( '/\{embed_post:(.*?)\}/', $text, $ep_matches, PREG_SET_ORDER );
+
+			if ( $ep_matches && $post_id ) {
+				$post       = get_post( $post_id );
+				$post_array = GFCommon::object_to_array( $post );
+
+				foreach ( $ep_matches as $match ) {
+					$full_tag = $match[0];
+					$property = $match[1];
+					$value    = $post_array[ $property ];
+					$text     = str_replace( $full_tag, $value, $text );
+				}
+
+				$field->defaultValue = $text;
 			}
 		}
 
