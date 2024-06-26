@@ -452,12 +452,13 @@ class GW_Advanced_Merge_Tags {
 	 */
 	public function handle_field_modifiers( $value, $input_id, $modifier, $field, $raw_value, $format ) {
 
-		$modifiers = $field->get_modifiers();
+		$modifiers = $this->parse_modifiers( $modifier );
+
 		if ( empty( $modifiers ) ) {
 			return $value;
 		}
 
-		foreach ( $modifiers as $modifier ) {
+		foreach ( $modifiers as $modifier => $modifier_options ) {
 			switch ( $modifier ) {
 				case 'wordcount':
 					// Note: str_word_count() is not a great solution as it does not support characters with accents reliably.
@@ -490,6 +491,20 @@ class GW_Advanced_Merge_Tags {
 					// Example {My Address Field:1.6:abbr}
 					$default_countries = array_flip( GF_Fields::get( 'address' )->get_default_countries() );
 					return rgar( $default_countries, $value );
+				case 'selected':
+					// 'selected' can be used over 'Checkbox' field to target the selected checkbox by its zero-based index.
+					if ( $field->type == 'checkbox' ) {
+						$index = $modifier_options;
+						if ( $index !== 'selected' && is_numeric( $index ) ) {
+							$index = intval( $index );
+						} else {
+							break;
+						}
+
+						$value_array = explode( ',', $value );
+						return rgar( $value_array, $index );
+					}
+					break;
 			}
 		}
 
