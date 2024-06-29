@@ -189,6 +189,11 @@ class GW_Cache_Buster {
 							) );
 						?>
 					} );
+					// Reinitialize Honeypot script
+					const id = 'gform_gravityforms_theme-js';
+					const src = $(`#${id}`).attr('src');
+					$(`script[src="${src}"]`).remove();
+					$('<script>').attr({ src, id }).appendTo('body');
 				} );
 			} )( jQuery );
 		</script>
