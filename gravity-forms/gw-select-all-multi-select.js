@@ -14,23 +14,33 @@
 // Update "4" to your Multi Select field ID.
 let targetFieldId = 4;
 
-let $selectAll = $( '<button type="button" style="margin-top: 1rem;">Select All</button>' );
-let $clearAll  = $( '<button type="button" style="margin: 1rem 0 0 0.5rem;">Clear All</button>' );
-let $target    = $( '#input_GFFORMID_' + targetFieldId );
+function selectAllMultiSelect() {
+	let $selectAll = $( '<button type="button" style="margin-top: 1rem;">Select All</button>' );
+	let $clearAll  = $( '<button type="button" style="margin: 1rem 0 0 0.5rem;">Clear All</button>' );
+	let $target    = $( '#input_GFFORMID_' + targetFieldId );
 
-$target.parents( '.ginput_container' ).append( $selectAll, $clearAll );
+	$target.parents( '.ginput_container' ).append( $selectAll, $clearAll );
 
-$selectAll.on( 'click', function() {
-	selectAllOptions( $target);
-} );
+	$selectAll.on( 'click', function() {
+		selectAllOptions( $target);
+	} );
 
-$clearAll.on( 'click', function() {
-	selectAllOptions( $target, false );
-} );
+	$clearAll.on( 'click', function() {
+		selectAllOptions( $target, false );
+	} );
 
-function selectAllOptions( $select, selected ) {
-	selected = typeof selected !== 'undefined' ? selected : true;
-	$select.find( 'option' ).prop( 'selected', selected );
-	window[ 'GPAdvancedSelect_GFFORMID_' + targetFieldId ].sync();
-	$select.trigger( 'change' );
+	function selectAllOptions( $select, selected ) {
+		selected = typeof selected !== 'undefined' ? selected : true;
+		$select.find( 'option' ).prop( 'selected', selected );
+		window[ 'GPAdvancedSelect_GFFORMID_' + targetFieldId ].sync();
+		$select.trigger( 'change' );
+	}
 }
+
+selectAllMultiSelect();
+
+$( document ).on( 'gppa_updated_batch_fields', function( e, formId, updatedFieldIDs ) {
+	if ( parseInt( formId ) === GFFORMID && $.inArray( String( targetFieldId ), updatedFieldIDs ) !== -1 ) {
+		selectAllMultiSelect();
+	}
+} );
