@@ -14,7 +14,7 @@
  */
 class GW_Cache_Buster {
 
-	private $args = array();
+	private $_args = array();
 
 	public function __construct( $args = array() ) {
 
@@ -39,6 +39,7 @@ class GW_Cache_Buster {
 			return;
 		}
 
+		add_filter( 'gform_pre_render', array( $this, 'clear_gpnf_cookies' ) );
 		add_filter( 'gform_shortcode_form', array( $this, 'shortcode' ), 10, 3 );
 		add_filter( 'gform_save_and_continue_resume_url', array( $this, 'filter_resume_link' ), 15, 4 );
 		add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_embed_url' ), 10, 4 );
@@ -46,6 +47,22 @@ class GW_Cache_Buster {
 
 		add_action( 'wp_ajax_nopriv_gfcb_get_form', array( $this, 'ajax_get_form' ) );
 		add_action( 'wp_ajax_gfcb_get_form', array( $this, 'ajax_get_form' ) );
+	}
+
+	public function clear_gpnf_cookies( $form ) {
+
+		if ( class_exists( 'GPNF_Session' ) && $this->is_cache_busting_applicable() ) {
+			$session     = new GPNF_Session( $form['id'] );
+			$cookie_name = $session->get_cookie_name();
+			foreach ( $_COOKIE as $name => $value ) {
+				if ( preg_match( '/^' . preg_quote( $cookie_name, '/' ) . '/', $name ) ) {
+					unset( $_COOKIE[ $name ] );
+					setcookie( $name, '', time() - ( 15 * 60 ), COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+				}
+			}
+		}
+
+		return $form;
 	}
 
 	public function shortcode( $markup, $attributes, $content ) {
