@@ -14,7 +14,7 @@
  */
 class GW_Cache_Buster {
 
-	private $args = array();
+	private $_args = array();
 
 	public function __construct( $args = array() ) {
 
@@ -143,13 +143,19 @@ class GW_Cache_Buster {
 		$ajax_url       = remove_query_arg( $exclude_params, add_query_arg( $_GET, admin_url( 'admin-ajax.php' ) ) );
 
 		// Still needed for the AJAX submission.
-		$ajax_url = add_query_arg(
-			array(
-				'action'  => 'gfcb_get_form',
-				'form_id' => $form_id,
-			),
-			$ajax_url
+		$ajax_params = array(
+			'action'  => 'gfcb_get_form',
+			'form_id' => $form_id,
 		);
+
+		// Ensure AJAX parameters for GPNF are also correctly populated.
+		if ( class_exists( 'GPNF_Session' ) ) {
+			$ajax_params['gpnf_context'] = array(
+				'path' => esc_js( GPNF_Session::get_session_path() ),
+			);
+		}
+
+		$ajax_url = add_query_arg( $ajax_params, $ajax_url );
 
 		$lang = null;
 		if ( class_exists( 'Gravity_Forms_Multilingual' ) ) {
