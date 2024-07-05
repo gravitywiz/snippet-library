@@ -173,7 +173,11 @@ class GW_Update_Posts {
 				}
 			}
 
-			$field      = GFAPI::get_field( $form, $value );
+			$field = GFAPI::get_field( $form, $value );
+			if ( ! $field ) {
+				continue;
+			}
+
 			$field_type = $field->get_input_type();
 			$meta_value = rgar( $entry, $value );
 			// Address input
