@@ -19,6 +19,8 @@
  */
 class GW_Dynamic_Range {
 
+	private $_args = array();
+
 	public function __construct( $args = array() ) {
 
 		$this->_args = wp_parse_args( $args, array(
@@ -222,8 +224,6 @@ class GW_Dynamic_Range {
 						if ( currentValue === false || currentValue === '' ) {
 							return;
 						}
-
-						currentValue = parseInt( currentValue );
 
 						let value = currentValue;
 
