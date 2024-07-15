@@ -160,44 +160,44 @@ class GW_Advanced_Merge_Tags {
 		// matches {Label:#fieldId#}
 		//         {Label:#fieldId#:#options#}
 		//         {Custom:#options#}
-		while ( preg_match_all( '/{(\w+)(:([\w&,=)(\-]+)){1,2}}/mi', $text, $matches, PREG_SET_ORDER ) ) {
+		preg_match_all( '/{(\w+)(:([\w&,=)(\-]+)){1,2}}/mi', $text, $matches, PREG_SET_ORDER );
 
-			foreach ( $matches as $match ) {
+		foreach ( $matches as $match ) {
 
-				list( $tag, $type, $args_match, $args_str ) = array_pad( $match, 4, false );
-				parse_str( $args_str, $args );
+			list( $tag, $type, $args_match, $args_str ) = array_pad( $match, 4, false );
+			parse_str( $args_str, $args );
 
-				$args  = array_map( array( $this, 'check_for_value_modifiers' ), $args );
-				$value = '';
+			$args  = array_map( array( $this, 'check_for_value_modifiers' ), $args );
+			$value = '';
 
-				switch ( $type ) {
-					case 'post':
-						$value = $this->get_post_merge_tag_value( $args );
+			switch ( $type ) {
+				case 'post':
+					$value = $this->get_post_merge_tag_value( $args );
+					break;
+				case 'post_meta':
+				case 'custom_field':
+					$value = $this->get_post_meta_merge_tag_value( $args );
+					break;
+				case 'source_post':
+					if ( empty( $entry ) || ! rgar( $entry, 'id' ) ) {
 						break;
-					case 'post_meta':
-					case 'custom_field':
-						$value = $this->get_post_meta_merge_tag_value( $args );
+					}
+					$source_post_id = gform_get_meta( $entry['id'], 'source_post_id' );
+					if ( ! $source_post_id ) {
 						break;
-					case 'source_post':
-						if ( empty( $entry ) || ! rgar( $entry, 'id' ) ) {
-							break;
-						}
-						$source_post_id = gform_get_meta( $entry['id'], 'source_post_id' );
-						if ( ! $source_post_id ) {
-							break;
-						}
-						$args['id']   = $source_post_id;
-						$args['prop'] = $args_str;
-						$value        = $this->get_post_merge_tag_value( $args );
-						break;
-					case 'entry':
-						$args['entry'] = $entry;
-						$value         = $this->get_entry_merge_tag_value( $args );
-						break;
-					case 'entry_meta':
-						$args['entry'] = $entry;
-						$value         = $this->get_entry_meta_merge_tag_value( $args );
-						break;
+					}
+					$args['id']   = $source_post_id;
+					$args['prop'] = $args_str;
+					$value        = $this->get_post_merge_tag_value( $args );
+					break;
+				case 'entry':
+					$args['entry'] = $entry;
+					$value         = $this->get_entry_merge_tag_value( $args );
+					break;
+				case 'entry_meta':
+					$args['entry'] = $entry;
+					$value         = $this->get_entry_meta_merge_tag_value( $args );
+					break;
 					// @todo: Add a whitelist here that the user can provide when they initialize the class.
 					//                  case 'callback':
 					//                      $args['callback'] = array_shift( array_keys( $args ) );
@@ -205,16 +205,17 @@ class GW_Advanced_Merge_Tags {
 					//                      $args['entry'] = $entry;
 					//                      $value         = $this->get_callback_merge_tag_value( $args );
 					//                      break;
-				}
-
-				// @todo: figure out if/how to support values that are not strings
-				if ( is_array( $value ) || is_object( $value ) ) {
-					$value = '';
-				}
-
-				$text = str_replace( $tag, $value, $text );
-
+				default:
+					continue 2;
 			}
+
+			// @todo: figure out if/how to support values that are not strings
+			if ( is_array( $value ) || is_object( $value ) ) {
+				$value = '';
+			}
+
+			$text = str_replace( $tag, $value, $text );
+
 		}
 
 		return $text;
