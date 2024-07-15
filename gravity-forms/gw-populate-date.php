@@ -244,7 +244,7 @@ class GW_Populate_Date {
 					$hour = 12;
 				}
 			}
-			$date = array( $hour, $minute, $ampm );
+			$date = "${hour}:${minute} ${ampm}";
 		} elseif ( $this->_args['enable_i18n'] ) {
 			$date = strftime( $format, $timestamp );
 		} else {
