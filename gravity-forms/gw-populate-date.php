@@ -244,7 +244,9 @@ class GW_Populate_Date {
 					$hour = 12;
 				}
 			}
-			$date = array( $hour, $minute, $ampm );
+			// Ensure the time value is retained as a String.
+			// If saved in array format, it will not reload the value after conditional viewing/hiding.
+			$date = "${hour}:${minute} ${ampm}";
 		} elseif ( $this->_args['enable_i18n'] ) {
 			$date = strftime( $format, $timestamp );
 		} else {
