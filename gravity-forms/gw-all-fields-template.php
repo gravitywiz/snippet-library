@@ -315,7 +315,7 @@ class GW_All_Fields_Template {
 		}
 
 		$items = rgar( $options, 'items' );
-		if ( empty( $items ) ) {
+		if ( empty( $items ) && $template == 'all-fields' && ! $modifiers ) {
 			$items = $this->get_items( $form, $entry, $display_empty, ! $use_value, $options['format'], $use_admin_label, 'all_fields', $_modifiers );
 		}
 
