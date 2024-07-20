@@ -161,12 +161,7 @@ class GW_All_Fields_Template {
 			}
 
 			if ( $modifier === 'nopricingfields' && ! has_filter( 'gform_order_summary', array( $this, 'clear_order_summary' ) ) ) {
-
 				add_filter( 'gform_order_summary', array( $this, 'clear_order_summary' ) );
-
-				// Hide "Order Summary" label if `:nopricingfields` is used.
-				add_filter( 'gform_display_product_summary', array( $this, 'hide_order_summary_label' ) );
-
 			}
 
 			/**
@@ -220,10 +215,9 @@ class GW_All_Fields_Template {
 						$value = $this->get_all_fields_field_value( $field, $value );
 					}
 					break;
-				case 'nopricingfields':
 				case 'exclude':
 					// exclude the fields marked to be excluded, or exclude all pricing fields if 'nopricingfields' merge tag is used.
-					if ( in_array( (int) $field->id, $field_ids, true ) || ( $modifier == 'nopricingfields' && GFCommon::is_product_field( $field->type ) ) ) {
+					if ( in_array( (int) $field->id, $field_ids, true ) ) {
 
 						$exclude_full_value = true;
 
