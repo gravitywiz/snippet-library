@@ -4,7 +4,7 @@
  *
  * Disable browser auto-complete.
  *
- * @version 0.3
+ * @version 0.4
  * @license GPL-2.0+
  * @link    http://gravitywiz.com
  */
