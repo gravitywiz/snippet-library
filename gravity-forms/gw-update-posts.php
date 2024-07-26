@@ -56,6 +56,8 @@ class GW_Update_Posts {
 			add_filter( 'gppa_process_template', array( $this, 'return_ids_instead_of_names' ), 9, 8 );
 			// Update posts after Gravity View updates an entry
 			add_action( 'gravityview/edit_entry/after_update', array( $this, 'gv_entry_after_update' ), 10, 4 );
+			// Update posts after Gravity Flow User Input/Approval Workflow step.
+			add_action( 'gravityflow_step_complete', array( $this, 'update_entry_after_workflow' ), 10, 4 );
 		}
 	}
 
@@ -63,6 +65,17 @@ class GW_Update_Posts {
 		if ( $form['id'] == $this->_args['form_id'] ) {
 			$entry = GFAPI::get_entry( $entry_id );
 			$this->update_post_by_entry( $entry, $form );
+		}
+	}
+
+	public function update_entry_after_workflow( $step_id, $entry_id, $form_id, $status ) {
+		if ( $form_id == $this->_args['form_id'] ) {
+			$form  = GFAPI::get_form( $form_id );
+			$entry = GFAPI::get_entry( $entry_id );
+			$step  = gravity_flow()->get_step( $step_id, $entry );
+			if ( $step && in_array( $step->get_type(), array( 'user_input', 'approval' ), true ) ) {
+				$this->update_post_by_entry( $entry, $form );
+			}
 		}
 	}
 
