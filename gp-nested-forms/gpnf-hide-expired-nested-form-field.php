@@ -12,7 +12,7 @@ function check_nested_form_expiration( $form ) {
 		return $form;
 	}
 
-	foreach( $form['fields'] as &$field ) {
+	foreach ( $form['fields'] as &$field ) {
 		if ( $field->type == 'form' && $field->gpnfForm ) {
 			$nested_form = GFAPI::get_form( $field->gpnfForm );
 			$is_expired  = GFFormDisplay::validate_form_schedule( $nested_form );
