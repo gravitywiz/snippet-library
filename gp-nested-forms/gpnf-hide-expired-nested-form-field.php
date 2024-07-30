@@ -5,10 +5,10 @@
  *
  * Instruction Video: https://www.loom.com/share/798f30d73d254864aa6a65e7d16d390b
  */
-add_filter( 'gform_pre_render', 'check_nested_form_expiration' );
-function check_nested_form_expiration( $form ) {
-	// Update '435' to the targeted Parent Form's ID.
-	if ( rgar( $form, 'id' ) != 435 || ! is_callable( 'gp_nested_forms' ) ) {
+add_filter( 'gform_pre_render', function ( $form ) {
+	// Update to form IDs this is to be applied to.
+	$form_ids = array( 43, 532, 435 );
+	if ( ! in_array( rgar( $form, 'id' ), $form_ids ) || ! is_callable( 'gp_nested_forms' ) ) {
 		return $form;
 	}
 
@@ -22,4 +22,4 @@ function check_nested_form_expiration( $form ) {
 		}
 	}
 	return $form;
-}
+}, 10, 1 );
