@@ -16,6 +16,9 @@
  */
 class GPML_Ajax_Upload {
 
+	private $_args = array();
+	private $form_id;
+
 	public function __construct( $args = array() ) {
 
 		$this->_args = wp_parse_args( $args, array(
