@@ -55,7 +55,7 @@ function updateNavigationState(  ) {
 }
 
 // Initialize the navigation state on page load
-setTimeout( updateNavigationState, 200 );
+setTimeout( updateNavigationState );
 
 /* CSS rule to add:
 #gf_page_steps_GFFORMID {
