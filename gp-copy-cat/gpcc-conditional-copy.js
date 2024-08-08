@@ -11,12 +11,30 @@
 *
 * 2. Configure the snippet per the inline instructions.
 */
-gform.addFilter( 'gpcc_copied_value', function( value, $targetElem, field ) {
-    // Update "17" to the field ID of your choice-based trigger field.
-    var triggerFieldId = 17;
+// Set rules for Source - Target Copying, based on a Trigger Field with a matching value.
+// Multiple rules can be set for Source - Target Copying.
+var fieldPairs = [
+	{ triggerFieldId: 17, targetFieldId: 16, sourceFieldId: 14 },
+	{ triggerFieldId: 19, targetFieldId: 20, sourceFieldId: 21 },
+];
+var matchingValue = '1';
 
-    if ( jQuery( '#input_{0}_{1}'.gformFormat( field.targetFormId, triggerFieldId ) ).val() != '1' ) {
-        value = '';
-    }
-    return value;
-} );
+gform.addFilter( 'gpcc_copied_value', function( value, $targetElem, field ) {
+	fieldPairs.forEach( function( pair ) {
+		if ( field['target'] == pair.targetFieldId && jQuery( '#input_{0}_{1}'.gformFormat( field.targetFormId, pair.triggerFieldId ) ).val() != matchingValue ) {
+			value = '';
+		}
+	} );
+	return value;
+});
+
+// Dynamic reloading of values for scenario where trigger field is changed after source field.
+fieldPairs.forEach( function( pair ) {
+	var $triggerField = jQuery( '#input_GFFORMID_' + pair.triggerFieldId );
+	var $sourceField  = jQuery( '#input_GFFORMID_' + pair.sourceFieldId );
+
+	$triggerField.on( 'change', function() {
+		var sourceFieldValue = $sourceField.val();
+		$sourceField.val( sourceFieldValue ).trigger( 'change' );
+	});
+});
