@@ -50,7 +50,7 @@ add_filter( 'gform_product_info', function( $product_info, $form, $entry ) {
 						}
 					}
 
-					$_child_products[ "{$nested_form_field_id}.{$child_entry['id']}.{$child_field_id}" ] = $child_product;
+					$_child_products[ "{$nested_form_field_id}.{$child_entry['id']}_{$child_field_id}" ] = $child_product;
 				}
 				$child_products = $child_products + $_child_products;
 			}
