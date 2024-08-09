@@ -10,15 +10,10 @@
  * Plugin URI: http://gravitywiz.com/how-do-i-export-multi-input-fields-in-a-single-column-with-gravity-forms/
  * Description: Export multi-input Gravity Forms fields as a single column.
  * Author: David Smith
- * Version: 1.2
+ * Version: 1.3
  * Author URI: http://gravitywiz.com
  */
-add_filter( 'gform_export_fields', function( $form ) {
-
-	// only modify the form object when the form is loaded for field selection; not when actually exporting
-	if ( rgpost( 'export_lead' ) || rgpost( 'action' ) == 'gf_process_export' ) {
-		return $form;
-	}
+add_filter( 'gform_form_export_page', function( $form ) {
 
 	$fields = array();
 
