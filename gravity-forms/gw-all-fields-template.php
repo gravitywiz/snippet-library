@@ -457,7 +457,7 @@ class GW_All_Fields_Template {
 						break;
 					}
 
-					if ( ! empty( $field_value ) || strlen( $field_value ) > 0 || $display_empty ) {
+					if ( ! empty( $field_value ) || ( isset( $field_value ) && strlen( $field_value ) > 0 ) || $display_empty ) {
 
 						switch ( $format ) {
 							case 'text':
