@@ -7,7 +7,7 @@
  * properties (e.g. label, cssClass, isRequired, etc).
  *
  * Set Field ID 1 as not required.
- * [gravityform id="1" field_props="1:isRequired:0"]
+ * [[gravityform id="1" field_props="1:isRequired:0"]]
  *
  * Set "my-special-class" as the CSS class for field ID 2.
  * [gravityform id="1" field_props="2:cssClass:my-special-class"]
