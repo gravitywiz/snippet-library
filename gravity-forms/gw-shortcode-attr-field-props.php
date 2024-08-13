@@ -6,7 +6,7 @@
  * Provide a custom "field_props" attribute for the [gravityforms] shortcode. This allows you to modify field
  * properties (e.g. label, cssClass, isRequired, etc).
  *
- * Set Field ID 1 as not required.
+ * Set field ID 1 as not required.
  * ```
  * [gravityform id="1" field_props="1:isRequired:0"]
  * ```
