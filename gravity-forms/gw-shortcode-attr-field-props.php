@@ -3,7 +3,7 @@
  * Gravity Wiz // Gravity Forms // Custom Field Properties via [gravityforms] Shortcode
  * https://gravitywiz.com/
  *
- * Provide a custom "field_props" attribute for the [[gravityforms]] shortcode. This allows you to modify field
+ * Provide a custom "field_props" attribute for the [gravityforms] shortcode. This allows you to modify field
  * properties (e.g. label, cssClass, isRequired, etc).
  *
  * Set Field ID 1 as not required.
