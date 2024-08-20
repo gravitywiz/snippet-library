@@ -25,7 +25,9 @@ gform.addAction( 'gpnf_init_nested_form', function( childFormId, gpnf ) {
 
 function copyParentFormValue( parentFormId, parentFieldId, childFormId, childFieldId ) {
 
-	var value = jQuery ( '#input_{0}_{1}'.gformFormat( parentFormId, parentFieldId ) ).val();
+	var value = jQuery ( '#input_{0}_{1}'.gformFormat( parentFormId, parentFieldId ) ).val() ||
+		jQuery('input[name="input_{0}"]:checked'.gformFormat( parentFieldId )).val() ||
+		jQuery('input[name="input_{0}"]:selected'.gformFormat( parentFieldId )).val();
 
 	// Delaying setting value so Populate Anything can pick up the change event.
 	setTimeout( function() {
