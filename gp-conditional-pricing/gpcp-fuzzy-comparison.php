@@ -2,9 +2,9 @@
 /**
  * Gravity Perks // GP Conditional Pricing // Fuzzy Comparison for operator "is"
  * http://gravitywiz.com/documentation/gravity-forms-conditional-pricing/
- * 
+ *
  * This snippet adds fuzzy comparison for "is" operator with the GPCP rules.
- * 
+ *
  */
 class GPCP_Fuzzy_Match {
 
@@ -165,8 +165,8 @@ class GPCP_Fuzzy_Match {
 		}
 
 		$args = array(
-			'formId'   => $this->_args['form_id'],
-			'fieldId'  => $this->_args['field_id'],
+			'formId'    => $this->_args['form_id'],
+			'fieldId'   => $this->_args['field_id'],
 			'threshold' => $this->_args['threshold'],
 		);
 
