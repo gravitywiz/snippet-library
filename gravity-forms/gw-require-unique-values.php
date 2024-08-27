@@ -185,8 +185,8 @@ class GW_Require_Unique_Values {
 		} else {
 			$value = $field->get_value_submission( array() );
 			// Product values are stored as Value|Price, we just need to compare Value.
-			if ( $field->type == 'product' && strpos( $value, '|' ) ) {
-				$value = explode( '|', $value )[0];
+			if ( rgar( $field, 'enablePrice' ) ) {
+				$value = GFCommon::get_selection_value( $value );
 			}
 		}
 
