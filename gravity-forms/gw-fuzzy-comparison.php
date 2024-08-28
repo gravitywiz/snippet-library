@@ -1,8 +1,8 @@
 <?php
 /**
- * Gravity Wiz // Gravity Forms // Fuzzy Comparison for operator "is"
+ * Gravity Wiz // Gravity Forms // Conditional Logic: Fuzzy Comparison for "is" Operator
  *
- * This snippet adds fuzzy comparison for "is" operator with the GF conditional logic rules.
+ * This snippet adds fuzzy comparison for Gravity Forms' conditional logic "is" operator. This allows you to match values that are similar but not identical (e.g. "África", "Africa", "Africaa").
  */
 class GW_Fuzzy_Match {
 
@@ -184,5 +184,5 @@ class GW_Fuzzy_Match {
 new GW_Fuzzy_Match( array(
 	'form_id'   => 1,  // Replace with your form ID.
 	'field_id'  => 2,  // Replace with your field ID for which conditional logic needs to be fuzzy.
-	'threshold' => 1,  // Define your threshold - It is the maximum number of allowed differences between two strings for them to be considered similar.
+	'threshold' => 1,  // Define the maximum number of allowed differences between two strings for them to be considered a match.
 ) );
