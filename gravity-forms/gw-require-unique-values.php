@@ -184,6 +184,10 @@ class GW_Require_Unique_Values {
 			$value = basename( rgars( $_FILES, sprintf( 'input_%d/name', $field->id ) ) );
 		} else {
 			$value = $field->get_value_submission( array() );
+			// Product values are stored as Value|Price, we just need to compare Value.
+			if ( rgar( $field, 'enablePrice' ) ) {
+				$value = GFCommon::get_selection_value( $value );
+			}
 		}
 
 		if ( $input_id && is_array( $value ) && isset( $value[ $input_id ] ) ) {
