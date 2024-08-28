@@ -1,12 +1,10 @@
 <?php
 /**
- * Gravity Perks // GP Conditional Pricing // Fuzzy Comparison for operator "is"
- * http://gravitywiz.com/documentation/gravity-forms-conditional-pricing/
+ * Gravity Wiz // Gravity Forms // Fuzzy Comparison for operator "is"
  *
- * This snippet adds fuzzy comparison for "is" operator with the GPCP rules.
- *
+ * This snippet adds fuzzy comparison for "is" operator with the GF conditional logic rules.
  */
-class GPCP_Fuzzy_Match {
+class GW_Fuzzy_Match {
 
 	private $_args;
 
@@ -63,7 +61,7 @@ class GPCP_Fuzzy_Match {
 		<script type="text/javascript">
 			( function( $ ) {
 
-				window.GPCP_Fuzzy_Match = function( args ) {
+				window.GW_Fuzzy_Match = function( args ) {
 					var self = this;
 
 					// Copy all args to current object: (list expected props)
@@ -170,7 +168,7 @@ class GPCP_Fuzzy_Match {
 			'threshold' => $this->_args['threshold'],
 		);
 
-		$script = 'new GPCP_Fuzzy_Match( ' . json_encode( $args ) . ' );';
+		$script = 'new GW_Fuzzy_Match( ' . json_encode( $args ) . ' );';
 		$slug   = implode( '_', array( strtolower( __CLASS__ ), $this->_args['form_id'], $this->_args['field_id'] ) );
 
 		GFFormDisplay::add_init_script( $form['id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
@@ -183,8 +181,8 @@ class GPCP_Fuzzy_Match {
 }
 
 # Configuration
-new GPCP_Fuzzy_Match( array(
-	'form_id'   => 1,  // Replace with your form ID
-	'field_id'  => 2,  // Replace with your field ID
-	'threshold' => 1,  // Define your threshold
+new GW_Fuzzy_Match( array(
+	'form_id'   => 1,  // Replace with your form ID.
+	'field_id'  => 2,  // Replace with your field ID for which conditional logic needs to be fuzzy.
+	'threshold' => 1,  // Define your threshold - It is the maximum number of allowed differences between two strings for them to be considered similar.
 ) );
