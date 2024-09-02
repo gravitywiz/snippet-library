@@ -17,6 +17,8 @@ class GPEP_Edit_Entry {
 	private $form_id;
 	private $delete_partial;
 	private $passed_through_entries;
+	private $refresh_token;
+	private $process_feeds;
 
 	public function __construct( $options ) {
 
