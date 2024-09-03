@@ -97,6 +97,9 @@ class GPEP_Edit_Entry {
 
 		$update_entry_id = $this->get_edit_entry_id( $form['id'] );
 		if ( $update_entry_id ) {
+			// Purge product info cache
+			$this->purge_product_cache( $form, GFAPI::get_entry( $update_entry_id ) );
+
 			if ( $this->delete_partial
 				&& is_callable( array( 'GF_Partial_Entries', 'get_instance' ) )
 				&& $entry_id !== null
@@ -244,6 +247,24 @@ class GPEP_Edit_Entry {
 		$query['where'] .= $wpdb->prepare( "\nAND em.entry_id != %d", $current_entry_id );
 
 		return $query;
+	}
+
+	public static function purge_product_cache( $form, $entry ) {
+
+		$cache_options = array(
+			array( false, false ),
+			array( false, true ),
+			array( true, false ),
+			array( true, true ),
+		);
+
+		foreach ( $cache_options as $cache_option ) {
+			list( $use_choice_text, $use_admin_label ) = $cache_option;
+			if ( gform_get_meta( rgar( $entry, 'id' ), "gform_product_info_{$use_choice_text}_{$use_admin_label}" ) ) {
+				gform_delete_meta( rgar( $entry, 'id' ), "gform_product_info_{$use_choice_text}_{$use_admin_label}" );
+			}
+		}
+
 	}
 
 	public function process_feeds( $entry, $form ) {
