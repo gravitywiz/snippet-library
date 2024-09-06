@@ -11,7 +11,7 @@
 class GPNF_GFlow_Delay_Child_Feed {
 
 	private $_args = array();
-	
+
 	public function __construct( $args = array() ) {
 
 		$this->_args = wp_parse_args( $args, array(
