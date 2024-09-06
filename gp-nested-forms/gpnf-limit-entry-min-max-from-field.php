@@ -5,6 +5,8 @@
  */
 class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 
+	private $_args = array();
+
 	public function __construct( $args = array() ) {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class

@@ -18,6 +18,8 @@
  */
 class GPAA_Single_Line_Input {
 
+	private $_args = array();
+
 	public function __construct( $args = array() ) {
 
 		$this->_args = wp_parse_args( $args, array(

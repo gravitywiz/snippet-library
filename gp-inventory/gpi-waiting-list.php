@@ -12,6 +12,9 @@
  * rather than being removed
  */
 class GPI_Waiting_List {
+
+	private $_args = array();
+
 	public $waitlist_message = '(waiting list)';
 
 	public function __construct( $args = array() ) {

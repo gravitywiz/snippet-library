@@ -14,6 +14,7 @@
  */
 class GPDEC_GFPDF_Delayed_Deletion {
 	public $deletion_queue = array();
+	private $_args         = array();
 
 	function __construct( $args ) {
 		$this->_args = wp_parse_args( $args, array(

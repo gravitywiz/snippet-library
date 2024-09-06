@@ -13,6 +13,7 @@
 class GW_Value_Exists_Validation {
 
 	protected static $is_script_output = false;
+	private $_args                     = array();
 
 	public function __construct( $args = array() ) {
 

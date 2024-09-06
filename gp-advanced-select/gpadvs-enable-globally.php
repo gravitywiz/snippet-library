@@ -15,6 +15,8 @@
 
 class GPASVS_Enable_Globally {
 
+	private $_args = array();
+
 	public function __construct( $args = array() ) {
 
 		$this->_args = wp_parse_args( $args, array(

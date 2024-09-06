@@ -9,6 +9,9 @@
  *     - Make all parameters optional. Would allow this snippet to apply to any child feed for which a parent feed of the same type was present for any Gravity Flow step.
  */
 class GPNF_GFlow_Delay_Child_Feed {
+
+	private $_args = array();
+
 	public function __construct( $args = array() ) {
 
 		$this->_args = wp_parse_args( $args, array(
