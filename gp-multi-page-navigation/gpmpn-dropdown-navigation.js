@@ -1,5 +1,5 @@
 /**
- * Gravity Perks // Multi-page Navigation // Enable "Back to Last Page" Button for Progress Bar Navigation
+ * Gravity Perks // Multi-page Navigation // Dropdown Navigation
  * https://gravitywiz.com/documentation/gravity-forms-multi-page-navigation/
  *
  * Instruction Video: https://www.loom.com/share/38fcc941036842d6a81a599fd8de39d7
