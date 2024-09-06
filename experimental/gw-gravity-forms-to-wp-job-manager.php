@@ -8,6 +8,7 @@
 class GW_GF_To_WP_Job_Manager {
 
 	var $post_custom_fields;
+	private $_args = array();
 
 	public function __construct( $args = array() ) {
 

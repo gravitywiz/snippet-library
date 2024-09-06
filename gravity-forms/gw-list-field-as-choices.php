@@ -16,6 +16,8 @@
 */
 class GW_List_Field_As_Choices {
 
+	private $_args = array();
+
 	function __construct( $args ) {
 
 		$this->_args = wp_parse_args( $args, array(

@@ -7,6 +7,7 @@
 class GPNF_Map_Child_Entries_To_ACF_Repeater {
 
 	private $args;
+	private $_args = array();	
 
 	public function __construct( $args ) {
 		$this->_args = wp_parse_args( $args, array(

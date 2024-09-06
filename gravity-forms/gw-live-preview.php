@@ -17,6 +17,8 @@ class GWLivePreview {
 	var $post_type    = 'gw_live_preview';
 	var $preview_post = null;
 
+	private $_args = array();
+
 	function __construct( $args = array() ) {
 
 		if ( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=' ) ) {

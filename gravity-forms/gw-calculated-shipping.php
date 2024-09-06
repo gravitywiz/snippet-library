@@ -20,6 +20,7 @@
 class GWCalculatedShipping {
 
 	private $_orig_field = null;
+	private $_args       = array();
 
 	function __construct( $args ) {
 

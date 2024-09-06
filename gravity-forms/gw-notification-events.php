@@ -13,6 +13,8 @@
 */
 class GW_Notification_Event {
 
+	private $_args = array();
+
 	public function __construct( $args ) {
 		$this->_args = wp_parse_args( $args, array(
 			'form_id'     => false,

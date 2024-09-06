@@ -18,6 +18,8 @@
  */
 class GW_Zip_Files {
 
+	private $_args = array();
+
 	public function __construct( $args = array() ) {
 
 		// make sure we're running the required minimum version of Gravity Forms

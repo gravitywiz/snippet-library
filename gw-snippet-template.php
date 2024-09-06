@@ -14,6 +14,8 @@
  */
 class GW_Snippet_Template {
 
+	private $_args = array();
+
 	public function __construct( $args = array() ) {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
@@ -54,6 +56,8 @@ new GW_Snippet_Template();
  * JS-powered Snippets
  */
 class GW_JS_Snippet_Template {
+
+	private $_args = array();
 
 	public function __construct( $args = array() ) {
 
