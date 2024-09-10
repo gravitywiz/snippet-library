@@ -1,5 +1,5 @@
 /**
- * Gravity Perks // File Upload Pro // Customize the “select file” Button Text for a Specific Field
+ * Gravity Perks // File Upload Pro // Customize the “select file” Button Text, "Drop files here" Text, and "or" Text for a Specific Field
  * https://gravitywiz.com/documentation/gravity-forms-file-upload-pro/
  *
  * Instructions:
@@ -13,7 +13,9 @@ window.gform.addFilter( 'gpfup_strings', function( strings, formId, fieldId ) {
 		return strings;
 	}
 
-	strings.select_files = 'Select an image';
+	strings.select_files    = 'Select an image';
+	strings.drop_files_here = 'Drag and drop images';
+	strings.or              = ' OR ';
 
 	return strings;
 } );
