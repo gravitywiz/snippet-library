@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Wiz // Remove URL and Edit Button for Hidden Products
+ * Gravity Wiz // Remove URL and Edit Button for Hidden Products in Cart.
  * https://gravitywiz.com/
  *
  * Plugin Name:  Remove URL & Edit Button for Hidden Products in Cart
@@ -52,7 +52,7 @@ class GW_Hidden_Product_Handler {
 	 * Remove the URL for hidden products in the cart.
 	 *
 	 * @param string $product_name  The product name.
-	 * @param array  $cart_item	 The cart item data.
+	 * @param array  $cart_item     The cart item data.
 	 * @param string $cart_item_key The cart item key.
 	 *
 	 * @return string Modified product name without link for hidden products.
