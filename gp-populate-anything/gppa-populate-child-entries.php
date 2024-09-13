@@ -63,13 +63,33 @@ class GPPA_Populate_Child_Entries {
 		if ( is_callable( 'gravityview_get_context' ) && gravityview_get_context() === 'edit' ) {
 			$value = GravityView_frontend::is_single_entry();
 		} else {
-			$session = new GPNF_Session( $field->formId );
-			$cookie  = $session->get_cookie();
-			$value   = rgar( $cookie, 'hash', '' );
+			$value = $this->get_or_create_session_hash( $field->formId );
 		}
 
 		return $value;
 	}
+
+	private function get_or_create_session_hash( $form_id ) {
+        $session = new GPNF_Session( $form_id );
+        $cookie = $session->get_cookie();
+        $hash = rgar( $cookie, 'hash', '' );
+
+        if ( empty( $hash ) ) {
+            // If no hash exists, create a new session and get the hash
+            $session->set_session_data();
+            $session->set_cookie();
+            $hash = $session->get( 'hash' );
+
+            // If still empty, generate a new hash
+            if ( empty( $hash ) ) {
+                $hash = $session->make_hashcode();
+                $session->_cookie['hash'] = $hash;
+                $session->set_cookie();
+            }
+        }
+
+        return $hash;
+    }
 
 	/**
 	 * GV passes the full parent entry as field values when rendering the entry for editing. Populate Anything honors the
@@ -103,6 +123,10 @@ class GPPA_Populate_Child_Entries {
 		<script type="text/javascript">
 
 			( function( $ ) {
+				if ( !sessionStorage.getItem( 'pageRefreshed' ) ) {
+					sessionStorage.setItem( 'pageRefreshed', 'true' );
+					location.reload();
+				}
 
 				window.GPPAPopulateChildEntries = function( args ) {
 
@@ -118,25 +142,13 @@ class GPPA_Populate_Child_Entries {
 					self.init = function() {
 
 						self.$peidField = $( '#input_{0}_{1}'.gformFormat( self.formId, self.fieldId ) );
-
-						if ( typeof window[ 'gpnfSessionPromise_' + self.formId ] === 'undefined' ) {
-							gform.addAction( 'gpnf_session_initialized', function() {
-								self.setupPeidField();
-							} );
-						} else {
-							self.setupPeidField();
-						}
+						self.setupPeidField();
 
 					};
 
 					self.setupPeidField = function() {
-
-						var gpnfCookie = $.parseJSON( self.getCookie( 'gpnf_form_session_{0}'.gformFormat( self.formId ) ) );
-
 						if ( ! self.$peidField.val() ) {
-							self.$peidField
-								.val( gpnfCookie.hash )
-								.change();
+							self.$peidField.val( self.hash ).change();
 						}
 
 						for ( var i = 0; i < self.nestedFormFieldIds.length; i++ ) {
@@ -144,7 +156,6 @@ class GPPA_Populate_Child_Entries {
 								self.$peidField.data( 'lastValue', '' ).change();
 							} );
 						}
-
 					}
 
 					self.getCookie = function( name ) {
@@ -181,6 +192,7 @@ class GPPA_Populate_Child_Entries {
 			'formId'             => $form['id'],
 			'fieldId'            => $this->get_parent_entry_id_field( $form ),
 			'nestedFormFieldIds' => wp_list_pluck( $this->get_nested_form_fields( $form ), 'id' ),
+			'hash'               => $this->get_or_create_session_hash( $form['id'] ),
 		);
 
 		$script = 'new GPPAPopulateChildEntries( ' . json_encode( $args ) . ' );';
