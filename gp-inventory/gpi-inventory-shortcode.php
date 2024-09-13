@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // Inventory // Shortcode: Inventory // Show Available Inventory by Field
+ * Gravity Perks // Inventory // Inventory Shortcode
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
  *
  * Instruction Video: https://www.loom.com/share/9d1897075b7b435389479d4f17fc6807
