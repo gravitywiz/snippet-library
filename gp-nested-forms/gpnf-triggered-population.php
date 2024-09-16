@@ -42,6 +42,15 @@ class GPNF_Triggered_Population {
 		add_action( 'wp_ajax_gpnf_triggered_population_add_child_entry', array( $this, 'ajax_add_child_entry' ) );
 		add_action( 'wp_ajax_nopriv_gpnf_triggered_population_add_child_entry', array( $this, 'ajax_add_child_entry' ) );
 
+		add_filter( 'gpnf_can_user_edit_entry', array( $this, 'can_user_edit_entry' ), 10, 2 );
+
+	}
+
+	public function can_user_edit_entry( $can_edit, $entry ) {
+		if ( isset( $entry['gpnf_entry_parent'] ) ) {
+			$can_edit = true;
+		}
+		return $can_edit;
 	}
 
 	public function load_form_script( $form, $is_ajax_enabled ) {
