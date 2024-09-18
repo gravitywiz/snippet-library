@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Shop // Product Configurator // Remove URL for Hidden Products in Cart.
+ * Gravity Shop // Product Configurator // Unlink Hidden Products in Cart.
  * https://gravitywiz.com/documentation/gs-product-configurator/
  */
 add_filter( 'woocommerce_cart_item_name', function ( $product_name, $cart_item, $cart_item_key ) {
