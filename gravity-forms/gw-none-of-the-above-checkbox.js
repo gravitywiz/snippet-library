@@ -21,9 +21,10 @@
  */
 $( '.gw-none-of-the-above' ).each( function() {
 
-	var $field  = $( this );
-	var $last   = $field.find( '.gchoice:last-child input' );
-	var $others = $field.find( 'input' ).not( $last );
+	var $disable_nota = false;
+	var $field        = $( this );
+	var $last         = $field.find( '.gchoice:last-child input' );
+	var $others       = $field.find( 'input' ).not( $last );
 
 	// If "None of the Above" choice is checked by default.
 	if ( $last.prop( 'checked' ) ) {
@@ -45,7 +46,7 @@ $( '.gw-none-of-the-above' ).each( function() {
 	} );
 
 	$others.on( 'click', function() {
-		if ( $others.filter( ':checked' ).length ) {
+		if ( $others.filter( ':checked' ).length && $disable_nota ) {
 			$last.prop( 'disabled', true );
 		} else {
 			$last.prop( 'disabled', false );
