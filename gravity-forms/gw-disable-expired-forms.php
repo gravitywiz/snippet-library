@@ -9,7 +9,7 @@ add_action( 'init', function() {
 	$threshold = 1;
 
 	$forms = GFAPI::get_forms();
-	foreach( $forms as $form ) {
+	foreach ( $forms as $form ) {
 		$schedule_end = rgar( $form, 'scheduleEnd' );
 		if ( ! $schedule_end ) {
 			continue;
