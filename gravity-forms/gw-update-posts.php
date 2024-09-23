@@ -1,6 +1,7 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Update Posts
+ * https://gravitywiz.com/how-to-update-posts-with-gravity-forms/
  *
  * Update existing post title, content, author and custom fields with values from Gravity Forms.
  *
