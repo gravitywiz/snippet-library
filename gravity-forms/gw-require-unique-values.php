@@ -88,7 +88,7 @@ class GW_Require_Unique_Values {
 				$is_unique = true;
 
 				foreach ( $field->inputs as $input ) {
-					$input_id = $input['id'];
+					$input_id    = $input['id'];
 					$input_value = rgars( $value, $input_id );
 
 					if ( empty( $input_value ) ) {
@@ -101,7 +101,7 @@ class GW_Require_Unique_Values {
 					}
 
 					$input_hash = $this->get_value_hash( array( $input_value ) );
-					$is_unique = ! in_array( $input_hash, $values );
+					$is_unique  = ! in_array( $input_hash, $values );
 					if ( ! $is_unique ) {
 						break;
 					}
