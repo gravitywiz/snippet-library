@@ -18,7 +18,7 @@ add_filter( 'gform_field_validation', function ( $result, $value, $form, $field 
 
 	if ( strpos( $value, '.' ) !== false ) {
 		$result['is_valid'] = false;
-		$result['message'] = 'Please enter a valid value.';
+		$result['message']  = 'Please enter a valid value.';
 	}
 
 	return $result;

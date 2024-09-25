@@ -12,7 +12,7 @@ class GPNF_Map_Child_Entries_To_ACF_Repeater {
 	public function __construct( $args ) {
 		$this->_args = wp_parse_args( $args, array(
 			'form_id'                 => false,
-			'nested_form_field_id'   => false,
+			'nested_form_field_id'    => false,
 			'field_map'               => array(),
 			'acf_repeater_field_name' => false,
 		) );
@@ -42,9 +42,9 @@ class GPNF_Map_Child_Entries_To_ACF_Repeater {
 			update_field( $this->_args['acf_repeater_field_name'], $repeat_value, $post_id );
 		}
 	}
- }
+}
 
- new GPNF_Map_Child_Entries_To_ACF_Repeater( array(
+new GPNF_Map_Child_Entries_To_ACF_Repeater( array(
 	'form_id'                  => 7, // Set this to the parent form ID
 	'nested_form_field_id'     => 18, // Update to the ID of the Nested Form field.
 	'field_map'                => array(
@@ -52,5 +52,5 @@ class GPNF_Map_Child_Entries_To_ACF_Repeater {
 		'role_comedien'        => 3,
 	), // The field map contains "field_name" => "child_entry_field_id" pairs. The field name is the name of the fields in
 	// the ACF Repeater field. The child entry field ID is the field ID from the child form.
-	'acf_repeater_field_name'  => 'comediens', // Update o the field name of the ACF repeater field.
+	'acf_repeater_field_name'  => 'comediens', // Update to the field name of the ACF repeater field.
 ) );
