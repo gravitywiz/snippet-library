@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Wiz // Gravity Perks // GP Limit Dates // Conditional Limits
+ * Gravity Perks // Limit Dates // Conditional Limits
  * https://gravitywiz.com/documentation/gravity-forms-limit-dates/
  *
  * Provide conditional date options for your date fields.
