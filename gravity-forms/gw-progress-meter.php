@@ -100,7 +100,8 @@ class GW_Progress_Meter {
 					'join'   => '',
 					'where'  => $wpdb->prepare( "
 						WHERE e.form_id = %d
-						AND e.status = 'active'\n",
+						AND e.status = 'active'
+						AND e.payment_status = 'Paid'\n",
 						$atts['id']
 					),
 				);
