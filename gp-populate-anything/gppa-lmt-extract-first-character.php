@@ -8,5 +8,5 @@
  */
 // Update "123" to your form ID; and "4" to the field ID you are copying from.
 add_filter( 'gppa_live_merge_tag_value_123_4', function( $value ) {
-  return substr( $value, 0, 1 );
+	return substr( $value, 0, 1 );
 } );
