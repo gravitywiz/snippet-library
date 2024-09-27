@@ -14,7 +14,7 @@
 gform.addAction( 'gpfup_uploader_ready', function( gpfup ) {
 	gpfup.Uploader.bind( 'PostInit', function() {
 		$( gpfup.$field ).find( 'input[type="file"]' )
-			.attr( 'capture', 'camera' )
+			.attr( 'capture', 'camera' ) // Update to "user" to encourage use of front camera.
 			.attr( 'accept', 'image/*' );
 	}, gpfup );
 } );
