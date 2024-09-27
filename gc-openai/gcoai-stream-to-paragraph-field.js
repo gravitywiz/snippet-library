@@ -15,21 +15,38 @@
  * 
  * 2. Update the variables to match your own field IDs.
  */
-var streamFieldId = 1;
-var promptFieldId = 2;
-var responseFieldId = 3;
+var streamFieldId = 3;
+var promptFieldId = 1;
+var responseFieldId = 4;
+var appendButtonFieldId = responseFieldId;
 
 var $streamFieldInput = $( `#input_GFFORMID_${streamFieldId}` );
 var $streamButton     = $streamFieldInput.parents( '.gfield' ).find( '.gcoai-trigger' );
 
 $streamFieldInput.on( 'change', function() {
-    $( `#input_GFFORMID_${responseFieldId}` ).val( this.value );
+	$input = $( `#input_GFFORMID_${responseFieldId}` );
+	$input.val( this.value );
+	if (window.tinyMCE) {
+		var tiny = tinyMCE.get( $input.attr( 'id' ) );
+		if (tiny) {
+			tiny.setContent( this.value );
+		}
+	}
 } );
 
-$streamButton
+let $newButton = $streamButton
 	.clone()
 	.attr( 'style', 'margin-top: var(--gf-label-space-primary, 8px);' )
 	.on( 'click', function() {
-		$streamButton.trigger( 'click' )
+		$streamButton.trigger( 'click' );
 	} )
-	.insertAfter( $( `#input_GFFORMID_${promptFieldId}` ) )
+	.insertAfter( $( `#input_GFFORMID_${appendButtonFieldId}` ) );
+
+$wpEditor = $newButton.parents( '.wp-editor-container' );
+if ( $wpEditor.length ) {
+	$newButton.insertAfter( $wpEditor );
+}
+
+$( `#input_GFFORMID_${promptFieldId}` ).on( 'blur', function() {
+	$streamButton.trigger( 'click' );
+} );
