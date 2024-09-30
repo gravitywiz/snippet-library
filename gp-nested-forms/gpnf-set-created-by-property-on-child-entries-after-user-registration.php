@@ -10,8 +10,8 @@
  *   1. Install per https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  *   2. Configure the snippet based on inline instructions.
  */
-add_action( 'gform_user_registered', 'add_custom_user_meta', 10, 4 );
-function add_custom_user_meta( $user_id, $feed, $entry, $user_pass ) {
+add_action( 'gform_user_registered', 'add_created_by_property', 10, 4 );
+function add_created_by_property( $user_id, $feed, $entry, $user_pass ) {
     // Update '123' with the Id of the form.
     if ( $entry['form_id'] !== '123' ){
         return;
