@@ -25,6 +25,16 @@ add_filter( 'gform_entry_post_save', function( $entry, $form ) {
 	$filter_priority = rand( 100000, 999999 );
 	add_filter( 'gform_is_feed_asynchronous', '__return_false', $filter_priority );
 
+	add_filter( 'gform_addon_pre_process_feeds', function( $feeds, $entry, $form ) {
+		// Array of feed ids to exclude
+		$excluded_feed_ids = array( 103, 104 );
+		$feeds             = array_filter( $feeds, function( $feed ) use ( $excluded_feed_ids ) {
+			return ! in_array( $feed['id'], $excluded_feed_ids );
+		} );
+
+		return $feeds;
+	}, 10, 3 );
+
 	$addons = \GFAddon::get_registered_addons();
 
 	foreach ( $addons as $addon ) {
@@ -38,4 +48,3 @@ add_filter( 'gform_entry_post_save', function( $entry, $form ) {
 
 	return $entry;
 }, 10, 2 );
-
