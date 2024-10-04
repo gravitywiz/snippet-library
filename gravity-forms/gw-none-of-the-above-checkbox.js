@@ -21,7 +21,7 @@
  */
 $( '.gw-none-of-the-above' ).each( function() {
 
-	var disable_nota = false;
+	var disableNota = false;
 	var $field       = $( this );
 	var $last        = $field.find( '.gchoice:last-child input' );
 	var $others      = $field.find( 'input' ).not( $last );
@@ -46,7 +46,7 @@ $( '.gw-none-of-the-above' ).each( function() {
 	} );
 
 	$others.on( 'click', function() {
-		if ( $others.filter( ':checked' ).length && disable_nota ) {
+		if ( $others.filter( ':checked' ).length && disableNota ) {
 			$last.prop( 'disabled', true );
 		} else {
 			$last.prop( 'disabled', false );
