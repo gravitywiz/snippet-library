@@ -12,7 +12,7 @@
  */
 class GW_Update_Posts {
 
-	protected $_args;
+	protected $_args = array();
 
 	public function __construct( $args = array() ) {
 
