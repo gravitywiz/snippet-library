@@ -1,7 +1,7 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Time Sensitive Choices
- * https://gravitywiz.com/
+ * https://gravitywiz.com/time-sensitive-choices-with-gravity-forms/
  *
  * Manually specify available time slots as choices and this snippet will automatically disable choices that are before
  * the current time. Link this with a Date field to only filter by time when the current date is selected.
