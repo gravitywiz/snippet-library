@@ -95,9 +95,14 @@ class GPNF_Override_Parent_Merge_Tags {
 				}
 
 				foreach ( $inputs as $input ) {
-					$default_value = ( $child_field->type != 'time' ) 
-						? rgar( $input, 'defaultValue' ) 
-						: preg_replace('/(\d+)\.\d+/', '$1', rgar( $child_field['inputs'][0], 'defaultValue' ) );
+					switch ( $child_field->type ) {
+						case 'time':
+							$default_value = preg_replace( '/(\d+)\.\d+/', '$1', rgar( $child_field['inputs'][0], 'defaultValue' ) );
+							break;
+						default:
+							$default_value = rgar( $input, 'defaultValue' );
+							break;
+					}
 
 					$this->override_child_entry_input_value( $entry, $field, $child_form, $input['id'], $default_value );
 				}
