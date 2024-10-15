@@ -15,6 +15,10 @@
 add_action( 'wp_ajax_gpnf_session', 'gw_gpnf_disable_session', 9 );
 add_action( 'wp_ajax_nopriv_gpnf_session', 'gw_gpnf_disable_session', 9 );
 function gw_gpnf_disable_session() {
+	// Store request
+	$request = $_REQUEST['request'] ?: array();
+	$form_id = $_REQUEST['form_id'];
+	setcookie( "{$form_id}-request", json_encode( $request ), 0, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 
 	remove_action( 'wp_ajax_gpnf_session', array( gp_nested_forms(), 'ajax_session' ) );
 	remove_action( 'wp_ajax_nopriv_gpnf_session', array( gp_nested_forms(), 'ajax_session' ) );
@@ -23,7 +27,23 @@ function gw_gpnf_disable_session() {
 	// and as a security precaution to prevent malicious users from creating artificial session cookies.
 	$session = new GPNF_Session( rgpost( 'form_id' ) );
 	$session->delete_cookie();
+}
 
+// Retrieve the stored request and populate field value.
+add_action( 'wp_ajax_gpnf_refresh_markup', 'populate_field_from_request' );
+add_action( 'wp_ajax_nopriv_gpnf_refresh_markup', 'populate_field_from_request' );
+function populate_field_from_request() {
+	$form_id = $_REQUEST['gpnf_parent_form_id'];
+	$request = json_decode( stripslashes( $_COOKIE[ "{$form_id}-request" ] ), true );
+
+	add_filter( 'gform_field_value', function( $value, $field, $name ) use ( $request ) {
+		$_value = rgar( $request, $name );
+		if ( $_value ) {
+			$value = $_value;
+		}
+
+		return $value;
+	}, 10, 3 );
 }
 
 add_filter( 'gpnf_can_user_edit_entry', function( $can_user_edit_entry, $entry, $current_user ) {
