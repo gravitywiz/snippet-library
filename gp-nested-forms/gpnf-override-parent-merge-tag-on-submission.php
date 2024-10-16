@@ -156,7 +156,8 @@ class GPNF_Override_Parent_Merge_Tags {
 				$formula = apply_filters( 'gform_calculation_formula', $formula, $form, $field, $entry );
 
 				// Process/Calculate the formula
-				$parsed_formula   = GFCommon::replace_variables( $formula, $form, $entry, false, false, false, 'text' );
+				$parsed_formula = GFCommon::replace_variables( $formula, $form, $entry, false, false, false, 'text' );
+				// phpcs:ignore Squiz.PHP.Eval.Discouraged
 				$calculated_value = eval( 'return ' . $parsed_formula . ';' );
 
 				// Update the entry with the recalculated value
