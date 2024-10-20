@@ -63,6 +63,9 @@ class GPI_Waiting_List {
 		add_filter( 'gform_field_input', array( $this, 'remove_gform_field_input_filters' ), 15, 2 );
 
 		add_filter( 'gform_pre_render', array( $this, 'add_waiting_list_to_single_product' ) );
+
+		// Allow negative stock to be used for conditional logic validation.
+		add_filter( 'gpi_allow_negative_stock', array( $this, 'allow_negative_stock_for_conditional_logic' ), 10, 3 );
 	}
 
 	public function is_applicable_form( $form ) {
@@ -257,6 +260,14 @@ class GPI_Waiting_List {
 		}
 
 		return $form;
+	}
+
+	public function allow_negative_stock_for_conditional_logic( $allow_negative_stock, $target_field, $form ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $allow_negative_stock;
+		}
+
+		return true;
 	}
 
 }
