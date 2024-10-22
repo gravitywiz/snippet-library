@@ -5,10 +5,11 @@
  *
  * Getting started:
  *
- * 1 - Copy and paste this code into your theme's functions.php file.
- * 2 - Add a Single Line Text field (or any field you would like to populate with a unique ID) to your form.
- * 3 - Enable the "Allow field to be populated dynamically" setting under the Advanced tab on the field settings for the newly created field.
- * 4 - Set "uid" as the value for the Paramater Name setting (screenshot: https://gwiz.io/2HhtBTa).
+ * Instructions:
+ * 1. Copy and paste this code into your theme's functions.php file.
+ * 2. Add a Single Line Text field (or any field you would like to populate with a unique ID) to your form.
+ * 3. Enable the "Allow field to be populated dynamically" setting under the Advanced tab on the field settings for the newly created field.
+ * 4. Set "uid" as the value for the Paramater Name setting (screenshot: https://gwiz.io/2HhtBTa).
  */
 add_filter( 'gform_field_value_uid', function( $value, $field ) {
 
