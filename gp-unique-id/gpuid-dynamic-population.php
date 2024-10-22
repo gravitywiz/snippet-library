@@ -3,8 +3,6 @@
  * GP Unique ID // Gravity Perks // Populate Unique ID via Dynamic Population
  * https://gravitywiz.com/documetnation/gravity-forms-unique-id/
  *
- * Getting started:
- *
  * Instructions:
  * 1. Copy and paste this code into your theme's functions.php file.
  * 2. Add a Single Line Text field (or any field you would like to populate with a unique ID) to your form.
