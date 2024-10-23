@@ -71,6 +71,8 @@ class GW_Time_Sensitive_Choices {
 
 					var self = this;
 
+					self.intialized = false;
+
 					for( var prop in args ) {
 						if( args.hasOwnProperty( prop ) ) {
 							self[ prop ] = args[ prop ];
@@ -85,10 +87,12 @@ class GW_Time_Sensitive_Choices {
 							self.bindEvents();
 							setTimeout( function() {
 								self.initializeChoices();
+								self.initialized = true;
 							} );
 						} else {
 							self.bindEvents();
 							self.initializeChoices();
+							self.initialized = true;
 						}
 
 					};
@@ -111,7 +115,16 @@ class GW_Time_Sensitive_Choices {
 
 						if ( self.$date.length ) {
 							self.$date.on( 'change', function() {
-								self.evaluateChoices();
+								/**
+								 * Inline datepickers trigger an early change event when they set the default date. This
+								 * triggers EvaluateChoices to run prematurely, disabling choices based on the selected
+								 * date. This leads InitializeChoices to assume these disabled choices were set on page
+								 * load and marks them as permanently disabled. To prevent this, InitializeChoices must
+								 * always run before EvaluateChoices.
+								 */
+								if ( self.initialized ) {
+									self.evaluateChoices();
+								}
 							} );
 						}
 
@@ -124,7 +137,7 @@ class GW_Time_Sensitive_Choices {
 						var currentTime = self.getCurrentServerTime();
 
 						if ( self.dateFieldId ) {
-							var selectedDate = self.$date.datepicker( 'getDate' );
+							var selectedDate = self.getSelectedDate();
 							if ( selectedDate !== null ) {
 								var currentDate = self.getCurrentServerTime();
 								currentDate.setHours(0, 0, 0, 0);
@@ -211,7 +224,11 @@ class GW_Time_Sensitive_Choices {
 					}
 
 					self.getSelectedDate = function() {
-						return self.$date.datepicker( 'getDate' );
+						let $datepicker = self.$date;
+						if ( $datepicker.hasClass( 'has-inline-datepicker' ) ) {
+							$datepicker = $( '#datepicker_{0}_{1}'.gformFormat( self.formId, self.dateFieldId ) );
+						}
+						return $datepicker.datepicker( 'getDate' );
 					}
 
 					/**
