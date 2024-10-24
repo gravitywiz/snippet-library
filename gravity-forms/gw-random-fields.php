@@ -21,7 +21,8 @@ class GFRandomFields {
 
 	public $all_random_field_ids;
 	public $display_count;
-	public $selected_field_ids = array();
+	public $selected_field_ids  = array();
+	public $multipage_field_ids = array();
 	public $preserve_order;
 
 	public function __construct( $form_id, $display_count = 5, $random_field_ids = false, $preserve_order = false ) {
@@ -59,7 +60,17 @@ class GFRandomFields {
 		$hash  = $this->get_selected_field_ids_hash( $form );
 		$value = implode( ',', $this->get_selected_field_ids( false, $form ) );
 		$input = sprintf( '<input type="hidden" value="%s" name="gfrf_field_ids_%s">', $value, $hash );
-		return $form_tag . $input;
+
+		$form_tag .= $input;
+
+		$field_ids = $this->get_multipage_field_ids( false, $form );
+		if ( $field_ids ) {
+			// Necessary for subsequent navigations across pages.
+			$input     = sprintf( '<input type="hidden" value="%s" name="gfrf_multipage_field_ids_%s">', implode( ',', $field_ids ), $hash );
+			$form_tag .= $input;
+		}
+
+		return $form_tag;
 	}
 
 	public function validate( $validation_result ) {
@@ -95,23 +106,54 @@ class GFRandomFields {
 		}
 
 		if ( ! $this->preserve_order ) {
+			$has_pages = GFCommon::has_pages( $form );
+			$hash      = $this->get_selected_field_ids_hash( $form );
+			$field_ids = $this->get_multipage_field_ids( false, $form );
 
-			$reordered_fields = array();
-			$random_index_key = $random_indexes;
+			if ( $has_pages && $field_ids ) {
+				// Multipage forms should be shuffled once only,
+				// else fields may re-appear in subsequent pages.
+				$filtered_fields = array_map( function( $id ) use ( $form ) {
 
-			shuffle( $random_indexes );
+					foreach ( $form['fields'] as $field ) {
+						if ( (int) $id === (int) $field['id'] ) {
+							return $field;
+						}
+					}
 
-			foreach ( $filtered_fields as $index => $field ) {
-				if ( in_array( $index, $random_index_key, true ) ) {
-					$random_index       = array_pop( $random_indexes );
-					$reordered_fields[] = $filtered_fields[ $random_index ];
-				} else {
-					$reordered_fields[] = $filtered_fields[ $index ];
+					return '';
+				}, $field_ids );
+
+				// Remove empties if any.
+				$filtered_fields = array_filter( $filtered_fields );
+			} else {
+				$reordered_fields = array();
+				$random_index_key = $random_indexes;
+
+				shuffle( $random_indexes );
+
+				foreach ( $filtered_fields as $index => $field ) {
+					if ( in_array( $index, $random_index_key, true ) ) {
+						$random_index       = array_pop( $random_indexes );
+						$reordered_fields[] = $filtered_fields[ $random_index ];
+					} else {
+						$reordered_fields[] = $filtered_fields[ $index ];
+					}
+				}
+
+				$filtered_fields = $reordered_fields;
+
+				// The rgpost check is just to ensure we don't add it 2ce.
+				if ( $has_pages && ! rgpost( "gfrf_multipage_field_ids_{$hash}" ) ) {
+					add_filter( "gform_form_tag_{$form['id']}", function ( $form_tag, $form ) use ( $filtered_fields ) {
+						$hash  = $this->get_selected_field_ids_hash( $form );
+						$value = implode( ',', wp_list_pluck( $filtered_fields, 'id' ) );
+						$input = sprintf( '<input type="hidden" value="%s" name="gfrf_multipage_field_ids_%s">', $value, $hash );
+
+						return $form_tag . $input;
+					}, 10, 2 );
 				}
 			}
-
-			$filtered_fields = $reordered_fields;
-
 		}
 
 		$form['fields'] = $filtered_fields;
@@ -176,7 +218,44 @@ class GFRandomFields {
 		if ( (int) $form['id'] === (int) $this->_form_id ) {
 			$hash = $this->get_selected_field_ids_hash( $form );
 			gform_add_meta( $entry['id'], "_gfrf_field_ids_{$hash}", $this->get_selected_field_ids( false, $form ) );
+
+			if ( GFCommon::has_pages( $form ) ) {
+				gform_add_meta( $entry['id'], "_gfrf_multipage_field_ids_{$hash}", $this->get_multipage_field_ids( false, $form ) );
+			}
 		}
+	}
+
+	public function get_multipage_field_ids( $entry_id = false, $form = array() ) {
+
+		if ( $form && ! GFCommon::has_pages( $form ) ) {
+			return array();
+		}
+
+		// check if class has already init fields
+		if ( ! empty( $this->multipage_field_ids ) ) {
+			return $this->multipage_field_ids;
+		}
+
+		$hash = $this->get_selected_field_ids_hash( $form );
+
+		// If entry ID is passed, retrieve multipage fields IDs from entry meta.
+		if ( $entry_id ) {
+			$field_ids = gform_get_meta( $entry_id, "_gfrf_multipage_field_ids_{$hash}" );
+
+			return is_array( $field_ids ) ? $field_ids : array();
+		}
+
+		// Check if fields have been submitted.
+		$field_ids = rgpost( "gfrf_multipage_field_ids_{$hash}" );
+		if ( ! empty( $field_ids ) ) {
+			return explode( ',', $field_ids );
+		}
+
+		$field_ids = array();
+
+		$this->multipage_field_ids = $field_ids;
+
+		return $field_ids;
 	}
 
 	/**
