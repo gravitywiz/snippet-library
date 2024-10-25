@@ -27,8 +27,14 @@ function gw_capitalize_submitted_data( $form ) {
 				$_POST[ $input_key ] = ucwords( strtolower( rgpost( $input_key ) ) );
 			}
 		} else {
-			$input_key           = sprintf( 'input_%s', $field['id'] );
-			$_POST[ $input_key ] = ucwords( strtolower( rgpost( $input_key ) ) );
+			$input_key = sprintf( 'input_%s', $field['id'] );
+			if ( is_array( $_POST[ $input_key ] ) ) {
+				$_POST[ $input_key ] = array_map( function( $value ) {
+					return ucwords( strtolower( $value ) );
+				}, $_POST[ $input_key ] );
+			} else {
+				$_POST[ $input_key ] = ucwords( strtolower( rgpost( $input_key ) ) );
+			}
 		}
 	}
 
