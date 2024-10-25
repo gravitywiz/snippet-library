@@ -5,14 +5,14 @@
  * Stream OpenAI responses from the OpenAI Stream field to a Paragraph (or Single Line Text)
  * field instead. Useful when wanting to provide a starting point for users while allowing them
  * to edit the final result.
- * 
+ *
  * Instruction Video: https://www.loom.com/share/f793319da7e449a8b01e5a8c077e24c7
  *
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
  *    https://gravitywiz.com/gravity-forms-custom-javascript/
- * 
+ *
  * 2. Update the variables to match your own field IDs.
  */
 var streamFieldId = 3;
@@ -21,18 +21,26 @@ var responseFieldId = 4;
 var appendButtonFieldId = responseFieldId;
 
 var $streamFieldInput = $( `#input_GFFORMID_${streamFieldId}` );
-var $streamButton     = $streamFieldInput.parents( '.gfield' ).find( '.gcoai-trigger' );
+var $streamButton     = $streamFieldInput.closest( '.gfield' ).find( '.gcoai-trigger' );
 
 $streamFieldInput.on( 'change', function() {
 	$input = $( `#input_GFFORMID_${responseFieldId}` );
-	$input.val( this.value );
+	var inputValue = this.value;
+
+	// Get HTML from response field if TinyMCE is available.
 	if (window.tinyMCE) {
+		var html = $streamFieldInput.closest( '.gfield' ).find('.gcoai-output').html();
+
+		// Set HTML content in TinyMCE.
 		var tiny = tinyMCE.get( $input.attr( 'id' ) );
 		if (tiny) {
-			tiny.setContent( this.value );
+			tiny.setContent( html );
 		}
+	} else {
+		// If TinyMCE is not available, use plain text.
+		$input.val( inputValue );
 	}
-} );
+});
 
 let $newButton = $streamButton
 	.clone()
@@ -50,3 +58,12 @@ if ( $wpEditor.length ) {
 $( `#input_GFFORMID_${promptFieldId}` ).on( 'blur', function() {
 	$streamButton.trigger( 'click' );
 } );
+
+$wpEditor = $newButton.parents('.wp-editor-container');
+if ($wpEditor.length) {
+	$newButton.insertAfter($wpEditor);
+}
+
+$( `#input_GFFORMID_${promptFieldId}` ).on('blur', function() {
+	$streamButton.trigger('click');
+});
