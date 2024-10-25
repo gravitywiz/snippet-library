@@ -1,4 +1,8 @@
 /**
+ * WARNING! THIS SNIPPET IS DEPRECATED. 🚧
+ * Padding is automatically handled in Advanced Phone Field v1.1+.
+ */
+/**
  * Gravity Perks // Advanced Phone Field // Preserve Input's Default Padding
  * https://gravitywiz.com/documentation/gravity-forms-advanced-phone-field/
  *
