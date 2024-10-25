@@ -11,7 +11,7 @@
 add_action( 'gform_pre_submission_123', 'gw_capitalize_submitted_data' );
 function gw_capitalize_submitted_data( $form ) {
 
-	$applicable_input_types = array( 'address', 'text', 'textarea', 'name' );
+	$applicable_input_types = array( 'address', 'text', 'textarea', 'name', 'list' );
 
 	foreach ( $form['fields'] as $field ) {
 
