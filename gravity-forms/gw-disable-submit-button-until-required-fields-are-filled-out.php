@@ -32,14 +32,15 @@ class GW_Disable_Submit {
 		}
 
 		if ( ! self::$script_output ) {
-			$this->script();
+			add_action( 'wp_footer', array( $this, 'output_script' ) );
+			add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
 			self::$script_output = true;
 		}
 
 		return $form;
 	}
 
-	public function script() {
+	public function output_script() {
 		?>
 
 		<script type="text/javascript">
@@ -81,6 +82,15 @@ class GW_Disable_Submit {
 						// Check if field becomes empty on deleting file(s)
 						$(document).on( 'click', '.gform_delete_file', function() {
 							self.runCheck();
+						});
+
+						// Check when fields are repopulated because of GPPA
+						$(document).on( 'gppa_updated_batch_fields', function() {
+							self.runCheck();
+						});
+						// GPPA logic may enable submit button, disable that logic.
+						gform.addFilter( 'gppa_disable_form_navigation_toggling', function() { 
+							return true; 
 						});
 
 						self.runCheck();
