@@ -3,6 +3,8 @@
  * Gravity Perks // Inventory // Dynamic Scopes for Combo Inventories
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
  *
+ * Instruction Video: https://www.loom.com/share/5e43a48fded04182859569a5b5874422
+ *
  * Imagine a form with two Drop Down fields with available time slots. One Time Slot field is for a Standard package.
  * This field has inventory enabled and is scoped to a Date field and a Room field (a Drop Down field with available
  * rooms). If a Standard package is selected, a Room must also be selected.
