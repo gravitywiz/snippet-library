@@ -28,7 +28,7 @@ function gw_capitalize_submitted_data( $form ) {
 			}
 		} else {
 			$input_key = sprintf( 'input_%s', $field['id'] );
-			if ( is_array( $_POST[ $input_key ] ) ) {
+			if ( $field->type == 'list' ) {
 				$_POST[ $input_key ] = array_map( function( $value ) {
 					return ucwords( strtolower( $value ) );
 				}, $_POST[ $input_key ] );
