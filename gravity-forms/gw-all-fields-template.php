@@ -60,7 +60,7 @@
  *    `{all_fields:exclude[5]}`
  *    `{all_fields:exclude[5,6]}`
  *    `{all_fields:exclude[5],include[3,4]}`
- * 
+ *
  * - **`:updated`**
  *
  *    Only show fields that were most recently updated.
@@ -71,7 +71,7 @@
 class GW_All_Fields_Template {
 
 	private static $instance = null;
-	private $original_entry = array();
+	private $original_entry  = array();
 
 	public static function get_instance() {
 		if ( self::$instance == null ) {
