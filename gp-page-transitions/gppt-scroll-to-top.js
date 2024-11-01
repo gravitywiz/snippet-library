@@ -2,8 +2,8 @@
  * Gravity Perks // Page Transitions // Scroll to top of page instead of top of form
  * https://gravitywiz.com/documentation/gravity-forms-page-transitions/
  *
- * If using Gravity Forms Custom Javascript, you will also need to install
- * the follow snippet: https://github.com/gravitywiz/snippet-library/blob/master/experimental/gfjs-early-init-scripts.php
+ * 1. Install this snippet with our free Code Chest plugin.
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  */
 gform.addFilter('gppt_swiper_options', function (options) {
     options.on.slideChange = function () {
