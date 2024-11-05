@@ -1,7 +1,6 @@
 <?php
 /**
- * Gravity Perks // Limit Submissions // Enable `WPML String Translate` for Custom Insufficient,
- * Exhausted and Available Inventory Messages.
+ * Gravity Perks // Inventory // WPML Support for Custom Inventory Messages
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
  */
 add_filter( 'gform_pre_render', function( $form ) {
