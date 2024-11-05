@@ -9,7 +9,7 @@
  * Plugin URI:  https://gravitywiz.com/cache-busting-with-gravity-forms/
  * Description: Bypass your website cache when loading a Gravity Forms form.
  * Author:      Gravity Wiz
- * Version:     0.6
+ * Version:     0.6.1
  * Author URI:  https://gravitywiz.com
  */
 class GW_Cache_Buster {
@@ -48,12 +48,44 @@ class GW_Cache_Buster {
 		add_action( 'wp_ajax_gfcb_get_form', array( $this, 'ajax_get_form' ) );
 	}
 
+	/**
+	 * Duplicate method due to GFFormDisplay::set_form_styles() being private.
+	 *
+	 * Applies the form styles and form theme to the form object so that the proper style block is rendered to the page.
+	 *
+	 * @param mixed       $form           The form object.
+	 * @param string|null $style_settings Style settings for the form. This will either come from the shortcode or from the block editor settings.
+	 * @param string|null $form_theme     The theme selected for the form. This will either come from the shortcode or from the block editor settings.
+
+	 * @return array Returns the form object with the 'styles' and 'theme' properties set.
+	 */
+	public function set_form_styles( $form, $style_settings, $form_theme ) {
+		if ( $style_settings === false ) {
+			// Form styles specifically set to false disables inline form css styles.
+			$form_styles = false;
+		} else {
+			$form_styles = !empty( $style_settings ) ? json_decode( $style_settings, true ) : array();
+		}
+
+		// Removing theme from styles for consistency. $form['theme'] should be used instead.
+		if ( $form_styles ) {
+			unset( $form_styles['theme'] );
+		}
+		$form['styles'] = GFFormDisplay::get_form_styles( $form_styles );
+		$form['theme'] = ! empty( $form_theme ) ? $form_theme : GFForms::get_default_theme();
+		return $form;
+	}
+
 	public function shortcode( $markup, $attributes, $content ) {
 
 		$atts = shortcode_atts(
 			array(
 				'id'          => 0,
 				'cachebuster' => false,
+
+				// Attributes needed for theme/styles.
+				'theme'        => method_exists( 'GFForms', 'get_default_theme' ) ? GFForms::get_default_theme() : '',
+				'styles'       => '',
 			),
 			$attributes
 		);
@@ -142,10 +174,19 @@ class GW_Cache_Buster {
 		$exclude_params = array( 'action', 'form_id', 'atts' );
 		$ajax_url       = remove_query_arg( $exclude_params, add_query_arg( $_GET, admin_url( 'admin-ajax.php' ) ) );
 
+		// Get the form theme.
+		if ( method_exists( 'GFFormDisplay', 'get_form_theme_slug' ) ) {
+			$form = $this->set_form_styles( GFAPI::get_form( $form_id ), rgar( $atts, 'styles' ), rgar( $atts, 'theme' ) );
+			$form_theme = GFFormDisplay::get_form_theme_slug( $form );
+		} else {
+			$form_theme = null;
+		}
+
 		// Still needed for the AJAX submission.
 		$ajax_params = array(
 			'action'  => 'gfcb_get_form',
 			'form_id' => $form_id,
+			'form_theme' => $form_theme,
 		);
 
 		// Ensure AJAX parameters for GPNF are also correctly populated.
@@ -255,6 +296,10 @@ class GW_Cache_Buster {
 		add_filter( 'gform_init_scripts_footer', '__return_true', 987 );
 		add_filter( 'gform_form_tag_' . $form_id, array( $this, 'add_hidden_inputs' ), 10, 2 );
 		add_filter( 'gform_pre_render_' . $form_id, array( $this, 'replace_embed_tag_for_field_default_values' ) );
+
+		add_filter( 'gform_form_theme_slug', function( $slug, $form ) {
+			return rgar( $_REQUEST, 'form_theme' ) ?: $slug;
+		}, 10, 2 );
 
 		$atts = rgpost( 'atts' );
 
