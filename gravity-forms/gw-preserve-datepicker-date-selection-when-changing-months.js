@@ -18,21 +18,9 @@ gform.addFilter( 'gform_datepicker_options_pre_init', function( optionsObj, form
 		var selectedDate = $(this).datepicker('getDate');
 		var day = selectedDate ? selectedDate.getDate() : 1;
 
-		// Helper function to check if the given year is a leap year
-		const isLeapYear = year => new Date(year, 1, 29).getMonth() === 1;
-
-		// Determine the maximum days for the selected month
-		let maxDay;
-		if (month === 2) {
-			// February
-			maxDay = isLeapYear(year) ? 29 : 28;
-		} else if ([4, 6, 9, 11].includes(month)) {
-			// April, June, September, November
-			maxDay = 30;
-		} else {
-			// All other months
-			maxDay = 31;
-		}
+		// Create a date with the first of the selected month and year
+		var newDate = new Date(year, month, 0); // Last day of the previous month (i.e., correct for leap years)
+		var maxDay = newDate.getDate();
 
 		// Adjust the day if it exceeds the maximum days in the selected month
 		day = Math.min(day, maxDay);
