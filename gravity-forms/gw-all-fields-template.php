@@ -8,7 +8,7 @@
  * Plugin URI:   https://gravitywiz.com/gravity-forms-all-fields-template/
  * Description:  Modify the {all_fields} merge tag output via a template file.
  * Author:       Gravity Wiz
- * Version:      0.10
+ * Version:      0.11
  * Author URI:   http://gravitywiz.com
  *
  * Usage:
@@ -61,10 +61,17 @@
  *    `{all_fields:exclude[5,6]}`
  *    `{all_fields:exclude[5],include[3,4]}`
  *
+ * - **`:updated`**
+ *
+ *    Only show fields that were most recently updated.
+ *
+ *    `{all_fields:updated}`
+ *
  */
 class GW_All_Fields_Template {
 
 	private static $instance = null;
+	private $original_entry  = array();
 
 	public static function get_instance() {
 		if ( self::$instance == null ) {
@@ -83,7 +90,7 @@ class GW_All_Fields_Template {
 
 		add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_merge_tags' ), 9, 7 );
 		add_filter( 'gform_merge_tag_filter', array( $this, 'all_fields_extra_options' ), 21, 6 );
-
+		add_action( 'gform_post_update_entry', array( $this, 'save_original_entry' ), 10, 2 );
 	}
 
 	/**
@@ -111,7 +118,7 @@ class GW_All_Fields_Template {
 		}
 
 		$modifiers = $this->parse_modifiers( $modifiers );
-		$whitelist = array( 'filter', 'include', 'exclude', 'nopricingfields' );
+		$whitelist = array( 'filter', 'include', 'exclude', 'nopricingfields', 'updated' );
 		$context   = rgar( $modifiers, 'context', false );
 
 		foreach ( $modifiers as $modifier => $mod_values ) {
@@ -255,6 +262,12 @@ class GW_All_Fields_Template {
 						}
 					}
 					break;
+				case 'updated':
+					// If current value matches original value, it was not changed so we skip it.
+					if ( $this->original_entry[ $field['id'] ] == $value ) {
+						$value = false;
+					}
+					break;
 			}
 		}
 
@@ -263,6 +276,10 @@ class GW_All_Fields_Template {
 		// print_r( compact( 'modifiers', 'field_ids', 'field_id', 'value' ) );
 		// echo '<pre>';
 		return $value;
+	}
+
+	public function save_original_entry( $entry, $original_entry ) {
+		$this->original_entry = $original_entry;
 	}
 
 	public function replace_merge_tags( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ) {
