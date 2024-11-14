@@ -72,7 +72,7 @@ class GW_Cache_Buster {
 			unset( $form_styles['theme'] );
 		}
 		$form['styles'] = GFFormDisplay::get_form_styles( $form_styles );
-		$form['theme'] = ! empty( $form_theme ) ? $form_theme : GFForms::get_default_theme();
+		$form['theme']  = $form_theme;
 		return $form;
 	}
 
