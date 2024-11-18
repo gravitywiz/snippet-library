@@ -16,6 +16,8 @@ class GW_Cache_Buster {
 
 	private $_args = array();
 
+	private $_form_args = array();
+
 	public function __construct( $args = array() ) {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
@@ -40,6 +42,8 @@ class GW_Cache_Buster {
 		}
 
 		add_filter( 'gform_shortcode_form', array( $this, 'shortcode' ), 10, 3 );
+		add_filter( 'gform_get_form_filter', array( $this, 'form_filter' ), 10, 2 );
+		add_filter( 'gform_form_args', array( $this, 'stash_form_args' ) );
 		add_filter( 'gform_save_and_continue_resume_url', array( $this, 'filter_resume_link' ), 15, 4 );
 		add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_embed_url' ), 10, 4 );
 		add_action( 'gform_after_submission', array( $this, 'entry_source_url' ), 10, 2 );
@@ -73,11 +77,16 @@ class GW_Cache_Buster {
 		}
 		$form['styles'] = GFFormDisplay::get_form_styles( $form_styles );
 		$form['theme']  = $form_theme;
+
 		return $form;
 	}
 
-	public function shortcode( $markup, $attributes, $content ) {
+	public function stash_form_args( $form_args ) {
+		$this->_form_args[ $form_args['form_id'] ] = $form_args;
+		return $form_args;
+	}
 
+	public function shortcode( $markup, $attributes, $content ) {
 		$atts = shortcode_atts(
 			array(
 				'id'          => 0,
@@ -90,6 +99,33 @@ class GW_Cache_Buster {
 			$attributes
 		);
 
+		remove_filter( 'gform_get_form_filter', array( $this, 'form_filter' ), 10, 2 );
+		return $this->get_cachebuster_markup( $markup, array_merge( $attributes, $atts ), $content );
+	}
+
+	public function form_filter( $markup, $form ) {
+		// Prevent recursion.
+		if ( rgar( $GLOBALS, 'processing' ) ) {
+			return $markup;
+		}
+
+		$form_args = rgar( $this->_form_args, $form['id'] );
+		$atts      = array(
+			'id'           => $form['id'],
+			'cachebuster'  => true,
+			'title'        => $form_args['display_title'],
+			'description'  => $form_args['display_description'],
+			'field_values' => $form_args['field_values'],
+			'ajax'         => $form_args['ajax'],
+			'tabindex'     => $form_args['tabindex']
+			'theme'        => rgar( $form, 'theme' ),
+			'styles'       => rgar( $form, 'styles' ),
+		);
+
+		return $this->get_cachebuster_markup( $markup, $atts, null );
+	}
+
+	public function get_cachebuster_markup( $markup, $atts, $content ) {
 		$form_id = $atts['id'];
 
 		if ( ! $this->is_cache_busting_applicable() ) {
@@ -210,7 +246,7 @@ class GW_Cache_Buster {
 				$.post( '<?php echo $ajax_url; ?>', {
 					action: 'gfcb_get_form',
 					form_id: '<?php echo $form_id; ?>',
-					atts: <?php echo wp_json_encode( $attributes ); ?>,
+					atts: <?php echo wp_json_encode( $atts ); ?>,
 					form_request_origin: '<?php echo esc_js( GFCommon::openssl_encrypt( GFFormsModel::get_current_page_url() ) ); ?>',
 					lang: '<?php echo $lang; ?>'
 				}, function( response ) {
@@ -310,7 +346,9 @@ class GW_Cache_Buster {
 		$GLOBALS['GWCB_POST'] = $_POST;
 		$_POST                = array();
 
+		$GLOBALS['processing'] = true;
 		gravity_form( $form_id, filter_var( rgar( $atts, 'title', true ), FILTER_VALIDATE_BOOLEAN ), filter_var( rgar( $atts, 'description', true ), FILTER_VALIDATE_BOOLEAN ), false, $field_values, true /* default to true; add support for non-ajax in the future */, rgar( $atts, 'tabindex' ) );
+		$GLOBALS['processing'] = false;
 
 		remove_filter( 'gform_form_tag_' . $form_id, array( $this, 'add_hidden_inputs' ) );
 		remove_filter( 'gform_pre_render_' . $form_id, array( $this, 'replace_embed_tag_for_field_default_values' ) );
