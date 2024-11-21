@@ -9,7 +9,7 @@
  * Plugin URI:   https://gravitywiz.com/gravity-forms-date-merge-tags/
  * Description:  Adds merge tag modifiers for formatting date merge tags using PHP Date Formats.
  * Author:       Gravity Wiz
- * Version:      0.5
+ * Version:      0.6
  * Author URI:   https://gravitywiz.com
  */
 class GW_Format_Date_Merge_Tag {
@@ -98,12 +98,15 @@ class GW_Format_Date_Merge_Tag {
 
 # Configuration
 
-new GW_Format_Date_Merge_Tag( array(
-	'form_id' => 123,
-) );
+new GW_Format_Date_Merge_Tag();
 
-# Configuration with locale enabled.
-// new GW_Format_Date_Merge_Tag( array(
-//	'form_id' => 123,
+# Apply locale to all forms.
+//new GW_Format_Date_Merge_Tag( array(
 //	'locale'  => 'fr_FR',
-// ) );
+//) );
+
+# Apply locale to a specific form.
+//new GW_Format_Date_Merge_Tag( array(
+//	'form_id' => 123,
+//	'locale' => 'fr_FR',
+//) );
