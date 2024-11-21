@@ -76,7 +76,7 @@ class GW_Format_Date_Merge_Tag {
 			$timestamp = strtotime( sprintf( '%d-%d-%d', $parsed_date['year'], $parsed_date['month'], $parsed_date['day'] ) );
 
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-			$replace = wp_date( $modifier, $timestamp );
+			$replace = wp_date( $modifier, $timestamp, new DateTimeZone( 'UTC' ) );
 
 			$text = str_replace( $match[0], $replace, $text );
 		}
