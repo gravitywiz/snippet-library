@@ -47,6 +47,21 @@ class GW_Disable_Submit {
 
 			var GWDisableSubmit;
 
+			function gwDisableSubmitDebounce(func, wait, immediate) {
+				var timeout;
+				return function() {
+					var context = this, args = arguments;
+					var later = function() {
+						timeout = null;
+						if (!immediate) func.apply(context, args);
+					};
+					var callNow = immediate && !timeout;
+					clearTimeout(timeout);
+					timeout = setTimeout(later, wait);
+					if (callNow) func.apply(context, args);
+				};
+			};
+
 			(function($){
 
 				GWDisableSubmit = function( args ) {
@@ -88,6 +103,10 @@ class GW_Disable_Submit {
 						$(document).on( 'gppa_updated_batch_fields', function() {
 							self.runCheck();
 						});
+						// We listen to input change to cover for more field types, for example, image choice field etc.
+						gform.addAction( 'gform_input_change', function( elem, formId, fieldId ) {
+							self.runCheck();
+						});
 						// GPPA logic may enable submit button, disable that logic.
 						gform.addFilter( 'gppa_disable_form_navigation_toggling', function() { 
 							return true; 
@@ -97,7 +116,7 @@ class GW_Disable_Submit {
 
 					}
 
-					self.runCheck = function() {
+					self.runCheck = gwDisableSubmitDebounce( function() {
 
 						var $form        = $( '#gform_' + self.formId );
 						var submitButton = $form.find( 'input[type="submit"], input[type="button"], button[type="submit"]' );
@@ -107,7 +126,7 @@ class GW_Disable_Submit {
 							submitButton.attr( 'disabled', true ).addClass( 'gwds-disabled' );
 						}
 
-					}
+					}, 10 );
 
 					self.areRequiredPopulated = function() {
 
