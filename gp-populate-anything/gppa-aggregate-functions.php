@@ -1,4 +1,4 @@
-<?php
+
 /**
  * Gravity Perks // GP Populate Anything // Add Support for Aggregate Functions
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
@@ -56,12 +56,17 @@ class GPPA_Aggregate_Functions {
 
 	}
 
-	public function enable_query_all_value_objects( $query_all_value_objects, $field, $field_values, $object_type_instance, $filter_groups, $primary_property, $templates ) {
-		return $this->matches_any_merge_tag( rgar( $templates, 'value' ) );
+	public function enable_query_all_value_objects( $should_query_all, $field, $field_values, $object_type_instance, $filter_groups, $primary_property, $templates ) {
+		return $should_query_all || $this->matches_any_merge_tag( rgar( $templates, 'value' ) );
 	}
 
+	// The count function normally has "query all value objects" enabled, but this function overrides that.
+	// We need to specify that count has to have "query all value objects" enabled to avoid breaking it.
 	public function matches_any_merge_tag( $template_value ) {
-		return preg_match( self::$sum_regex, $template_value ) || preg_match( self::$avg_regex, $template_value ) || preg_match( self::$min_regex, $template_value ) || preg_match( self::$max_regex, $template_value );
+		return preg_match( self::$sum_regex, $template_value ) ||
+			preg_match( self::$avg_regex, $template_value ) ||
+			preg_match( self::$min_regex, $template_value ) ||
+			preg_match( self::$max_regex, $template_value );
 	}
 
 	public function replace_template_sum_merge_tags( $template_value, $field, $template, $populate, $object, $object_type, $objects ) {
@@ -178,6 +183,14 @@ class GPPA_Aggregate_Functions {
 			$source_field = GFAPI::get_field( $object->form_id, $input_id );
 			if ( GFCommon::is_product_field( $source_field->type ) ) {
 				$value = GFCommon::to_number( $value, $object->currency );
+			}
+		} else {
+			// Even if this isn't a product field, it might have a currency value in it.
+			// Handle it accordingly.
+			// TODO:  Handle other currency locales
+			$language = get_user_locale();
+			if (str_contains($language, "en")) {
+				$value = preg_replace("/[\$\,]/", "", $value);
 			}
 		}
 		return $value;
