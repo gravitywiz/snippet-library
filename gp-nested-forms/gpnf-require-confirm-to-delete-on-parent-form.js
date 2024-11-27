@@ -2,6 +2,8 @@
  * Gravity Perks // Nested Forms // Require Confirmation to Delete Child Entry on Parent Form
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
+ * Instruction Video: https://www.loom.com/share/592608555bb54bf4b2bb29cc233a8416
+ * 
  * Require users to confirm delection of a child entry on the parent form. This works the same was as the
  * confirm-to-delete requirement in the child form.
  *
