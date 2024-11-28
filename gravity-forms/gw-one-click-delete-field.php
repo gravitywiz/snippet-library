@@ -6,6 +6,8 @@
  * This snippet adds a one-click delete button (no confirmation) to each field when viewing the
  * form in compact view.
  *
+ * Instruction Video: https://www.loom.com/share/08993a9574ec43fdac5fcd23da5a864f
+ *
  * Instructions:
  *
  * 1. Install the snippet.
