@@ -105,6 +105,9 @@ class GPECF_Discount_Amounts_By_Field_Value {
 					};
 
 					self.setDiscountAmount = function( value ) {
+						// Clean the value to remove the thousand separator (could be , or . depending on currency settings).
+						value = gformCleanNumber( value, '', '', window.gf_global.gf_currency_config.decimal_separator );
+
 						if ( value.indexOf( '|' ) !== -1 ) {
 							value = value.split( '|' )[0];
 						}
