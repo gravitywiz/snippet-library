@@ -2,21 +2,32 @@
 /**
  * Gravity Connect // Airtable // Create Phone Number Relation
  *
+ * Experimental Snippet 🧪
+ *
  * This snippet demonstrates how to create a relation between two tables in Airtable
  * when a GC Airtable feed is being processed. It uses an example assuming the following:
  *
- * 1. There are a "People" table and "Phone Numbers" table in Airtable.
- * 2. The "Phone Numbers" table has, at minimum, a phone number field and a link field.
- * 3. There is a GCA feed that creates a record in the "People" table.
- * 4. The snippet adds a phone number to the "Phone Numbers" table and creates a relation
+ *   1. There are a "People" table and "Phone Numbers" table in Airtable.
+ *   2. The "Phone Numbers" table has, at minimum, a phone number field and a link field.
+ *   3. There is a GCA feed that creates a record in the "People" table.
+ *   4. The snippet adds a phone number to the "Phone Numbers" table and creates a relation
  *    between the newly created "People" record and the "Phone Numbers" record.
  *
  * Installation:
  *   1. Install per https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  *
- * https://gravitywiz.com/documentation/gravity-connect-airtable
+ * References:
+ *   * https://gravitywiz.com/documentation/gravity-connect-airtable
+ *   * https://gravitywiz.com/documentation/gca_entry_added_to_airtable/
  */
 
+/**
+ * You can also apply this to individual forms for feeds for more granular control. For example:
+ *
+ * add_action( 'gca_entry_added_to_airtable_FORMID', function( $entry, $create_record_resp, $gca_connection_instance ) {} );
+ * add_action( 'gca_entry_added_to_airtable_FORMID_FEEDID', function( $entry, $create_record_resp, $gca_connection_instance ) {} );
+ *
+ */
 add_action( 'gca_entry_added_to_airtable', function( $entry, $create_record_resp, $gca_connection_instance ) {
 	$gf_phone_number_field_id = '1'; // The ID of the form field which contains the value you want to use to create the relation.
 	$table_id                 = 'TODO'; // The ID of the Phone number
