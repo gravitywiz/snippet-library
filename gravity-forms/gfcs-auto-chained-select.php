@@ -3,6 +3,8 @@
  * Gravity Wiz // Gravity Forms Chained Selects // Auto Select Only Option
  * https://gravitywiz.com/
  *
+ * Experimental Snippet 🧪
+ *
  * The Gravity Forms Chained Selects field requires you to manually select a value in each Drop Down
  * even if there is only a single option available in that Drop Down. This snippet will automatically
  * selected an option when it is the only option available.
