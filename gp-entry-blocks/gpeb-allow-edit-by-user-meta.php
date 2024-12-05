@@ -16,9 +16,9 @@
  */
 add_filter( 'gpeb_can_user_edit_entry', function( $can_user_edit_entry, $entry, $current_user_id ) {
 	$current_user = new WP_User( $current_user_id );
-  // Update "entry_ids" to whatever user meta key you're storing entry IDs for which the user has permission to edit.
+	// Update "entry_ids" to whatever user meta key you're storing entry IDs for which the user has permission to edit.
 	if ( in_array( $entry['id'], (array) $current_user->get( 'entry_ids' ) ) ) {
 		$can_user_edit_entry = true;
 	}
-	returN $can_user_edit_entry;
+	return $can_user_edit_entry;
 }, 10, 3 );

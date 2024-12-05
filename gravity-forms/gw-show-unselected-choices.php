@@ -35,7 +35,7 @@ function gpeb_show_unselected_choices( $field, $raw_value ) {
 			$class = 'gpeb-unselected';
 			$icon  = '✘';
 			if ( ! rgblank( $raw_value[ $input['id'] ] ) ) {
-				$icon = '✔';
+				$icon  = '✔';
 				$class = 'gpeb-selected';
 			}
 			$output[] = sprintf( '<li class="%s">%s %s</li>', $class, $icon, $input['label'] );
@@ -45,7 +45,7 @@ function gpeb_show_unselected_choices( $field, $raw_value ) {
 			$class = 'gpeb-unselected';
 			$icon  = '✘';
 			if ( $choice['value'] === $raw_value ) {
-				$icon = '✔';
+				$icon  = '✔';
 				$class = 'gpeb-selected';
 			}
 			$output[] = sprintf( '<li class="%s">%s %s</li>', $class, $icon, $choice['text'] );

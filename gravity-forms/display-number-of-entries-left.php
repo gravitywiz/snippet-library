@@ -5,8 +5,8 @@
  *
  * Instruction Video: https://www.loom.com/share/b6c46aebf0ff483496faf9994e36083e
  *
- * Instructions: 
- * 
+ * Instructions:
+ *
  * 1. Install the snippet.
  *    https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  */

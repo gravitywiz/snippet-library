@@ -1,6 +1,6 @@
 <?php
 /**
  * This snippet has evolved! 🦄
- * Find the new version of this snippet here: 
+ * Find the new version of this snippet here:
  * https://github.com/gravitywiz/snippet-library/blob/master/gp-address-autocomplete/gpaa-show-place-name.js
  */

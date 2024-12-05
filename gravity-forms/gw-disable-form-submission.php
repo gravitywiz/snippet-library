@@ -29,7 +29,7 @@ class GW_Disable_Form_Submission {
 	 */
 	public function __construct( $args = array() ) {
 		$this->_args = wp_parse_args( $args, array(
-			'form_ids'  => array(),
+			'form_ids' => array(),
 		) );
 
 		add_action( 'init', array( $this, 'init' ) );
@@ -71,5 +71,5 @@ new GW_Disable_Form_Submission(array(
 	// replace with form IDs you would like to disable form submission for
 	'form_ids' => array(
 		6,
-	)
+	),
 ));

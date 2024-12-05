@@ -25,7 +25,7 @@
  *
  * 1. Install the snippet.
  *    https://gravitywiz.com/documentation/managing-snippets/#where-do-i-put-snippets
- * 
+ *
  * 2. Update the inline variables with your form and field IDs.
  */
 add_filter( 'gpi_query', function( $query, $field ) {
@@ -42,18 +42,17 @@ add_filter( 'gpi_query', function( $query, $field ) {
 	 */
 	if ( $field->id === $ultimate_field_id ) {
 		$fields_to_alter = array( $standard_field_id, $super_field_id, $ultimate_field_id );
-	}
-	/**
-	 * We're querying for the Standard or Super field's (inventory-enabled Drop Down fields with available rooms) inventory.
-	 * Let's ensure that the Ultimate field's claimed inventory is included in the Standard and Super fields'.
-	 */
-	else if ( in_array( $field->id, array( $standard_field_id, $super_field_id ) ) ) {
+	} elseif ( in_array( $field->id, array( $standard_field_id, $super_field_id ) ) ) {
+		/**
+		 * We're querying for the Standard or Super field's (inventory-enabled Drop Down fields with available rooms) inventory.
+		 * Let's ensure that the Ultimate field's claimed inventory is included in the Standard and Super fields'.
+		 */
 		$fields_to_alter = array( $ultimate_field_id );
 	} else {
 		return $query;
 	}
 
-	foreach( $fields_to_alter as $current_field_id ) {
+	foreach ( $fields_to_alter as $current_field_id ) {
 		$query['where'] = preg_replace(
 			"/\(e.form_id = {$form_id} AND em.form_id = {$form_id} AND em.meta_key = '{$current_field_id}'\) AND ([a-z0-9_]+)\.meta_value = '(.*?)' AND [a-z0-9_]+\.meta_value = '(.*?)'/",
 			"(e.form_id = {$form_id} AND em.form_id = {$form_id} AND em.meta_key = '{$current_field_id}') AND \${1}.meta_value = '\${2}'",

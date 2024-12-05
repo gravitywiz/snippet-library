@@ -68,7 +68,7 @@ class GW_Cache_Buster {
 			// Form styles specifically set to false disables inline form css styles.
 			$form_styles = false;
 		} else {
-			$form_styles = !empty( $style_settings ) ? json_decode( $style_settings, true ) : array();
+			$form_styles = ! empty( $style_settings ) ? json_decode( $style_settings, true ) : array();
 		}
 
 		// Removing theme from styles for consistency. $form['theme'] should be used instead.
@@ -93,8 +93,8 @@ class GW_Cache_Buster {
 				'cachebuster' => false,
 
 				// Attributes needed for theme/styles.
-				'theme'        => method_exists( 'GFForms', 'get_default_theme' ) ? GFForms::get_default_theme() : '',
-				'styles'       => '',
+				'theme'       => method_exists( 'GFForms', 'get_default_theme' ) ? GFForms::get_default_theme() : '',
+				'styles'      => '',
 			),
 			$attributes
 		);
@@ -212,7 +212,7 @@ class GW_Cache_Buster {
 
 		// Get the form theme.
 		if ( method_exists( 'GFFormDisplay', 'get_form_theme_slug' ) ) {
-			$form = $this->set_form_styles( GFAPI::get_form( $form_id ), rgar( $atts, 'styles' ), rgar( $atts, 'theme' ) );
+			$form       = $this->set_form_styles( GFAPI::get_form( $form_id ), rgar( $atts, 'styles' ), rgar( $atts, 'theme' ) );
 			$form_theme = GFFormDisplay::get_form_theme_slug( $form );
 		} else {
 			$form_theme = null;
@@ -220,8 +220,8 @@ class GW_Cache_Buster {
 
 		// Still needed for the AJAX submission.
 		$ajax_params = array(
-			'action'  => 'gfcb_get_form',
-			'form_id' => $form_id,
+			'action'     => 'gfcb_get_form',
+			'form_id'    => $form_id,
 			'form_theme' => $form_theme,
 		);
 
@@ -269,7 +269,8 @@ class GW_Cache_Buster {
 								GFFormDisplay::post_render_script(
 									$form_id,
 									GFFormDisplay::get_current_page( $form_id )
-							) );
+								)
+							);
 						?>
 					} );
 				} );

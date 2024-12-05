@@ -15,9 +15,9 @@ add_filter( 'gform_get_form_filter', function( $markup, $form ) {
 		return $markup;
 	}
 
-	$pattern = '/<div class="gform_validation_errors" ([\s\S]+?)<\/div>/';
+	$pattern  = '/<div class="gform_validation_errors" ([\s\S]+?)<\/div>/';
 	$pattern2 = '/(<div class=(["\'])gform[-_]body)/';
-	if ( preg_match($pattern, $markup, $matches ) ) {
+	if ( preg_match( $pattern, $markup, $matches ) ) {
 		$markup = preg_replace( $pattern, '', $markup );
 		$markup = preg_replace( $pattern2, $matches[0] . '$1', $markup );
 	}

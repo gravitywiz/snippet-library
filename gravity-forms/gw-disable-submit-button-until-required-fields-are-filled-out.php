@@ -89,8 +89,8 @@ class GW_Disable_Submit {
 							self.runCheck();
 						});
 						// GPPA logic may enable submit button, disable that logic.
-						gform.addFilter( 'gppa_disable_form_navigation_toggling', function() { 
-							return true; 
+						gform.addFilter( 'gppa_disable_form_navigation_toggling', function() {
+							return true;
 						});
 
 						self.runCheck();
@@ -195,6 +195,7 @@ class GW_Disable_Submit {
 						$html_ids[] = "#gform_preview_{$form['id']}_{$field['id']}";
 						break;
 					}
+					// Let single file enabled File Upload field be handled as default.
 
 				default:
 					$html_ids[] = "#input_{$form['id']}_{$field['id']}";

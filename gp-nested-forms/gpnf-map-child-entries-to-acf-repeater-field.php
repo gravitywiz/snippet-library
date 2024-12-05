@@ -25,7 +25,7 @@ class GPNF_Map_Child_Entries_To_ACF_Repeater {
 		if ( $form['id'] !== $this->_args['form_id'] ) {
 			return;
 		}
-	
+
 		$parent_entry  = new GPNF_Entry( $entry );
 		$child_entries = $parent_entry->get_child_entries( $this->_args['nested_form_field_id'] );
 		$repeat_value  = array();
@@ -45,12 +45,12 @@ class GPNF_Map_Child_Entries_To_ACF_Repeater {
 }
 
 new GPNF_Map_Child_Entries_To_ACF_Repeater( array(
-	'form_id'                  => 7, // Set this to the parent form ID
-	'nested_form_field_id'     => 18, // Update to the ID of the Nested Form field.
-	'field_map'                => array(
-		'num_comedien'         => 1,
-		'role_comedien'        => 3,
+	'form_id'                 => 7, // Set this to the parent form ID
+	'nested_form_field_id'    => 18, // Update to the ID of the Nested Form field.
+	'field_map'               => array(
+		'num_comedien'  => 1,
+		'role_comedien' => 3,
 	), // The field map contains "field_name" => "child_entry_field_id" pairs. The field name is the name of the fields in
 	// the ACF Repeater field. The child entry field ID is the field ID from the child form.
-	'acf_repeater_field_name'  => 'comediens', // Update to the field name of the ACF repeater field.
+	'acf_repeater_field_name' => 'comediens', // Update to the field name of the ACF repeater field.
 ) );
