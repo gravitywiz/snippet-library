@@ -117,7 +117,7 @@ class GW_Cache_Buster {
 			'description'  => $form_args['display_description'],
 			'field_values' => $form_args['field_values'],
 			'ajax'         => $form_args['ajax'],
-			'tabindex'     => $form_args['tabindex']
+			'tabindex'     => $form_args['tabindex'],
 			'theme'        => rgar( $form, 'theme' ),
 			'styles'       => rgar( $form, 'styles' ),
 		);
