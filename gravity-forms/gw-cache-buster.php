@@ -9,7 +9,7 @@
  * Plugin URI:  https://gravitywiz.com/cache-busting-with-gravity-forms/
  * Description: Bypass your website cache when loading a Gravity Forms form.
  * Author:      Gravity Wiz
- * Version:     0.6.2
+ * Version:     0.6.3
  * Author URI:  https://gravitywiz.com
  */
 class GW_Cache_Buster {
@@ -112,7 +112,7 @@ class GW_Cache_Buster {
 		$form_args = rgar( $this->_form_args, $form['id'] );
 		$atts      = array(
 			'id'           => $form['id'],
-			'cachebuster'  => true,
+			'cachebuster'  => rgar( $form_args, 'cachebuster' ),
 			'title'        => $form_args['display_title'],
 			'description'  => $form_args['display_description'],
 			'field_values' => $form_args['field_values'],
