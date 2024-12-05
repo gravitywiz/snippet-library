@@ -26,7 +26,6 @@ add_filter( 'gform_entry_detail_meta_boxes', function ( $meta_boxes, $entry, $fo
 				'context'  => 'side',
 			);
 		}
-		
 	}
 
 	return $meta_boxes;
