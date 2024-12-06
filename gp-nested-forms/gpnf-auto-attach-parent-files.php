@@ -15,7 +15,7 @@
  * Author URI:   https://gravitywiz.com/
  */
 
- class GPNF_Auto_Attach_Parent_Files {
+class GPNF_Auto_Attach_Parent_Files {
 	/**
 	 * The ID of the child form to apply this to (optional).
 	 */
@@ -87,11 +87,11 @@
 				continue;
 			}
 
-			$upload_root = GFFormsModel::get_upload_root();
-			$upload_field = GFAPI::get_field( $parent_entry['form_id'], $field_id );
+			$upload_root       = GFFormsModel::get_upload_root();
+			$upload_field      = GFAPI::get_field( $parent_entry['form_id'], $field_id );
 			$is_multiple_files = $upload_field->multipleFiles;
 
-			$files = $is_multiple_files ? json_decode( $uploaded_files, true ) : [ $uploaded_files ];
+			$files = $is_multiple_files ? json_decode( $uploaded_files, true ) : array( $uploaded_files );
 
 			foreach ( $files as $file ) {
 				$attachments[] = preg_replace( '|^(.*?)/gravity_forms/|', $upload_root, $file );
