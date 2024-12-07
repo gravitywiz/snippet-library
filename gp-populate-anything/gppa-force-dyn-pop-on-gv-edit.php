@@ -13,7 +13,7 @@ add_filter( 'gravityview/edit_entry/field_value', function( $field_value, $field
 	// End customizing
 
 	if ( $field->formId == $form_id && in_array( $field->id, $field_ids_to_populate ) ) {
-		$populated_field = gp_populate_anything()->populate_field( $field, $_this->form, gp_populate_anything()->get_posted_field_values( $_this->form ), $_this->entry );
+		$populated_field = gp_populate_anything()->populate_field( $field, $_this->form, gp_populate_anything()->get_posted_field_values( $_this->form ) );
 
 		if ( $field->storageType === 'json' ) {
 			$field_value = json_encode( $populated_field['field_value'] );
