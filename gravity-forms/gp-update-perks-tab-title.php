@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // Update Perks Tab Field Settings Title
  * https://gravitywiz.com/
+ *
+ * Experimental Snippet 🧪
  */
 add_action( 'gform_field_settings_tabs', function( $tabs ) {
 	foreach ( $tabs as &$tab ) {
