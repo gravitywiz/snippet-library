@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // Hide Perks from Plugins Page
  * https://gravitywiz.com/documentation/
+ *
+ * Experimental Snippet 🧪
  */
 add_filter( 'all_plugins', function( $plugins ) {
 
