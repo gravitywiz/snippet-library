@@ -1,5 +1,8 @@
 /**
  * Gravity Perks // GP Address Autocomplete // Display Google Plus Code
+ * https://gravitywiz.com/documentation/gravity-forms-address-autocomplete/
+ *
+ * Experimental Snippet 🧪
  *
  * Adds a Google Plus Code to the configured text field when an address is autocompleted.
  *
