@@ -5,7 +5,7 @@
  *
  * Supports all registered meta and as well as the "Payment Status" standard meta.
  * Handles enabling conditional logic evaluation on send for GP Notification Scheduler when notification
- * contains a conditioanl rule for "payment_status".
+ * contains a conditional rule for "payment_status".
  *
  * Requires Gravity Forms 2.6.2.
  *
@@ -13,7 +13,7 @@
  * Plugin URI:   https://gravitywiz.com/
  * Description:  Use the entry meta in conditional logic (e.g. payment status, approval status, etc).
  * Author:       Gravity Wiz
- * Version:      0.3
+ * Version:      0.3.1
  * Author URI:   https://gravitywiz.com
  */
 class GW_CL_Entry_Meta {
@@ -150,7 +150,21 @@ class GW_CL_Entry_Meta {
 					'isnot' => 'isNot',
 				),
 			);
-			$_choices        = rgar( $choices_by_key, $key );
+
+			$_choices = rgar( $choices_by_key, $key );
+
+			/*
+			 * Use choices by key if exists, otherwise, attempt to pull from $meta/filter/choices, which contains
+			 * array{ text: string, value: string }[]
+			 */
+			if ( empty( $_choices ) ) {
+				$filter_choices = rgars( $meta, 'filter/choices' );
+
+				if ( ! empty( $filter_choices ) ) {
+					$_choices = wp_list_pluck( $filter_choices, 'text', 'value' );
+				}
+			}
+
 			if ( ! empty( $_choices ) ) {
 				$choices = array();
 				foreach ( $_choices as $value => $text ) {
