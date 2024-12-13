@@ -1,5 +1,8 @@
 /**
  * Gravity Perks // GP Address Autocomplete // Add Google Street View
+ * https://gravitywiz.com/documentation/gravity-forms-address-autocomplete/
+ *
+ * Experimental Snippet 🧪
  *
  * Adds a Google Street View container to the bottom of the map and automatically
  * updates the Street View when the user selects an address.
