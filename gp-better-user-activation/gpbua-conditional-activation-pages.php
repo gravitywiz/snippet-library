@@ -3,6 +3,8 @@
  * Gravity Perks // Better User Activation // Conditional Activation Pages
  * https://gravitywiz.com/documentation/gravity-forms-better-user-activation/
  *
+ * Experimental Snippet 🧪
+ *
  * This experimental snippet allows you to load a different activation page depending on a value
  * in its associated entry.
  */
