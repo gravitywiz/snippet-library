@@ -3,6 +3,8 @@
  * Gravity Perks // Date Time Calculator // Recalculate Field Value on View
  * https://gravitywiz.com/documentation/gravity-forms-date-time-calculator/
  *
+ * Experimental Snippet 🧪
+ *
  * Recalculate a calculated field's value every time it's viewed.
  *
  * Works great with Date Time Calculator's [:age modifier][1].
