@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // Conditional Pricing // Add Support for Choice-based Rules with WPML Translations
  * https://gravitywiz.com/documentation/gravity-forms-conditional-pricing/
+ *
+ * Experimental Snippet 🧪
  */
 add_filter( 'gpcp_pricing_logic', function( $pricing_logic, $form ) {
 
