@@ -3,6 +3,8 @@
  * Gravity Perks // Copy Cat // Show Source and Target Field Indicators in Form Editor
  * https://gravitywiz.com/documentation/gravity-forms-copy-cat/
  *
+ * Experimental Snippet 🧪
+ *
  * Display visual source and target field indicators next to field labels in the form editor.
  */
 add_filter( 'gform_field_content', function( $content, $field ) {
