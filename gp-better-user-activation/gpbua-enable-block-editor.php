@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // Better User Activation // Enable Block Editor for Activation Page
  * https://gravitywiz.com/documentation/gravity-forms-better-user-activation/
+ *
+ * Experimental Snippet 🧪
  */
 add_action( 'init', function() {
 	if ( is_callable( 'gp_better_user_activation' ) ) {
