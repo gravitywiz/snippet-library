@@ -1,8 +1,8 @@
 <?php
 /**
  * Gravity Perks // GP eCommerce Fields // Dynamically Set Discount Amount via Easy Passthrough
- * http://gravitywiz.com/documentation/gravity-forms-ecommerce-fields/
- * 
+ * https://gravitywiz.com/documentation/gravity-forms-ecommerce-fields/
+ *
  * Experimental Snippet 🧪
  *
  * This experimental snippet allows you to set the discount amount by a field that has been populated via Easy Passthrough.
