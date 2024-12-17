@@ -3,6 +3,8 @@
  * Gravity Perks // Entry Blocks // Filters Block: Use Select for Country Input Filter
  * https://gravitywiz.com/documentation/gravity-forms-entry-blocks/
  *
+ * Experimental Snippet 🧪
+ *
  * All input fields in the Entry Blocks filter are text inputs by default. This snippet changes the input type to a
  * select for the Address field's Country input.
  */
