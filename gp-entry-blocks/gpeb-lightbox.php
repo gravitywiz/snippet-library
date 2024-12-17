@@ -3,6 +3,8 @@
  * Gravity Perks // Entry Blocks // Lightbox
  * https://gravitywiz.com/documentation/gravity-forms-entry-blocks/
  *
+ * Experimental Snippet 🧪
+ *
  * A rough draft lightbox implementation for Entry Blocks!
  *
  * Instructions:
