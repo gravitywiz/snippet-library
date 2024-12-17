@@ -4,6 +4,8 @@
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  * https://gravitywiz.com/documentation/gravity-forms-easy-passthrough/
  *
+ * Experimental Snippet 🧪
+ *
  * Installation Instructions: https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  *
  * Duplicate child entries when a parent form is passed through using Easy Passthrough.
