@@ -2,6 +2,8 @@
  * Gravity Perks // GP File Upload Pro // Prevent cropper from closing Beaver Builder modal that a form is embedded in
  * https://gravitywiz.com/documentation/gravity-forms-file-upload-pro/
  *
+ * Experimental Snippet 🧪
+ *
  * Instructions:
  *     1. Install our free Custom JavaScript for Gravity Forms plugin.
  *         Download the plugin here: https://gravitywiz.com/gravity-forms-code-chest/
