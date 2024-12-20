@@ -4,7 +4,7 @@
  *
  * Create coupons via Gravity Forms submissions. Map the coupon code to a field on the GF form and voila!
  *
- * @version 1.2.2
+ * @version 1.2.3
  * @author  David Smith <david@gravitywiz.com>
  * @license GPL-2.0+
  * @link    WooCommerce:   http://gravitywiz.com/creating-coupons-woocommerce-gravity-forms/
@@ -190,10 +190,10 @@ class GW_Create_Coupon {
 			$start_date = $date->format( 'Y-m-d H:i:s' );
 		}
 
-		// WooCommerce coupon uses the Post Title as the coupon code hence $coupon_code is assigned to Post Title and $coupon_name is assigned to the Post Content
+		// WooCommerce coupon uses the Post Title as the coupon code hence $coupon_code is assigned to Post Title and $coupon_name is assigned to the Post Excerpt
 		$coupon = array(
 			'post_title'   => $coupon_code,
-			'post_content' => $coupon_name,
+			'post_excerpt' => $coupon_name,
 			'post_status'  => 'publish',
 			'post_author'  => 1,
 			'post_type'    => 'shop_coupon',
