@@ -8,7 +8,7 @@
  * or Multi-Select property.
  *
  * Instructions:
- * 
+ *
  *  1. Change FORMID in the filter name to your form ID.
  *  2. Change the $field_id, $database_id, and $property_id variables to match your form and Notion database.
  *      NOTE: the $database_id and $property_id can be found in the Javascript developer console in a GC Notion
@@ -21,9 +21,9 @@ add_filter( 'gform_pre_render_FORMID', function( $form, $ajax, $field_values ) {
 	$property_id = 'PROPERTY_ID'; // Change this to the ID of the property in the database which you want to populate values.
 
 	$notion_account_id = \GC_Notion\Tokens::get_resource_service_account( $database_id );
-	if( empty( $notion_account_id ) ) {
-        return $form;
-    }
+	if ( empty( $notion_account_id ) ) {
+		return $form;
+	}
 
 	$token = rgar( \GC_Notion\Tokens::get_service_account_ids_to_tokens(), $notion_account_id );
 	if ( empty( $token ) ) {
