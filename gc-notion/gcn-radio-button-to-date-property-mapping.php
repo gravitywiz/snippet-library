@@ -4,6 +4,8 @@
  *
  * This snippet demonstrates how to map a radio button field to a Date property in Notion.
  *
+ * Instruction Video: https://www.loom.com/share/0680e7ad671f41e1a2801c62d84c034b
+ *
  * Instructions:
  *   1. Modify the filter name to scope as needed.
  *     * see filter reference for full list of variants: https://gravitywiz.com/documentation/gcn_notion_page_data/)
