@@ -13,7 +13,7 @@ $containers.each( function() {
 } );
 
 // Show/hide checkboxes when the field is manipulated.
-$containers.bind( 'DOMNodeInserted DOMNodeRemoved', function() {
+$containers.bind( 'DOMNodeInserted DOMNodeRemoved change.gppa', function() {
 	gwizRemoveEmptyChoices( $( this ) );
 } );
 
