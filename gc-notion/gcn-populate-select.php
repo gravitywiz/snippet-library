@@ -9,10 +9,12 @@
  *
  * Instructions:
  *
- *  1. Change FORMID in the filter name to your form ID.
- *  2. Change the $field_id, $database_id, and $property_id variables to match your form and Notion database.
- *      NOTE: the $database_id and $property_id can be found in the Javascript developer console in a GC Notion
- *      feed settings AFTER the feed is connected to a database.
+ * 1. Change FORMID in the filter name to your form ID.
+ *
+ * 2. Change the $field_id, $database_id, and $property_id variables to match your form and Notion database.
+ *
+ *   > 💡 The $database_id and $property_id can be found in the Javascript developer console in a GC Notion
+ *   > feed settings AFTER the feed is connected to a database.
  */
 
 add_filter( 'gform_pre_render_FORMID', function( $form, $ajax, $field_values ) {
