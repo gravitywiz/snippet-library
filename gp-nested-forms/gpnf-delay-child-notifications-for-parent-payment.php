@@ -9,7 +9,7 @@
  * Plugin URI:   http://gravitywiz.com/documentation/gravity-forms-nested-forms/
  * Description:  Delay GP Nested Forms child form notification until payment processing is completed.
  * Author:       Gravity Wiz
- * Version:      1.1
+ * Version:      1.1.1
  * Author URI:   http://gravitywiz.com
  */
 class GW_GPNF_Delay_Child_Notifications {
@@ -43,12 +43,13 @@ class GW_GPNF_Delay_Child_Notifications {
 
 	public function gpnf_should_send_notification( $should_send_notification, $notification, $context, $parent_form, $nested_form_field, $entry, $child_form ) {
 		if ( $context === 'parent' && $this->is_applicable_form( $parent_form['id'] ) ) {
-			$parent_entry             = GFAPI::get_entry( rgar( $entry, 'gpnf_entry_parent' ) );
-			$should_send_notification = in_array( rgar( $parent_entry, 'payment_status' ), array( 'Paid', 'Active' ), true );
+			$parent_entry   = GFAPI::get_entry( rgar( $entry, 'gpnf_entry_parent' ) );
+			$payment_status = rgar( $parent_entry, 'payment_status', '' );
+
+			$should_send_notification = in_array( $payment_status, array( '', 'Paid', 'Active' ), true );
 		}
 
 		return $should_send_notification;
-
 	}
 
 	public function gform_post_payment_completed( $entry ) {
