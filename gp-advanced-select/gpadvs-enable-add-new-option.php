@@ -51,6 +51,9 @@ class GPASVS_Enable_Add_New_Option {
 		add_filter( 'gform_pre_render', array( $this, 'add_new_option_to_choices' ), 10, 1 );
 
 		add_action( 'gform_after_submission', array( $this, 'create_new_option' ), 10, 2 );
+
+		add_filter( 'gppa_input_choices', array( $this, 'enable_new_choice_for_gppa_empty' ), 10, 3 );
+
 	}
 
 	public function load_form_script( $form, $is_ajax_enabled ) {
@@ -292,6 +295,19 @@ class GPASVS_Enable_Add_New_Option {
 			$gppa_choice_labels = array( $field->id => array( $term->$choice_template_value => $field_value ) );
 			gform_update_meta( $entry['id'], 'gppa_choices', $gppa_choice_labels, $form['id'] );
 		}
+	}
+
+	public function enable_new_choice_for_gppa_empty( $choices, $field, $objects ) {
+
+		$form = GFAPI::get_form( $field->formId );
+		if ( ! $this->is_applicable_form( $form ) || ! $this->is_applicable_field( $field ) ) {
+			return $choices;
+		}
+
+		if ( is_array( $choices ) && rgar( $choices[0], 'gppaErrorChoice' ) == 'no_choices' ) {
+			unset( $choices[0]['gppaErrorChoice'] );
+		}
+		return $choices;
 	}
 }
 
