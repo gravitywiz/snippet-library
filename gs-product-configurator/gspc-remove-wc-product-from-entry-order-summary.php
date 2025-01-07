@@ -2,6 +2,8 @@
 /**
  * Gravity Shop // Product Configurator // Remove WC Product from Entry Order Summary
  * https://gravitywiz.com/documentation/gs-product-configurator/
+ *
+ * Experimental Snippet 🧪
  */
 add_filter( 'init', function() {
 	if ( is_callable( 'gs_product_configurator' ) ) {
