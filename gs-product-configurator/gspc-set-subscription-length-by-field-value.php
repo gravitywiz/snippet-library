@@ -2,6 +2,8 @@
 /**
  * Gravity Shop // Product Configurator // Set Subscription Length by Field Value
  * https://gravitywiz.com/documentation/gravity-shop-product-configurator/
+ *
+ * Experimental Snippet 🧪
  */
 add_action( 'woocommerce_checkout_create_subscription', function ( $subscription ) {
 
