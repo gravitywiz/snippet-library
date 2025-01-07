@@ -2,6 +2,8 @@
 /**
  * This snippet enables LMT usage in WooCommerce cart pages.
  * See: https://secure.helpscout.net/conversation/1520295750/24633?folderId=3808239
+ *
+ * Experimental Snippet 🧪
  */
 add_action( 'wp', function() {
 	if ( ! function_exists( 'WC' ) || ( ! is_cart() && ! is_checkout() ) ) {
