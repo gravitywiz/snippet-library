@@ -2,6 +2,8 @@
 /**
  * Gravity Wiz // Gravity Forms // Require a minimum number of files in multi file uploader
  * https://gravitywiz.com/
+ *
+ * Experimental Snippet 🧪
  */
 add_filter( 'gform_validation', function ( $result ) {
 	$form = $result['form'];
