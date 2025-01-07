@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // Inventory // Auto-selections
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
+ *
+ * Experimental Snippet 🧪
  */
 global $gpias_form_id, $gpias_list_field_id, $gpias_product_field_id;
 
