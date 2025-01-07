@@ -3,6 +3,8 @@
  * Gravity Perks // Nested Forms // Lock Child Entries by Date
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
+ * Experimental Snippet 🧪
+ *
  * When editing a parent entry via Entry Blocks or GravityView, this snippet will allow you
  * to prevent child entries from being edited (or deleted) after a given date.
  *
