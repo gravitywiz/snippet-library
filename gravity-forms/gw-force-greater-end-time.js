@@ -2,6 +2,8 @@
  * Gravity Wiz // Gravity Forms // Force Greater End Time.
  * https://gravitywiz.com/
  *
+ * Experimental Snippet 🧪
+ *
  * Force the user to enter an end time greater than the start time.
  *
  * Instructions:
