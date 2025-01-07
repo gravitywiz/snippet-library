@@ -3,6 +3,8 @@
  * Gravity Perks // Inventory // Packaged Products
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
  *
+ * Experimental Snippet 🧪
+ *
  * Add dependencies between packaged products and products that are individually in the product. As packages are
  * bought, the individual items available inventory will also decrease by that much. If the available inventory of an
  * individual product is below the inventory of a package, it should use the lowest inventory amount amongst the packaged
