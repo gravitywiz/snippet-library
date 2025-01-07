@@ -2,9 +2,11 @@
  * Gravity Perks // GP Populate Anything // Refresh Live Merge Tags pointing to Simply Schedule Appointments field
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything
  *
- * --- STOP! ---
+ * ## STOP! ##
+ * 
  * This snippet is deprecated and no longer required if you are using the latest version of Simply Schedule Appointments.
- * -------------
+ * 
+ * ## Original ##
  *
  * By default, if using a Simply Schedule Appointments field and you select an appointment time, any Live Merge Tags
  * referencing the SSA field will not automatically update due to SSA not firing a change event on the hidden input.
