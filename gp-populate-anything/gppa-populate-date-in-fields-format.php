@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // Populate Anything // Populate Date in Field's Format
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
+ *
+ * Experimental Snippet 🧪
  */
 add_filter( 'gppa_process_template_value', function( $value, $field ) {
 	if ( $field->get_input_type() === 'date' && $field->dateType === 'datepicker' ) {
