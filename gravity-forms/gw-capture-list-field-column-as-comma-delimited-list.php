@@ -2,6 +2,8 @@
 /**
  * Gravity Wiz // Gravity Forms // Capture List Field Column as Comma-delimited List
  * https://gravitywiz.com/
+ *
+ * Experimental Snippet 🧪
  */
 // Update "123" to your form ID.
 add_action( 'gform_pre_submission_123', function( $form ) {
