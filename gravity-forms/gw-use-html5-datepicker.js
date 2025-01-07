@@ -8,6 +8,8 @@
  * Instructions:
  *     1. Install our free Custom JavaScript for Gravity Forms plugin.
  *	     Download the plugin here: https://gravitywiz.com/gravity-forms-code-chest/
+ *
+ * Experimental Snippet 🧪
  *     2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
  */
 
