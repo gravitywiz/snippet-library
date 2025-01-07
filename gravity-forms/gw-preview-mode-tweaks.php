@@ -4,6 +4,8 @@
  *
  * Instruction Video: https://www.loom.com/share/3a42b0ba7452424c8dbde1fc4988a5d0
  *
+ * Experimental Snippet 🧪
+ *
  * This snippet allows you to tweak the CSS styles when using Gravity Forms Preview Mode.
  */
 add_action( 'gform_preview_footer', function() {
