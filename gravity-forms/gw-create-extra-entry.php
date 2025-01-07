@@ -3,6 +3,8 @@
  * Gravity Wiz // Gravity Forms // Create an Extra Entry if Checkbox is Checked
  * https://gravitywiz.com/
  *
+ * Experimental Snippet 🧪
+ *
  * Create an additional entry identical to the first if a specified checkbox is checked.
  *
  * @see https://stackoverflow.com/a/69497108/227711
