@@ -1,5 +1,6 @@
 <?php
 /**
+ * Experimental Snippet 🧪
  * Clear all indexes for GPUID.
  */
 add_action( 'admin_init', function() {
