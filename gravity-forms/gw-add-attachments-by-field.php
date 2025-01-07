@@ -3,6 +3,8 @@
  * Gravity Wiz // Gravity Forms // Add Attachments by Field
  * https://gravitywiz.com/
  *
+ * Experimental Snippet 🧪
+ *
  * Gravity Forms provides an option to add all uploaded files as attachments but it does not provide the ability to
  * choose which fields to attach. This snippet allows you to attach a specific field's uploaded files to a specific
  * notification by name and field ID.
