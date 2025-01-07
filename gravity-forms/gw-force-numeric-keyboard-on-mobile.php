@@ -3,6 +3,8 @@
  * Gravity Wiz // Gravity Forms // Force Numeric Keyboard for Number Fields on Mobile
  * https://gravitywiz.com/
  *
+ * Experimental Snippet 🧪
+ *
  * This snippet forces the numeric keyboard for Number fields on mobile devices by updating the "type" attribute of the
  * input to "tel" instead of "number". If you find there are any drawbacks to this approach, let us know!
  *
