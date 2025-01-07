@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // Populate Anything // Conditionally Exclude Filter by Field Value
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
+ *
+ * Experimental Snippet 🧪
  */
 add_filter( 'gppa_object_type_query', function( $query, $args ) {
 	// Update "123 to your form ID and "4" to your field ID that is being populated.
