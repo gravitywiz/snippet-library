@@ -3,6 +3,8 @@
  * Gravity Wiz // Gravity Forms // Capture File Extension
  * https://gravitywiz.com/
  *
+ * Experimental Snippet 🧪
+ *
  * Capture the file extension of any file uploaded into a File Upload field on submission.
  * This only works with single File Upload fields.
  *
