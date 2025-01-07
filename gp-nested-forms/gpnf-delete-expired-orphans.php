@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // Nested Forms // Delete Expired Orphan Child Entries (Instead of Trashing)
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
+ *
+ * Experimental Snippet 🧪
  */
 add_action( 'gform_update_status', function( $entry_id, $new_status ) {
 	if ( $new_status === 'trash' ) {
