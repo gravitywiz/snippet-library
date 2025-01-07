@@ -2,6 +2,8 @@
  * Gravity Perks // GP Limit Dates // Default value to the minimum date allowed
  * https://gravitywiz.com/documentation/gravity-forms-limit-dates/
  *
+ * Experimental Snippet 🧪
+ *
  * Instructions:
  * 1. Install our free Custom Javascript for Gravity Forms plugin.
  *    Download the plugin here: https://gravitywiz.com/gravity-forms-code-chest/
