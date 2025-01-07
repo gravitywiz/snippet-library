@@ -176,7 +176,8 @@ class GW_Value_Exists_Validation {
 
 		// Do not output main script if AJAX is enabled
 		if ( ! $is_ajax_enabled && $this->is_applicable_form( $form ) && ! self::$is_script_output && ! $this->is_ajax_submission( $form['id'], $is_ajax_enabled ) ) {
-			$this->output_script();
+			add_action( 'wp_footer', array( $this, 'output_script' ) );
+			add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
 		}
 
 		return $form;
