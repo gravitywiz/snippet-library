@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // Populate Anything // Require Filter Groups to have all values present.
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
+ *
+ * Experimental Snippet 🧪
  */
 add_filter( 'gppa_object_type_post_filter', function( $query_builder_args, $args ) {
 	/**
