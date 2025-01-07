@@ -2,6 +2,8 @@
  * Gravity Wiz // Gravity Forms // Value Counter
  * https://gravitywiz.com/
  *
+ * Experimental Snippet 🧪
+ *
  * Count the number of times a given value has been selected in a group of fields and populate that number into a Number field.
  * This snippet is designed to target a Number field and count selected values in Checkbox and Radio Button fields.
  *
