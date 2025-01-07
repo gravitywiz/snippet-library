@@ -3,6 +3,8 @@
  * Gravity Perks // Inventory + Nested Forms // Exclude Child Entries of Partial Entry Parents from Inventory
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
+ * Experimental Snippet 🧪
+ *
  * WIP: This provides very basic support for excluding child entries attached to a partial entry parent
  * from inventory limits.
  *
