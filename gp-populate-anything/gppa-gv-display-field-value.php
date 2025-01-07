@@ -2,6 +2,8 @@
 /**
  * Show values instead of labels for Populate-Anything-enabled fields in GravityView.
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
+ *
+ * Experimental Snippet 🧪
  */
 add_filter( 'gform_entry_field_value', function( $display_value, $field, $entry, $form ) {
 
