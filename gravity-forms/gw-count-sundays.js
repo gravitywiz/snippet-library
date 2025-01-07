@@ -2,6 +2,8 @@
  * Gravity Wiz // Gravity Forms // Count Number of Sundays Between Two Dates
  * https://gravitywiz.com/path/to/article/
  *
+ * Experimental Snippet 🧪
+ *
  * Use this snippet to count the number of Sundays between a start and end date, including those dates themselves.
  *
  * Note: This is a JavaScript snippet and there is no server-side validation to ensure that the calculated value
