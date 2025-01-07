@@ -3,6 +3,8 @@
  * Gravity Perks // Populate Anything // JSON API Object Type
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
+ * Experimental Snippet 🧪
+ *
  * This snippet adds a new Object Type that pulls from a JSON file containing airports and their IATA codes.
  * Use this snippet as a starting point for other HTTP-based APIs that you would like to populate fields from.
  *
