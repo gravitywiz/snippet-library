@@ -2,7 +2,7 @@
 /**
  * Gravity Perks // Media Library // Add terms to new Media Library files.
  * https://gravitywiz.com/documentation/gravity-forms-media-library/
- * 
+ *
  * Experimental Snippet 🧪
  */
 // Update "123" to your form ID and "4" to your GPML-enabled File Upload field.
