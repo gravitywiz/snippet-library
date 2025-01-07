@@ -2,6 +2,8 @@
  * Gravity Perks // GP Populate Anything // Automatically Check Checkboxes
  * http://gravitywiz.com/documentation/gravity-forms-populate-anything
  *
+ * Experimental Snippet 🧪
+ *
  * Instructions:
  *     1. Install our free Custom Javascript for Gravity Forms plugin.
  *        Download the plugin here: https://gravitywiz.com/gravity-forms-code-chest/
