@@ -1,5 +1,4 @@
 /**
- * Experimental Snippet 🧪
  * --- STOP! ---
  *
  * This snippet is deprecated and no longer required if you are using the latest version of Simply Schedule Appointments.
