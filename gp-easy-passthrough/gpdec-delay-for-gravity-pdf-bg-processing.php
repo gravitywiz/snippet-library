@@ -1,8 +1,9 @@
 <?php
-
 /**
  * Gravity Perks // Disable Entry Creation // Delay Deletion for Gravity PDF Background Processing
  * http://gravitywiz.com/documentation/gravity-forms-disable-entry-creation/
+ *
+ * Experimental Snippet 🧪
  *
  * Prevent the deletion of entries until PDFs are generated and attached to notifications. This is necessary if
  * using Gravity PDF's background processing as the entry will be deleted prior to the PDF being generated since
