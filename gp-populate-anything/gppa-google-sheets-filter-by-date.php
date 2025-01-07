@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // Populate Anything + Google Sheets // Convert Date Format in Date Field for Search to m/d/y
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
+ *
+ * Experimental Snippet 🧪
  * https://gravitywiz.com/populate-gravity-forms-with-google-sheets/
  */
 add_filter( 'gppa_replace_filter_value_variables_google_sheet', function ( $filter_value ) {
