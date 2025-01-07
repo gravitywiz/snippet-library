@@ -3,6 +3,8 @@
  * Gravity Wiz // Gravity Forms // Map Multiple Fields w/ Advanced Post Creation
  * https://gravitywiz.com/
  *
+ * Experimental Snippet 🧪
+ *
  * By default, the Advanced Post Creation add-on does not allow you to map multiple fields to a taxonomy nor does it
  * allow you to set terms by ID.
  *
