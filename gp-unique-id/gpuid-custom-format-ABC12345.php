@@ -1,6 +1,8 @@
-<?php // phpcs:ignore WordPress.Files.FileName.NotHyphenatedLowercase
+<?php
 /**
  * Gravity Perks // Unique ID // Custom Format: `ABC12345`
+ *
+ * Experimental Snippet 🧪
  *
  * Generate a Unique ID in the following format `ABC12345` where each letter can be any letter between A and Z and each
  * digit can be any number between 1 and 9.
