@@ -54,7 +54,8 @@ class GW_Coupons_Exclude_Products {
 	function load_form_script( $form ) {
 
 		if ( $this->is_applicable_form( $form ) && ! self::$is_script_output ) {
-			$this->output_script();
+			add_action( 'wp_footer', array( $this, 'output_script' ) );
+			add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
 		}
 
 		return $form;
