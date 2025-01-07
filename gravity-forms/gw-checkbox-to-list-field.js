@@ -2,6 +2,8 @@
  * Gravity Wiz // Gravity Forms // Checkbox to List Field
  * https://gravitywiz.com/
  *
+ * Experimental Snippet 🧪
+ *
  * When a Checkbox is clicked, add a new row to a List field with the checkbox value as the value in the first column 
  * of the newly added row.
  */
