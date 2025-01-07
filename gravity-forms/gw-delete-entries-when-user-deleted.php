@@ -3,6 +3,8 @@
  * Gravity Wiz // Gravity Forms // Delete User's Entries When User Deleted
  * https://gravitywiz.com/
  *
+ * Experimental Snippet 🧪
+ *
  * Automatically delete all of a user's entries across all forms when the user is deleted. If the user's content is
  * reassigned to another user, their entries will be reassigned to the same user rather than deleted.
  *
