@@ -2,6 +2,8 @@
  * Gravity Wiz // Gravity Forms // Prevent Non-numeric Characters in Input
  * https://gravitywiz.com/
  *
+ * Experimental Snippet 🧪
+ *
  * Based on solution provided here: https://stackoverflow.com/a/15729184/227711
  *
  * Instructions:
