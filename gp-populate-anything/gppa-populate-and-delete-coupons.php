@@ -3,6 +3,8 @@
  * Gravity Perks // Populate Anything // Populate & Delete Coupons
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
+ * Experimental Snippet 🧪
+ *
  * This experimental snippet demonstrates how to populate a Drop Down field with coupons (assisted by Populate Anything)
  * and then delete the selected coupon on submission.
  */
