@@ -1,5 +1,6 @@
 <?php
 /**
+ * Experimental Snippet 🧪
  * Output value instead of label for choice-based fields when using {all_fields} template or Nested Forms merge tag.
  */
 add_filter( 'gform_merge_tag_filter', function ( $field_value, $merge_tag, $options, $field, $raw_field_value ) {
