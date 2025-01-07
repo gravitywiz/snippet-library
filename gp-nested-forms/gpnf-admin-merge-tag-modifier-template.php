@@ -4,6 +4,8 @@
  * IMPORTANT: Make sure the file name is "nested-entries-detail.php".
  * Usage: Place this file in your current active theme structure.
  *
+ * Experimental Snippet 🧪
+ *
  * @var array  $nested_fields    An array of GF_Field objects.
  * @var array  $nested_form      The form object of the nested form.
  * @var array  $nested_field_ids An array of nested field IDs.
