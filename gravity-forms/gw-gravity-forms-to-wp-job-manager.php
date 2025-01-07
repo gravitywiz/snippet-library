@@ -3,6 +3,8 @@
  * Gravity Wiz // Gravity Forms // Populate GF Data into WP Job Manager Custom Fields
  * https://gravitywiz.com/
  *
+ * Experimental Snippet 🧪
+ *
  * Provides support for mapping a GF multiselect field to a WPJM multiselect field.
  */
 class GW_GF_To_WP_Job_Manager {
