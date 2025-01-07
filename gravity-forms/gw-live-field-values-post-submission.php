@@ -2,6 +2,8 @@
 /**
  * Gravity Wiz // Gravity Forms // Live Field Values Post-submission
  * https://gravitywiz.com/
+ *
+ * Experimental Snippet 🧪
  */
 // Update "123" to your form ID and "4" to your field ID.
 add_filter( 'gform_get_input_value_123_4', function( $value, $entry ) {
