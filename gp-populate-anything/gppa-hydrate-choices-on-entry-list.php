@@ -3,6 +3,8 @@
  * Gravity Perks // Populate Anything // Hydrate form on Entry List page to include dynamic choices
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
+ * Experimental Snippet 🧪
+ *
  * Installation: https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  *
  * Limitations:
