@@ -3,6 +3,8 @@
  * Gravity Perks // Populate Anything // Format Comma-delimited List of Files as Links
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
+ * Experimental Snippet 🧪
+ *
  * Populate a Single Line Text field with the value of a Multi-file Upload field and then use this snippet to display
  * the file URLs as links instead of plain text.
  */
