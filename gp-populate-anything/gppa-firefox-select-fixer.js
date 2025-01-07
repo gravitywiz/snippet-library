@@ -2,6 +2,8 @@
  * Gravity Wiz // Populate Anything // Firefox Select Fixer
  * https://gravitywiz.com/
  *
+ * Experimental Snippet 🧪
+ *
  * Firefox will auto-fill fields (including select fields) with the selected option upon
  * refresh. This can be problematic with Populate Anything if fields or Live Merge Tags rely
  * upon the value of the select as Firefox does not trigger any events. To work around this, we
