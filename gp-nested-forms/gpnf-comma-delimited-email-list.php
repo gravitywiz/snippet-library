@@ -3,6 +3,8 @@
  * Gravity Perks // Nested Forms // Convert Simple List to Comma-delimited List of Emails
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
+ * Experimental Snippet 🧪
+ *
  * Requires the All Fields Template plugin: https://gravitywiz.com/gravity-forms-all-fields-template/
  *
  * Example usage: {My Nested Form Field:1:filter[2]:listemails}
