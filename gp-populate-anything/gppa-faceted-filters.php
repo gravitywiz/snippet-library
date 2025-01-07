@@ -6,6 +6,8 @@
  *
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
+ * Experimental Snippet 🧪
+ *
  * Instructions:
  *   1. Add to site (https://gravitywiz.com/documentation/how-do-i-install-a-snippet/)
  *   2. Update field ID and form ID accordingly. In this snippet they are set to 5 and 2 respectively.
