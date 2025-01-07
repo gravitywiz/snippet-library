@@ -2,6 +2,8 @@
  * Gravity Perks // Populate Anything // Conditional Logic using a field that populates with no result
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
+ * Experimental Snippet 🧪
+ *
  * 1. Install this snippet with our free Custom JavaScript plugin.
  *    https://gravitywiz.com/gravity-forms-code-chest/
  */
