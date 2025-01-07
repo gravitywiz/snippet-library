@@ -3,6 +3,8 @@
  * Gravity Perks // Populate Anything // JSON API with Query Params
  * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
+ * Experimental Snippet 🧪
+ *
  * This snippet adds a new Object Type
  *
  * THE SOFTWARE/SNIPPET IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
