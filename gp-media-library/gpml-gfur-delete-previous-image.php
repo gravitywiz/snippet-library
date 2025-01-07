@@ -2,6 +2,8 @@
 /**
  * Gravity Perks // Media Library + Gravity Forms User Registration // Delete Previous Image
  * https://gravitywiz.com/documentation/gravity-forms-media-library/
+ *
+ * Experimental Snippet 🧪
  */
 add_filter( 'update_user_metadata', function( $return, $object_id, $meta_key, $meta_value, $prev_value ) {
 
