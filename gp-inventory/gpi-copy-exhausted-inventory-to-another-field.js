@@ -2,6 +2,8 @@
  * Gravity Perks // Inventory // Copy Exhausted Choices to Another Field
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
  *
+ * Experimental Snippet 🧪
+ *
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
