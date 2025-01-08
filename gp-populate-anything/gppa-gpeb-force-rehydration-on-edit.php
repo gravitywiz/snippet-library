@@ -16,14 +16,14 @@ add_filter( 'gpeb_edit_form_entry', function( $entry ) {
 	// Update (or remove) "4", "5", and "6" to the field IDs that should be rehydrated.
 	$field_ids = array( 4, 5, 6 );
 
-	if ( ! is_callable( array( 'GP_Populate_Anything', 'populate_field' ) ) || ! isset( $GLOBALS['gppa-field-values'] ) || $entry['form_id'] != $form_id ) {
+	if ( ! is_callable( array( gp_populate_anything(), 'populate_field' ) ) || ! isset( $GLOBALS['gppa-field-values'] ) || $entry['form_id'] != $form_id ) {
 		return $entry;
 	}
 
 	$form = GFAPI::get_form( $form_id );
 	foreach ( $form['fields'] as &$field ) {
 		if ( in_array( $field->id, $field_ids ) ) {
-			$hydrated_field      = gp_populate_anything()->populate_field( $field, $form, array(), $entry );
+			$hydrated_field      = gp_populate_anything()->populate_field( $field, $form, array(), gp_populate_anything()->get_posted_field_values( $form ) );
 			$entry[ $field->id ] = $hydrated_field['field_value'];
 		}
 	}
