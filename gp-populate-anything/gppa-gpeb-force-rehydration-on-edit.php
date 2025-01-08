@@ -23,7 +23,7 @@ add_filter( 'gpeb_edit_form_entry', function( $entry ) {
 	$form = GFAPI::get_form( $form_id );
 	foreach ( $form['fields'] as &$field ) {
 		if ( in_array( $field->id, $field_ids ) ) {
-			$hydrated_field      = gp_populate_anything()->populate_field( $field, $form, array(), gp_populate_anything()->get_posted_field_values( $form ) );
+			$hydrated_field      = gp_populate_anything()->populate_field( $field, $form, gp_populate_anything()->get_posted_field_values( $form ), array() );
 			$entry[ $field->id ] = $hydrated_field['field_value'];
 		}
 	}
