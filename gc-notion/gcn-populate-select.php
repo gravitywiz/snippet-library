@@ -4,7 +4,7 @@
  * Gravity Connect // Notion // Populate Select Field with Notion Database Options
  * https://gravitywiz.com/documentation/gravity-connect-notion/
  *
- * Populate a Select or Multi-Select field with the options from a Notion Database Select
+ * Populate a Dropdown or Multi-Select field with the options from a Notion Database Status, Select
  * or Multi-Select property.
  *
  * Instructions:
@@ -14,7 +14,8 @@
  * 2. Change the $field_id, $database_id, and $property_id variables to match your form and Notion database.
  *
  *   > 💡 The $database_id and $property_id can be found in the Javascript developer console in a GC Notion
- *   > feed settings AFTER the feed is connected to a database.
+ *   > feed settings AFTER the feed is connected to a database. An video demonstrating how to get
+ *   > a property ID can be viewed here: https://www.loom.com/share/30dd8d83750f424c8cf85a8f4dd8f5f7
  */
 
 add_filter( 'gform_pre_render_FORMID', function( $form, $ajax, $field_values ) {
