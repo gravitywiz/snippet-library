@@ -66,7 +66,7 @@ add_filter( 'gform_product_info', function( $product_info, $form, $entry ) use (
 								$child_product['quantity'] += $_child_product['quantity'];
 
 								$match_found = true;
-								unset($_child_products[$key]);
+								unset( $_child_products[ $key ] );
 								break;
 							}
 						}
