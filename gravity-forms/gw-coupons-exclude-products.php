@@ -6,7 +6,7 @@
  *
  * Requires Gravity Forms Coupons v1.1
  *
- * @version 1.2.1
+ * @version 1.2.2
  * @author  David Smith <david@gravitywiz.com>
  * @license GPL-2.0+
  * @link    http://gravitywiz.com/...
@@ -70,17 +70,9 @@ class GW_Coupons_Exclude_Products {
 
 				if( window.gform ) {
 
-					gform.addFilter( 'gform_coupons_discount_amount', function( discount, couponType, couponAmount, price, totalDiscount ) {
+					gform.addFilter( 'gform_coupons_discount_amount', function( discount, couponType, couponAmount, price, totalDiscount, formId ) {
 
-						// pretty hacky... work our way up the chain to see if the 4th func up is the expected func
-						var caller = arguments.callee.caller.caller.caller.caller;
-
-						if( caller.name != 'PopulateDiscountInfo' ) {
-							return discount;
-						}
-
-						var formId = caller.arguments[1],
-							price  = price - getExcludedAmount( formId );
+						price -= getExcludedAmount( formId );
 
 						if( couponType == 'percentage' ) {
 							discount = price * Number( ( couponAmount / 100 ) );
