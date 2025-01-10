@@ -5,6 +5,11 @@
  * Use this snippet to copy List field rows as new lines into a Paragraph field.
  *
  * Screenshot: https://gwiz.io/3wWlUts
+ *
+ * Instructions:
+ * 
+ * 1. Install this snippet with our free Code Chest plugin.
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  */
 gform.addFilter( 'gpcc_copied_value', function( value, $targetElem, field, sourceValues ) {
 	// Update "3" to your Paragraph field ID.
