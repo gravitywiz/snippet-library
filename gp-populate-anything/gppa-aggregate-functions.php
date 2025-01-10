@@ -17,7 +17,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  * Description:  Perform calculations on the values in a field/column and return a single value.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   https://gravitywiz.com/
  */
 class GPPA_Aggregate_Functions {
@@ -57,7 +57,7 @@ class GPPA_Aggregate_Functions {
 	}
 
 	public function enable_query_all_value_objects( $query_all_value_objects, $field, $field_values, $object_type_instance, $filter_groups, $primary_property, $templates ) {
-		return $this->matches_any_merge_tag( $templates['value'] );
+		return $this->matches_any_merge_tag( rgar( $templates, 'value' ) );
 	}
 
 	public function matches_any_merge_tag( $template_value ) {
@@ -65,6 +65,10 @@ class GPPA_Aggregate_Functions {
 	}
 
 	public function replace_template_sum_merge_tags( $template_value, $field, $template, $populate, $object, $object_type, $objects ) {
+		if ( ! is_string( $template_value ) ) {
+			return $template_value;
+		}
+
 		preg_match_all( self::$sum_regex, $template_value, $matches, PREG_SET_ORDER );
 		if ( $matches ) {
 			foreach ( $matches as $match ) {
@@ -84,6 +88,10 @@ class GPPA_Aggregate_Functions {
 	}
 
 	public function replace_template_avg_merge_tags( $template_value, $field, $template, $populate, $object, $object_type, $objects ) {
+		if ( ! is_string( $template_value ) ) {
+			return $template_value;
+		}
+
 		preg_match_all( self::$avg_regex, $template_value, $matches, PREG_SET_ORDER );
 		if ( $matches ) {
 			foreach ( $matches as $match ) {
@@ -105,6 +113,10 @@ class GPPA_Aggregate_Functions {
 	}
 
 	public function replace_template_min_merge_tags( $template_value, $field, $template, $populate, $object, $object_type, $objects ) {
+		if ( ! is_string( $template_value ) ) {
+			return $template_value;
+		}
+
 		preg_match_all( self::$min_regex, $template_value, $matches, PREG_SET_ORDER );
 		if ( $matches ) {
 			foreach ( $matches as $match ) {
@@ -130,6 +142,10 @@ class GPPA_Aggregate_Functions {
 	}
 
 	public function replace_template_max_merge_tags( $template_value, $field, $template, $populate, $object, $object_type, $objects ) {
+		if ( ! is_string( $template_value ) ) {
+			return $template_value;
+		}
+
 		preg_match_all( self::$max_regex, $template_value, $matches, PREG_SET_ORDER );
 		if ( $matches ) {
 			foreach ( $matches as $match ) {

@@ -11,7 +11,7 @@
 add_action( 'gform_pre_submission_123', 'gw_capitalize_submitted_data' );
 function gw_capitalize_submitted_data( $form ) {
 
-	$applicable_input_types = array( 'address', 'text', 'textarea', 'name' );
+	$applicable_input_types = array( 'address', 'text', 'textarea', 'name', 'list' );
 
 	foreach ( $form['fields'] as $field ) {
 
@@ -27,8 +27,14 @@ function gw_capitalize_submitted_data( $form ) {
 				$_POST[ $input_key ] = ucwords( strtolower( rgpost( $input_key ) ) );
 			}
 		} else {
-			$input_key           = sprintf( 'input_%s', $field['id'] );
-			$_POST[ $input_key ] = ucwords( strtolower( rgpost( $input_key ) ) );
+			$input_key = sprintf( 'input_%s', $field['id'] );
+			if ( $field->type == 'list' ) {
+				$_POST[ $input_key ] = array_map( function( $value ) {
+					return ucwords( strtolower( $value ) );
+				}, $_POST[ $input_key ] );
+			} else {
+				$_POST[ $input_key ] = ucwords( strtolower( rgpost( $input_key ) ) );
+			}
 		}
 	}
 

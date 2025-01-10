@@ -9,7 +9,7 @@
  * Plugin URI:   https://gravitywiz.com/edit-gravity-forms-entries-on-the-front-end/
  * Description:  Edit the entry that was passed through via GP Easy Passthrough rather than creating a new entry.
  * Author:       Gravity Wiz
- * Version:      1.4.2
+ * Version:      1.4.3
  * Author URI:   https://gravitywiz.com/
  */
 class GPEP_Edit_Entry {
@@ -17,6 +17,8 @@ class GPEP_Edit_Entry {
 	private $form_id;
 	private $delete_partial;
 	private $passed_through_entries;
+	private $refresh_token;
+	private $process_feeds;
 
 	public function __construct( $options ) {
 
@@ -27,9 +29,11 @@ class GPEP_Edit_Entry {
 		$this->form_id        = rgar( $options, 'form_id' );
 		$this->delete_partial = rgar( $options, 'delete_partial', true );
 		$this->refresh_token  = rgar( $options, 'refresh_token', false );
+		$this->process_feeds  = rgar( $options, 'process_feeds', false );
 
 		add_filter( "gpep_form_{$this->form_id}", array( $this, 'capture_passed_through_entry_ids' ), 10, 3 );
 		add_filter( "gform_entry_id_pre_save_lead_{$this->form_id}", array( $this, 'update_entry_id' ), 10, 2 );
+		add_filter( "gform_entry_post_save_{$this->form_id}", array( $this, 'delete_values_for_conditionally_hidden_fields' ), 10, 2 );
 
 		// Enable edit view in GP Inventory.
 		add_filter( "gpi_is_edit_view_{$this->form_id}", '__return_true' );
@@ -39,6 +43,8 @@ class GPEP_Edit_Entry {
 
 		add_filter( "gpi_query_{$this->form_id}", array( $this, 'exclude_edit_entry_from_inventory' ), 10, 2 );
 
+		// If we need to reprocess any feeds on 'edit'.
+		add_filter( 'gform_entry_post_save', array( $this, 'process_feeds' ), 10, 2 );
 	}
 
 	public function capture_passed_through_entry_ids( $form, $values, $passed_through_entries ) {
@@ -91,6 +97,9 @@ class GPEP_Edit_Entry {
 
 		$update_entry_id = $this->get_edit_entry_id( $form['id'] );
 		if ( $update_entry_id ) {
+			// Purge product info cache
+			$this->purge_product_cache( $form, GFAPI::get_entry( $update_entry_id ) );
+
 			if ( $this->delete_partial
 				&& is_callable( array( 'GF_Partial_Entries', 'get_instance' ) )
 				&& $entry_id !== null
@@ -110,6 +119,66 @@ class GPEP_Edit_Entry {
 		}
 
 		return $entry_id;
+	}
+
+	/**
+	 * Delete values that exist for the entry in the database for fields that are now conditionally hidden.
+	 *
+	 * If we find any instance where a conditionally hidden field has a value, we'll update the DB with the passed entry,
+	 * which was just submitted and will not contain conditionally hidden values.
+	 *
+	 * Note: There's a good case for us to simply call GFAPI::update_entry() with the passed entry without all the other
+	 * fancy logic to that only makes the call if it identifies a conditionally hidden field with a DB value. A thought
+	 * for future us.
+	 *
+	 * @param $entry
+	 * @param $form
+	 *
+	 * @return mixed
+	 */
+	public function delete_values_for_conditionally_hidden_fields( $entry, $form ) {
+
+		// We'll only update the entry if we identify a field value that needs to be deleted.
+		$has_change = false;
+
+		// The passed entry does not reflect what is actually in the database.
+		$db_entry = null;
+
+		/**
+		 * @var \GF_Field $field
+		 */
+		foreach ( $form['fields'] as $field ) {
+
+			if ( ! GFFormsModel::is_field_hidden( $form, $field, array(), $entry ) ) {
+				continue;
+			}
+
+			if ( ! $db_entry ) {
+				$db_entry = GFAPI::get_entry( $entry['id'] );
+			}
+
+			$inputs = $field->get_entry_inputs();
+			if ( ! $inputs ) {
+				$inputs = array(
+					array(
+						'id' => $field->id,
+					),
+				);
+			}
+
+			foreach ( $inputs as $input ) {
+				if ( ! empty( $db_entry[ $input['id'] ] ) ) {
+					$has_change = true;
+					break 2;
+				}
+			}
+		}
+
+		if ( $has_change ) {
+			GFAPI::update_entry( $entry );
+		}
+
+		return $entry;
 	}
 
 	public function get_passed_through_entries_input_name( $form_id ) {
@@ -180,11 +249,53 @@ class GPEP_Edit_Entry {
 		return $query;
 	}
 
+	public static function purge_product_cache( $form, $entry ) {
+
+		$cache_options = array(
+			array( false, false ),
+			array( false, true ),
+			array( true, false ),
+			array( true, true ),
+		);
+
+		foreach ( $cache_options as $cache_option ) {
+			list( $use_choice_text, $use_admin_label ) = $cache_option;
+			if ( gform_get_meta( rgar( $entry, 'id' ), "gform_product_info_{$use_choice_text}_{$use_admin_label}" ) ) {
+				gform_delete_meta( rgar( $entry, 'id' ), "gform_product_info_{$use_choice_text}_{$use_admin_label}" );
+			}
+		}
+
+	}
+
+	public function process_feeds( $entry, $form ) {
+		if ( ! $this->process_feeds ) {
+			return $entry;
+		}
+
+		/**
+		 * Disable asynchronous feed process on edit otherwise async feeds will not be re-ran due to a check in
+		 * class-gf-feed-processor.php that checks `gform_get_meta( $entry_id, 'processed_feeds' )` and there isn't
+		 * a way to bypass it.
+		 */
+		$filter_priority = rand( 100000, 999999 );
+		add_filter( 'gform_is_feed_asynchronous', '__return_false', $filter_priority );
+
+		foreach ( GFAddOn::get_registered_addons( true ) as $addon ) {
+			if ( method_exists( $addon, 'maybe_process_feed' ) && ( $this->process_feeds === true || strpos( $this->process_feeds, $addon->get_slug() ) !== false ) ) {
+				$addon->maybe_process_feed( $entry, $form );
+			}
+		}
+
+		remove_filter( 'gform_is_feed_asynchronous', '__return_false', $filter_priority );
+		return $entry;
+	}
+
 }
 
 // Configurations
 new GPEP_Edit_Entry( array(
 	'form_id'        => 123,   // Set this to the form ID.
 	'delete_partial' => false, // Set this to false if you wish to preserve partial entries after an edit is submitted.
-	'refresh_token'  => true,  // Set this to true to generate a fresh Easy Passthrough token after updating an entry.
+	'refresh_token'  => false,  // Set this to true to generate a fresh Easy Passthrough token after updating an entry.
+	'process_feeds'  => false,  // Set this to true to process all feed addons on Edit Entry, or provide a comma separated list of addon slugs like 'gravityformsuserregistration', etc.
 ) );

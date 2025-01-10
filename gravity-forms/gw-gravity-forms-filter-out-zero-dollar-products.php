@@ -9,18 +9,24 @@
  * Gravity Forms Drop Down Products which resulted in the placeholder choice being added to the
  * order as a zero-cost line item. We are not aware of a current need for this snippet.
  */
-add_filter( 'gform_product_info', 'gw_remove_empty_products', 10, 3 );
-function gw_remove_empty_products( $product_info, $form, $lead ) {
+add_filter( 'gform_product_info', function ( $product_info, $form, $lead ) {
 
 	$products = array();
 
 	foreach ( $product_info['products'] as $field_id => $product ) {
 		if ( GFCommon::to_number( $product['price'] ) != 0 ) {
 			$products[ $field_id ] = $product;
+		} else if ( isset( $product['options'] ) && is_array( $product['options'] ) ) {
+			foreach ( $product['options'] as $option ) {
+				if ( GFCommon::to_number( $option['price'] ) !== 0 ) {
+					$products[ $field_id ] = $product;
+					break;
+				}
+			}
 		}
 	}
 
 	$product_info['products'] = $products;
 
 	return $product_info;
-}
+}, 10, 3 );

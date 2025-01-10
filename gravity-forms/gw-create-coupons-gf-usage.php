@@ -1,7 +1,7 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Create Coupons with Gravity Forms for Gravity Forms
- * http://gravitywiz.com/creating-coupons-for-gravity-forms/
+ * https://gravitywiz.com/creating-coupons-for-gf-coupons-add-on-with-gravity-forms/
  */
 
 // Coupon with Flat Discount, Applied to Total

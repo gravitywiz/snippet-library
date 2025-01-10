@@ -12,9 +12,19 @@
  * rather than being removed
  */
 class GPI_Waiting_List {
+
+	private $_args = array();
+
 	public $waitlist_message = '(waiting list)';
 
-	public function __construct() {
+	public function __construct( $args = array() ) {
+
+		// set our default arguments, parse against the provided arguments, and store for use throughout the class
+		$this->_args = wp_parse_args( $args, array(
+			'form_id'  => false,
+			'field_id' => false,
+		) );
+
 		add_action( 'init', array( $this, 'add_hooks' ), 20 ); // Wait for GPI to be instantiated
 	}
 
@@ -50,8 +60,28 @@ class GPI_Waiting_List {
 		remove_filter( 'gform_validation', array( gp_inventory_type_simple(), 'validation' ) );
 
 		// Remove locking out single products.
-		add_filter( 'gform_field_input', function ( $return, $field ) {
+		add_filter( 'gform_field_input', array( $this, 'remove_gform_field_input_filters' ), 15, 2 );
 
+		add_filter( 'gform_pre_render', array( $this, 'add_waiting_list_to_single_product' ) );
+
+		// Allow negative stock to be used for conditional logic validation.
+		add_filter( 'gpi_allow_negative_stock', array( $this, 'allow_negative_stock_for_conditional_logic' ), 10, 3 );
+	}
+
+	public function is_applicable_form( $form ) {
+		$form_id = isset( $form['id'] ) ? $form['id'] : $form;
+
+		return empty( $this->_args['form_id'] ) || $form_id == $this->_args['form_id'];
+	}
+
+	public function is_applicable_field( $field ) {
+		$field_id = isset( $field['id'] ) ? $field['id'] : $field;
+
+		return empty( $this->_args['field_id'] ) || $this->_args['field_id'] == $field_id;
+	}
+
+	public function remove_gform_field_input_filters( $return, $field ) {
+		if ( $this->is_applicable_form( $field->formId ) && $this->is_applicable_field( $field ) ) {
 			remove_filter( "gform_field_input_{$field->formId}_{$field->id}", array(
 				gp_inventory_type_simple(),
 				'hide_field',
@@ -61,47 +91,54 @@ class GPI_Waiting_List {
 				gp_inventory_type_advanced(),
 				'hide_field',
 			) );
+		}
 
-			return $return;
-		}, 15, 2 );
-
-		add_filter( 'gform_pre_render', array( $this, 'add_waiting_list_to_single_product' ) );
+		return $return;
 	}
 
 	public function entries_field_value_with_waitlist_message( $value, $form_id, $field_id, $entry ) {
 		$form  = GFAPI::get_form( $form_id );
 		$field = GFAPI::get_field( $form, $field_id );
 
-		$value = $this->add_waitlist_message_to_entry_value( $value, $field, $entry, $form );
+		if ( $this->is_applicable_form( $form ) && $this->is_applicable_field( $field ) ) {
+			$value = $this->add_waitlist_message_to_entry_value( $value, $field, $entry, $form );
+		}
 
 		return $value;
 	}
 
 	public function pre_render_choice( $choice, $exceeded_limit, $field, $form, $count ) {
-		$limit         = (int) rgar( $choice, 'inventory_limit' );
-		$how_many_left = max( $limit - $count, 0 );
+		if ( $this->is_applicable_form( $form ) && $this->is_applicable_field( $field ) ) {
+			$limit         = (int) rgar( $choice, 'inventory_limit' );
+			$how_many_left = max( $limit - $count, 0 );
 
-		if ( $how_many_left <= 0 ) {
-			$choice                 = $this->apply_waitlist_message_to_choice( $choice, $field, $form, $how_many_left );
-			$choice['isWaitlisted'] = true;
+			if ( $how_many_left <= 0 ) {
+				$choice                 = $this->apply_waitlist_message_to_choice( $choice, $field, $form, $how_many_left );
+				$choice['isWaitlisted'] = true;
+			}
 		}
-
 		return $choice;
 	}
 
 	public function apply_waitlist_message_to_choice( $choice, $field, $form, $how_many_left = false ) {
-		$message         = $this->waitlist_message;
-		$default_message = gp_inventory_type_choices()->replace_choice_available_inventory_merge_tags( gp_inventory_type_choices()->get_inventory_available_message( $field ), $field, $form, $choice, $how_many_left );
-		if ( strpos( $choice['text'], $default_message ) === false ) {
-			$choice['text'] .= ' ' . $message;
-		} else {
-			$choice['text'] = str_replace( $default_message, $message, $choice['text'] );
+		if ( $this->is_applicable_form( $form ) && $this->is_applicable_field( $field ) ) {
+			$message         = $this->waitlist_message;
+			$default_message = gp_inventory_type_choices()->replace_choice_available_inventory_merge_tags( gp_inventory_type_choices()->get_inventory_available_message( $field ), $field, $form, $choice, $how_many_left );
+			if ( strpos( $choice['text'], $default_message ) === false ) {
+				$choice['text'] .= ' ' . $message;
+			} else {
+				$choice['text'] = str_replace( $default_message, $message, $choice['text'] );
+			}
 		}
 
 		return $choice;
 	}
 
 	public function add_waitlist_message_to_entry_value( $value, $field, $entry, $form ) {
+		if ( ! $this->is_applicable_form( $form ) || ! $this->is_applicable_field( $field ) ) {
+			return $value;
+		}
+
 		if ( gp_inventory_type_choices()->is_applicable_field( $field ) ) {
 			foreach ( $field->choices as $choice ) {
 				if ( $choice['text'] != $value ) {
@@ -129,7 +166,15 @@ class GPI_Waiting_List {
 	}
 
 	public function add_entry_meta( $entry, $form ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $entry;
+		}
+
 		foreach ( $form['fields'] as $field ) {
+			if ( ! $this->is_applicable_field( $field ) ) {
+				continue;
+			}
+
 			// Checks all inventory types
 			if ( ! gp_inventory_conditional_logic()->is_applicable_field( $field ) ) {
 				continue;
@@ -154,7 +199,15 @@ class GPI_Waiting_List {
 	}
 
 	public function add_waitlist_message_to_choices_on_submission( $form ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $form;
+		}
+
 		foreach ( $form['fields'] as &$field ) {
+			if ( ! $this->is_applicable_field( $field ) ) {
+				continue;
+			}
+
 			// Checks all inventory types
 			if ( ! gp_inventory_conditional_logic()->is_applicable_field( $field ) ) {
 				continue;
@@ -182,7 +235,15 @@ class GPI_Waiting_List {
 	}
 
 	public function add_waiting_list_to_single_product( $form ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $form;
+		}
+
 		foreach ( $form['fields'] as &$field ) {
+			if ( ! $this->is_applicable_field( $field ) ) {
+				continue;
+			}
+
 			if ( ! gp_inventory_type_simple()->is_applicable_field( $field ) && ! gp_inventory_type_advanced()->is_applicable_field( $field ) ) {
 				continue;
 			}
@@ -199,6 +260,14 @@ class GPI_Waiting_List {
 		}
 
 		return $form;
+	}
+
+	public function allow_negative_stock_for_conditional_logic( $allow_negative_stock, $target_field, $form ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $allow_negative_stock;
+		}
+
+		return true;
 	}
 
 }

@@ -45,11 +45,11 @@ add_filter( 'gp_template_output_nested-entries', function( $markup, $located_tem
 				<?php endforeach; ?>
 				<td class="gpnf-row-actions" style="display: none;" data-bind="visible: true">
 					<ul>
-						<li class="edit"><button class="edit-button" data-bind="click: $parent.editEntry, attr: { 'aria-label': '<?php echo esc_js( $aria_labels['edit_entry'] ); ?>'.format( $index() + 1, f<?php echo $nested_fields[0]['id']; ?>.label ) }"><?php echo $labels['edit_entry']; ?></button></li>
+						<li class="edit"><button class="edit-button" data-bind="click: $parent.editEntry, attr: { 'aria-label': '<?php echo esc_js( $aria_labels['edit_entry'] ); ?>'.gformFormat( $index() + 1, f<?php echo $nested_fields[0]['id']; ?>.label ) }"><?php echo $labels['edit_entry']; ?></button></li>
 						<?php if ( $enable_duplication ) : ?>
-							<li class="duplicate" data-bind="visible: ! $parent.isMaxed()"><button href="#" data-bind="click: $parent.duplicateEntry, attr: { 'aria-label': '<?php echo esc_js( $aria_labels['duplicate_entry'] ); ?>'.format( $index() + 1, f<?php echo $nested_fields[0]['id']; ?>.label ) }"><?php echo $labels['duplicate_entry']; ?></button></li>
+							<li class="duplicate" data-bind="visible: ! $parent.isMaxed()"><button href="#" data-bind="click: $parent.duplicateEntry, attr: { 'aria-label': '<?php echo esc_js( $aria_labels['duplicate_entry'] ); ?>'.gformFormat( $index() + 1, f<?php echo $nested_fields[0]['id']; ?>.label ) }"><?php echo $labels['duplicate_entry']; ?></button></li>
 						<?php endif; ?>
-						<li class="delete"><button class="delete-button" data-bind="click: $parent.deleteEntry, attr: { 'aria-label': '<?php echo esc_js( $aria_labels['delete_entry'] ); ?>'.format( $index() + 1, f<?php echo $nested_fields[0]['id']; ?>.label ) }"><?php echo $labels['delete_entry']; ?></button></li>
+						<li class="delete"><button class="delete-button" data-bind="click: $parent.deleteEntry, attr: { 'aria-label': '<?php echo esc_js( $aria_labels['delete_entry'] ); ?>'.gformFormat( $index() + 1, f<?php echo $nested_fields[0]['id']; ?>.label ) }"><?php echo $labels['delete_entry']; ?></button></li>
 					</ul>
 				</td>
 			</tr>

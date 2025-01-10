@@ -1,6 +1,5 @@
-// Round the total field
-gform.addFilter( 'gform_product_total', function(total, formId){
-	var interval = 1; // Change this to the nearest percision (e.g. 10 rounds to the nearest 10,20,30... etc.)
-	var base = Math.round( total / interval );
-	return base * interval;
-} );
+/**
+ * We're no longer using the experimental folder for experimental snippets. 🚧
+ * You can now find the snippet here:
+ * https://github.com/gravitywiz/snippet-library/blob/master/gravity-forms/gw-round-total.js
+ */

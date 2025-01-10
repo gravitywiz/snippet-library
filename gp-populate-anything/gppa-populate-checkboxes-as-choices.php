@@ -1,23 +1,30 @@
 <?php
 /**
- * See https://gravitywiz.com/documentation/how-do-i-install-a-snippet/ for details on how to install snippets like these.
+ * Gravity Perks // Populate Anything // Populate Checkboxes (and Multi Selects) as Choices
+ * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
- * The following snippet allows you to use a checkbox field as choices.
- *
- * This will use whatever property is selected in the "Value Template" for the choices.
- *
- * FORMID is the form that the field with dynamically populated choices is on
- * FIELDID is the field ID of the field that you wish to modify the choices for
+ * When populating data from a Checkbox or Multi Select field via the Gravity Forms Entry object type, all selected values
+ * for the given field of each entry will be populated as a single choice. This snippet will split those values up into
+ * separate choices.
  */
-add_filter( 'gppa_input_choices_FORMID_FIELDID', 'gppa_populate_checkboxes_as_choices', 10, 3 );
+// Update "123" to your form ID and "4" to your field ID.
+add_filter( 'gppa_input_choices_123_4', 'gppa_populate_checkboxes_as_choices', 10, 3 );
 function gppa_populate_checkboxes_as_choices( $choices, $field, $objects ) {
+
 	$choices   = array();
 	$templates = rgar( $field, 'gppa-choices-templates', array() );
-	foreach ( $objects as $object ) {
-		$field_id = str_replace( 'gf_field_', '', rgar( $templates, 'value' ) );
 
+	if ( empty( $objects ) ) {
+		return $choices;
+	}
+
+	$source_form     = GFAPI::get_form( $objects[0]->form_id );
+	$source_field_id = str_replace( 'gf_field_', '', rgar( $templates, 'value' ) );
+	$source_field    = GFAPI::get_field( $source_form, $source_field_id );
+
+	foreach ( $objects as $object ) {
 		foreach ( $object as $meta_key => $meta_value ) {
-			if ( absint( $meta_key ) === absint( $field_id ) ) {
+			if ( absint( $meta_key ) === absint( $source_field_id ) ) {
 				/**
 				 * Some fields such as the multi-select store the selected values in one meta value.
 				 *
@@ -28,18 +35,13 @@ function gppa_populate_checkboxes_as_choices( $choices, $field, $objects ) {
 					continue;
 				}
 
-				if ( is_array( $meta_value ) ) {
-					foreach ( $meta_value as $value ) {
-						$choices[] = array(
-							'value' => $value,
-							'text'  => $value,
-						);
-					}
-				} else {
-					$choices[] = array(
-						'value' => $meta_value,
-						'text'  => $meta_value,
-					);
+				if ( ! is_array( $meta_value ) ) {
+					$meta_value = array( $meta_value );
+				}
+
+				foreach ( $meta_value as $value ) {
+					$source_choice = $source_field->get_selected_choice( $value );
+					$choices[]     = $source_choice;
 				}
 			}
 		}

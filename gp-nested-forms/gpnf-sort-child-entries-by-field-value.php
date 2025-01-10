@@ -14,7 +14,8 @@ add_filter( 'gpnf_template_args_123_4', function( $args ) {
 	// Update "5" to the ID of the child field by which you would like to sort.
 	$field_id = 5;
 	$order    = 'asc'; // 'asc' or 'desc'
-	if ( $args['template'] === 'nested-entries-detail-simple' && $args['field']->is_gravityview() ) {
+	// Optionally, limit this to GravityView by adding and additional condition: ` && $args['field']->is_gravityview()`.
+	if ( $args['template'] === 'nested-entries-detail-simple' ) {
 		usort( $args['entries'], function( $a, $b ) use ( $field_id, $order ) {
 			$first  = rgar( $a, $field_id );
 			$second = rgar( $b, $field_id );

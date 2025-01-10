@@ -20,7 +20,7 @@
  * Plugin URI:   https://gravitywiz.com/gravity-forms-feed-specific-submit-button/
  * Description:  Change the label of the submit button depending on which payment feed will be used to process the order.
  * Author:       Gravity Wiz.
- * Version:      1.2
+ * Version:      1.3
  * Author URI:   https://gravitywiz.com
  */
 class GW_Feed_Specific_Submit_Button {
@@ -87,7 +87,7 @@ class GW_Feed_Specific_Submit_Button {
 
 				gform.addAction( 'gform_frontend_feeds_evaluated', function( feeds, formId ) {
 
-					var $submitButton = $( '#gform_submit_button_{0}'.format( formId ) ),
+					var $submitButton = $( '#gform_submit_button_{0}'.gformFormat( formId ) ),
 						originalLabel = $submitButton.data( 'default-label' );
 
 					if( originalLabel ) {

@@ -7,10 +7,6 @@
  * Requires Gravity Forms Coupons v1.1
  *
  * @version 1.3
- * @author  David Smith <david@gravitywiz.com>
- * @author  James M. Joyce <james@flashpointcs.net>
- * @license GPL-2.0+
- * @link    http://gravitywiz.com/...
  */
 class GW_Coupons_Exclude_Products {
 
@@ -57,7 +53,8 @@ class GW_Coupons_Exclude_Products {
 	function load_form_script( $form ) {
 
 		if ( $this->is_applicable_form( $form ) && ! self::$is_script_output ) {
-			$this->output_script();
+			add_action( 'wp_footer', array( $this, 'output_script' ) );
+			add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
 		}
 
 		return $form;
@@ -72,24 +69,9 @@ class GW_Coupons_Exclude_Products {
 
 				if( window.gform ) {
 
-					gform.addFilter( 'gform_coupons_discount_amount', function( discount, couponType, couponAmount, price, totalDiscount, formId = null ) {
+          gform.addFilter( 'gform_coupons_discount_amount', function( discount, couponType, couponAmount, price, totalDiscount, formId ) {
 
-						if( ! formId ) { // GF Coupons >= 3.0.1 adds formId param to this filter
-							// pretty hacky... work our way up the chain to see if the 4th func up is the expected func
-							var caller = arguments.callee.caller.caller.caller.caller;
-
-							if( caller.name != 'PopulateDiscountInfo' ) {
-								return discount;
-							}
-
-							formId = caller.arguments[1];
-						}
-						
-						if( couponType == 'percentage' && couponAmount == 100 && gf_global.gfcep.skipFor100Percent ) {
-							return discount;
-						}
-
-						var price  = price - getExcludedAmount( formId );
+						price -= getExcludedAmount( formId );
 
 						if( couponType == 'percentage' ) {
 							discount = price * Number( ( couponAmount / 100 ) );

@@ -1,6 +1,7 @@
 <?php
 /**
  * Gravity Perks // Populate Anything // Populate Child Entries
+ * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
  * Populate child entries from a Nested Form field into any multi-choice field.
  *
@@ -30,7 +31,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  * Description:  A brief description about this snippet and the functionality it provides. Might also include basic usage instructions if applicable.
  * Author:       Gravity Wiz
- * Version:      1.2
+ * Version:      1.3
  * Author URI:   http://gravitywiz.com
  */
 class GPPA_Populate_Child_Entries {
@@ -117,7 +118,7 @@ class GPPA_Populate_Child_Entries {
 
 					self.init = function() {
 
-						self.$peidField = $( '#input_{0}_{1}'.format( self.formId, self.fieldId ) );
+						self.$peidField = $( '#input_{0}_{1}'.gformFormat( self.formId, self.fieldId ) );
 
 						if ( typeof window[ 'gpnfSessionPromise_' + self.formId ] === 'undefined' ) {
 							gform.addAction( 'gpnf_session_initialized', function() {
@@ -131,7 +132,7 @@ class GPPA_Populate_Child_Entries {
 
 					self.setupPeidField = function() {
 
-						var gpnfCookie = $.parseJSON( self.getCookie( 'gpnf_form_session_{0}'.format( self.formId ) ) );
+						var gpnfCookie = $.parseJSON( self.getCookie( 'gpnf_form_session_{0}'.gformFormat( self.formId ) ) );
 
 						if ( ! self.$peidField.val() ) {
 							self.$peidField
@@ -140,7 +141,7 @@ class GPPA_Populate_Child_Entries {
 						}
 
 						for ( var i = 0; i < self.nestedFormFieldIds.length; i++ ) {
-							window[ 'GPNestedForms_{0}_{1}'.format( self.formId, self.nestedFormFieldIds[ i ] ) ].viewModel.entries.subscribe( function( entries ) {
+							window[ 'GPNestedForms_{0}_{1}'.gformFormat( self.formId, self.nestedFormFieldIds[ i ] ) ].viewModel.entries.subscribe( function( entries ) {
 								self.$peidField.data( 'lastValue', '' ).change();
 							} );
 						}

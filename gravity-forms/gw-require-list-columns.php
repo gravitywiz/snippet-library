@@ -5,7 +5,8 @@
  */
 class GWRequireListColumns {
 
-	private $field_ids;
+	private $field_ids     = array();
+	private $required_cols = array();
 
 	public static $fields_with_req_cols = array();
 

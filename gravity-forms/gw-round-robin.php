@@ -10,12 +10,14 @@
  * employees are assigned to the next available shift, and/or balancing the responsibility of any task-oriented
  * submission (e.g. support request, job application, contest entry).
  *
- * @version  1.5
+ * @version  1.6
  * @author   David Smith <david@gravitywiz.com>
  * @license  GPL-2.0+
  * @link     http://gravitywiz.com/
  */
 class GW_Round_Robin {
+
+	private $_args = array();
 
 	public function __construct( $args = array() ) {
 
@@ -64,14 +66,22 @@ class GW_Round_Robin {
 			return $entry;
 		}
 
+		$field = GFAPI::get_field( $entry['form_id'], $this->_args['field_id'] );
+
+		// Ignore if Round Robin field is hidden by conditional logic.
+		if ( GFFormsModel::is_field_hidden( $form, $field, array() ) ) {
+			return $entry;
+		}
+
 		$rotation   = $this->get_rotation_values( $this->_args['field_id'], $form );
-		$last_entry = $this->get_last_entry( $entry, GFAPI::get_field( $entry['form_id'], $this->_args['field_id'] ) );
+		$last_entry = $this->get_last_entry( $entry, $field );
 
 		// Get the value submitted for our designated field in the last entry.
 		$last_value = rgar( $last_entry, $this->_args['field_id'] );
 
 		// Determine the next index at which to fetch our value.
-		$next_index = empty( $last_value ) ? 0 : array_search( $last_value, $rotation ) + 1;
+		$next_index = empty( $last_value ) ? array_search( $entry[ $this->_args['field_id'] ], $rotation ) : array_search( $last_value, $rotation ) + 1;
+
 		if ( $next_index > count( $rotation ) - 1 ) {
 			$next_index = 0;
 		}
@@ -90,7 +100,14 @@ class GW_Round_Robin {
 
 	public function get_last_entry( $entry, $field ) {
 
-		$field_filters = array();
+		// Find the last entry that has a value in our Round Robin field.
+		$field_filters = array(
+			array(
+				'key'      => $this->_args['field_id'],
+				'operator' => 'ISNOT',
+				'value'    => '',
+			),
+		);
 
 		// GPPA integration only supports the first group of filters and filters that are field-specific (no custom values).
 		if ( is_callable( 'gp_populate_anything' ) && $field->{'gppa-choices-enabled'} ) {
@@ -152,6 +169,11 @@ class GW_Round_Robin {
 		// Add support for GP Limit Choices.
 		if ( is_callable( 'gp_limit_choices' ) ) {
 			$field->choices = gp_limit_choices()->apply_choice_limits( $field->choices, $field, $form );
+		}
+
+		// Add support for GP Inventory Choices.
+		if ( is_callable( 'gp_inventory_type_choices' ) ) {
+			$field->choices = gp_inventory_type_choices()->apply_choice_limits( $field->choices, $field, $form );
 		}
 
 		$rotation = array_filter( wp_list_pluck( $field->choices, 'value' ) );

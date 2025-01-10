@@ -7,7 +7,6 @@
  *
  * Requires GP File Renamer v1.0.5+.
  */
-add_filter( 'gpfr_filename', function( $renamed_file, $file, $entry, $form, $field ) {
-	$renamed_file = gp_file_renamer()->get_template_value( '{entry:id}/{filename}-{i}', $file, $entry, $form, $field );
-	return $renamed_file;
+add_filter( 'gpfr_filename_template', function ( $template, $filename, $form, $field, $entry ) {
+	return '{entry:id}/{filename}-{i}';
 }, 10, 5 );

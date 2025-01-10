@@ -4,7 +4,7 @@
  *
  * Provides the ability to populate a Date field with a modified date based on the current date or a user-submitted date.
  *
- * @version   2.7
+ * @version   2.8
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/populate-dates-gravity-form-fields/
@@ -12,6 +12,9 @@
 class GW_Populate_Date {
 
 	protected static $is_script_output = false;
+
+	private $_args         = array();
+	private $_field_values = array();
 
 	public function __construct( $args = array() ) {
 
@@ -241,7 +244,9 @@ class GW_Populate_Date {
 					$hour = 12;
 				}
 			}
-			$date = array( $hour, $minute, $ampm );
+			// Ensure the time value is retained as a String.
+			// If saved in array format, it will not reload the value after conditional viewing/hiding.
+			$date = "{$hour}:{$minute} {$ampm}";
 		} elseif ( $this->_args['enable_i18n'] ) {
 			$date = strftime( $format, $timestamp );
 		} else {
@@ -351,7 +356,7 @@ class GW_Populate_Date {
 							case 'field':
 								var inputId  = self.modifier.inputId,
 									value    = self.getFieldValue( inputId ),
-									modifier = value !== '' ? self.modifier.modifier.format( value ) : false;
+									modifier = value !== '' ? self.modifier.modifier.gformFormat( value ) : false;
 								break;
 						}
 
@@ -396,7 +401,7 @@ class GW_Populate_Date {
 						var fieldId    = gformExtractFieldId( inputId ),
 							inputIndex = gformExtractInputIndex( inputId ),
 							id         = inputIndex !== fieldId ? '#input_{0}_{1}' : '#input_{0}_{1}_{2}',
-							$input     = $( id.format( self.formId, fieldId, inputIndex ) );
+							$input     = $( id.gformFormat( self.formId, fieldId, inputIndex ) );
 
 						return $input;
 					};
@@ -1730,7 +1735,7 @@ class GW_Populate_Date {
 							case 'time':
 								var hours   = isNaN( date.getHours() ) ? '' : date.getHours(),
 									minutes = isNaN( date.getMinutes() )  ? '' : date.getMinutes(),
-									hasAMPM = $inputs.length === 3,
+									hasAMPM = $inputs.filter( 'select' ).length === 1,
 									isPM    = false;
 
 								if ( hasAMPM ) {

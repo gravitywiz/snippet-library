@@ -14,10 +14,12 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Set a Number field's minimum and maximum range by the values entered in to other fields.
  * Author:       Gravity Wiz
- * Version:      0.2
+ * Version:      0.5
  * Author URI:   http://gravitywiz.com
  */
 class GW_Dynamic_Range {
+
+	private $_args = array();
 
 	public function __construct( $args = array() ) {
 
@@ -39,11 +41,15 @@ class GW_Dynamic_Range {
 		add_filter( 'gform_pre_process', array( $this, 'set_dynamic_range' ), 10, 3 );
 
 		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
-		add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
+		add_action( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
 
 	}
 
 	public function set_dynamic_range( $form, $ajax, $field_values ) {
+
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $form;
+		}
 
 		foreach ( $form['fields'] as &$field ) {
 
@@ -107,17 +113,17 @@ class GW_Dynamic_Range {
 
 					self.init = function() {
 
-						self.$target = $( '#input_{0}_{1}'.format( self.formId, self.fieldId ) );
+						self.$target = $( '#input_{0}_{1}'.gformFormat( self.formId, self.fieldId ) );
 
 						if ( self.minFieldId ) {
-							self.$min = $( '#input_{0}_{1}'.format( self.formId, self.minFieldId ) );
+							self.$min = $( '#input_{0}_{1}'.gformFormat( self.formId, self.minFieldId ) );
 							self.$min.on( 'change', function() {
 								self.setDynamicRange();
 							} );
 						}
 
 						if ( self.maxFieldId ) {
-							self.$max = $( '#input_{0}_{1}'.format( self.formId, self.maxFieldId ) );
+							self.$max = $( '#input_{0}_{1}'.gformFormat( self.formId, self.maxFieldId ) );
 							self.$max.on( 'change', function() {
 								self.setDynamicRange();
 							} );
@@ -147,7 +153,7 @@ class GW_Dynamic_Range {
 						if ( ! self.minFieldId ) {
 							return null;
 						}
-						let min = parseInt( self.$min.val() );
+						let min = gformToNumber( self.$min.val() );
 						return isNaN( min ) ? 0 : min;
 					}
 
@@ -155,7 +161,7 @@ class GW_Dynamic_Range {
 						if ( ! self.maxFieldId ) {
 							return null;
 						}
-						let max = parseInt( self.$max.val() );
+						let max = gformToNumber( self.$max.val() );
 						return isNaN( max ) ? 0 : max;
 					}
 
@@ -188,23 +194,23 @@ class GW_Dynamic_Range {
 							message = self.messages.both
 								.replace( '%1$s', '{0}' )
 								.replace( '%2$s', '{1}' )
-								.format( '<strong>' + min + '</strong>', '<strong>' + max + '</strong>' );
+								.gformFormat( '<strong>' + min + '</strong>', '<strong>' + max + '</strong>' );
 						} else if ( min ) {
 							message = self.messages.min
 								.replace( '%s', '{0}' )
-								.format( '<strong>' + min + '</strong>' );
+								.gformFormat( '<strong>' + min + '</strong>' );
 						} else if ( max ) {
 							message = self.messages.max
 								.replace( '%s', '{0}' )
-								.format( '<strong>' + max + '</strong>' );
+								.gformFormat( '<strong>' + max + '</strong>' );
 						}
 
-						let $instruct = $( '#gfield_instruction_{0}_{1}'.format( self.formId, self.fieldId ) );
+						let $instruct = $( '#gfield_instruction_{0}_{1}'.gformFormat( self.formId, self.fieldId ) );
 						if ( ! $instruct.length ) {
-							$instruct = $( '#validation_message_{0}_{1}'.format( self.formId, self.fieldId ) );
+							$instruct = $( '#validation_message_{0}_{1}'.gformFormat( self.formId, self.fieldId ) );
 						}
 						if ( ! $instruct.length && message ) {
-							$instruct = $( '<div class="gfield_description instruction" id="gfield_instruction_{0}_{1}"></div>'.format( self.formId, self.fieldId ) );
+							$instruct = $( '<div class="gfield_description instruction" id="gfield_instruction_{0}_{1}"></div>'.gformFormat( self.formId, self.fieldId ) );
 							self.$target.after( $instruct );
 						}
 
@@ -214,12 +220,10 @@ class GW_Dynamic_Range {
 
 					self.enforceRange = function( min, max ) {
 
-						let currentValue = self.$target.val();
-						if ( currentValue === '' ) {
+						let currentValue = gformToNumber( self.$target.val() );
+						if ( currentValue === false || currentValue === '' ) {
 							return;
 						}
-
-						currentValue = parseInt( currentValue );
 
 						let value = currentValue;
 
@@ -236,6 +240,18 @@ class GW_Dynamic_Range {
 						}
 
 					}
+
+					// For dynamically populated Min-Max Fields
+					$( document ).on( 'gppa_updated_batch_fields', function( e, formId, updatedFieldIDs ) {
+						if ( parseInt( formId ) !== self.formId ) {
+							return;
+						}
+
+						// Re-init if min or max fields are updated via GP Populate Anything
+						if ( $.inArray( String( self.minFieldId ), updatedFieldIDs ) !== -1 || $.inArray( String( self.maxFieldId ), updatedFieldIDs ) !== -1 ) {
+							self.init();
+						}
+					} );
 
 					self.init();
 

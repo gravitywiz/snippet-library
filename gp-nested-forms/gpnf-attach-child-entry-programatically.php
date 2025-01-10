@@ -4,7 +4,7 @@
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  */
 // Update "124" to your child form ID.
-add_action( 'gform_entry_post_save_124', function( $entry ) {
+add_filter( 'gform_entry_post_save_124', function( $entry ) {
 	$entry = array_replace( array(
 		// The ID of the parent entry.
 		GPNF_Entry::ENTRY_PARENT_KEY            => 234,

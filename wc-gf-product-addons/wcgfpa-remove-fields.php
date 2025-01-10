@@ -98,7 +98,7 @@ class WCGFPA_Remove_Field_From_Product_Description {
 			(function($) {
 
 				$(document).bind('gform_load_field_settings', function(event, field, form) {
-					$("#wgfrf-enable").attr( 'checked', field.wgfrfEnable == true );
+					$("#wgfrf-enable").prop( 'checked', field.wgfrfEnable == true );
 				});
 
 				for( inputType in fieldSettings ) {

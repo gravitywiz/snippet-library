@@ -71,7 +71,7 @@ class GPNF_Auto_Attach_Child_Files {
 			return $notification;
 		}
 
-		$upload_fields = GFCommon::get_fields_by_type( $form, array( 'fileupload' ) );
+		$upload_fields = GFCommon::get_fields_by_type( $form, array( 'fileupload', 'image_hopper', 'image_hopper_post' ) );
 
 		if ( ! $this->is_applicable_notification( $notification ) ) {
 			return $notification;
@@ -95,7 +95,7 @@ class GPNF_Auto_Attach_Child_Files {
 			}
 
 			$child_form    = GFAPI::get_form( $field->gpnfForm );
-			$upload_fields = GFCommon::get_fields_by_type( $child_form, array( 'fileupload' ) );
+			$upload_fields = GFCommon::get_fields_by_type( $child_form, array( 'fileupload', 'image_hopper', 'image_hopper_post' ) );
 			$child_entries = $parent_entry->get_child_entries( $field->id );
 			$upload_root   = GFFormsModel::get_upload_root();
 

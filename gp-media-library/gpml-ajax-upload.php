@@ -11,16 +11,21 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-media-library/
  * Description:  Upload images to the Media Library as they are uploaded via the Gravity Forms Multi-file Upload field.
  * Author:       Gravity Wiz
- * Version:      0.13
+ * Version:      0.14
  * Author URI:   https://gravitywiz.com/
  */
 class GPML_Ajax_Upload {
+
+	private $_args = array();
+	private $form_id;
 
 	public function __construct( $args = array() ) {
 
 		$this->_args = wp_parse_args( $args, array(
 			'default_entry_id' => 1,
 		) );
+
+		$this->form_id = rgar( $args, 'form_id' );
 
 		add_action( 'init', array( $this, 'init' ), 11 );
 
@@ -43,15 +48,23 @@ class GPML_Ajax_Upload {
 
 	}
 
+	public function is_applicable_form( $form ) {
+		return empty( $this->form_id ) || (int) rgar( $form, 'id' ) === (int) $this->form_id;
+	}
+
 	public function gpml_gflow_next_step( $step, $current_step, $entry, $steps ) {
 		$form = GFAPI::get_form( $entry['form_id'] );
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $step;
+		}
+
 		$this->update_entry_field_values( $entry, $form );
 		return $step;
 	}
 
 	public function upload( $form, $field, $uploaded_filename, $tmp_file_name, $file_path ) {
 
-		if ( ! gp_media_library()->is_applicable_field( $field ) ) {
+		if ( ! gp_media_library()->is_applicable_field( $field ) || ! $this->is_applicable_form( $form ) ) {
 			return;
 		}
 
@@ -64,6 +77,16 @@ class GPML_Ajax_Upload {
 		if ( is_wp_error( $id ) ) {
 			return;
 		}
+
+		/**
+		 * Fires after a file has been uploaded to the Media Library via AJAX.
+		 *
+		 * @param array               $id                Array of file IDs.
+		 * @param GF_Field_FileUpload $field             The File Upload field object.
+		 *
+		 * @since 0.14
+		 */
+		do_action( 'gpmlau_after_upload', $id, $field );
 
 		$key = sprintf( 'gpml_ids_%s', $field_uid );
 
@@ -95,6 +118,10 @@ class GPML_Ajax_Upload {
 	}
 
 	public function update_entry_field_values( $entry, $form ) {
+
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $entry;
+		}
 
 		foreach ( $form['fields'] as $field ) {
 
@@ -143,3 +170,8 @@ class GPML_Ajax_Upload {
 # Configuration
 
 new GPML_Ajax_Upload();
+
+# Apply to a specific Form.
+// new GPML_Ajax_Upload( array(
+// 	'form_id' => 292,
+// ) );

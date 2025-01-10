@@ -13,12 +13,14 @@
  *  + add a prefix or suffix to file uploads
  *  + include identifying submitted data in the file name like the user's first and last name
  *
- * @version   2.5.3
+ * @version   2.6
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/rename-uploaded-files-for-gravity-form/
  */
 class GW_Rename_Uploaded_Files {
+
+	public $_args;
 
 	public function __construct( $args = array() ) {
 
@@ -207,7 +209,7 @@ class GW_Rename_Uploaded_Files {
 
 	function rename_file( $file, $entry ) {
 
-		$new_file = $this->get_template_value( $this->_args['template'], $file, $entry );
+		$new_file = $this->get_renamed_filepath( $this->_args['template'], $file, $entry );
 		$new_file = $this->increment_file( $new_file );
 
 		return $new_file;
@@ -241,32 +243,28 @@ class GW_Rename_Uploaded_Files {
 		return strpos( $filename, '/' ) !== false;
 	}
 
-	function get_template_value( $template, $file, $entry ) {
-
+	function get_renamed_filepath( $template, $file, $entry ) {
 		$info = pathinfo( $file );
+
+		// replace our custom "{filename}" psuedo-merge-tag
+		$filename = str_replace( '{filename}', $info['filename'], $template );
+
+		// replace merge tags
+		$form     = GFAPI::get_form( $entry['form_id'] );
+		$filename = GFCommon::replace_variables( $filename, $form, $entry, false, true, false, 'text' );
+		// make sure filename is "clean". This includes removing any user inputted items such as "../", "/usr/bin" etc
+		$filename = $this->clean( $filename );
 
 		if ( strpos( $template, '/' ) === 0 ) {
 			$dir      = wp_upload_dir();
-			$template = $dir['basedir'] . $template;
+			$filepath = $dir['basedir'];
 		} else {
-			$template = $info['dirname'] . '/' . $template;
+			$filepath = $info['dirname'] . '/';
 		}
 
-		// replace our custom "{filename}" psuedo-merge-tag
-		$value = str_replace( '{filename}', $info['filename'], $template );
+		$filepath .= $filename . '.' . $info['extension'];
 
-		// replace merge tags
-		$form  = GFAPI::get_form( $entry['form_id'] );
-		$value = GFCommon::replace_variables( $value, $form, $entry, false, true, false, 'text' );
-
-		// make sure filename is "clean"
-		$filename = $this->clean( basename( $value ) );
-		$value    = str_replace( basename( $value ), $filename, $value );
-
-		// append our file ext
-		$value .= '.' . $info['extension'];
-
-		return $value;
+		return $filepath;
 	}
 
 	function is_applicable_form( $form ) {

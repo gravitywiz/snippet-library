@@ -3,9 +3,9 @@
  * https://gravitywiz.com/
  *
  * Instructions:
- * 
+ *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  */
 $( document ).on( 'keypress', '.gform_wrapper', function (e) {
     var code = e.keyCode || e.which;

@@ -15,6 +15,7 @@
 class GW_GFUR_Skip_Registration_If_Email_Exists {
 
 	private static $instance = null;
+	private $_args           = array();
 
 	public static function get_instance( $args ) {
 		if ( null == self::$instance ) {

@@ -11,10 +11,12 @@
  * Plugin URI:   https://gravitywiz.com/gravity-forms-require-unique-values-for-different-fields/
  * Description:  Require two or more fields on the same form to be different from each other.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   https://gravitywiz.com/
  */
 class GW_Require_Unique_Values {
+
+	private $_args = array();
 
 	public function __construct( $args = array() ) {
 
@@ -48,7 +50,6 @@ class GW_Require_Unique_Values {
 		}
 
 		add_filter( sprintf( 'gform_field_validation_%s', $this->_args['form_id'] ), array( $this, 'validate' ), 10, 4 );
-
 	}
 
 	public function validate( $result, $value, $form, $field ) {
@@ -80,10 +81,34 @@ class GW_Require_Unique_Values {
 				}
 			}
 		} else {
+			$values = $this->get_group_values( $form, $field->id );
 
-			$values    = $this->get_group_values( $form, $field->id );
-			$is_unique = ! in_array( $this->get_value_hash( $value ), $values );
+			// If the field has inputs, let's loop through them and check if they are unique.
+			if ( is_array( $field->inputs ) && ! empty( $field->inputs ) ) {
+				$is_unique = true;
 
+				foreach ( $field->inputs as $input ) {
+					$input_id    = $input['id'];
+					$input_value = rgars( $value, $input_id );
+
+					if ( empty( $input_value ) ) {
+						continue;
+					}
+
+					// Ensure that this input is to be validated.
+					if ( ! in_array( $input_id, array_keys( $values ) ) ) {
+						continue;
+					}
+
+					$input_hash = $this->get_value_hash( array( $input_value ) );
+					$is_unique  = ! in_array( $input_hash, $values );
+					if ( ! $is_unique ) {
+						break;
+					}
+				}
+			} else {
+				$is_unique = ! in_array( $this->get_value_hash( $value ), $values );
+			}
 		}
 
 		if ( $result['is_valid'] && ! $is_unique ) {
@@ -135,11 +160,12 @@ class GW_Require_Unique_Values {
 				continue;
 			}
 
-			$field = GFFormsModel::get_field( $form, $field_id );
-			$value = $this->get_filtered_value( $field );
+			$field    = GFFormsModel::get_field( $form, $field_id );
+			$input_id = preg_match( '/^\d+\.\w+$/', $field_id ) ? (string) $field_id : null;
+			$value    = $this->get_filtered_value( $field, $input_id );
 
 			if ( ! empty( $value ) ) {
-				$values[ $field->id ] = $do_hash ? $this->get_value_hash( $value ) : $value;
+				$values[ (string) $field_id ] = $do_hash ? $this->get_value_hash( $value ) : $value;
 			}
 		}
 
@@ -151,13 +177,21 @@ class GW_Require_Unique_Values {
 	 *
 	 * @return array
 	 */
-	public function get_filtered_value( $field ) {
+	public function get_filtered_value( $field, $input_id = null ) {
 
 		if ( $field->get_input_type() == 'fileupload' && ! $field->multipleFiles ) {
 			/** @var GF_Field_FileUpload $field */
 			$value = basename( rgars( $_FILES, sprintf( 'input_%d/name', $field->id ) ) );
 		} else {
 			$value = $field->get_value_submission( array() );
+			// Product values are stored as Value|Price, we just need to compare Value.
+			if ( rgar( $field, 'enablePrice' ) ) {
+				$value = GFCommon::get_selection_value( $value );
+			}
+		}
+
+		if ( $input_id && is_array( $value ) && isset( $value[ $input_id ] ) ) {
+			$value = $value[ $input_id ];
 		}
 
 		$value = ! is_array( $value ) ? array( $value ) : $value;
@@ -197,18 +231,17 @@ class GW_Require_Unique_Values {
 			return false;
 		} elseif ( $this->_args['validate_all_fields'] && $field->id == $this->_args['master_field_id'] ) {
 			return true;
-		} elseif ( ! in_array( $field->id, $this->_args['field_ids'] ) ) {
+		} elseif ( ! in_array( $field->id, array_map( 'absint', array_merge( $this->_args['field_ids'], array( $this->_args['master_field_id'] ) ) ) ) ) {
 			return false;
 		}
 
 		return true;
 	}
-
 }
 
 # Configuration
 
 new GW_Require_Unique_Values( array(
-	'form_id'   => 123,
-	'field_ids' => array( 4, 5 ),
+	'form_id'   => 5,
+	'field_ids' => array( 1, 3.3 ),
 ) );

@@ -1,15 +1,18 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Update Posts
+ * https://gravitywiz.com/how-to-update-posts-with-gravity-forms/
  *
  * Update existing post title, content, author and custom fields with values from Gravity Forms.
  *
- * @version 0.4.3
- * @author  Scott Buchmann <scott@gravitywiz.com>
+ * @version 0.6
+ * @author  Scott Ryer <scott@gravitywiz.com>
  * @license GPL-2.0+
  * @link    http://gravitywiz.com
  */
 class GW_Update_Posts {
+
+	protected $_args;
 
 	public function __construct( $args = array() ) {
 
@@ -54,6 +57,8 @@ class GW_Update_Posts {
 			add_filter( 'gppa_process_template', array( $this, 'return_ids_instead_of_names' ), 9, 8 );
 			// Update posts after Gravity View updates an entry
 			add_action( 'gravityview/edit_entry/after_update', array( $this, 'gv_entry_after_update' ), 10, 4 );
+			// Update posts after Gravity Flow User Input/Approval Workflow step.
+			add_action( 'gravityflow_step_complete', array( $this, 'update_entry_after_workflow' ), 10, 4 );
 		}
 	}
 
@@ -64,10 +69,26 @@ class GW_Update_Posts {
 		}
 	}
 
+	public function update_entry_after_workflow( $step_id, $entry_id, $form_id, $status ) {
+		if ( $form_id == $this->_args['form_id'] ) {
+			$form  = GFAPI::get_form( $form_id );
+			$entry = GFAPI::get_entry( $entry_id );
+			$step  = gravity_flow()->get_step( $step_id, $entry );
+			if ( $step && in_array( $step->get_type(), array( 'user_input', 'approval' ), true ) ) {
+				$this->update_post_by_entry( $entry, $form );
+			}
+		}
+	}
+
 	public function update_post_by_entry( $entry, $form ) {
 
+		$post_id = rgar( $entry, $this->_args['post_id'] );
+		// If post not selected or post not available, return.
+		if ( empty( $post_id ) ) {
+			return;
+		}
 		// Get the post and, if the current user has capabilities, update post with new content.
-		$post = get_post( rgar( $entry, $this->_args['post_id'] ) );
+		$post = get_post( $post_id );
 		if ( ! current_user_can( 'edit_post', $post->ID ) ) {
 			return;
 		}
@@ -96,10 +117,15 @@ class GW_Update_Posts {
 			$post->post_name = rgar( $entry, $this->_args['slug'] );
 		}
 
-		if ( $this->_args['post_date'] ) {
-			$new_date_time       = $this->get_post_date( $entry, $form );
-			$post->post_date     = $new_date_time;
-			$post->post_date_gmt = get_gmt_from_date( $new_date_time );
+		if (
+			( ! is_array( $this->_args['post_date'] ) && ! empty( $this->_args['post_date'] ) ) ||
+				rgars( $this->_args, 'post_date/date' )
+		) {
+			$new_date_time = $this->get_post_date( $entry, $form );
+			if ( $new_date_time ) {
+				$post->post_date     = $new_date_time;
+				$post->post_date_gmt = get_gmt_from_date( $new_date_time );
+			}
 		}
 
 		if ( $this->_args['featured_image'] && is_callable( 'gp_media_library' ) ) {
@@ -127,47 +153,114 @@ class GW_Update_Posts {
 		}
 
 		if ( $this->_args['meta'] ) {
+			$post->meta_input = $this->prepare_meta_input( $this->_args['meta'], $post->ID, $entry, $form );
+		}
 
-			$meta_input = array();
+		// ensure the fires after hooks is set to false, so that doesn't override some of the normal rendering - GF confirmation for instance.
+		wp_update_post( $post, false, false );
 
-			// Assign custom fields.
-			foreach ( $this->_args['meta'] as $key => $value ) {
+	}
 
-				$meta_value = rgar( $entry, $value );
+	/**
+	 * @param $meta
+	 * @param $post_id
+	 * @param $entry
+	 * @param $form
+	 * @param $meta_input
+	 * @param $group string|null Used to handle populating ACF fields within a group.
+	 *
+	 * @return array|mixed
+	 */
+	public function prepare_meta_input( $meta, $post_id, $entry, $form, $meta_input = array(), $group = null ) {
 
-				$field = GFAPI::get_field( $form, $value );
+		foreach ( $meta as $key => $value ) {
 
-				// Support mapping all checkboxes of a Checkbox field to a custom field.
-				if ( $field->get_input_type() === 'checkbox' ) {
-					$meta_value = $field->get_value_export( $entry );
-					if ( is_callable( 'acf_get_field' ) ) {
-						$acf_field = acf_get_field( $key );
-						if ( $acf_field ) {
-							$meta_value = array_map( 'trim', explode( ',', $meta_value ) );
-						}
-					}
-				}
+			$append = false;
 
-				// Check for ACF image-like custom fields. Integration powered by GP Media Library.
-				$acf_field = is_callable( 'gp_media_library' ) && is_callable( 'acf_get_field' ) ? acf_get_field( $key ) : false;
-				if ( $acf_field && in_array( $acf_field['type'], array( 'image', 'file', 'gallery' ), true ) ) {
-					gp_media_library()->acf_update_field( $post->ID, $key, GFAPI::get_field( $form, $value ), $entry );
+			if ( is_array( $value ) ) {
+				if ( ! isset( $value['field_id'] ) ) {
+					$meta_input = $this->prepare_meta_input( $value, $post_id, $entry, $form, $meta_input, $key );
+					continue;
 				} else {
-					// Map all other custom fields generically.
-					if ( ! rgblank( $meta_value ) ) {
-						$meta_input[ $key ] = $meta_value;
-					} elseif ( $this->_args['delete_if_empty'] ) {
-						delete_post_meta( $post->ID, $key );
+					$append = rgar( $value, 'append', false );
+					$value  = $value['field_id'];
+				}
+			}
+
+			$field = GFAPI::get_field( $form, $value );
+			if ( ! $field ) {
+				continue;
+			}
+
+			$field_type = $field->get_input_type();
+			$meta_value = rgar( $entry, $value );
+			// Address input
+			if ( $field_type == 'address' ) {
+				$meta_value = $field->get_value_export( $entry, $value );
+			}
+
+			// Support mapping all checkboxes of a Checkbox field to a custom field.
+			if ( $field_type === 'checkbox' ) {
+				$meta_value = $field->get_value_export( $entry );
+				if ( is_callable( 'acf_get_field' ) ) {
+					$acf_field = acf_get_field( $key );
+					if ( $acf_field ) {
+						$meta_value = array_map( 'trim', explode( ',', $meta_value ) );
 					}
 				}
 			}
 
-			$post->meta_input = $meta_input;
+			// Check for ACF image-like custom fields. Integration powered by GP Media Library. We use `acf_maybe_get_field()`
+			// here which supports fetching fields within a group by combined key (e.g. "group_name_field_name" );
+			$acf_field = is_callable( 'gp_media_library' ) ? $this->acf_get_field_object_by_name( $key, $group ) : false;
+			if ( $acf_field && in_array( $acf_field['type'], array( 'image', 'file', 'gallery' ), true ) ) {
+				$is_gallery = $acf_field['type'] === 'gallery';
+				$meta_value = gp_media_library()->acf_get_field_value( 'id', $entry, $field, $is_gallery );
+				if ( $meta_value && $is_gallery && $append ) {
+					$current_value = get_field( $acf_field['key'], $post_id, false );
+					if ( is_array( $current_value ) ) {
+						$meta_value = array_unique( array_merge( $meta_value, $current_value ) );
+					}
+				}
+			}
 
+			if ( $group ) {
+				$key = sprintf( '%s_%s', $group, $key );
+			}
+
+			if ( ! rgblank( $meta_value ) ) {
+				$acf_field = $this->acf_get_field_object_by_name( $key, $group );
+				if ( $acf_field ) {
+					$meta_value = $acf_field['type'] == 'google_map' && $field_type == 'address' ? array(
+						'address' => $meta_value,
+						'lat'     => rgar( $entry, "gpaa_lat_{$field->id}" ),
+						'lng'     => rgar( $entry, "gpaa_lng_{$field->id}" ),
+					) : $meta_value;
+					update_field( $key, $meta_value, $post_id );
+				} else {
+					$meta_input[ $key ] = $meta_value;
+				}
+			} elseif ( $this->_args['delete_if_empty'] ) {
+				delete_post_meta( $post_id, $key );
+			}
 		}
 
-		wp_update_post( $post );
+		return $meta_input;
+	}
 
+	function acf_get_field_object_by_name( $field_name, $group_name = false ) {
+
+		if ( ! is_callable( 'acf_get_field' ) ) {
+			return null;
+		}
+
+		if ( ! $group_name ) {
+			return acf_get_field( $field_name );
+		}
+
+		$group = acf_get_field( $group_name );
+
+		return acf_get_field( $field_name, $group['ID'] );
 	}
 
 	/**
@@ -222,7 +315,7 @@ class GW_Update_Posts {
 			}
 		} else {
 			$post_date['date'] = $this->_args['post_date']['date'];
-			$post_date['time'] = $this->_args['post_date']['time'];
+			$post_date['time'] = rgar( $this->_args['post_date'], 'time' );
 		}
 
 		$date = rgar( $entry, $post_date['date'], gmdate( 'm/d/Y' ) );

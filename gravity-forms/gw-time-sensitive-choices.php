@@ -1,7 +1,7 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Time Sensitive Choices
- * https://gravitywiz.com/
+ * https://gravitywiz.com/time-sensitive-choices-with-gravity-forms/
  *
  * Manually specify available time slots as choices and this snippet will automatically disable choices that are before
  * the current time. Link this with a Date field to only filter by time when the current date is selected.
@@ -19,10 +19,12 @@
  * Plugin URI:  https://gravitywiz.com
  * Description: Filter time-based choices based on the current time.
  * Author:      David Smith
- * Version:     1.3.2
+ * Version:     1.5
  * Author URI:  https://gravitywiz.com
  */
 class GW_Time_Sensitive_Choices {
+
+	private $_args = array();
 
 	public function __construct( $args = array() ) {
 
@@ -69,6 +71,8 @@ class GW_Time_Sensitive_Choices {
 
 					var self = this;
 
+					self.intialized = false;
+
 					for( var prop in args ) {
 						if( args.hasOwnProperty( prop ) ) {
 							self[ prop ] = args[ prop ];
@@ -77,16 +81,18 @@ class GW_Time_Sensitive_Choices {
 
 					self.init = function() {
 
-						self.$target = $( '#input_{0}_{1}'.format( self.formId, self.fieldId ) );
+						self.$target = $( '#input_{0}_{1}'.gformFormat( self.formId, self.fieldId ) );
 						if ( self.dateFieldId ) {
-							self.$date = $( '#input_{0}_{1}'.format( self.formId, self.dateFieldId ) );
+							self.$date = $( '#input_{0}_{1}'.gformFormat( self.formId, self.dateFieldId ) );
 							self.bindEvents();
 							setTimeout( function() {
 								self.initializeChoices();
+								self.initialized = true;
 							} );
 						} else {
 							self.bindEvents();
 							self.initializeChoices();
+							self.initialized = true;
 						}
 
 					};
@@ -95,21 +101,30 @@ class GW_Time_Sensitive_Choices {
 
 						gform.addAction( 'gpi_field_refreshed', function( $targetField, $triggerField, initialLoad ) {
 							if ( gf_get_input_id_by_html_id( self.$target.attr( 'id' ) ) == gf_get_input_id_by_html_id( $targetField.attr( 'id' ) ) ) {
-								self.$target = $targetField.find( '#input_{0}_{1}'.format( self.formId, self.fieldId ) );
+								self.$target = $targetField.find( '#input_{0}_{1}'.gformFormat( self.formId, self.fieldId ) );
 								self.initializeChoices();
 							}
 						} );
 
 						$( document ).on( 'gppa_updated_batch_fields', function ( event, formId, updatedFieldIds ) {
 							if ( updatedFieldIds.indexOf( gf_get_input_id_by_html_id( self.$target.attr( 'id' ) ) ) !== - 1 ) {
-								self.$target = $( '#input_{0}_{1}'.format( self.formId, self.fieldId ) );
+								self.$target = $( '#input_{0}_{1}'.gformFormat( self.formId, self.fieldId ) );
 								self.initializeChoices();
 							}
 						} );
 
 						if ( self.$date.length ) {
 							self.$date.on( 'change', function() {
-								self.evaluateChoices();
+								/**
+								 * Inline datepickers trigger an early change event when they set the default date. This
+								 * triggers EvaluateChoices to run prematurely, disabling choices based on the selected
+								 * date. This leads InitializeChoices to assume these disabled choices were set on page
+								 * load and marks them as permanently disabled. To prevent this, InitializeChoices must
+								 * always run before EvaluateChoices.
+								 */
+								if ( self.initialized ) {
+									self.evaluateChoices();
+								}
 							} );
 						}
 
@@ -122,7 +137,7 @@ class GW_Time_Sensitive_Choices {
 						var currentTime = self.getCurrentServerTime();
 
 						if ( self.dateFieldId ) {
-							var selectedDate = self.$date.datepicker( 'getDate' );
+							var selectedDate = self.getSelectedDate();
 							if ( selectedDate !== null ) {
 								var currentDate = self.getCurrentServerTime();
 								currentDate.setHours(0, 0, 0, 0);
@@ -209,7 +224,11 @@ class GW_Time_Sensitive_Choices {
 					}
 
 					self.getSelectedDate = function() {
-						return self.$date.datepicker( 'getDate' );
+						let $datepicker = self.$date;
+						if ( $datepicker.hasClass( 'has-inline-datepicker' ) ) {
+							$datepicker = $( '#datepicker_{0}_{1}'.gformFormat( self.formId, self.dateFieldId ) );
+						}
+						return $datepicker.datepicker( 'getDate' );
 					}
 
 					/**

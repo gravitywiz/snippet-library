@@ -11,7 +11,7 @@
  * Instructions:
  *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  *
  * 2. Add a new choice to your Checkbox field to act as the "None of the Above" choice.
  *    This must be the last choice in the field.
@@ -20,10 +20,19 @@
  *    any Checkbox field to which this should be applied.
  */
 $( '.gw-none-of-the-above' ).each( function() {
-	
-	var $field  = $( this );
-	var $last   = $field.find( '.gchoice:last-child input' );
-	var $others = $field.find( 'input' ).not( $last );
+
+	var disableNota = false;
+	var $field       = $( this );
+	var $last        = $field.find( '.gchoice:last-child input' );
+	var $others      = $field.find( 'input' ).not( $last );
+
+	// If "None of the Above" choice is checked by default.
+	if ( $last.prop( 'checked' ) ) {
+		var $checkboxes = $field.find( 'input' ).not( $last )
+		$checkboxes
+			.prop( 'checked', false )
+			.prop( 'disabled', true );
+	}
 
 	$last.on( 'click', function() {
 		var $checkboxes = $field.find( 'input' ).not( $( this ) )
@@ -37,7 +46,7 @@ $( '.gw-none-of-the-above' ).each( function() {
 	} );
 
 	$others.on( 'click', function() {
-		if ( $others.filter( ':checked' ).length ) {
+		if ( $others.filter( ':checked' ).length && disableNota ) {
 			$last.prop( 'disabled', true );
 		} else {
 			$last.prop( 'disabled', false );

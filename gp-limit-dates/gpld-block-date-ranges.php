@@ -16,7 +16,9 @@ function gpld_except_date_ranges( $options, $form, $field ) {
 	foreach ( $ranges as $range ) {
 		$start_date = new DateTime( $range[0] );
 		$end_date   = new DateTime( $range[1] );
-		$period     = new DatePeriod( $start_date, new DateInterval( 'P1D' ), $end_date );
+		// include end date.
+		$end_date->setTime( 0, 0, 1 );
+		$period = new DatePeriod( $start_date, new DateInterval( 'P1D' ), $end_date );
 
 		foreach ( $period as $date ) {
 			$options['exceptions'][] = $date->format( 'm/d/Y' );

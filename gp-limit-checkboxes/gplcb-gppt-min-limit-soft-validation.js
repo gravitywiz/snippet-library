@@ -6,7 +6,7 @@
  * Requires 1.3.12 or newer of GP Limit Checkboxes.
  *
  * Instructions:
- *   - Install using https://gravitywiz.com/gravity-forms-custom-javascript/
+ *   - Install using https://gravitywiz.com/gravity-forms-code-chest/
  */
 window.gform.addFilter('gppt_validation_result', function (result, gppt, formId) {
 	var message = 'You must select at least {0} options.';
@@ -28,7 +28,7 @@ window.gform.addFilter('gppt_validation_result', function (result, gppt, formId)
 		var group = gplc.groups[i];
 		var fields = group.fields;
 		var fieldsVisible = true;
-		var groupValidationMessage = validationMessage.format(group.min);
+		var groupValidationMessage = validationMessage.gformFormat(group.min);
 
 		$(gplc.getSelector(group.fields)).each(function () {
 			var fieldVisible = $(this).is(':visible');

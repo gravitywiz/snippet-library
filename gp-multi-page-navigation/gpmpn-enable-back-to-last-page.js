@@ -5,7 +5,7 @@
  * Instruction Video: https://www.loom.com/share/877d576a3e3d46329d132dd634c1ecca
  *
  * This snippet is designed to be used with the Gravity Forms Custom Javascript plugin.
- * https://gravitywiz.com/gravity-forms-custom-javascript/
+ * https://gravitywiz.com/gravity-forms-code-chest/
  *
  * The "Back to Last Page" button relies on the "Steps" Progress Indicator. Use this snippet to enable it for
  * the "Progress Bar" or "None" Progress Indicator.

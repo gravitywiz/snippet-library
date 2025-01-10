@@ -13,7 +13,7 @@
  * Plugin URI:   https://gravitywiz.com/customizing-multi-file-merge-tag/
  * Description:  Enhance the merge tag for multi-file upload fields by adding support for outputting markup that corresponds to the uploaded file.
  * Author:       Gravity Wiz
- * Version:      1.8
+ * Version:      1.9
  * Author URI:   https://gravitywiz.com
  */
 class GW_Multi_File_Merge_Tag {
@@ -107,6 +107,11 @@ class GW_Multi_File_Merge_Tag {
 
 		foreach ( $matches as $match ) {
 
+			// Ignore the {apc_media:xx} merge tag which handles its own business.
+			if ( str_contains( $match[0], '{apc_media:' ) !== false ) {
+				continue;
+			}
+
 			$input_id = $match[1];
 			$field    = GFFormsModel::get_field( $form, $input_id );
 
@@ -150,6 +155,9 @@ class GW_Multi_File_Merge_Tag {
 
 					$files = array_slice( $files, $offset, $length );
 
+				} elseif ( count( $modifiers ) > 0 ) {
+					/* Skip fields with a modifier other than "index" */
+					continue;
 				}
 
 				$value = '';
@@ -165,8 +173,9 @@ class GW_Multi_File_Merge_Tag {
 
 			if ( $has_value ) {
 				$markup_settings = $this->get_markup_settings( $form['id'] );
-				if ( $markup_settings['container'] ) {
-					$value = sprintf( $markup_settings['container'], $value );
+				$container       = rgar( $markup_settings, 'container' );
+				if ( $container ) {
+					$value = sprintf( $container, $value );
 				}
 			}
 
@@ -312,7 +321,7 @@ class GW_Multi_File_Merge_Tag {
 
 		$is_valid_form        = ! $this->is_excluded_form( $field['formId'] );
 		$is_matching_field_id = empty( $field_ids ) || in_array( $field->id, $field_ids );
-		$is_file_upload_filed = GFFormsModel::get_input_type( $field ) === 'fileupload';
+		$is_file_upload_filed = in_array( GFFormsModel::get_input_type( $field ), array( 'fileupload', 'image_hopper' ), true );
 		$is_multi             = rgar( $field, 'multipleFiles' );
 
 		return $is_valid_form && $is_matching_field_id && $is_file_upload_filed && $is_multi;

@@ -14,6 +14,8 @@
  */
 class GW_Restrict_States_In_Address_Field {
 
+	private $_args = array();
+
 	public function __construct( $args = array() ) {
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
 		$this->_args = wp_parse_args(

@@ -15,6 +15,9 @@
 class GW_Quantity_Decimal {
 
 	private static $_current_form;
+	private $form_id;
+	private $global    = false;
+	private $field_ids = array();
 
 	function __construct( $form_id, $field_ids = array(), $global = false ) {
 

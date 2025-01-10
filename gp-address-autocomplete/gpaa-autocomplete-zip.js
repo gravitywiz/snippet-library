@@ -4,7 +4,7 @@
  *
  * Instructions:
  *     1. Install our free Custom JavaScript for Gravity Forms plugin.
- *        Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
+ *        Download the plugin here: https://gravitywiz.com/gravity-forms-code-chest/
  *     2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
  *     3. Install accompanying gpaa-autocomplete-zip.php snippet
  *     4. Change addressFieldId to the Address Field's ID

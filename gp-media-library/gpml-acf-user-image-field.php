@@ -12,6 +12,8 @@
  */
 class GPML_ACF_User_Image_Field {
 
+	private $_args = array();
+
 	public function __construct( $args ) {
 
 		$this->_args = wp_parse_args(

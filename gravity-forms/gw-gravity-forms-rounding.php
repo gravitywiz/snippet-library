@@ -10,16 +10,11 @@
  *  + rounding up to a specific minimum   (i.e. min of 50 would round 1 to 50, 51 and greater would not be rounded) | class: 'gw-round-min-50'
  *  + rounding down to a specific maximum (i.e. max of 25 would round 26 to 25, 25 and below would not be rounded)  | class: 'gw-round-max-25'
  *
- * @version 1.13
- * @author  David Smith <david@gravitywiz.com>
- * @license GPL-2.0+
- * @link    http://gravitywiz.com/rounding-increments-gravity-forms/
- *
  * Plugin Name:  Gravity Forms Rounding
  * Plugin URI:   http://gravitywiz.com/rounding-increments-gravity-forms/
  * Description:  Round your field values (including calculations) up, down, by an increment, or to a specific minimum or maximum value.
  * Author:       Gravity Wiz
- * Version:      1.13
+ * Version:      1.14
  * Author URI:   http://gravitywiz.com
  */
 class GW_Rounding {
@@ -276,7 +271,7 @@ class GW_Rounding {
 								 * @param int value       Current input value to be rounded
 								 * @param int actionValue Custom value passed in CSS class name (e.g. gw-round-custom-10, actionValue = 10)
 								 */
-								value = window.gform.applyFilters( 'gw_round_{0}'.format(action), value, actionValue );
+								value = window.gform.applyFilters( 'gw_round_{0}'.gformFormat(action), value, actionValue );
 								break;
 						}
 

@@ -24,6 +24,9 @@ add_filter( 'gform_shortcode_entry_count', function( $output, $atts ) {
 		$value = true;
 	} elseif ( strtolower( $value ) === 'false' ) {
 		$value = false;
+	} elseif ( GFCommon::has_merge_tag( $value ) ) {
+		// @todo Consider adding support for all merge tags.
+		$value = GFCommon::replace_variables_prepopulate( $value );
 	}
 
 	$args = array(

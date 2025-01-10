@@ -5,6 +5,8 @@
  */
 class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 
+	private $_args = array();
+
 	public function __construct( $args = array() ) {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
@@ -131,7 +133,7 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 
 					self.init = function () {
 
-						var attrReadyMaxFieldId = self.maxFieldId.replace( '.', '_' );
+						var attrReadyMaxFieldId = typeof self.maxFieldId === 'string' ? self.maxFieldId.replace('.', '_') : self.maxFieldId;
 						var maxFieldId = 'input_' + self.parentFormId + '_' + attrReadyMaxFieldId;
 
 						// GF uses "1" for the input index in the HTML id attribute for Single Product fields. Weird.
@@ -154,7 +156,7 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 						gform.addAction( 'gform_input_change', function( el, formId, fieldId ) {
 							if ( el.id === maxFieldId ) {
 								// Force Knockout to recalculate the max when the number has changed
-								window[ 'GPNestedForms_{0}_{1}'.format( self.parentFormId, self.nestedFormFieldId ) ].viewModel.entries.valueHasMutated();
+								window[ 'GPNestedForms_{0}_{1}'.gformFormat( self.parentFormId, self.nestedFormFieldId ) ].viewModel.entries.valueHasMutated();
 							}
 						} );
 

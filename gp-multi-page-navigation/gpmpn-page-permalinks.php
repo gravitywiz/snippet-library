@@ -9,10 +9,12 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-multi-page-navigation/
  * Description:  Add permalinks for each page of your multi-page forms.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   https://gravitywiz.com
  */
 class GPMPN_Page_Permalinks {
+
+	private $_args = array();
 
 	public function __construct( $args = array() ) {
 
@@ -119,11 +121,11 @@ class GPMPN_Page_Permalinks {
 
 					self.init = function() {
 
-						if ( typeof window[ 'GPMPNPagePermalinks_{0}'.format( self.formId ) ] !== 'undefined' ) {
+						if ( typeof window[ 'GPMPNPagePermalinks_{0}'.gformFormat( self.formId ) ] !== 'undefined' ) {
 							return;
 						}
 
-						window[ 'GPMPNPagePermalinks_{0}'.format( self.formId ) ] = self;
+						window[ 'GPMPNPagePermalinks_{0}'.gformFormat( self.formId ) ] = self;
 
 						self.history.push( { gpmpnPage: self.defaultPage } );
 
@@ -149,7 +151,7 @@ class GPMPN_Page_Permalinks {
 							// 	$( '.gform_previous_button:visible' ).click();
 							// }
 							// Temporary solution: reload first page when user uses browser's back/next buttons.
-							window.location = window.location.origin + '/{0}/{1}/'.format( self.pagename, self.permalinks[1] );
+							window.location = window.location.origin + '/{0}/{1}/'.gformFormat( self.pagename, self.permalinks[1] );
 						} );
 
 						self.isInit = true;
@@ -163,7 +165,7 @@ class GPMPN_Page_Permalinks {
 						var state = { gpmpnPage: self.currentPage };
 
 						self.history.push( state );
-						window.history.pushState( state, null, '/{0}/{1}/'.format( self.pagename, self.permalinks[ currentPage ] ) );
+						window.history.pushState( state, null, '/{0}/{1}/'.gformFormat( self.pagename, self.permalinks[ currentPage ] ) );
 
 					}
 

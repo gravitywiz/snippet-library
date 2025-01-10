@@ -5,7 +5,7 @@
  *
  * Populate the current parent entry ID (or hash) using the "gpnf_parent_entry_id" dynamic population parameter.
  * This parameter can only be used for fields in the parent form. To capture in a child form, you must populate
- * the parent entry ID in a field on the parent form and then use the {Parent} merge tag to capture the ID in
+ * the parent entry ID in a field on the parent form and then use the `{Parent}` merge tag to capture the ID in
  * a child field.
  */
 add_filter( 'gform_field_value_gpnf_parent_entry_id', function( $value, $field ) {
@@ -21,9 +21,10 @@ add_filter( 'gform_field_value_gpnf_parent_entry_id', function( $value, $field )
 		} else {
 			// The first time the parent form loads there will be no cookie. Create a hash and set it as the default
 			// hash for this cookie created for this form.
-			$value = $session->make_hashcode();
+			$value = $session->get_runtime_hashcode();
 			add_filter( "gpnf_session_script_data_{$field->formId}", function( $data ) use ( $value ) {
 				$data['hash'] = $value;
+				return $data;
 			} );
 		}
 	}

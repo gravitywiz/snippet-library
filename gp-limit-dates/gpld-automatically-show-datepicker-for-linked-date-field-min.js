@@ -7,10 +7,10 @@
  * the date has been selected in Field A.
  *
  * Instructions:
- * 
+ *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  */
-gform.addAction( 'gpld_after_set_min_date', function( $input, date ) { 
+gform.addAction( 'gpld_after_set_min_date', function( $input, date ) {
 	$input.datepicker( 'show' );
 } );

@@ -1,0 +1,28 @@
+<!--
+ Gravity Wiz // Gravity Forms // Copy Button for Save & Continue Link
+ https://gravitywiz.com/
+ 
+ Instruction Video: https://www.loom.com/share/3193ef07ce8e413fbdb2ecc561ce0ae2
+ 
+ Add a button that when click will copy the generated Save and Continue link URL to the user's
+ clipboard. 
+ 
+ Note: This will only work for pages served over `https` and will not work in Internet Explorer.
+-->
+
+<!-- Add this markup wherever you would like the "Copy" button to appear -->
+<button type="button" onclick="gwCopyToClipboard( document.getElementsByClassName( 'resume_form_link' )[0].text )">Copy!</button>
+
+<!--
+ Add this script block to the bottom of your "Save and Continue Confirmation" message.
+ We recommend disabling auto-formatting for the confirmation as well.
+-->
+<script>
+	const gwCopyToClipboard = async ( text ) => {
+		try {
+			await navigator.clipboard.writeText( text );
+		} catch (err) {
+			console.error( 'Failed to copy: ', err );
+		}
+	}
+</script>

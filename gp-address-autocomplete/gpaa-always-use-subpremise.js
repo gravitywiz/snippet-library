@@ -9,9 +9,12 @@
  *
  * Instructions:
  *     1. Install our free Custom Javascript for Gravity Forms plugin.
- *        Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
+ *        Download the plugin here: https://gravitywiz.com/gravity-forms-code-chest/
  *     2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
  */
+// Update to "true" to add subpremise to Address Line 2 instead of Street Address.
+let addSubpremiseToLine2 = false;
+
 window.gform.addFilter('gpaa_values', function(values, place, instance) {
     if (instance.inputs.address1.value.indexOf('/') === -1) {
         return values;
@@ -29,8 +32,19 @@ window.gform.addFilter('gpaa_values', function(values, place, instance) {
         var results = subPremisePattern.exec(instance.inputs.address1.value);
         var streetNumber = results[1].trim().split('/')[1];
 
+		// Sometimes Rd/Road is inconsistent, let's use Road.
+		values.address1 = values.address1.replace('Rd', 'Road');
+		streetNumber = streetNumber.replace('Rd', 'Road');
+
+		// Remove trailing comma from streetNumber
+		streetNumber = streetNumber.replace(/,$/, '');
+
         if (results && values.address1.indexOf(results[1]) === -1) {
-            values.address1 = results[1].trim() + ' ' + values.address1.replace(streetNumber, '').trim();
+			if (!addSubpremiseToLine2) {
+            	values.address1 = (results[1].trim() + ' ' + values.address1.replace(streetNumber, '').trim()).trim().replace(/,$/, '');
+			} else {
+				values.address2 = results[1].trim().split('/')[0];
+			}
         }
     }
 

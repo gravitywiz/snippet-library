@@ -6,14 +6,20 @@
  * Provide a custom "field_props" attribute for the [gravityforms] shortcode. This allows you to modify field
  * properties (e.g. label, cssClass, isRequired, etc).
  *
- * Set Field ID 1 as not required.
+ * Set field ID 1 as not required.
+ * ```
  * [gravityform id="1" field_props="1:isRequired:0"]
+ * ```
  *
  * Set "my-special-class" as the CSS class for field ID 2.
+ * ```
  * [gravityform id="1" field_props="2:cssClass:my-special-class"]
+ * ```
  *
  * Set the discount amount to 10% and discount type to flat for GP eCommerce Fields Discount field ID 3.
+ * ```
  * [gravityform id="1" field_props="3:taxAmount:10,3:taxAmountType:flat"]
+ * ```
  *
  * Plugin Name:  Gravity Forms - Shortcode Field Properties
  * Plugin URI:   https://gravitywiz.com/

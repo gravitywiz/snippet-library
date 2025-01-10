@@ -26,8 +26,8 @@ add_filter( 'gp_template_output_nested-entries', function( $markup, $located_tem
 
 		<div data-bind="visible: entries().length, foreach: entries">
 			✅ Child form submitted!
-			<button class="edit-button" data-bind="click: $parent.editEntry, attr: { 'aria-label': '<?php echo esc_js( $aria_labels['edit_entry'] ); ?>'.format( $index() + 1, f<?php echo $nested_fields[0]['id']; ?>.label ) }"><?php echo $labels['edit_entry']; ?></button>
-			<button class="delete-button" data-bind="click: $parent.deleteEntry, attr: { 'aria-label': '<?php echo esc_js( $aria_labels['delete_entry'] ); ?>'.format( $index() + 1, f<?php echo $nested_fields[0]['id']; ?>.label ) }"><?php echo $labels['delete_entry']; ?>
+			<button class="edit-button" data-bind="click: $parent.editEntry, attr: { 'aria-label': '<?php echo esc_js( $aria_labels['edit_entry'] ); ?>'.gformFormat( $index() + 1, f<?php echo $nested_fields[0]['id']; ?>.label ) }"><?php echo $labels['edit_entry']; ?></button>
+			<button class="delete-button" data-bind="click: $parent.deleteEntry, attr: { 'aria-label': '<?php echo esc_js( $aria_labels['delete_entry'] ); ?>'.gformFormat( $index() + 1, f<?php echo $nested_fields[0]['id']; ?>.label ) }"><?php echo $labels['delete_entry']; ?>
 		</div>
 
 		<div data-bind="visible: ! entries().length">

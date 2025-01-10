@@ -1,20 +1,5 @@
 /**
- * Gravity Wiz // Gravity Forms // Auto-prepend HTTPS to URLs
- * https://gravitywiz.com/
- *
- * Auto-prepend "https://" to URLs in Website fields.
+ * We're no longer using the experimental folder for experimental snippets. 🚧
+ * You can now find the snippet here:
+ * https://github.com/gravitywiz/snippet-library/blob/master/gravity-forms/gw-auto-prepend-https.js
  */
-// Update "1" to your field ID.
-$( '#input_GFFORMID_1' )
-	.on( 'focus', function() {
-		if ( $( this ).val() === '' ) {
-			$( this ).val( 'https://' );
-		}
-	} )
-	.on( 'keyup', function() {
-		if ( $( this ).val() === 'https:/' ) {
-			$( this ).val( 'https://' );
-		} else if ( $( this ).val().indexOf( 'https://' ) !== 0 ) {
-			$( this ).val( 'https://' + $( this ).val() );
-		}
-	} );

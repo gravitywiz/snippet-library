@@ -4,7 +4,7 @@
  *
  * Instructions:
  *     1. Install our free Custom Javascript for Gravity Forms plugin.
- *        Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
+ *        Download the plugin here: https://gravitywiz.com/gravity-forms-code-chest/
  *     2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
  */
 
@@ -24,9 +24,9 @@ function gwizDebounce(func, wait, immediate) {
     };
 }
 
-$(document).off("gform_post_conditional_logic.gfCalc_{0}".format(GFFORMID))
+$(document).off("gform_post_conditional_logic.gfCalc_{0}".gformFormat(GFFORMID))
 
-$(document).on("gform_post_conditional_logic.gfCalc_{0}".format(GFFORMID), gwizDebounce(function () {
-    var _GFCalc = rgars(window, 'gf_global/gfcalc/{0}'.format(GFFORMID));
+$(document).on("gform_post_conditional_logic.gfCalc_{0}".gformFormat(GFFORMID), gwizDebounce(function () {
+    var _GFCalc = rgars(window, 'gf_global/gfcalc/{0}'.gformFormat(GFFORMID));
     _GFCalc.runCalcs(formId, _GFCalc.formulaFields);
 }, 15));

@@ -23,6 +23,8 @@ add_filter( 'gppa_object_type_database_query', function( $query, $args, $db_obje
 	$are_all_same   = count( array_unique( array( $order_by, $template_value, $template_label ) ) ) === 1;
 
 	if ( $are_all_same ) {
+		// %i is a valid placeholder as of WP 6.2
+		// phpcs:ignore
 		$query = str_replace( 'SELECT *', $wpdb->prepare( 'SELECT DISTINCT %i', $order_by ), $query );
 	}
 

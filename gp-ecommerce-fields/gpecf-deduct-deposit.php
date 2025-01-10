@@ -7,15 +7,10 @@
  *
  * This snippet uses a Product field to create a deposit field and deducts the deposit from Order Summary.
  * To use the snippet, you'll have to update the Form ID and the deposit field ID within the snippet.
- *
- * Plugin Name:  GP eCommerce Fields - Deduct Deposit from Order Summary
- * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-ecommerce-fields/
- * Description:  This snippet uses a Produdct field to create a deposit field and deducts the deposit from Order Summary
- * Author:       Gravity Wiz
- * Version:      0.3
- * Author URI:   https://gravitywiz.com
  */
 class GW_Deduct_Deposit {
+
+	private $_args = array();
 
 	public function __construct( $args ) {
 
@@ -38,6 +33,84 @@ class GW_Deduct_Deposit {
 		remove_action( 'gform_product_info', array( gp_ecommerce_fields(), 'add_ecommerce_fields_to_order' ), 9 );
 
 		add_action( 'gform_product_info', array( $this, 'deduct_deposit' ), 9, 3 );
+		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ) );
+		add_action( 'gform_register_init_scripts', array( $this, 'add_init_script' ) );
+
+	}
+
+	public function is_applicable_form( $form ) {
+
+		$form_id = isset( $form['id'] ) ? $form['id'] : $form;
+
+		return empty( $this->_args['form_id'] ) || (int) $form_id === (int) $this->_args['form_id'];
+	}
+
+	public function load_form_script( $form ) {
+
+		if ( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
+			add_action( 'wp_footer', array( $this, 'output_script' ) );
+			add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
+		}
+
+		return $form;
+	}
+
+	public function output_script() {
+		?>
+
+		<script type="text/javascript">
+
+			( function( $ ) {
+
+				window.<?php echo __CLASS__; ?> = function( args ) {
+
+					var self = this;
+
+					self.formId = args.formId;
+					self.depositFieldId = args.depositFieldId;
+
+					self.init = function() {
+						gform.addFilter( 'gform_product_total', function( total, formId ) {
+							if ( formId == self.formId ) {
+								var depositPrice    = $( 'input[name="input_' + self.depositFieldId + '.2"]' ).val();
+								var depositQuantity = $( 'input[name="input_' + self.depositFieldId + '.3"]' ).val();
+
+								depositValue = gformToNumber(depositPrice) * depositQuantity;
+
+								// since the depositValue (product field) would have been added to the total,
+								// it must first be removed to get base value and then discount applied (second substract).
+								total = total - depositValue - depositValue;
+							}
+							return total;
+						} );
+					};
+
+					self.init();
+
+				}
+
+			} )( jQuery );
+
+		</script>
+
+		<?php
+	}
+
+	public function add_init_script( $form ) {
+
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return;
+		}
+
+		$args = array(
+			'formId'         => $this->_args['form_id'],
+			'depositFieldId' => $this->_args['deposit_field_id'],
+		);
+
+		$script = 'new ' . __CLASS__ . '( ' . json_encode( $args ) . ' );';
+		$slug   = implode( '_', array( strtolower( __CLASS__ ), $this->_args['form_id'] ) );
+
+		GFFormDisplay::add_init_script( $form['id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
 
 	}
 

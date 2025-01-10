@@ -1,13 +1,13 @@
 /**
  * Gravity Wiz // Gravity Forms // Auto Select Country in Address Field
  * https://gravitywiz.com/
- * 
+ *
  * Automatically selects the user's current country based on IP in a designated address field.
- * 
+ *
  * Instructions:
- * 
+ *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  * 2. Customize the selector for the $country variable below.
  */
 var $country = jQuery( '#input_GFFORMID_1_6' );
@@ -18,10 +18,10 @@ jQuery
 	} )
 	.always( function ( resp ) {
 		const countryCode = resp && resp.country ? resp.country : null;
-	
+
 		var oldValue = $country.val();
 		var newValue = countryCode in isoAlpha2ToCountry ? isoAlpha2ToCountry[countryCode] : '';
-	
+
 		$country.val( newValue );
 		if ( newValue != oldValue ) {
 			$country.trigger( 'change' );

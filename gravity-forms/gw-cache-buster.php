@@ -9,10 +9,14 @@
  * Plugin URI:  https://gravitywiz.com/cache-busting-with-gravity-forms/
  * Description: Bypass your website cache when loading a Gravity Forms form.
  * Author:      Gravity Wiz
- * Version:     0.2
+ * Version:     0.6.3
  * Author URI:  https://gravitywiz.com
  */
 class GW_Cache_Buster {
+
+	private $_args = array();
+
+	private $_form_args = array();
 
 	public function __construct( $args = array() ) {
 
@@ -38,26 +42,91 @@ class GW_Cache_Buster {
 		}
 
 		add_filter( 'gform_shortcode_form', array( $this, 'shortcode' ), 10, 3 );
+		add_filter( 'gform_get_form_filter', array( $this, 'form_filter' ), 10, 2 );
+		add_filter( 'gform_form_args', array( $this, 'stash_form_args' ) );
 		add_filter( 'gform_save_and_continue_resume_url', array( $this, 'filter_resume_link' ), 15, 4 );
+		add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_embed_url' ), 10, 4 );
+		add_action( 'gform_after_submission', array( $this, 'entry_source_url' ), 10, 2 );
 
 		add_action( 'wp_ajax_nopriv_gfcb_get_form', array( $this, 'ajax_get_form' ) );
 		add_action( 'wp_ajax_gfcb_get_form', array( $this, 'ajax_get_form' ) );
+	}
 
+	/**
+	 * Duplicate method due to GFFormDisplay::set_form_styles() being private.
+	 *
+	 * Applies the form styles and form theme to the form object so that the proper style block is rendered to the page.
+	 *
+	 * @param mixed       $form           The form object.
+	 * @param string|null $style_settings Style settings for the form. This will either come from the shortcode or from the block editor settings.
+	 * @param string|null $form_theme     The theme selected for the form. This will either come from the shortcode or from the block editor settings.
+
+	 * @return array Returns the form object with the 'styles' and 'theme' properties set.
+	 */
+	public function set_form_styles( $form, $style_settings, $form_theme ) {
+		if ( $style_settings === false ) {
+			// Form styles specifically set to false disables inline form css styles.
+			$form_styles = false;
+		} else {
+			$form_styles = ! empty( $style_settings ) ? json_decode( $style_settings, true ) : array();
+		}
+
+		// Removing theme from styles for consistency. $form['theme'] should be used instead.
+		if ( $form_styles ) {
+			unset( $form_styles['theme'] );
+		}
+		$form['styles'] = GFFormDisplay::get_form_styles( $form_styles );
+		$form['theme']  = $form_theme;
+
+		return $form;
+	}
+
+	public function stash_form_args( $form_args ) {
+		$this->_form_args[ $form_args['form_id'] ] = $form_args;
+		return $form_args;
 	}
 
 	public function shortcode( $markup, $attributes, $content ) {
-
 		$atts = shortcode_atts(
 			array(
 				'id'          => 0,
 				'cachebuster' => false,
+
+				// Attributes needed for theme/styles.
+				'theme'       => method_exists( 'GFForms', 'get_default_theme' ) ? GFForms::get_default_theme() : '',
+				'styles'      => '',
 			),
 			$attributes
 		);
 
-		$form_id = $atts['id'];
+		remove_filter( 'gform_get_form_filter', array( $this, 'form_filter' ), 10, 2 );
+		return $this->get_cachebuster_markup( $markup, array_merge( $attributes, $atts ), $content );
+	}
 
-		add_filter( "gform_footer_init_scripts_filter_{$form_id}", array( $this, 'suppress_default_post_render_event' ), 10, 3 );
+	public function form_filter( $markup, $form ) {
+		// Prevent recursion.
+		if ( rgar( $GLOBALS, 'processing' ) ) {
+			return $markup;
+		}
+
+		$form_args = rgar( $this->_form_args, $form['id'] );
+		$atts      = array(
+			'id'           => $form['id'],
+			'cachebuster'  => rgar( $form_args, 'cachebuster' ),
+			'title'        => $form_args['display_title'],
+			'description'  => $form_args['display_description'],
+			'field_values' => $form_args['field_values'],
+			'ajax'         => $form_args['ajax'],
+			'tabindex'     => $form_args['tabindex'],
+			'theme'        => rgar( $form, 'theme' ),
+			'styles'       => rgar( $form, 'styles' ),
+		);
+
+		return $this->get_cachebuster_markup( $markup, $atts, null );
+	}
+
+	public function get_cachebuster_markup( $markup, $atts, $content ) {
+		$form_id = $atts['id'];
 
 		if ( ! $this->is_cache_busting_applicable() ) {
 			return $markup;
@@ -67,6 +136,8 @@ class GW_Cache_Buster {
 		if ( ! $is_enabled ) {
 			return $markup;
 		}
+
+		add_filter( "gform_footer_init_scripts_filter_{$form_id}", array( $this, 'suppress_default_post_render_event' ), 10, 3 );
 
 		ob_start();
 		?>
@@ -135,17 +206,35 @@ class GW_Cache_Buster {
 			</style>
 		</div>
 		<?php
-		// Store current URL parameters and include them in AJAX call
-		// This preserves dynamic form population
-		$params         = array();
-		$exclude_params = array( 'action', 'form_id', 'atts' ); // Exclude parameters that may clash
-		foreach ( $_GET as $k => $v ) {
-			if ( ! in_array( $k, $exclude_params, true ) ) {
-				$params[ $k ] = sprintf( '%s=%s', $k, $_GET[ $k ] );
-			}
+		// Include original query parameters (with some exclusions) in the AJAX call to preserve dynamic population via query string.
+		$exclude_params = array( 'action', 'form_id', 'atts' );
+		$ajax_url       = remove_query_arg( $exclude_params, add_query_arg( $_GET, admin_url( 'admin-ajax.php' ) ) );
+
+		// Get the form theme.
+		if ( method_exists( 'GFFormDisplay', 'get_form_theme_slug' ) ) {
+			$form       = $this->set_form_styles( GFAPI::get_form( $form_id ), rgar( $atts, 'styles' ), rgar( $atts, 'theme' ) );
+			$form_theme = GFFormDisplay::get_form_theme_slug( $form );
+		} else {
+			$form_theme = null;
 		}
-		$params = ( count( $params ) > 0 ) ? '&' . join( '&', $params ) : '';
-		$lang   = null;
+
+		// Still needed for the AJAX submission.
+		$ajax_params = array(
+			'action'     => 'gfcb_get_form',
+			'form_id'    => $form_id,
+			'form_theme' => $form_theme,
+		);
+
+		// Ensure AJAX parameters for GPNF are also correctly populated.
+		if ( class_exists( 'GPNF_Session' ) ) {
+			$ajax_params['gpnf_context'] = array(
+				'path' => esc_js( GPNF_Session::get_session_path() ),
+			);
+		}
+
+		$ajax_url = add_query_arg( $ajax_params, $ajax_url );
+
+		$lang = null;
 		if ( class_exists( 'Gravity_Forms_Multilingual' ) ) {
 			global $sitepress;
 			$lang = $sitepress->get_current_language();
@@ -154,10 +243,11 @@ class GW_Cache_Buster {
 		<script type="text/javascript">
 			( function ( $ ) {
 				var formId = '<?php echo $form_id; ?>';
-				$.post( '<?php echo admin_url( 'admin-ajax.php' ); ?>?action=gfcb_get_form&form_id=<?php echo $form_id, $params; ?>', {
+				$.post( '<?php echo $ajax_url; ?>', {
 					action: 'gfcb_get_form',
 					form_id: '<?php echo $form_id; ?>',
-					atts: '<?php echo json_encode( $attributes ); ?>',
+					atts: <?php echo wp_json_encode( $atts ); ?>,
+					form_request_origin: '<?php echo esc_js( GFCommon::openssl_encrypt( GFFormsModel::get_current_page_url() ) ); ?>',
 					lang: '<?php echo $lang; ?>'
 				}, function( response ) {
 					$( '#gf-cache-buster-form-container-<?php echo $form_id; ?>' ).html( response ).fadeIn();
@@ -173,10 +263,18 @@ class GW_Cache_Buster {
 					// GF is using it as their standard for triggering the `gform_post_render` event, I figured we should follow suit.
 					gform.initializeOnLoaded( function() {
 						// Form has been rendered. Trigger post render to initialize scripts.
-						jQuery( document ).trigger( 'gform_post_render', [ formId, 1 ] );
+						<?php
+							echo sprintf(
+								'gform.initializeOnLoaded(function() {%s});',
+								GFFormDisplay::post_render_script(
+									$form_id,
+									GFFormDisplay::get_current_page( $form_id )
+								)
+							);
+						?>
 					} );
 				} );
-			} ( jQuery ) );
+			} )( jQuery );
 		</script>
 
 		<?php
@@ -189,11 +287,22 @@ class GW_Cache_Buster {
 	}
 
 	public function suppress_default_post_render_event( $form_string, $form, $current_page ) {
+		$searches = array(
+			"gform.initializeOnLoaded( function() { jQuery(document).trigger('gform_post_render', [{$form['id']}, {$current_page}]) } );",
+			"gform.initializeOnLoaded( function() {jQuery(document).trigger('gform_post_render', [{$form['id']}, {$current_page}]);gform.utils.trigger({ event: 'gform/postRender', native: false, data: { formId: {$form['id']}, currentPage: {$current_page} } });} );",
+		);
 
-		$footer_script_body = "gform.initializeOnLoaded( function() { jQuery(document).trigger('gform_post_render', [{$form['id']}, {$current_page}]) } );";
-		$search             = GFCommon::get_inline_script_tag( $footer_script_body );
+		foreach ( $searches as $search ) {
+			$search      = GFCommon::get_inline_script_tag( $search );
+			$form_string = str_replace( $search, '', $form_string );
+		}
 
-		$form_string = str_replace( $search, '', $form_string );
+		if ( is_callable( 'GFFormDisplay::post_render_script' ) ) {
+			$post_render_script = GFFormDisplay::post_render_script( $form['id'], $current_page );
+			$post_render_script = preg_quote( $post_render_script, '/' ); // Escape special characters
+			$pattern            = '/<script>\s*gform\.initializeOnLoaded\(\s*function\(\)\s*\{\s*(' . $post_render_script . ')\s*\}\s*\);\s*<\/script>/';
+			$form_string        = preg_replace( $pattern, '', $form_string );
+		}
 
 		return $form_string;
 	}
@@ -204,6 +313,12 @@ class GW_Cache_Buster {
 		if ( ! $form_id ) {
 			$form_id = isset( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : 0;
 		}
+
+		add_filter( 'gpasc_new_draft_form_path', function( $form_path, $form ) {
+			return rgpost( 'form_request_origin' )
+				? remove_query_arg( 'gf_token', GFCommon::openssl_decrypt( rgpost( 'form_request_origin' ) ) )
+				: $form_path;
+		}, 10, 2 );
 
 		/**
 		 * Init scripts are output to the footer by default so they are not needed in the AJAX response. Some plugins
@@ -216,16 +331,36 @@ class GW_Cache_Buster {
 		 * Priority of this filter is set aggressively high to ensure it will take priority.
 		 */
 		add_filter( 'gform_init_scripts_footer', '__return_true', 987 );
+		add_filter( 'gform_form_tag_' . $form_id, array( $this, 'add_hidden_inputs' ), 10, 2 );
+		add_filter( 'gform_pre_render_' . $form_id, array( $this, 'replace_embed_tag_for_field_default_values' ) );
 
-		$atts = json_decode( rgpost( 'atts' ), true );
+		add_filter( 'gform_form_theme_slug', function( $slug, $form ) {
+			return rgar( $_REQUEST, 'form_theme' ) ?: $slug;
+		}, 10, 2 );
+
+		add_filter( 'gpmpn_default_page_' . $form_id, function( $page ) {
+			if ( rgars( $_REQUEST, 'atts/page' ) && rgget( 'gpmpn_page' ) ) {
+				return rgget( 'gpmpn_page' );
+			}
+
+			return rgars( $_REQUEST, 'atts/page', $page );
+		} );
+
+		$atts = rgpost( 'atts' );
 
 		// GF expects an associative array for field values. Parse them before passing it on.
 		$field_values = wp_parse_args( rgar( $atts, 'field_values' ) );
 
 		// If `$_POST` is not an empty array GF 2.5 fails to select default values for checkbox fields. See HS#26188
-		$_POST = array();
+		$GLOBALS['GWCB_POST'] = $_POST;
+		$_POST                = array();
 
+		$GLOBALS['processing'] = true;
 		gravity_form( $form_id, filter_var( rgar( $atts, 'title', true ), FILTER_VALIDATE_BOOLEAN ), filter_var( rgar( $atts, 'description', true ), FILTER_VALIDATE_BOOLEAN ), false, $field_values, true /* default to true; add support for non-ajax in the future */, rgar( $atts, 'tabindex' ) );
+		$GLOBALS['processing'] = false;
+
+		remove_filter( 'gform_form_tag_' . $form_id, array( $this, 'add_hidden_inputs' ) );
+		remove_filter( 'gform_pre_render_' . $form_id, array( $this, 'replace_embed_tag_for_field_default_values' ) );
 
 		die();
 	}
@@ -255,6 +390,127 @@ class GW_Cache_Buster {
 		return add_query_arg( array( 'gf_token' => $resume_token ), $referer );
 	}
 
+	/**
+	 * Replace `{embed_url}` merge tag for notifications, confirmations, etc.
+	 *
+	 * @param string $text The current text with merge tags.
+	 * @param array $form The current form.
+	 * @param array $entry The current entry.
+	 * @param boolean $url_encode The URLs need to be encoded or not.
+	 *
+	 * @return string
+	 */
+	public function replace_embed_url( $text, $form, $entry, $url_encode ) {
+		// Check if the text contains the {embed_url} merge tag
+		if ( strpos( $text, '{embed_url}' ) !== false ) {
+			$origin = $this->get_form_request_origin();
+
+			if ( ! $origin ) {
+				return $text;
+			}
+
+			// Replace the {embed_url} merge tag with the original URL
+			$text = str_replace( '{embed_url}', $origin, $text );
+		}
+
+		return $text;
+	}
+
+	/**
+	 * Append hidden inputs to store the entry url.
+	 *
+	 * @param array $entry The current entry.
+	 * @param array $form The current form.
+	 */
+	function entry_source_url( $entry, $form ) {
+		$origin = $this->get_form_request_origin();
+
+		if ( ! $origin ) {
+			return;
+		}
+
+		GFAPI::update_entry_property( $entry['id'], 'source_url', $origin );
+	}
+
+	/**
+	 * Replace {embed_url} and {embed_post} merge tag for field default values. We have to do this using gform_pre_render as
+	 * gform_pre_replace_merge_tags is not called for field default values.
+	 *
+	 * @param array $form The current form.
+	 */
+	public function replace_embed_tag_for_field_default_values( $form ) {
+		foreach ( $form['fields'] as &$field ) {
+			$text    = $field->defaultValue;
+			$origin  = $this->get_form_request_origin();
+			$post_id = url_to_postid( $origin );
+
+			if ( strpos( $text, '{embed_url}' ) !== false ) {
+				if ( ! $origin ) {
+					continue;
+				}
+
+				$field->defaultValue = str_replace( '{embed_url}', $origin, $text );
+			}
+
+			preg_match_all( '/\{embed_post:(.*?)\}/', $text, $ep_matches, PREG_SET_ORDER );
+
+			if ( $ep_matches && $post_id ) {
+				$post       = get_post( $post_id );
+				$post_array = GFCommon::object_to_array( $post );
+
+				foreach ( $ep_matches as $match ) {
+					$full_tag = $match[0];
+					$property = $match[1];
+					$value    = $post_array[ $property ];
+					$text     = str_replace( $full_tag, $value, $text );
+				}
+
+				$field->defaultValue = $text;
+			}
+		}
+
+		return $form;
+	}
+
+	/**
+	 * Helper method to get the form request origin.
+	 */
+	public function get_form_request_origin() {
+		static $form_request_origin;
+
+		if ( $form_request_origin ) {
+			return $form_request_origin;
+		}
+
+		$origin = rgpost( 'gwcb_form_request_origin' );
+		$origin = $origin ?: rgpost( 'form_request_origin' );
+		$origin = $origin ?: rgars( $GLOBALS, 'GWCB_POST/form_request_origin' );
+
+		if ( $origin ) {
+			$form_request_origin = GFCommon::openssl_decrypt( $origin );
+		} else {
+			$form_request_origin = null;
+		}
+
+		return $form_request_origin;
+	}
+
+	/**
+	 * Append hidden inputs to store the entry url.
+	 *
+	 * @param string $form_tag The form opening tag.
+	 * @param array $form The current form.
+	 *
+	 * @return string
+	 */
+	public function add_hidden_inputs( $form_tag, $form ) {
+		if ( strpos( $form_tag, 'gwcb_form_request_origin' ) !== false ) {
+			return $form_tag;
+		}
+
+		$form_tag .= '<input type="hidden" value="' . esc_attr( rgars( $GLOBALS, 'GWCB_POST/form_request_origin' ) ) . '" name="gwcb_form_request_origin" />';
+		return $form_tag;
+	}
 }
 
 # Configuration
