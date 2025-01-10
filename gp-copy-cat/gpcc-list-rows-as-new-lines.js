@@ -8,8 +8,8 @@
  *
  * Instructions:
  * 
- * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ * 1. Install this snippet with our free Code Chest plugin.
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  */
 gform.addFilter( 'gpcc_copied_value', function( value, $targetElem, field, sourceValues ) {
 	// Update "3" to your Paragraph field ID.
