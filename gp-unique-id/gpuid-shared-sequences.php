@@ -16,9 +16,7 @@
  *     )
  * );
  */
-add_filter( 'gpui_unique_id_attributes', 'gwiz_unique_id_global_sequential_index', 10, 3 );
-
-function gwiz_unique_id_global_sequential_index( $atts, $form_id, $field_id ) {
+add_filter( 'gpui_unique_id_attributes', function ( $atts, $form_id, $field_id ) {
 
 	$groups = array(
 		array(
@@ -31,7 +29,7 @@ function gwiz_unique_id_global_sequential_index( $atts, $form_id, $field_id ) {
 		),
 	);
 
-	if ( $atts['type'] != 'sequential' ) {
+	if ( $atts['type'] !== 'sequential' ) {
 		return $atts;
 	}
 
@@ -50,10 +48,15 @@ function gwiz_unique_id_global_sequential_index( $atts, $form_id, $field_id ) {
 		return $atts;
 	}
 
-	$atts['starting_number']  = 1;
-	$atts['form_id']          = 0;
-	$atts['original_form_id'] = $form_id;
-	$atts['field_id']         = $group_number;
+	$atts['starting_number'] = 1;
+
+	$atts['slug'] = array(
+		'form_id'  => 0,
+		'field_id' => 0,
+		'slug'     => 'shared-sequence-' . $group_number,
+	);
 
 	return $atts;
-}
+}, 10, 3 );
+
+
