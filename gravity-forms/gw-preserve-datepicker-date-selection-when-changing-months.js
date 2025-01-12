@@ -18,9 +18,16 @@ gform.addFilter( 'gform_datepicker_options_pre_init', function( optionsObj, form
 		var selectedDate = $(this).datepicker('getDate');
 		var day = selectedDate ? selectedDate.getDate() : 1;
 
-		// Set the new date with the updated month and year
+		// Create a date with the first of the selected month and year
+		var newDate = new Date(year, month, 0); // Last day of the previous month (i.e., correct for leap years)
+		var maxDay = newDate.getDate();
+
+		// Adjust the day if it exceeds the maximum days in the selected month
+		day = Math.min(day, maxDay);
+
+		// Set the new date with the updated month, year, and adjusted day
 		$(this).datepicker('setDate', new Date(year, month - 1, day));
 	}
-  
-    return optionsObj;
+
+	return optionsObj;
 } );
