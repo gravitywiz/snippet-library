@@ -5,7 +5,7 @@
  *
  * Nested Form fields fetch the child form markup via an AJAX request after the parent form has loaded. This
  * means that when loading child form markup, the child form's context is not the same as the parent's. However,
- * most of the parent form context can be retrieved via the GPNF session.
+ * most of the parent form context can be retrieved via the `gpnf_context` parameter passed in the AJAX request.
  *
  * Here is an example where we fetch the "my_id" query parameter that was set on the page on which the parent
  * form was loaded.
