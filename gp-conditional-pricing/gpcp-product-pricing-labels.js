@@ -8,7 +8,7 @@
 	function update_price_labels() {
 		$( 'label[data-gpcp-template], option[data-gpcp-template]' ).each( function() {
 			var $priceElem = $( this ).is( 'option' ) ? $( this ) : $( this ).siblings( 'input' );
-			var price = gformFormatMoney( $priceElem.val().split( '|' )[1] );
+			var price = gformFormatMoney( $priceElem.val().split( '|' )[1], true );
 			var template = $( this ).attr( 'data-gpcp-template' );
 			$( this ).html( template.replace( '{price}', price ) );
 		} );
