@@ -106,7 +106,13 @@ class GPECF_Discount_Amounts_By_Field_Value {
 
 					self.setDiscountAmount = function( value ) {
 						// Clean the value to remove the thousand separator (could be , or . depending on currency settings).
-						value = gformCleanNumber( value, '', '', window.gf_global.gf_currency_config.decimal_separator );
+						if ( gform.Currency && typeof gform.Currency.cleanNumber === 'function' ) {
+							// Gravity Forms 2.9 deprecates gformCleanNumber in favor of gform.Currency.cleanNumber.
+							value = gform.Currency.cleanNumber( value, '', '', window.gf_global.gf_currency_config.decimal_separator ).toString();
+						} else {
+							// For Gravity Forms prior to 2.9.
+							value = gformCleanNumber( value, '', '', window.gf_global.gf_currency_config.decimal_separator ).toString();
+						}
 
 						if ( value.indexOf( '|' ) !== -1 ) {
 							value = value.split( '|' )[0];
