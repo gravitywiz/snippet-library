@@ -12,9 +12,7 @@
  */
 add_filter( 'gform_pre_render', function( $form ) {
 	if ( in_array( rgar( $_REQUEST, 'action' ), array( 'gpnf_refresh_markup', 'gpnf_edit_entry' ) ) ) {
-		$session = new GPNF_Session( rgar( $_REQUEST, 'gpnf_parent_form_id' ) );
-		$cookie  = $session->get_cookie();
-		$my_id   = rgars( $cookie, 'request/my_id' );
+		$my_id = rgars( $_REQUEST, 'gpnf_context/request/my_id' );
 	}
 	return $form;
 } );
