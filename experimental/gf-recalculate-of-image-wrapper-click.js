@@ -1,6 +1,10 @@
 /**
- * Gravity Perks // Gravity Forms //  Recalculate on checkbox change
+ * Gravity Perks // Gravity Forms // Trigger calculations on click of image for Image Choice
  * https://gravitywiz.com/
+ *
+ * This snippet is needed to work around a bug in Gravity Forms 2.9 where calculations are not
+ * re-processed when the actual image of an Image Choice is clicked. It works fine if you click on
+ * the label or the checkbox/radio itself.
  *
  * Instructions:
  *
