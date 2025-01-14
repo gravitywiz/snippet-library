@@ -14,9 +14,8 @@ add_filter( 'gpui_sequential_unique_id_pre_insert_519_5', function ( $uid, $form
 
 	$table_name = GFFormsModel::get_entry_meta_table_name();
 
-	$result = $wpdb->get_results( $wpdb->prepare( "
-		select meta_value 
-		from {$table_name}
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$result = $wpdb->get_results( $wpdb->prepare( "select meta_value from {$table_name}
 		where form_id = %d and meta_key = %d", $form_id, $field_id ) );
 
 	if ( empty( $result ) ) {

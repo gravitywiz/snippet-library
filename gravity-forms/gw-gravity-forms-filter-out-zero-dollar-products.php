@@ -16,7 +16,7 @@ add_filter( 'gform_product_info', function ( $product_info, $form, $lead ) {
 	foreach ( $product_info['products'] as $field_id => $product ) {
 		if ( GFCommon::to_number( $product['price'] ) != 0 ) {
 			$products[ $field_id ] = $product;
-		} else if ( isset( $product['options'] ) && is_array( $product['options'] ) ) {
+		} elseif ( isset( $product['options'] ) && is_array( $product['options'] ) ) {
 			foreach ( $product['options'] as $option ) {
 				if ( GFCommon::to_number( $option['price'] ) !== 0 ) {
 					$products[ $field_id ] = $product;

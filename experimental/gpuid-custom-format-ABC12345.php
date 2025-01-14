@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore WordPress.Files.FileName.NotHyphenatedLowercase
 /**
  * We're no longer using the experimental folder for experimental snippets. 🚧
  * You can now find the snippet here:

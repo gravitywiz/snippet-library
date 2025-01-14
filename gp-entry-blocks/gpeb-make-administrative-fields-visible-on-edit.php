@@ -7,16 +7,16 @@
  */
 class GPEB_Editable_Admin_Fields {
 
-    private static $instance;
+	private static $instance;
 
-    public static function get_instance() {
+	public static function get_instance() {
 
-        if ( ! self::$instance ) {
-            self::$instance = new self;
-        }
+		if ( ! self::$instance ) {
+			self::$instance = new self;
+		}
 
-        return self::$instance;
-    }
+		return self::$instance;
+	}
 
 	private function __construct() {
 
@@ -41,7 +41,7 @@ class GPEB_Editable_Admin_Fields {
 	}
 
 	public function add_gpep_context_for_gpnf_ajax_requests( $args ) {
-		$payload = array();
+		$payload    = array();
 		$block_uuid = $this->get_edit_block_uuid( $args['formId'] );
 		if ( $block_uuid ) {
 			$payload['uuid']     = $block_uuid;
@@ -63,7 +63,7 @@ class GPEB_Editable_Admin_Fields {
 			return false;
 		}
 
-		$action  = rgpost( 'action' );
+		$action = rgpost( 'action' );
 		if ( ! in_array( $action, array( 'gpnf_edit_entry', 'gpnf_refresh_markup' ) ) ) {
 			return false;
 		}
@@ -118,7 +118,7 @@ class GPEB_Editable_Admin_Fields {
 }
 
 function gpeb_editable_admin_fields() {
-    return GPEB_Editable_Admin_Fields::get_instance();
+	return GPEB_Editable_Admin_Fields::get_instance();
 }
 
 gpeb_editable_admin_fields();

@@ -69,7 +69,7 @@ class GW_Coupons_Exclude_Products {
 
 				if( window.gform ) {
 
-          gform.addFilter( 'gform_coupons_discount_amount', function( discount, couponType, couponAmount, price, totalDiscount, formId ) {
+					gform.addFilter( 'gform_coupons_discount_amount', function( discount, couponType, couponAmount, price, totalDiscount, formId ) {
 
 						price -= getExcludedAmount( formId );
 
@@ -190,14 +190,14 @@ class GW_Coupons_Exclude_Products {
 
 		$coupon_fields = GFCommon::get_fields_by_type( $form, array( 'coupon' ) );
 
-		if( sizeof( $this->_args['exclude_fields_by_form']) > 0 ) {
+		if ( sizeof( $this->_args['exclude_fields_by_form'] ) > 0 ) {
 			$is_applicable_form_id = in_array( $form['id'], array_keys( $this->_args['exclude_fields_by_form'] ) );
-			if( $is_applicable_form_id && $form['id'] != $this->_args['form_id'] ) {
-				$this->_args['form_id'] = $form['id'];
-				$this->_args['exclude_fields'] = $this->_args['exclude_fields_by_form'][$form['id']];
+			if ( $is_applicable_form_id && $form['id'] != $this->_args['form_id'] ) {
+				$this->_args['form_id']        = $form['id'];
+				$this->_args['exclude_fields'] = $this->_args['exclude_fields_by_form'][ $form['id'] ];
 			}
 		}
-		
+
 		$is_applicable_form_id = $form['id'] == $this->_args['form_id'];
 
 		return $is_applicable_form_id && ! empty( $coupon_fields );
@@ -217,15 +217,15 @@ class GW_Coupons_Exclude_Products {
 new GW_Coupons_Exclude_Products( array(
 	'form_id'              => 123,
 	'exclude_fields'       => array( 4, 5 ),
-	'skip_for_100_percent' => false
+	'skip_for_100_percent' => false,
 ) );
 
 // Multiple forms
 
 new GW_Coupons_Exclude_Products( array(
-	'exclude_fields_by_form' => array( 
+	'exclude_fields_by_form' => array(
 		123 => array( 4, 5 ),
 		456 => array( 7, 8 ),
 	),
-	'skip_for_100_percent'   => false
+	'skip_for_100_percent'   => false,
 ) );
