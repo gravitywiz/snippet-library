@@ -368,6 +368,11 @@ class GW_Populate_Date {
 						var $input = self.getInputs( inputId ),
 							value  = self.getCleanNumber( $input.val(), gformExtractFieldId( inputId ), self.formId );
 
+						// Cannot retrieve value from `gfield_radio` directly on `$input`.
+						if ( ! $input.val() && $input.hasClass( 'gfield_radio' ) ) {
+							value = $input.find('input[type="radio"]:checked').val();
+						}
+
 						value = gform.applyFilters( 'gwpd_get_field_value', value, $input, inputId );
 
 						if ( ! value || isNaN( value ) ) {
