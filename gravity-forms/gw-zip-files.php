@@ -307,7 +307,7 @@ class GW_Zip_Files {
 
 	public function get_zip_paths( $entry, $type = false ) {
 
-		$filename = $this->get_zip_filename( $entry['id'] );
+		$filename = $this->get_zip_filename( $entry );
 		$paths    = GFFormsModel::get_file_upload_path( $entry['form_id'], $filename );
 
 		foreach ( $paths as &$path ) {
@@ -317,8 +317,12 @@ class GW_Zip_Files {
 		return $type ? rgar( $paths, $type ) : $paths;
 	}
 
-	public function get_zip_filename( $entry_id ) {
-		return $this->get_slug( $this->_args['zip_name'], $entry_id, $this->_args['field_ids'] ) . '.zip';
+	public function get_zip_filename( $entry ) {
+		$form_id  = $entry['form_id'];
+		$form     = GFAPI::get_form( $form_id );
+		// replace merge tags in the zip file name
+		$zip_name = GFCommon::replace_variables( $this->_args['zip_name'], $form, $entry, false, false, false, 'text' );
+		return $this->get_slug( $zip_name, false, $this->_args['field_ids'] ) . '.zip';
 	}
 
 	public function get_meta_key( $entry_id = false ) {
@@ -477,7 +481,7 @@ class GW_Zip_Files {
 new GW_Zip_Files(
 	array(
 		'form_id'       => 123,
-		'zip_name'      => 'my-sweet-archive',
+		'zip_name'      => 'my-sweet-archive', // supports merge tags
 		'notifications' => array( '5f4668ec2afbb' ),
 	)
 );
