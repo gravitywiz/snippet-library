@@ -11,32 +11,28 @@
  */
 // Update to the Survey field ID on your form.
 const fieldId = '1';
-document.addEventListener( 'change', function ( event ) {
+// If you want to exclude a column from this behavior, set the column label here.
+// If you don't want it to exclude any column, set it to an empty string.
+const exceptionColumnLabel = 'Not Available';
 
-	if ( event.target.type == 'radio' ) {
-		const selectedRadio = event.target;
+$( document ).on( 'change', `#field_${GFFORMID}_${fieldId} input[type="radio"]`, function () {
+	const $selectedRadio = $(this);
+	const $td            = $selectedRadio.closest('td');
 
-		const field = selectedRadio.closest( `#field_${GFFORMID}_${fieldId}` );
-		// Exit if the radio button is not within the target field.
-		if ( !field ) {
-			return;
-		}
+	// Skip logic if the column label matches the exception label.
+	if ( exceptionColumnLabel && $td.data('label') == exceptionColumnLabel ) {
+		return;
+	}
 
-		// Get the column ID of the radio button
-		const ariaLabels = selectedRadio.getAttribute( 'aria-labelledby' ).split(' ');
-		const columnId = ariaLabels.find(label => label.startsWith( 'likert_col_' ));
-		
-		if (columnId) {
-			// Find all radio buttons in the same table within the specified field/
-			const table = selectedRadio.closest( 'table' );
-			const radiosInColumn = table.querySelectorAll( `input[type="radio"][aria-labelledby*="${columnId}"]` );
+	const ariaLabels = $selectedRadio.attr( 'aria-labelledby' ).split( ' ' );
+	const columnId   = ariaLabels.find( label => label.startsWith( 'likert_col_' ) ) ;
 
-			// Deselect all other radio buttons in the same column/
-			radiosInColumn.forEach(radio => {
-				if (radio != selectedRadio) {
-					radio.checked = false;
-				}
-			});
-		}
+	if ( columnId ) {
+		// Find all radio buttons in the same column.
+		const $table          = $selectedRadio.closest( 'table' );
+		const $radiosInColumn = $table.find( `input[type="radio"][aria-labelledby*="${columnId}"]` );
+
+		// Deselect all other radio buttons in the same column.
+		$radiosInColumn.not( $selectedRadio ).prop( 'checked', false );
 	}
 });
