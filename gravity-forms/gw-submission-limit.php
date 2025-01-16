@@ -13,7 +13,6 @@
  */
 class GW_Submission_Limit {
 
-	var $_args;
 	var $_notification_event;
 
 	private static $forms_with_individual_settings = array();
