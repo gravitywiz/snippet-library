@@ -20,5 +20,6 @@ gform.addFilter( 'gpaa_autocomplete_options', function( options ) {
 
 // Display Place Name
 gform.addAction( 'gpaa_fields_filled', function ( place, instance, formId, fieldId ) {
-	jQuery( '#input_{0}_{1}_1'.gformFormat( formId, fieldId ) ).val( place.name ).trigger('change');
+	let $addressLine1 = jQuery( '#input_{0}_{1}_1'.gformFormat( formId, fieldId ) );
+	$addressLine1.val( place.name + ', ' + $addressLine1.val() ).trigger('change');
 } );
