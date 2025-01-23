@@ -31,9 +31,7 @@ class GPLD_Conditional_Limits {
 		add_action( 'gform_field_validation', array( $this, 'validate' ), 11, 4 );
 
         // Enables date limits for the form field, allowing the `gp-limit-dates` script to be enqueued.
-		add_filter( "gpld_has_limit_dates_enabled_{$this->_args['form_id']}_{$this->_args['field_id']}", function ( $result, $field ) {
-			return true;
-		}, 10, 2 );
+		add_filter( "gpld_has_limit_dates_enabled_{$this->_args['form_id']}_{$this->_args['field_id']}", '__return_true', 10, 2 );
 	}
 
 	public function enqueue_form_scripts( $form ) {
