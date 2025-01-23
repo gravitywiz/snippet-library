@@ -124,7 +124,7 @@ class GW_Choice_Count {
 								if ( ! values ) {
 									// If no values provided in the config, just get the number of checkboxes checked.
 									if ( self.isCheckableField( $choiceField ) ) {
-										count += $choiceField.find( ':checked' ).not(' #choice_' + choiceFieldIds[ i ] + '_select_all').length;
+										count += $choiceField.find( ':checked' ).not(':disabled').not(' #choice_' + choiceFieldIds[ i ] + '_select_all').length;
 									} else {
 										count += $choiceField.find( 'option:selected' ).length;
 									}
