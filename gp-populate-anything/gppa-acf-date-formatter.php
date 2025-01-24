@@ -13,14 +13,24 @@
  * Plugin URI:   http:///gravitywiz.com.com/documentation/gravity-forms-populate-anything/
  * Description:  This snippet will format the value from a ACF Date field that is retrieved from the database and convert it into a Gravity Forms format Date field.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   http://gravitywiz.com
  */
 add_filter( 'gppa_process_template_value', function( $template_value, $field, $template_name, $populate, $object, $object_type, $objects ) {
-
 	if ( strpos( $field->cssClass, 'gppa-format-acf-date' ) === false ) {
 		return $template_value;
 	}
 
-	return wp_date( 'd/m/Y', strtotime( $template_value ) );
+	$timezone = new DateTimeZone( 'UTC' );
+
+	try {
+		// Attempt to parse the date value.
+		$date = new DateTime( $template_value );
+		$date->setTimezone( $timezone ); // Ensure it's parsed as UTC.
+
+		return wp_date( 'd/m/Y', $date->getTimestamp(), $timezone );
+	} catch ( Exception $e ) {
+		// Handle invalid date formats gracefully.
+		return $template_value;
+	}
 }, 10, 7 );
