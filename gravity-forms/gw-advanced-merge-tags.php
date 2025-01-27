@@ -506,6 +506,25 @@ class GW_Advanced_Merge_Tags {
 						return rgar( $value_array, $index );
 					}
 					break;
+				case 'all_fields':
+					// {all_fields} merge tag support needs to get the entry IDs from the raw value.
+					$entries = json_decode( $raw_value, true );
+
+					// loop through each entry ID and get the {all_fields} output.
+					$output  = '';
+					foreach ( $entries as $entry_id ) {
+						$entry = GFAPI::get_entry( $entry_id );
+						$form  = GFAPI::get_form( $entry['form_id'] );
+
+						// Get the {all_fields} output for each entry.
+						$all_fields_output = GFCommon::replace_variables( '{all_fields}', $form, $entry, false, false, false );
+
+						$output .= $all_fields_output;
+					}
+
+					// if no entries were found, return the original value.
+					$value = $output ? $output : $value;
+					break;
 			}
 		}
 
