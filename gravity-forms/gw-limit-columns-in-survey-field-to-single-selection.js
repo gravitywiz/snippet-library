@@ -33,6 +33,16 @@ $( document ).on( 'change', `#field_${GFFORMID}_${fieldId} input[type="radio"]`,
 		const $radiosInColumn = $table.find( `input[type="radio"][aria-labelledby*="${columnId}"]` );
 
 		// Deselect all other radio buttons in the same column.
-		$radiosInColumn.not( $selectedRadio ).prop( 'checked', false );
+		$radiosInColumn.not($selectedRadio).each(function () {
+			let $radio = $(this);
+			let $parentTd = $radio.closest('td');
+
+			$radio.prop('checked', false);
+
+			// if gsurvey-likert-selected class is added to the parent td, remove it (GF 2.5 Theme). 
+			if ( $parentTd.length && $parentTd.hasClass( 'gsurvey-likert-selected' ) ) {
+				$parentTd.removeClass( 'gsurvey-likert-selected' );
+			}
+		});
 	}
 });
