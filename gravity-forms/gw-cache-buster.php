@@ -262,15 +262,18 @@ class GW_Cache_Buster {
 					// We probably don't need this since everything else should already be loaded by this point but since
 					// GF is using it as their standard for triggering the `gform_post_render` event, I figured we should follow suit.
 					gform.initializeOnLoaded( function() {
-						// Form has been rendered. Trigger post render to initialize scripts.
+						// Form has been rendered. Trigger post render to initialize scripts if form is not restricted (expired).
 						<?php
-							echo sprintf(
-								'gform.initializeOnLoaded(function() {%s});',
-								GFFormDisplay::post_render_script(
-									$form_id,
-									GFFormDisplay::get_current_page( $form_id )
-								)
-							);
+							$form_restriction_error = rgars( GFFormDisplay::$submission, $form_id . '/form_restriction_error' );
+							if ( ! $form_restriction_error ) {
+								echo sprintf(
+									'gform.initializeOnLoaded(function() {%s});',
+									GFFormDisplay::post_render_script(
+										$form_id,
+										GFFormDisplay::get_current_page( $form_id )
+									)
+								);
+							}
 						?>
 					} );
 				} );
