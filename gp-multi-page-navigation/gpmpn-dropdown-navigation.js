@@ -7,6 +7,7 @@
  * This snippet is designed to be used with the Gravity Forms Code Chest plugin.
  * https://gravitywiz.com/gravity-forms-code-chest/
  */
+const pageNameTemplate = 'Step {pageNumber}: {pageName}';
 function updateNavigationState(  ) {
 	// hide if visible
 	$( '#gf_page_steps_GFFORMID' ).attr( 'hidden', 'true' );
@@ -33,10 +34,15 @@ function updateNavigationState(  ) {
 	}
 
 	$( '#gf_page_steps_GFFORMID .gf_step' ).each( function(  ) {
-		var $div = $( this );
+		var $div       = $( this );
 		var stepNumber = $div.find('.gf_step_number').text();
-		var $a = $div.find('a');
-		var $option = $('<option></option>').text( 'Step ' + stepNumber );
+		var pageName   = $div.find('.gf_step_label').text().trim();
+		var optionText = pageNameTemplate
+            .replace('{pageNumber}', stepNumber)
+            .replace('{pageName}', pageName);
+
+		var $a      = $div.find('a');
+		var $option = $('<option></option>').text( optionText );
 
 		if ( $a.length > 0 ) {
 			// found a tag, add the link to the dropdown option
