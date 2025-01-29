@@ -34,6 +34,10 @@ class GW_Format_Date_Merge_Tag {
 	}
 
 	public function replace_merge_tags( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $text;
+		}
+
 		$current_locale = determine_locale();
 		$locale         = $this->_args['locale'];
 		if ( $locale ) {
