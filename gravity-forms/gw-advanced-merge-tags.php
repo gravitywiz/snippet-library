@@ -529,7 +529,7 @@ class GW_Advanced_Merge_Tags {
 						// Get the {all_fields} output for each entry.
 						$all_fields_output = GFCommon::replace_variables( '{all_fields}', $form, $entry, false, false, false );
 
-						$output .= $all_fields_output;
+						$output .= $all_fields_output . '<br>';
 					}
 
 					// if no entries were found, return the original value.
