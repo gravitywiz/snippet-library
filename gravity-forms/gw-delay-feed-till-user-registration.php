@@ -7,7 +7,7 @@
  * Delay a specified feed until user registration is complete.
  * This is useful when you have a feed that needs to be processed after user registration is complete.
  */
-class GW_Delayed_Feed_Processing {
+class GW_Delayed_Feed_Processing_Till_User_Registration {
 
 	private $_args = array();
 
@@ -66,7 +66,7 @@ class GW_Delayed_Feed_Processing {
 }
 
 # Configuration: Pass feed_slug (mandatory) and form_id (optional)
-new GW_Delayed_Feed_Processing( array(
+new GW_Delayed_Feed_Processing_Till_User_Registration( array(
 	'feed_slug' => 'gc-notion',  // Specify the feed_slug (mandatory)
 	'form_id'   => 6,  // Optional: Specify the form_id (or apply to all forms).
 ) );
