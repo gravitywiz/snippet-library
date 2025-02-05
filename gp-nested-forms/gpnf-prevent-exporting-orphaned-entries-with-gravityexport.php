@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // Nested Forms // Prevent Exporting Orphaned Entries with GravityExport
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
