@@ -9,7 +9,7 @@
  * Plugin URI:  https://gravitywiz.com/cache-busting-with-gravity-forms/
  * Description: Bypass your website cache when loading a Gravity Forms form.
  * Author:      Gravity Wiz
- * Version:     0.6.3
+ * Version:     0.6.4
  * Author URI:  https://gravitywiz.com
  */
 class GW_Cache_Buster {
@@ -68,7 +68,7 @@ class GW_Cache_Buster {
 			// Form styles specifically set to false disables inline form css styles.
 			$form_styles = false;
 		} else {
-			$form_styles = ! empty( $style_settings ) ? json_decode( $style_settings, true ) : array();
+			$form_styles = is_array( $style_settings ) ? $style_settings : ( ! empty( $style_settings ) ? json_decode( $style_settings, true ) : array() );
 		}
 
 		// Removing theme from styles for consistency. $form['theme'] should be used instead.
