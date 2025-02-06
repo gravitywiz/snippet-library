@@ -331,6 +331,17 @@ class GW_All_Fields_Template {
 			$items = $this->get_items( $form, $entry, $display_empty, ! $use_value, $options['format'], $use_admin_label, 'all_fields', $_modifiers );
 		}
 
+		// Add meta fields to the items array.
+		if ( ! empty( $modifiers ) && array_key_exists( 'meta', $modifiers ) ) {
+			$meta_keys = $modifiers['meta'];
+			foreach ( $meta_keys as $key ) {
+				$items[] = array(
+					'label' => $key,
+					'value' => gform_get_meta( $entry['id'], $key ),
+				);
+			}
+		}
+
 		$output = $this->load_template( $template, null, array(
 			'form'  => $form,
 			'entry' => $entry,
