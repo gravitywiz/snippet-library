@@ -4,6 +4,11 @@
  * https://gravitywiz.com/documentation/
  *
  * Experimental Snippet 🧪
+ *
+ * So you've installed dozens of perks, each one more useful than the last, but you find that you'd rather not see them all
+ * listed individually on your Plugins page. No problem! This snippet will hide perks from your Plugins page.
+ *
+ * Note: Perks will still show up on your Updates page.
  */
 add_filter( 'all_plugins', function( $plugins ) {
 
