@@ -506,6 +506,12 @@ class GW_Advanced_Merge_Tags {
 						return rgar( $value_array, $index );
 					}
 					break;
+				case 'gravatar':
+					if ( $field->type !== 'email' ) {
+						break;
+					}
+
+					return $this->generate_gravatar($value, $modifiers);
 			}
 		}
 
@@ -543,6 +549,41 @@ class GW_Advanced_Merge_Tags {
 		return $parsed;
 	}
 
+	/**
+	 * Generate a Gravatar image URL or image tag.
+	 *
+	 * @param $email
+	 * @param $modifiers
+	 *
+	 * @return string
+	 */
+	public function generate_gravatar( $email, $modifiers ) {
+		$format  = rgar( $modifiers, 'format' );
+		$size    = rgar( $modifiers, 'size', 64 );
+		$default = rgar( $modifiers, 'default' );
+
+		$params = array();
+
+		if ( $default ) {
+			$params['d'] = htmlentities( $default );
+		}
+
+		if ( $size ) {
+			$params['s'] = htmlentities($size);
+		}
+
+		$base_url = 'https://www.gravatar.com/avatar';
+		$hash     = hash( 'sha256', strtolower( trim( $email ) ) );
+		$query    = http_build_query( $params );
+
+		$gravatar_url = sprintf( '%s/%s?%s', $base_url, $hash, $query );
+
+		if ( $format === 'url' ) {
+			return $gravatar_url;
+		}
+
+		return "<img src='{$gravatar_url}' alt='Gravatar Image'/>";
+	}
 }
 
 function gw_advanced_merge_tags( $args = array() ) {
