@@ -22,5 +22,10 @@ add_filter( 'gppa_process_template_value', function( $template_value, $field, $t
 
 	$label = get_field( str_replace( 'meta_', '', $field->{'gppa-values-templates'}['value'] ), $object->ID );
 
+	// When the ACF field's return value as Both (Value and Label), the `$label` is an array. So, we need to get the label from the array.
+	if ( rgars( $label, '0/label' ) ) {
+		$label[0] = $label[0]['label'];
+	}
+
 	return $label;
 }, 10, 7 );
