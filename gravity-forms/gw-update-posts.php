@@ -279,6 +279,16 @@ class GW_Update_Posts {
 	 * @return mixed
 	 */
 	public function return_ids_instead_of_names( $value, $field, $template_name, $populate, $object, $object_type, $objects, $template ) {
+		// Check if this is for the specific form we want.
+		if ( $field->formId != $this->_args['form_id'] ) {
+			return $value;
+		}
+
+		// Don't want to return IDs for post objects used in the populates field dynamically using GPPA.
+		if ( rgar( $field, 'gppa-values-enabled' ) === true  && rgar( $field, 'gppa-values-object-type' ) === 'post' ) {
+			return $value;
+		}
+
 		if ( strpos( $template, 'taxonomy_' ) === 0 ) {
 			$taxonomy = preg_replace( '/^taxonomy_/', '', $template );
 			$terms    = wp_get_post_terms( $object->ID, $taxonomy, array( 'fields' => 'ids' ) );
