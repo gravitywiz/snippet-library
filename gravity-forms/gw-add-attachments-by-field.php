@@ -12,7 +12,7 @@
 add_filter( 'gform_notification', function( $notification, $form, $entry ) {
 
 	$notification_name = 'Notification A';
-	$upload_field_id   = 1;
+	$upload_field_ids  = array( 1 );
 
 	return gw_add_attachments_by_field( $notification, $form, $entry, $notification_name, $upload_field_id );
 }, 10, 3 );
@@ -20,12 +20,12 @@ add_filter( 'gform_notification', function( $notification, $form, $entry ) {
 add_filter( 'gform_notification', function( $notification, $form, $entry ) {
 
 	$notification_name = 'Notification B';
-	$upload_field_id   = 2;
+	$upload_field_ids  = array( 2, 3 );
 
-	return gw_add_attachments_by_field( $notification, $form, $entry, $notification_name, $upload_field_id );
+	return gw_add_attachments_by_field( $notification, $form, $entry, $notification_name, $upload_field_ids );
 }, 10, 3 );
 
-function gw_add_attachments_by_field( $notification, $form, $entry, $notification_name, $upload_field_id ) {
+function gw_add_attachments_by_field( $notification, $form, $entry, $notification_name, $upload_field_ids ) {
 
 	if ( $notification['name'] !== $notification_name ) {
 		return $notification;
@@ -34,22 +34,24 @@ function gw_add_attachments_by_field( $notification, $form, $entry, $notificatio
 	$notification['attachments'] = rgar( $notification, 'attachments', array() );
 	$upload_root                 = RGFormsModel::get_upload_root();
 
-	$field = GFAPI::get_field( $form, $upload_field_id );
-	$url   = rgar( $entry, $field->id );
+	foreach ( $upload_field_ids as $upload_field_id ) {
+		$field = GFAPI::get_field( $form, $upload_field_id );
+		$url   = rgar( $entry, $field->id );
 
-	if ( empty( $url ) ) {
-		return $notification;
-	}
+		if ( empty( $url ) ) {
+			continue;
+		}
 
-	if ( $field->multipleFiles ) {
-		$uploaded_files = json_decode( stripslashes( $url ), true );
-		foreach ( $uploaded_files as $uploaded_file ) {
-			$attachment                    = preg_replace( '|^(.*?)/gravity_forms/|', $upload_root, $uploaded_file );
+		if ( $field->multipleFiles ) {
+			$uploaded_files = json_decode( stripslashes( $url ), true );
+			foreach ( $uploaded_files as $uploaded_file ) {
+				$attachment                    = preg_replace( '|^(.*?)/gravity_forms/|', $upload_root, $uploaded_file );
+				$notification['attachments'][] = $attachment;
+			}
+		} else {
+			$attachment                    = preg_replace( '|^(.*?)/gravity_forms/|', $upload_root, $url );
 			$notification['attachments'][] = $attachment;
 		}
-	} else {
-		$attachment                    = preg_replace( '|^(.*?)/gravity_forms/|', $upload_root, $url );
-		$notification['attachments'][] = $attachment;
 	}
 
 	return $notification;
