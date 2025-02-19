@@ -140,15 +140,53 @@ class GW_Update_Posts {
 		}
 
 		if ( $this->_args['terms'] ) {
-
 			// Assign custom taxonomies.
 			$term_fields = is_array( $this->_args['terms'] ) ? $this->_args['terms'] : array( $this->_args['terms'] );
+
 			foreach ( $term_fields as $field ) {
 				$term_field = GFAPI::get_field( $form, $field );
-				$terms      = array_map( 'intval', explode( ',', is_object( $term_field ) ? $term_field->get_value_export( $entry ) : '' ) );
-				$taxonomy   = is_object( $term_field ) ? $term_field['choices'][0]['object']->taxonomy : '';
 
-				wp_set_post_terms( $post->ID, $terms, $taxonomy );
+				$terms = explode( ',', is_object( $term_field ) ? trim( $term_field->get_value_export( $entry ) ) : '' );
+
+				if ( ! empty( $terms ) && rgar( $term_field, 'gppa-choices-enabled' ) ) {
+					$taxonomy = '';
+					// Get the taxonomy from the field settings or the first choice object based on the field type.
+					if ( $term_field instanceof GF_Field_Text ) {
+						$taxonomy = str_replace( 'taxonomy_', '', rgars( $term_field, 'gppa-values-templates/value', '' ) );
+					} elseif ( is_object( $term_field ) && ! empty( $term_field['choices'][0]['object']->taxonomy ) ) {
+						$taxonomy = $term_field['choices'][0]['object']->taxonomy;
+					} elseif ( is_object( $term_field ) && rgars( $term_field, 'gppa-choices-filter-groups/0/0/property' ) === 'taxonomy' ) {
+						// When GravityView is activated, need to get the taxonomy from the filter groups.
+						$taxonomy = $term_field['gppa-choices-filter-groups'][0][0]['value'];
+					}
+
+					// Taxonomy not found, skip.
+					if ( empty( $taxonomy ) ) {
+						continue;
+					}
+
+					foreach ( $terms as $key => $term ) {
+						// Check if `$term` is a term name or id. If term name, get the term id.
+						if ( ! is_numeric( $term ) ) {
+							$term = term_exists( $term, $taxonomy );
+
+							// If the term doesn't exist, remove it from the array.
+							if ( ! $term ) {
+								unset( $terms[ $key ] );
+								continue;
+							}
+
+							$terms[ $key ] = $term['term_id'];
+						}
+					}
+
+					// If the taxonomy is not hierarchical, we need to get the term names from the term ids.
+					if( ! $this->is_taxonomy_hierarchical( $taxonomy ) ) {
+						$terms = $this->get_term_names_by_ids( $terms, $taxonomy );
+					}
+
+					wp_set_post_terms( $post->ID, $terms, $taxonomy );
+				}
 			}
 		}
 
@@ -156,10 +194,50 @@ class GW_Update_Posts {
 			$post->meta_input = $this->prepare_meta_input( $this->_args['meta'], $post->ID, $entry, $form );
 		}
 
-		// ensure the fires after hooks is set to false, so that doesn't override some of the normal rendering - GF confirmation for instance.
+		// Ensure the fires after hooks is set to false, so that doesn't override some of the normal rendering - GF confirmation for instance.
 		wp_update_post( $post, false, false );
 
 	}
+
+	/**
+	 * Check if a taxonomy is hierarchical.
+	 *
+	 * @param $taxonomy
+	 *
+	 * @return bool
+	 */
+	function is_taxonomy_hierarchical( $taxonomy ) {
+		$taxonomy_object = get_taxonomy( $taxonomy );
+
+		if ( ! $taxonomy_object ) {
+			return false;
+		}
+
+		return $taxonomy_object->hierarchical;
+	}
+
+	/**
+	 * Get term names by term IDs.
+	 *
+	 * @param $tag_ids
+	 * @param string $taxonomy
+	 *
+	 * @return array
+	 */
+	function get_term_names_by_ids( $tag_ids, $taxonomy = 'post_tag' ) {
+		$tag_ids = is_array( $tag_ids ) ? $tag_ids : array( $tag_ids );
+
+		$tag_names = [];
+		foreach ( $tag_ids as $tag_id ) {
+			$tag = get_term( $tag_id, $taxonomy );
+			if ( ! is_wp_error( $tag ) && $tag ) {
+				$tag_names[] = $tag->name;
+			}
+		}
+
+		return $tag_names;
+	}
+
 
 	/**
 	 * @param $meta
@@ -279,6 +357,16 @@ class GW_Update_Posts {
 	 * @return mixed
 	 */
 	public function return_ids_instead_of_names( $value, $field, $template_name, $populate, $object, $object_type, $objects, $template ) {
+		// Check if this is for the specific form we want.
+		if ( $field->formId != $this->_args['form_id'] ) {
+			return $value;
+		}
+
+		// Don't want to return IDs for post objects used in the populates field dynamically using GPPA.
+		if ( rgar( $field, 'gppa-values-enabled' ) === true  && rgar( $field, 'gppa-values-object-type' ) === 'post' ) {
+			return $value;
+		}
+
 		if ( strpos( $template, 'taxonomy_' ) === 0 ) {
 			$taxonomy = preg_replace( '/^taxonomy_/', '', $template );
 			$terms    = wp_get_post_terms( $object->ID, $taxonomy, array( 'fields' => 'ids' ) );
@@ -330,5 +418,6 @@ class GW_Update_Posts {
 
 		return gmdate( 'Y-m-d H:i:s', strtotime( sprintf( '%s %s:%s:00', $date, $hour, $min ) ) );
 	}
-
 }
+
+
