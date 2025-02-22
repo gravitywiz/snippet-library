@@ -7,6 +7,8 @@
  *
  * Use a Single Line Text field as autocomplete input and populate the Single Line Text field with the full address.
  *
+ * Supports multiple address fields by adding multiple configuration blocks at the end of the snippet.
+ *
  * Note: This snippet will require the user to make a selection from the auto-suggested addresses.
  *
  * Plugin Name:  GP Address Autocomplete - Use Single Line Text field as Autocomplete Input
@@ -130,10 +132,14 @@ class GPAA_Single_Line_Input {
 
 }
 
-// Configuration
+# Configuration
+
+// Duplicate then modify the next 7 lines to add another address field
+// Configuration for the first address field
 new GPAA_Single_Line_Input( array(
 	'form_id'              => 123,     // The ID of your form.
 	'address_field_id'     => 4,       // The ID of the Address field.
 	'single_line_field_id' => 5,        // The ID of the Single Line Text field.
 	// 'use_full_address'     => true,    // Uncomment to use the full street address if you don't want an abbreviated street address.
 ) );
+
