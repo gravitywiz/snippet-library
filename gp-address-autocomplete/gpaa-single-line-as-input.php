@@ -132,6 +132,8 @@ class GPAA_Single_Line_Input {
 
 }
 
+# Configuration
+
 // Duplicate then modify the next 7 lines to add another address field
 // Configuration for the first address field
 new GPAA_Single_Line_Input( array(
