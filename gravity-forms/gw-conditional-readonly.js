@@ -13,11 +13,19 @@
 const value = "abc";
 
 // Update "4" to the field to check for the conditional value.
-const $sourceField = document.getElementById("input_GFFORMID_1");
+const $sourceField = document.getElementById("input_GFFORMID_4");
 
 // Update "5" to the field that should be marked as readonly if the conditional value is present.
-const $readOnlyField = document.getElementById("input_GFFORMID_3");
+const $readOnlyField = document.getElementById("input_GFFORMID_5");
 
+// Evaluate once when the form is rendered.
+setFieldAsReadonlyConditionally();
+
+// Evaluate again each time our source field receives input.
 $sourceField.addEventListener("input", function () {
-	$readOnlyField.readOnly = $sourceField.value.toLowerCase() === "abc";
+	setFieldAsReadonlyConditionally();
 });
+
+function setFieldAsReadonlyConditionally() {
+	$readOnlyField.readOnly = $sourceField.value.toLowerCase() === value;
+}
