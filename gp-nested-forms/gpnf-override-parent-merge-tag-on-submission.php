@@ -95,7 +95,16 @@ class GPNF_Override_Parent_Merge_Tags {
 				}
 
 				foreach ( $inputs as $input ) {
-					$this->override_child_entry_input_value( $entry, $field, $child_form, $input['id'], rgar( $input, 'defaultValue' ) );
+					switch ( $child_field->type ) {
+						case 'time':
+							$default_value = preg_replace( '/(\d+)\.\d+/', '$1', rgar( $child_field['inputs'][0], 'defaultValue' ) );
+							break;
+						default:
+							$default_value = rgar( $input, 'defaultValue' );
+							break;
+					}
+
+					$this->override_child_entry_input_value( $entry, $field, $child_form, $input['id'], $default_value );
 				}
 			}
 		}
@@ -122,8 +131,39 @@ class GPNF_Override_Parent_Merge_Tags {
 			$child_entry = GFAPI::get_entry( $child_entry_id );
 			$value       = GFCommon::replace_variables( $default_value, $child_form, $child_entry );
 			GFAPI::update_entry_field( $child_entry_id, $input_id, $value );
+
+			// If because of the field update, any formula evaluation should be done on the entry.
+			$this->reprocess_form_calculations( $child_entry_id );
 		}
 
+	}
+
+	function reprocess_form_calculations( $entry_id ) {
+		$entry = GFAPI::get_entry( $entry_id );
+		$form  = GFAPI::get_form( $entry['form_id'] );
+
+		foreach ( $form['fields'] as $field ) {
+			// Only process calculation fields
+			if ( $field->enableCalculation && $field->calculationFormula ) {
+				$field_id = $field->id;
+
+				// Retrieve the formula for this field and process. First check for GPDTC calculations because of ':' calculations.
+				if ( is_callable( array( gp_date_time_calculator(), 'modify_calculation_formula' ) ) ) {
+					$formula = gp_date_time_calculator()->modify_calculation_formula( $field->calculationFormula, $field, $form, $entry );
+				}
+
+				// Process any other filter customization over it.
+				$formula = apply_filters( 'gform_calculation_formula', $formula, $form, $field, $entry );
+
+				// Process/Calculate the formula
+				$parsed_formula = GFCommon::replace_variables( $formula, $form, $entry, false, false, false, 'text' );
+				// phpcs:ignore Squiz.PHP.Eval.Discouraged
+				$calculated_value = eval( 'return ' . $parsed_formula . ';' );
+
+				// Update the entry with the recalculated value
+				GFAPI::update_entry_field( $entry_id, $field_id, $calculated_value );
+			}
+		}
 	}
 }
 
