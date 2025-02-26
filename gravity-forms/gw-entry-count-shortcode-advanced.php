@@ -19,7 +19,9 @@
  * - display_min_alt_text (string): The text to display if the entry count is less than display_min.
  *
  * Example Usage:
- * ```[gform_shortcode_entry_count id="1" field_id="2" value="example" field_filters="3:is:example,4:>5" field_filters_mode="any" format="comma" start_date="2023-01-01" end_date="2023-12-31" current_user="true" display_min="10" display_min_alt_text="Less than 10 entries"]```
+ * ```
+ * [gform_shortcode_entry_count id="1" field_id="2" value="example" field_filters="3:is:example,4:>5" field_filters_mode="any" format="comma" start_date="2023-01-01" end_date="2023-12-31" current_user="true" display_min="10" display_min_alt_text="Less than 10 entries"]
+ * ```
  */
 add_filter( 'gform_shortcode_entry_count', function( $output, $atts ) {
 
