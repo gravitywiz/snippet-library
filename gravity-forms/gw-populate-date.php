@@ -49,7 +49,8 @@ class GW_Populate_Date {
 			return;
 		}
 
-		if ( $this->_args['source_field_id'] ) {
+		// Always load the script if a modifier is provided, even if no source_field_id is set
+		if ( $this->_args['modifier'] || $this->_args['source_field_id'] ) {
 			add_filter( 'gform_pre_render', array( $this, 'load_form_script' ) );
 			add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ) );
 			add_filter( 'gform_enqueue_scripts', array( $this, 'enqueue_form_scripts' ) );
@@ -300,20 +301,21 @@ class GW_Populate_Date {
 
 					self.init = function() {
 
-						self.$sourceInputs = GWDates.getFieldInputs( self.sourceFieldId, self.formId );
+						if( self.sourceFieldId ) {
+							self.$sourceInputs = GWDates.getFieldInputs( self.sourceFieldId, self.formId );
+							self.$sourceInputs.change( function() {
+								self.populateDate( self.sourceFieldId, self.targetFieldId, self.getModifier(), self.format );
+							} );
 
-						self.$sourceInputs.change( function() {
-							self.populateDate( self.sourceFieldId, self.targetFieldId, self.getModifier(), self.format );
-						} );
-
-						// Listen for GPPA's new `gppa_updated_batch_fields`
-						$( document ).on( 'gppa_updated_batch_fields', function ( e, formId, updatedFieldIDs ) {
-							for ( var i = 0, max = updatedFieldIDs.length; i < max; i ++ ) {
-								if ( self.sourceFieldId === parseInt( updatedFieldIDs[i] ) ) {
-									self.populateDate( self.sourceFieldId, self.targetFieldId, self.getModifier(), self.format );
+							// Listen for GPPA's new `gppa_updated_batch_fields`
+							$( document ).on( 'gppa_updated_batch_fields', function ( e, formId, updatedFieldIDs ) {
+								for ( var i = 0, max = updatedFieldIDs.length; i < max; i ++ ) {
+									if ( self.sourceFieldId === parseInt( updatedFieldIDs[i] ) ) {
+										self.populateDate( self.sourceFieldId, self.targetFieldId, self.getModifier(), self.format );
+									}
 								}
-							}
-						} );
+							} );
+						}
 
 						if( typeof self.modifier == 'object' ) {
 							self.$modifierInputs = self.getInputs( self.modifier.inputId );
@@ -334,7 +336,7 @@ class GW_Populate_Date {
 
 					self.populateDate = function( sourceFieldId, targetFieldId, modifier, format ) {
 
-						var timestamp = GWDates.getFieldTimestamp( sourceFieldId, self.formId, undefined, self.utcOffset );
+						var timestamp = sourceFieldId ? GWDates.getFieldTimestamp( sourceFieldId, self.formId, undefined, self.utcOffset ) : new Date().getTime();
 						if( timestamp === 0 ) {
 							return;
 						}
