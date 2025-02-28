@@ -4,6 +4,8 @@
  * https://gravitywiz.com/gravity-forms-all-fields-template/
  *
  * Adds support for a collapsible template with All Fields Template.
+ * 
+ * ![Preview of Collapsible All Fields Template in action](https://gravitywiz.com/app/uploads/2025/02/gwaft-collapsible-preview.png)
  *
  * Instructions:
  *
@@ -13,8 +15,8 @@
  * 2. Install this snippet. No code configuration required.
  *    https://gravitywiz.com/documentation/managing-snippets/#where-do-i-put-snippets
  *
- * 3. Enable the collapsible template on any {all_fields} merge tag.
- *    {all_fields:template[collapsible]}
+ * 3. Enable the collapsible template on any `{all_fields}` merge tag.
+ *    `{all_fields:template[collapsible]}`
  */
 add_filter( 'gwaft_template_output', function( $content, $slug, $name, $data, $suffixes ) {
 	if ( ! in_array( 'collapsible', $suffixes ) ) {
