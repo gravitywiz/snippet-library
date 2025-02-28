@@ -122,6 +122,15 @@ class GPNF_Override_Parent_Merge_Tags {
 			$child_entry = GFAPI::get_entry( $child_entry_id );
 			$value       = GFCommon::replace_variables( $default_value, $child_form, $child_entry );
 			GFAPI::update_entry_field( $child_entry_id, $input_id, $value );
+
+			// Added support to force the renaming of uploaded files if the GP File Renamer plugin is active and the version is greater than 1.0.9 because `rename_uploaded_files` method of `GP_File_Renamer` class supports third argument `force` only after 1.0.9.
+			if ( function_exists( 'gp_file_renamer' ) && defined( 'GP_FILE_RENAMER_VERSION' ) && version_compare( GP_FILE_RENAMER_VERSION, '1.0.9', '>' ) ) {
+				// Get the updated child entry to rename the uploaded files.
+				$child_entry = GFAPI::get_entry( $child_entry_id );
+
+				// Force the renaming of uploaded files if set.
+				gp_file_renamer()->rename_uploaded_files( $child_entry, $child_form, true );
+			}
 		}
 
 	}
