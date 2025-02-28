@@ -8,7 +8,7 @@
  * Plugin URI:   https://gravitywiz.com/gravity-forms-all-fields-template/
  * Description:  Modify the {all_fields} merge tag output via a template file.
  * Author:       Gravity Wiz
- * Version:      0.11
+ * Version:      0.12
  * Author URI:   http://gravitywiz.com
  *
  * Usage:
@@ -591,7 +591,20 @@ class GW_All_Fields_Template {
 			include( $template );
 		}
 		$content = ob_get_clean();
-		return ! $template ? false : $content;
+
+		/**
+		 * Filters the output loaded by the template.
+		 *
+		 * @since 0.12
+		 *
+		 * @param string $content  The output content loaded by the template.
+		 * @param string $slug     The slug name for the generic template.
+		 * @param string $name     The name of the specialized template.
+		 * @param array  $data     An array of data extracted for use in the template.
+		 * @param array  $suffixes An array of suffixes used to locate the template.
+		 */
+		$content = apply_filters( 'gwaft_template_output', $content, $slug, $name, $data, $suffixes );
+		return ! $template && ! $content ? false : $content;
 	}
 
 	public function get_template_part( $slug, $name = null, $load = true, $suffixes = array() ) {
