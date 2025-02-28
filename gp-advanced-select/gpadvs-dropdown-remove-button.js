@@ -4,6 +4,9 @@
  *
  * Adds a Remove button to selection options in Dropdown fields. By default,
  * the remove button is only added to Multi-Select fields.
+ * 
+ * The Remove Button is a built in plugin of Tom Select.
+ * @reference https://tom-select.js.org/plugins/remove-button/ 
  *
  * Instructions:
  *
