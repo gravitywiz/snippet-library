@@ -1,5 +1,7 @@
 <?php
 /**
+ * WARNING! THIS SNIPPET IS DEPRECATED. 🚧
+ *
  * Gravity Perks // Nested Forms // Dynamically Set Entry Min/Max From Field Value
  * http://gravitywiz.com/documentation/gravity-forms-nested-forms/
  */
