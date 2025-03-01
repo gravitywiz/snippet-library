@@ -218,3 +218,12 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 	}
 
 }
+
+# Configuration
+
+new GP_Nested_Forms_Dynamic_Entry_Min_Max( array(
+	'parent_form_id'       => 4,
+	'nested_form_field_id' => 3,
+	'max_field_id'         => 1,
+	'min_field_id'         => 2, // (Optional)
+) );
