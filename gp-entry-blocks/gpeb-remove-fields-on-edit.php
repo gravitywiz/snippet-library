@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // Entry Blocks // Set Fields as Readonly On Edit
+ * Gravity Perks // Entry Blocks // Remove Fields On Edit
  * https://gravitywiz.com/documentation/gravity-forms-entry-blocks/
  *
  * Remove fields from the Entry Blocks edit form by automatically setting the field's visibility to "administrative".
