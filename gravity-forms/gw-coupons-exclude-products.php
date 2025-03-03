@@ -6,7 +6,7 @@
  *
  * Requires Gravity Forms Coupons v1.1
  *
- * @version 1.3
+ * @version 1.4
  */
 class GW_Coupons_Exclude_Products {
 
@@ -19,10 +19,11 @@ class GW_Coupons_Exclude_Products {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
 		$this->_args = wp_parse_args( $args, array(
-			'form_id'                => false,
-			'exclude_fields'         => array(),
-			'exclude_fields_by_form' => array(),
-			'skip_for_100_percent'   => false,
+			'form_id'                        => false,
+			'exclude_fields'                 => array(),
+			'exclude_fields_without_options' => array(),
+			'exclude_fields_by_form'         => array(),
+			'skip_for_100_percent'           => false,
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -102,16 +103,24 @@ class GW_Coupons_Exclude_Products {
 
 				function getExcludedAmount( formId ) {
 
-					var excludeFields = gf_global.gfcep[ formId ],
-						amount        = 0;
+					var excludeFields               = gf_global.gfcep[ formId ].exclude_fields,
+						excludeFieldsWithoutOptions = gf_global.gfcep[ formId ].exclude_fields_without_options,
+						amount                      = 0;
 
-					if( ! excludeFields ) {
+					if( ! excludeFields && ! excludeFieldsWithoutOptions ) {
 						return 0;
 					}
 
 					for( var i = 0; i < excludeFields.length; i++ ) {
 						var productAmount = gformCalculateProductPrice( formId, excludeFields[ i ] );
 						amount += productAmount;
+					}
+
+					for( var i = 0; i < excludeFieldsWithoutOptions.length; i++ ) {
+						var productAmount = gformCalculateProductPrice( formId, excludeFieldsWithoutOptions[ i ] );
+						var price = gformGetBasePrice( formId, excludeFieldsWithoutOptions[ i ] );
+						var quantity = gformGetProductQuantity( formId, excludeFieldsWithoutOptions[ i ] );
+						amount += ( productAmount - ( price * quantity ) );
 					}
 
 					return amount;
@@ -133,14 +142,18 @@ class GW_Coupons_Exclude_Products {
 			return;
 		}
 
-		$base_json           = json_encode( array( 'skipFor100Percent' => $this->_args['skip_for_100_percent'] ) );
-		$exclude_fields_json = json_encode( $this->_args['exclude_fields'] );
+		$base_json                           = json_encode( array( 'skipFor100Percent' => $this->_args['skip_for_100_percent'] ) );
+		$exclude_fields_json                 = json_encode( $this->_args['exclude_fields'] );
+		$exclude_fields_without_options_json = json_encode( $this->_args['exclude_fields_without_options'] );
 
 		$script = "if( typeof gf_global != 'undefined' ) {
 			if( typeof gf_global.gfcep == 'undefined' ) {
 				gf_global.gfcep = {$base_json};
 			}
-			gf_global.gfcep[ {$this->_args['form_id']} ] = {$exclude_fields_json};
+			gf_global.gfcep[ {$this->_args['form_id']} ] = {
+				exclude_fields: {$exclude_fields_json},
+				exclude_fields_without_options: {$exclude_fields_without_options_json}
+			};
 		}";
 
 		GFFormDisplay::add_init_script( $this->_args['form_id'], 'gfcep', GFFormDisplay::ON_PAGE_RENDER, $script );
@@ -159,6 +172,9 @@ class GW_Coupons_Exclude_Products {
 			if ( in_array( $field_id, $this->_args['exclude_fields'] ) ) {
 				$this->excluded_total += GFCommon::to_number( $data['price'] );
 			}
+			if ( in_array( $field_id, $this->_args['exclude_fields_without_options'] ) ) {
+				$this->excluded_total += GFCommon::to_number( $data['price'] );
+			}
 		}
 
 		return $product_data;
@@ -170,11 +186,18 @@ class GW_Coupons_Exclude_Products {
 			return $discount;
 		}
 
-		$price    = $price - $this->excluded_total;
-		$currency = new RGCurrency( GFCommon::get_currency() );
-		$amount   = $currency->to_number( $coupon['amount'] );
+		$orig_price = $price;
+		$price      = $price - $this->excluded_total;
+		$currency   = new RGCurrency( GFCommon::get_currency() );
+		$amount     = $currency->to_number( $coupon['amount'] );
 
-		if ( $coupon['type'] == 'percentage' && ! ( $amount == 100 && $this->_args['skip_for_100_percent'] ) ) {
+		if ( $this->_args['exclude_fields_without_options'] ) {
+			if ( $coupon['type'] == 'percentage' && ! ( $amount == 100 && $this->_args['skip_for_100_percent'] ) ) {
+				$discount = $discount - ( $price * ( $amount / 100 ) );
+			} else {
+				$discount = $this->excluded_total;
+			}
+		} elseif ( $coupon['type'] == 'percentage' && ! ( $amount == 100 && $this->_args['skip_for_100_percent'] ) ) {
 			$discount = $price * ( $amount / 100 );
 		} elseif ( $coupon['type'] == 'flat' ) {
 			$discount = $amount;
@@ -207,12 +230,20 @@ class GW_Coupons_Exclude_Products {
 
 /**
  * Configuration
- * - for a single form, set form_id to your form ID, and exclude_fields to an array of the fields you wish to exclude
+ * - for a single form, set form_id to your form ID, and exclude_fields to an array of the fields you wish to exclude or use exclude_fields_without_options for fields without options
  * - for multiple forms, set exclude_fields_by_form to an array with form IDs as its keys, and arrays of field IDs as its values
  * - set skip_for_100_percent to true to ignore these exclusions when a 100% off coupon is used
  */
 
 // Single form
+
+new GW_Coupons_Exclude_Products( array(
+	'form_id'                        => 123,
+	'exclude_fields_without_options' => array( 6 ),
+	'skip_for_100_percent'           => false,
+) );
+
+// Single form (exclude fields without options)
 
 new GW_Coupons_Exclude_Products( array(
 	'form_id'              => 123,
