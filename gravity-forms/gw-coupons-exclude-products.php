@@ -238,17 +238,17 @@ class GW_Coupons_Exclude_Products {
 // Single form
 
 new GW_Coupons_Exclude_Products( array(
-	'form_id'                        => 123,
-	'exclude_fields_without_options' => array( 6 ),
-	'skip_for_100_percent'           => false,
+	'form_id'              => 123,
+	'exclude_fields'       => array( 4, 5 ),
+	'skip_for_100_percent' => false,
 ) );
 
 // Single form (exclude fields without options)
 
 new GW_Coupons_Exclude_Products( array(
-	'form_id'              => 123,
-	'exclude_fields'       => array( 4, 5 ),
-	'skip_for_100_percent' => false,
+	'form_id'                        => 123,
+	'exclude_fields_without_options' => array( 6 ),
+	'skip_for_100_percent'           => false,
 ) );
 
 // Multiple forms
