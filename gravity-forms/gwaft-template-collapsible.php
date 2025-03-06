@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Wiz // Gravity Forms // All Fields Template: Collapsible
+ * Gravity Wiz // Gravity Forms // All Fields Template: Collapsible Sections
  * https://gravitywiz.com/gravity-forms-all-fields-template/
  *
  * Adds support for a collapsible template with All Fields Template.
