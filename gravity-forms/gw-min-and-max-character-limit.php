@@ -85,6 +85,11 @@ class GW_Minimum_Characters {
 			}
 		}
 
+		// If value is empty, don't do validation.
+		if ( empty( $value ) ) {
+			return $result;
+		}
+
 		$char_count      = mb_strlen( $value );
 		$is_min_reached  = $this->_args['min_chars'] !== false && $char_count >= $this->_args['min_chars'];
 		$is_max_exceeded = $this->_args['max_chars'] !== false && $char_count > $this->_args['max_chars'];
