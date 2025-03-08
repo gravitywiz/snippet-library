@@ -7,7 +7,7 @@
  * Installation:
  *   1. Install per https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  */
-add_filter( 'gcgs-gppa-query-builder-args.php', function( $query_builder_args, $args, $object ) {
+add_filter( 'gcgs_gppa_query_builder_args', function( $query_builder_args, $args, $object ) {
 	/** @var string|string[] */
 	$filter_value = null;
 
