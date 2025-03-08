@@ -21,7 +21,7 @@ class GW_Coupons_Exclude_Products {
 		$this->_args = wp_parse_args( $args, array(
 			'form_id'                        => false,
 			'exclude_fields'                 => array(),
-			'exclude_fields_without_options' => array(),
+			'exclude_options_from_fields' => array(),
 			'exclude_fields_by_form'         => array(),
 			'skip_for_100_percent'           => false,
 		) );
@@ -104,7 +104,7 @@ class GW_Coupons_Exclude_Products {
 				function getExcludedAmount( formId ) {
 
 					var excludeFields               = gf_global.gfcep[ formId ].exclude_fields,
-						excludeFieldsWithoutOptions = gf_global.gfcep[ formId ].exclude_fields_without_options,
+						excludeFieldsWithoutOptions = gf_global.gfcep[ formId ].exclude_options_from_fields,
 						amount                      = 0;
 
 					if( ! excludeFields && ! excludeFieldsWithoutOptions ) {
@@ -144,7 +144,7 @@ class GW_Coupons_Exclude_Products {
 
 		$base_json                           = json_encode( array( 'skipFor100Percent' => $this->_args['skip_for_100_percent'] ) );
 		$exclude_fields_json                 = json_encode( $this->_args['exclude_fields'] );
-		$exclude_fields_without_options_json = json_encode( $this->_args['exclude_fields_without_options'] );
+		$exclude_options_from_fields_json = json_encode( $this->_args['exclude_options_from_fields'] );
 
 		$script = "if( typeof gf_global != 'undefined' ) {
 			if( typeof gf_global.gfcep == 'undefined' ) {
@@ -152,7 +152,7 @@ class GW_Coupons_Exclude_Products {
 			}
 			gf_global.gfcep[ {$this->_args['form_id']} ] = {
 				exclude_fields: {$exclude_fields_json},
-				exclude_fields_without_options: {$exclude_fields_without_options_json}
+				exclude_options_from_fields: {$exclude_options_from_fields_json}
 			};
 		}";
 
@@ -172,7 +172,7 @@ class GW_Coupons_Exclude_Products {
 			if ( in_array( $field_id, $this->_args['exclude_fields'] ) ) {
 				$this->excluded_total += GFCommon::to_number( $data['price'] );
 			}
-			if ( in_array( $field_id, $this->_args['exclude_fields_without_options'] ) ) {
+			if ( in_array( $field_id, $this->_args['exclude_options_from_fields'] ) ) {
 				$this->excluded_total += GFCommon::to_number( $data['price'] );
 			}
 		}
@@ -186,12 +186,11 @@ class GW_Coupons_Exclude_Products {
 			return $discount;
 		}
 
-		$orig_price = $price;
-		$price      = $price - $this->excluded_total;
-		$currency   = new RGCurrency( GFCommon::get_currency() );
-		$amount     = $currency->to_number( $coupon['amount'] );
+		$price    = $price - $this->excluded_total;
+		$currency = new RGCurrency( GFCommon::get_currency() );
+		$amount   = $currency->to_number( $coupon['amount'] );
 
-		if ( $this->_args['exclude_fields_without_options'] ) {
+		if ( $this->_args['exclude_options_from_fields'] ) {
 			if ( $coupon['type'] == 'percentage' && ! ( $amount == 100 && $this->_args['skip_for_100_percent'] ) ) {
 				$discount = $discount - ( $price * ( $amount / 100 ) );
 			} else {
@@ -230,7 +229,7 @@ class GW_Coupons_Exclude_Products {
 
 /**
  * Configuration
- * - for a single form, set form_id to your form ID, and exclude_fields to an array of the fields you wish to exclude or use exclude_fields_without_options for fields without options
+ * - for a single form, set form_id to your form ID, and exclude_fields to an array of the fields you wish to exclude or use exclude_options_from_fields for fields without options
  * - for multiple forms, set exclude_fields_by_form to an array with form IDs as its keys, and arrays of field IDs as its values
  * - set skip_for_100_percent to true to ignore these exclusions when a 100% off coupon is used
  */
@@ -247,7 +246,7 @@ new GW_Coupons_Exclude_Products( array(
 
 new GW_Coupons_Exclude_Products( array(
 	'form_id'                        => 123,
-	'exclude_fields_without_options' => array( 6 ),
+	'exclude_options_from_fields' => array( 6 ),
 	'skip_for_100_percent'           => false,
 ) );
 
