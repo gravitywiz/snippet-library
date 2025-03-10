@@ -30,6 +30,15 @@ class GW_Quantity_Decimal {
 
 	}
 
+	/**
+	 * Initializes the plugin by adding the necessary Gravity Forms filters.
+	 *
+	 * This method first verifies that Gravity Forms is loaded. It then conditionally registers
+	 * a field validation filter for decimal quantities on either a global or a form-specific basis.
+	 * For Gravity Forms versions before 2.8 with HTML5 disabled, only the validation filter is added.
+	 * Otherwise, additional filters are registered to stash the current form, modify the quantity
+	 * input tag to allow decimal values, and adjust input content to ensure the 'step' attribute is set to 'any'.
+	 */
 	function init() {
 
 		// make sure Gravity Forms is loaded
@@ -56,6 +65,19 @@ class GW_Quantity_Decimal {
 		add_filter( 'gform_field_content', array( $this, 'fix_content' ), 10, 5 );
 	}
 
+	/**
+	 * Validates and allows decimal input for quantity and product fields.
+	 *
+	 * This callback checks if the field is enabled for decimals and if its user-submitted value is a valid decimal number
+	 * (accepting both dot and comma as separators). If a valid decimal is detected, it updates the validation result accordingly.
+	 *
+	 * @param array  $result The current validation result array, which includes an 'is_valid' flag.
+	 * @param mixed  $value  The submitted value for the field.
+	 * @param object $form   The form object being processed.
+	 * @param object $field  The field object including type and validation configuration.
+	 *
+	 * @return array The modified validation result.
+	 */
 	function allow_quantity_float( $result, $value, $form, $field ) {
 		if (
 			$this->is_enabled_field( $field ) &&
@@ -75,6 +97,23 @@ class GW_Quantity_Decimal {
 		return $form;
 	}
 
+	/**
+	 * Modifies the HTML markup for a Gravity Forms quantity field to enable decimal input.
+	 *
+	 * If the form ID matches the configured form (or if the plugin applies globally), the currently
+	 * processed form is stored, and the field is enabled for decimals, this function updates the
+	 * input field markup by adding a "step='any'" attribute to the number input element. Otherwise,
+	 * it returns the unmodified markup.
+	 *
+	 * @param string $markup  The original HTML markup for the field input.
+	 * @param array  $field   The configuration array for the form field.
+	 * @param mixed  $value   The current value of the field.
+	 * @param mixed  $lead_id The identifier for the current lead/entry.
+	 * @param int    $form_id The identifier of the form being processed.
+	 *
+	 * @return string The modified HTML markup with an added "step='any'" attribute if applicable,
+	 *                or the original markup if the conditions are not met.
+	 */
 	function modify_quantity_input_tag( $markup, $field, $value, $lead_id, $form_id ) {
 
 		$is_correct_form         = $this->form_id == $form_id || $this->global;
@@ -93,6 +132,21 @@ class GW_Quantity_Decimal {
 		return $markup;
 	}
 
+	/**
+	 * Modifies HTML content for quantity fields to support decimal values.
+	 *
+	 * This function scans the provided HTML content for input elements with the "ginput_quantity" class.
+	 * If an input field includes a decimal value and lacks a step attribute set to "any", the function
+	 * updates the input tag to include step="any", ensuring that decimal quantities are handled correctly.
+	 *
+	 * @param string $content The HTML content containing the input fields.
+	 * @param mixed $field Field data provided by Gravity Forms.
+	 * @param mixed $value Current value of the field.
+	 * @param int|string $lead_id The entry identifier.
+	 * @param int|string $form_id The form identifier.
+	 *
+	 * @return string The modified HTML content with updated input tags.
+	 */
 	function fix_content( $content, $field, $value, $lead_id, $form_id ) {
 		// ensure the step is 'any' for any fields that have a decimal value.
 		return preg_replace_callback(
@@ -113,6 +167,17 @@ class GW_Quantity_Decimal {
 		);
 	}
 
+	/**
+	 * Retrieves the field input markup while avoiding recursive modification.
+	 *
+	 * Temporarily disables the quantity input tag modification filter to prevent recursion,
+	 * retrieves the field input HTML via GFCommon, and then re-applies the filter.
+	 *
+	 * @param array $field The configuration array for the Gravity Forms field.
+	 * @param mixed $value The current value of the field.
+	 * @param array $form The configuration array for the Gravity Forms form.
+	 * @return string The generated HTML markup for the field input.
+	 */
 	function get_field_input( $field, $value, $form ) {
 
 		remove_filter( 'gform_field_input', array( $this, 'modify_quantity_input_tag' ), 10, 5 );
