@@ -43,10 +43,15 @@ class GW_Quantity_Decimal {
 			add_filter( 'gform_field_validation_' . $this->form_id, array( $this, 'allow_quantity_float' ), 10, 4 );
 		}
 
-		if ( GFFormsModel::is_html5_enabled() ) {
-			add_filter( 'gform_pre_render', array( $this, 'stash_current_form' ) );
-			add_filter( 'gform_field_input', array( $this, 'modify_quantity_input_tag' ), 10, 5 );
+		// For GF versions before 2.8 and HTML5 disabled, ignore the rest.
+		if ( version_compare( GFCommon::$version, '2.8', '<' ) && ! GFFormsModel::is_html5_enabled() ) {
+			return;
 		}
+
+		// For GF versions 2.8 and beyond, HTML5 is enabled by default.
+		// Also for GF versions prior to 2.8 having HTML5 manually enabled.
+		add_filter( 'gform_pre_render', array( $this, 'stash_current_form' ) );
+		add_filter( 'gform_field_input', array( $this, 'modify_quantity_input_tag' ), 10, 5 );
 
 		add_filter( 'gform_field_content', array( $this, 'fix_content' ), 10, 5 );
 	}
@@ -89,8 +94,23 @@ class GW_Quantity_Decimal {
 	}
 
 	function fix_content( $content, $field, $value, $lead_id, $form_id ) {
-		// ensure the quantity min attribute.
-		return preg_replace( '/\smin=["\']0["\']/', 'min="0" step="any"', $content );
+		// ensure the step is 'any' for any fields that have a decimal value.
+		return preg_replace_callback(
+			'/<input([^>]*class=[\'"]ginput_quantity[\'"][^>]*)>/i',
+			function ( $matches ) {
+				$inputTag = $matches[0];
+
+				// Check if the input has a decimal value, and if does not have 'any'.
+				if ( preg_match('/\bvalue=[\'"]([\d]+\.[\d]+)[\'"]/i', $inputTag, $valueMatch ) ) {
+					if ( ! preg_match('/\bstep=[\'"]any[\'"]/i', $inputTag ) ) {
+						$inputTag = preg_replace( '/<input/i', '<input step="any"', $inputTag, 1 );
+					}
+				}
+
+				return $inputTag;
+			},
+			$content
+		);
 	}
 
 	function get_field_input( $field, $value, $form ) {
