@@ -94,6 +94,10 @@ class GW_Quantity_Decimal {
 	}
 
 	function fix_content( $content, $field, $value, $lead_id, $form_id ) {
+		if ( ! $this->is_enabled_field( $field ) ) {
+			return $content;
+		}
+
 		// ensure the step is 'any' for any fields that have a decimal value.
 		return preg_replace_callback(
 			'/<input([^>]*class=[\'"]ginput_quantity[\'"][^>]*)>/i',
