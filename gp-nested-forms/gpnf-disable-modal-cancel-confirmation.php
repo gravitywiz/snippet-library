@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // Nested Forms // Disable Modal Cancel Confirmation
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
