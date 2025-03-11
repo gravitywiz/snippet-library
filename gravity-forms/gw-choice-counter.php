@@ -143,6 +143,7 @@ class GW_Choice_Count {
 
 							if( parseInt( countField.val() ) != parseInt( count ) ) {
 								countField.val( count ).change();
+								countField[0].dispatchEvent( new Event( 'change', { bubbles: true } ) );
 							}
 						}
 
