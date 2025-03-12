@@ -61,6 +61,11 @@ add_filter( 'gform_shortcode_entry_count', function( $output, $atts ) {
 
 		$filter_pairs = explode(',', $atts['field_filters']); // Split by comma
 		foreach ($filter_pairs as $pair) {
+			// Replace merge tags in filter pair.
+			if ( GFCommon::has_merge_tag( $pair ) ) {
+				$pair = GFCommon::replace_variables_prepopulate( $pair );
+			}
+
 			$parts = explode(':', $pair);
 
 			if (count($parts) === 3) {
