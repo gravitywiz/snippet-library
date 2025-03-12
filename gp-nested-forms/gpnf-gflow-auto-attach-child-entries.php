@@ -11,7 +11,7 @@
  */
 add_filter( 'gpnf_set_parent_entry_id', function( $parent_entry_id ) {
 	if ( ! $parent_entry_id && is_callable( 'gravity_flow' ) && gravity_flow()->is_workflow_detail_page() ) {
-		$parent_entry_id = rgget( 'lid' );
+		$parent_entry_id = rgget( 'lid' ) ? rgget( 'lid' ) : $parent_entry_id;
 	}
 	return $parent_entry_id;
 } );
