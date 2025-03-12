@@ -27,7 +27,7 @@ add_filter( 'gwaft_template_output', function( $content, $slug, $name, $data, $s
 	foreach ( $data['items'] as $item ) {
 		$field = $item['field'];
 		// Skip hidden fields.
-		if ( $field->type == 'hidden' || $field->visibility == 'hidden' ) {
+		if ( $field->type === 'hidden' || $field->visibility === 'hidden' ) {
 			continue;
 		}
 		// Adjust pageNumber to be zero-based.
