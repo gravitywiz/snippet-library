@@ -2,7 +2,7 @@
 /**
  * Gravity Connect // Google Sheets // Custom Query Build Arguments
  * 
- * Instruction Video: https://www.loom.com/share/4649b62e6cf54ac5b4dcf2c9ab00d568
+ * Instruction Video: https://www.loom.com/share/a7bf1139baef48fc8b9b31209827cd17
  *
  * This snippet customizes the generation of query builder arguments for Google Sheets queries.
  *
