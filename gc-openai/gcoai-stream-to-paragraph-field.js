@@ -27,15 +27,15 @@ $streamFieldInput.on( 'change', function() {
 	$input = $( `#input_GFFORMID_${responseFieldId}` );
 	var inputValue = this.value;
 
-	// Get HTML from response field if TinyMCE is available.
-	if (window.tinyMCE) {
-		var html = $streamFieldInput.closest( '.gfield' ).find('.gcoai-output').html();
+	// Check if the response field has TinyMCE enabled.
+	var tiny = window.tinyMCE && tinyMCE.get( $input.attr( 'id' ) );
 
+	// Get HTML for the response field if TinyMCE is available.
+	if (tiny) {
+		var html = $streamFieldInput.closest( '.gfield' ).find('.gcoai-output').html();
+		
 		// Set HTML content in TinyMCE.
-		var tiny = tinyMCE.get( $input.attr( 'id' ) );
-		if (tiny) {
-			tiny.setContent( html );
-		}
+		tiny.setContent( html );
 	} else {
 		// If TinyMCE is not available, use plain text.
 		$input.val( inputValue );
@@ -57,13 +57,4 @@ if ( $wpEditor.length ) {
 
 $( `#input_GFFORMID_${promptFieldId}` ).on( 'blur', function() {
 	$streamButton.trigger( 'click' );
-} );
-
-$wpEditor = $newButton.parents('.wp-editor-container');
-if ($wpEditor.length) {
-	$newButton.insertAfter($wpEditor);
-}
-
-$( `#input_GFFORMID_${promptFieldId}` ).on('blur', function() {
-	$streamButton.trigger('click');
 });
