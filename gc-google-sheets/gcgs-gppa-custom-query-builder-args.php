@@ -1,6 +1,8 @@
 <?php
 /**
  * Gravity Connect // Google Sheets // Custom Query Build Arguments
+ * 
+ * Instruction Video: https://www.loom.com/share/4649b62e6cf54ac5b4dcf2c9ab00d568
  *
  * This snippet customizes the generation of query builder arguments for Google Sheets queries.
  *
@@ -8,6 +10,7 @@
  *   1. Install per https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  */
 add_filter( 'gcgs_gppa_query_builder_args', function( $query_builder_args, $args, $object ) {
+
 	/** @var string|string[] */
 	$filter_value = null;
 
@@ -20,8 +23,17 @@ add_filter( 'gcgs_gppa_query_builder_args', function( $query_builder_args, $args
 	/** @var string */
 	$property_id = null;
 
+	/** @var object */
+	$field = null;
+
 	// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 	extract( $args );
+
+	// TODO : UPDATE 4 to your targetted field ID.
+	// TODO : UPDATE 141 to your targetted form ID.
+	if ( $field->id != '4' || $field->formId != 141 || $filter['operator'] != 'is' ) {
+		return $query_builder_args;
+	}
 
 	$column_letter = $object->get_column_letter( $args['primary_property_value'], $property_id );
 
