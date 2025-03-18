@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Forms // Gravity Perks // Add to Block List Modifier
+ * Gravity Forms // Gravity Perks // Modifier: Add to Blocklist
  * https://gravitywiz.com/documentation/gravity-forms-blocklist/
  *
  * This snippet introduces a `:blocklist` merge tag modifier for Gravity Forms.
