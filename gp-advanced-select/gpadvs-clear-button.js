@@ -2,8 +2,7 @@
  * Gravity Perks // Advanced Select // Clear Button
  * https://gravitywiz.com/documentation/gravity-forms-advanced-select/
  *
- * Adds a Clearn button to selection options in Dropdown fields. By default,
- * the remove button is only added to Multi-Select fields.
+ * Adds a Clear buton to GP Advanced Select fields.
  * 
  * The Clear Button is a built in plugin of Tom Select.
  * @reference https://tom-select.js.org/plugins/clear-button/
@@ -16,9 +15,16 @@
 window.gform.addFilter(
     'gpadvs_settings',
     function(settings, gpadvsInstance, selectNamespace) {
-        settings.plugins.clear_button = {
-            title: 'Clear options',
-        };
+        /**
+         * Scope to only dropdown fields.
+         * This can also be changed to 'multiselect' to only target multi-select fields
+         * OR the conditional can be removed to apply to all fields.
+         */
+        if (gpadvsInstance.fieldType === 'dropdown') {
+            settings.plugins.clear_button = {
+                title: 'Clear options',
+            };
+        }
 
         return settings;
     }
