@@ -29,6 +29,12 @@ add_filter( 'gform_entry_post_save', function( $entry, $form ) {
 	add_filter( 'gform_is_feed_asynchronous', '__return_false', $filter_priority );
 
 	add_filter( 'gform_addon_pre_process_feeds', function( $feeds, $entry, $form ) use ( $excluded_feed_ids ) {
+		// If no feeds are present, return.
+		if ( ! is_array( $feeds ) ) {
+			return $feeds;
+		}
+
+		// Filter feeds excluding the ones in the excluded feed ids array.
 		$feeds = array_filter( $feeds, function( $feed ) use ( $excluded_feed_ids ) {
 			return ! in_array( $feed['id'], $excluded_feed_ids );
 		} );
