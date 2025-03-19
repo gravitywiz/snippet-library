@@ -4,17 +4,16 @@
  *
  * Provides the ability to populate a Date field with a modified date based on the current date or a user-submitted date.
  *
- * @version   2.8
+ * @version   2.6
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/populate-dates-gravity-form-fields/
  */
 class GW_Populate_Date {
 
-	protected static $is_script_output = false;
+	protected $_args;
 
-	private $_args         = array();
-	private $_field_values = array();
+	protected static $is_script_output = false;
 
 	public function __construct( $args = array() ) {
 
@@ -28,7 +27,6 @@ class GW_Populate_Date {
 			'min_date'               => false,
 			'enable_i18n'            => false,
 			'override_on_submission' => false,
-			'utc_offset'             => get_option( 'gmt_offset' ), // Used only for time calculations on the current date.
 		) );
 
 		$this->_field_values = array();
@@ -49,8 +47,7 @@ class GW_Populate_Date {
 			return;
 		}
 
-		// Always load the script if a modifier is provided, even if no source_field_id is set
-		if ( $this->_args['modifier'] || $this->_args['source_field_id'] ) {
+		if ( $this->_args['source_field_id'] ) {
 			add_filter( 'gform_pre_render', array( $this, 'load_form_script' ) );
 			add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ) );
 			add_filter( 'gform_enqueue_scripts', array( $this, 'enqueue_form_scripts' ) );
@@ -245,9 +242,7 @@ class GW_Populate_Date {
 					$hour = 12;
 				}
 			}
-			// Ensure the time value is retained as a String.
-			// If saved in array format, it will not reload the value after conditional viewing/hiding.
-			$date = "{$hour}:{$minute} {$ampm}";
+			$date = array( $hour, $minute, $ampm );
 		} elseif ( $this->_args['enable_i18n'] ) {
 			$date = strftime( $format, $timestamp );
 		} else {
@@ -287,11 +282,10 @@ class GW_Populate_Date {
 		<script type="text/javascript">
 
 			( function( $ ) {
-
-				if ( ! String.prototype.format ) {
+				if (!String.prototype.format) {
 					String.prototype.format = function() {
 						var args = arguments;
-						return this.replace(/{(\d+)}/g, function( match, number ) { 
+						return this.replace(/{(\d+)}/g, function(match, number) { 
 							return typeof args[number] !== 'undefined'
 								? args[number]
 								: match;
@@ -312,12 +306,11 @@ class GW_Populate_Date {
 
 					self.init = function() {
 
-						if( self.sourceFieldId ) {
-							self.$sourceInputs = GWDates.getFieldInputs( self.sourceFieldId, self.formId );
-							self.$sourceInputs.change( function() {
-								self.populateDate( self.sourceFieldId, self.targetFieldId, self.getModifier(), self.format );
-							} );
+						self.$sourceInputs = GWDates.getFieldInputs( self.sourceFieldId, self.formId );
 
+						self.$sourceInputs.change( function() {
+							self.populateDate( self.sourceFieldId, self.targetFieldId, self.getModifier(), self.format );
+						} );
 
 						// Listen for any dynamic content loaded on modifier field (if existing) to refresh values on Target.
 						if ( self.modifier && self instanceof GWPopulateDate ) {
@@ -360,7 +353,7 @@ class GW_Populate_Date {
 
 					self.populateDate = function( sourceFieldId, targetFieldId, modifier, format ) {
 
-						var timestamp = sourceFieldId ? GWDates.getFieldTimestamp( sourceFieldId, self.formId, undefined, self.utcOffset ) : new Date().getTime();
+						var timestamp = GWDates.getFieldTimestamp( sourceFieldId, self.formId );
 						if( timestamp === 0 ) {
 							return;
 						}
@@ -382,7 +375,7 @@ class GW_Populate_Date {
 							case 'field':
 								var inputId  = self.modifier.inputId,
 									value    = self.getFieldValue( inputId ),
-									modifier = value !== '' ? self.modifier.modifier.gformFormat( value ) : false;
+									modifier = value !== '' ? self.modifier.modifier.format( value ) : false;
 								break;
 						}
 
@@ -393,11 +386,6 @@ class GW_Populate_Date {
 
 						var $input = self.getInputs( inputId ),
 							value  = self.getCleanNumber( $input.val(), gformExtractFieldId( inputId ), self.formId );
-
-						// Cannot retrieve value from `gfield_radio` directly on `$input`.
-						if ( ! $input.val() && $input.hasClass( 'gfield_radio' ) ) {
-							value = $input.find('input[type="radio"]:checked').val();
-						}
 
 						value = gform.applyFilters( 'gwpd_get_field_value', value, $input, inputId );
 
@@ -432,7 +420,7 @@ class GW_Populate_Date {
 						var fieldId    = gformExtractFieldId( inputId ),
 							inputIndex = gformExtractInputIndex( inputId ),
 							id         = inputIndex !== fieldId ? '#input_{0}_{1}' : '#input_{0}_{1}_{2}',
-							$input     = $( id.gformFormat( self.formId, fieldId, inputIndex ) );
+							$input     = $( id.format( self.formId, fieldId, inputIndex ) );
 
 						return $input;
 					};
@@ -1572,7 +1560,7 @@ class GW_Populate_Date {
 
 				window.GWDates = {
 
-					getFieldTimestamp: function( dateTimeFieldId, formId, $inputs, utcOffset ) {
+					getFieldTimestamp: function( dateTimeFieldId, formId, $inputs ) {
 
 						var field;
 
@@ -1633,45 +1621,23 @@ class GW_Populate_Date {
 										break;
 								}
 
-								/*
-								 * If the date matches the current date, attach the time to it as well so time calculations
-								 * work as expected rather than off of midnight.
-								 */
-								var now = new Date();
-
-								// Convert now to use the UTC offset from the server.
-								now = new Date( now.getTime() + ( now.getTimezoneOffset() * 60000 ) + ( utcOffset * 60 * 60000 ) );
-
-								if (datetime.getDate() == now.getDate() && datetime.getMonth() == now.getMonth() && datetime.getFullYear() == now.getFullYear()) {
-									datetime.setHours(now.getHours());
-									datetime.setMinutes(now.getMinutes());
-									datetime.setSeconds(now.getSeconds());
-								}
-
 								var timestamp = datetime === false ? false : datetime.getTime();
 
 								break;
 
 							case 'time':
 
-								var hour        = parseInt( $inputs.eq( 0 ).val() ),
-									min         = parseInt( $inputs.eq( 1 ).val() ),
+								var hour        = $inputs.eq( 0 ).val(),
+									min         = $inputs.eq( 1 ).val(),
 									ampm        = $inputs.eq( 2 ).val(),
-									missingData = isNaN( hour ) || isNaN( min ),
+									missingData = ! hour || ! min,
 									datetime    = missingData ? false : new Date();
 
+
 								if ( $inputs.eq( 2 ).length ) {
-									hours = hour;
-
-									if (ampm.toLowerCase() === 'am') {
-										hours += hour === 12 ? -12 : 0;
-									} else {
-										hours += hour !== 12 ? 12 : 0;
-									}
-
-									datetime.setHours( hours );
+									datetime.setHours( parseInt( hour ) + ( ampm.toLowerCase() === 'pm' ? 12 : 0 ) );
 								} else {
-									datetime.setHours( hour );
+									datetime.setHours( parseInt( hour ) );
 								}
 
 								datetime.setMinutes( min );
@@ -1766,7 +1732,7 @@ class GW_Populate_Date {
 							case 'time':
 								var hours   = isNaN( date.getHours() ) ? '' : date.getHours(),
 									minutes = isNaN( date.getMinutes() )  ? '' : date.getMinutes(),
-									hasAMPM = $inputs.filter( 'select' ).length === 1,
+									hasAMPM = $inputs.length === 3,
 									isPM    = false;
 
 								if ( hasAMPM ) {
@@ -1775,9 +1741,6 @@ class GW_Populate_Date {
 									} else if ( hours > 12 ) {
 										hours -= 12;
 										isPM   = true;
-									} else if ( hours == 12 ) {
-										// for 12 PM, the PM display should update
-										isPM = true;
 									}
 								}
 
@@ -1918,13 +1881,12 @@ class GW_Populate_Date {
 			'targetFieldId' => $this->_args['target_field_id'],
 			'sourceFieldId' => $this->_args['source_field_id'],
 			'modifier'      => $this->_args['modifier'],
-			'utcOffset'     => $this->_args['utc_offset'],
 			// Keep the format in the `date()` format for JS.
 			'format'        => $this->get_format( false ),
 		);
 
 		$script = 'new GWPopulateDate( ' . json_encode( $args ) . ' );';
-		$slug   = implode( '_', array_filter( array( 'gw_populate_date', $this->_args['form_id'], $this->_args['source_field_id'], $this->_args['target_field_id'], rgar( $this->_args['modifier'], 'inputId' ) ) ) );
+		$slug   = implode( '_', array( 'gw_populate_date', $this->_args['form_id'], $this->_args['source_field_id'], $this->_args['target_field_id'] ) );
 
 		GFFormDisplay::add_init_script( $this->_args['form_id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
 
@@ -2092,4 +2054,3 @@ new GW_Populate_Date( array(
 	'target_field_id' => 5,
 	'modifier'        => '+7 days',
 ) );
-
