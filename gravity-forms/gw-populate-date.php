@@ -281,6 +281,17 @@ class GW_Populate_Date {
 
 			( function( $ ) {
 
+				if ( ! String.prototype.format ) {
+					String.prototype.format = function() {
+						var args = arguments;
+						return this.replace(/{(\d+)}/g, function( match, number ) { 
+							return typeof args[number] !== 'undefined'
+								? args[number]
+								: match;
+						});
+					};
+				}
+
 				window.GWPopulateDate = function( args ) {
 
 					var self = this;
