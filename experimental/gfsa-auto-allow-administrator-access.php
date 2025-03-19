@@ -1,8 +1,6 @@
 <?php
 /**
- * Gravity Forms // Submit to Access // Auto-allow Access for Administrators
- * https://gravitywiz.com/submit-gravity-form-access-content/
+ * We're no longer using the experimental folder for experimental snippets. 🚧
+ * You can now find the snippet here:
+ * https://github.com/gravitywiz/snippet-library/blob/master/gravity-forms/gfsa-auto-allow-administrator-access.php
  */
-add_filter( 'gfsa_has_access', function( $has_access ) {
-	return current_user_can( 'administrator' );
-} );

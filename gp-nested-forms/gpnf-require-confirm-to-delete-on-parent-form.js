@@ -6,9 +6,9 @@
  * confirm-to-delete requirement in the child form.
  *
  * Instructions:
- * 
+ *
  * 1. Install this snippet with our free Custom JavaScript plugin.
- *    https://gravitywiz.com/gravity-forms-custom-javascript/
+ *    https://gravitywiz.com/gravity-forms-code-chest/
  */
 window.gform.addFilter( 'gpnf_should_delete', function( shouldDelete, items, $trigger, gpnf ) {
 	if ( ! $trigger.is('.gpnf-row-actions .delete-button') ) {

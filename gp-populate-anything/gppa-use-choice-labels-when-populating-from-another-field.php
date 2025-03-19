@@ -3,19 +3,16 @@
  * Gravity Perks // Populate Anything // Populate choices using choice labels rather than values
  * http://gravitywiz.com/documentation/gravity-forms-populate-anything/
  *
- * Instruction Video: https://www.loom.com/share/0a3bc5ea99ee44f6acccceab3737101a
+ * Instruction Video: https://www.loom.com/share/0a3bc5ea99ee44f6acccceab3737101a (Out of date)
  *
- * Installation instructions:
- *   1. https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
- *   2. Update variables below accordingly.
+ * Instructions:
+ *  1. Install the snippet.
+ *     https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
+ *  2. Add "gppa-use-choice-label" to the "Custom CSS Class" field setting of the target field.
  */
 add_filter( 'gppa_process_template', function ( $template_value, $field, $template_name, $populate, $object, $object_type, $objects, $template ) {
-	/* Variables to customize */
-	$populated_form_id  = 3;
-	$populated_field_id = 3;
-	/* End variables to customize */
 
-	if ( $template_name !== 'label' || $field->id !== $populated_field_id || $field->formId !== $populated_form_id ) {
+	if ( $template_name !== 'label' || strpos( $field->cssClass, 'gppa-use-choice-label' ) === false ) {
 		return $template_value;
 	}
 

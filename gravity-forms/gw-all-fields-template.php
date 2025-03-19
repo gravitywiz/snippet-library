@@ -8,63 +8,70 @@
  * Plugin URI:   https://gravitywiz.com/gravity-forms-all-fields-template/
  * Description:  Modify the {all_fields} merge tag output via a template file.
  * Author:       Gravity Wiz
- * Version:      0.9.15
+ * Version:      0.12
  * Author URI:   http://gravitywiz.com
  *
  * Usage:
  *
- * {all_fields}
+ * - **`{all_fields}`**
  *
  *     By default, enabling this plugin will look for this template:
- *     <theme>/gravity-forms/all-fields.php
+ *     `<theme>/gravity-forms/all-fields.php`
  *
- *     Override the {all_fields} template for a specific form by specifying the form ID:
- *     <theme>/gravity-forms/all-fields-<formId>.php
+ *     Override the `{all_fields}` template for a specific form by specifying the form ID:
+ *     `<theme>/gravity-forms/all-fields-<formId>.php`
  *
- * {all_fields:template[custom]}
+ * - **`{all_fields:template[custom]}`**
  *
  *     Specify a custom template suffix. This is useful for allowing specific forms to use the same template.
- *     <theme>/gravity-forms/all-fields-custom.php
+ *     `<theme>/gravity-forms/all-fields-custom.php`
  *
- * {all_fields:notemplate}
+ * - **`{all_fields:notemplate}`**
  *
- *     Will always load the default Gravity Forms {all_fields} markup.
+ *     Will always load the default Gravity Forms `{all_fields}` markup.
  *
- * {all_fields:nopricingfields}
+ * - **`{all_fields:nopricingfields}`**
  *
  *     Hide all pricing fields (i.e. order summary).
  *
- * Filtering Usage:
+ * ## Filtering Usage
  *
- * :filter
+ * - **`:filter`**
  *
- *     Filtering will only include the specified fields and exclude all others. It cannot be combined with the include
- *     exclude filters.
+ *    Filtering will only include the specified fields and exclude all others. It cannot be combined with the include
+ *    exclude filters.
  *
- *     {all_fields:filter[1]}
- *     {all_fields:filter[1,2]}
+ *    `{all_fields:filter[1]}`
+ *    `{all_fields:filter[1,2]}`
  *
- * :include
+ * - **`:include`**
  *
- *     Including will include fields with types that are typically not supported by the {all_fields} merge tag
- *     (e.g., HTML fields).
+ *    Including will include fields with types that are typically not supported by the `{all_fields}` merge tag
+ *    (e.g., HTML fields).
  *
- *     {all_fields:include[3]}
- *     {all_fields:include[3,4]}
- *     {all_fields:include[3,4],exclude[5]}
+ *    `{all_fields:include[3]}`
+ *    `{all_fields:include[3,4]}`
+ *    `{all_fields:include[3,4],exclude[5]}`
  *
- * :exclude
+ * - **`:exclude`**
  *
- *     Excluding will exclude specific fields from being included in the {all_fields} output.
+ *    Excluding will exclude specific fields from being included in the `{all_fields}` output.
  *
- *     {all_fields:exclude[5]}
- *     {all_fields:exclude[5,6]}
- *     {all_fields:exclude[5],include[3,4]}
+ *    `{all_fields:exclude[5]}`
+ *    `{all_fields:exclude[5,6]}`
+ *    `{all_fields:exclude[5],include[3,4]}`
+ *
+ * - **`:updated`**
+ *
+ *    Only show fields that were most recently updated.
+ *
+ *    `{all_fields:updated}`
  *
  */
 class GW_All_Fields_Template {
 
 	private static $instance = null;
+	private $original_entry  = array();
 
 	public static function get_instance() {
 		if ( self::$instance == null ) {
@@ -82,8 +89,8 @@ class GW_All_Fields_Template {
 	public function init() {
 
 		add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_merge_tags' ), 9, 7 );
-		add_filter( 'gform_merge_tag_filter', array( $this, 'all_fields_extra_options' ), 11, 6 );
-
+		add_filter( 'gform_merge_tag_filter', array( $this, 'all_fields_extra_options' ), 21, 6 );
+		add_action( 'gform_post_update_entry', array( $this, 'save_original_entry' ), 10, 2 );
 	}
 
 	/**
@@ -111,7 +118,7 @@ class GW_All_Fields_Template {
 		}
 
 		$modifiers = $this->parse_modifiers( $modifiers );
-		$whitelist = array( 'filter', 'include', 'exclude', 'nopricingfields' );
+		$whitelist = array( 'filter', 'include', 'exclude', 'nopricingfields', 'updated' );
 		$context   = rgar( $modifiers, 'context', false );
 
 		foreach ( $modifiers as $modifier => $mod_values ) {
@@ -160,18 +167,8 @@ class GW_All_Fields_Template {
 				}
 			}
 
-			if ( $modifier === 'nopricingfields' ) {
-				$func = function() use ( &$func ) {
-					remove_filter( 'gform_order_summary', $func );
-					return '';
-				};
-				add_filter( 'gform_order_summary', $func );
-				// Hide "Order Summary" label if nopricingfields is used
-				$gf_dps_func = function() use ( &$gf_dps_func ) {
-					remove_filter( 'gform_display_product_summary', $gf_dps_func );
-					return false;
-				};
-				add_filter( 'gform_display_product_summary', $gf_dps_func );
+			if ( $modifier === 'nopricingfields' && ! has_filter( 'gform_order_summary', array( $this, 'clear_order_summary' ) ) ) {
+				add_filter( 'gform_order_summary', array( $this, 'clear_order_summary' ) );
 			}
 
 			/**
@@ -180,6 +177,7 @@ class GW_All_Fields_Template {
 			 */
 			if ( $context == 'nested' ) {
 
+				$input_ids = array();
 				$nested_form_field_id = rgar( $modifiers, 'parent', false );
 				if ( ! $nested_form_field_id ) {
 					break;
@@ -202,6 +200,19 @@ class GW_All_Fields_Template {
 			switch ( $modifier ) {
 				case 'filter':
 					if ( in_array( $field->id, $field_ids ) ) {
+						// Check for input-specific filters.
+						if ( is_array( $raw_value ) && ! empty( $input_ids ) && ! in_array( $field->id, $input_ids ) ) {
+							$filtered_values = array();
+
+							foreach ( $input_ids as $input_id ) {
+								if ( in_array( $input_id, $input_ids ) ) {
+									$filtered_values[ $input_id ] = $raw_value[ $input_id ];
+								}
+							}
+
+							$value = GFCommon::get_lead_field_display( $field, $filtered_values );
+						}
+
 						$value = $this->get_all_fields_field_value( $field, $value );
 					} else {
 						$value = false;
@@ -213,6 +224,7 @@ class GW_All_Fields_Template {
 					}
 					break;
 				case 'exclude':
+					// exclude the fields marked to be excluded, or exclude all pricing fields if 'nopricingfields' merge tag is used.
 					if ( in_array( (int) $field->id, $field_ids, true ) ) {
 
 						$exclude_full_value = true;
@@ -251,6 +263,12 @@ class GW_All_Fields_Template {
 						}
 					}
 					break;
+				case 'updated':
+					// If current value matches original value, it was not changed so we skip it.
+					if ( $this->original_entry[ $field['id'] ] == $value ) {
+						$value = false;
+					}
+					break;
 			}
 		}
 
@@ -259,6 +277,10 @@ class GW_All_Fields_Template {
 		// print_r( compact( 'modifiers', 'field_ids', 'field_id', 'value' ) );
 		// echo '<pre>';
 		return $value;
+	}
+
+	public function save_original_entry( $entry, $original_entry ) {
+		$this->original_entry = $original_entry;
 	}
 
 	public function replace_merge_tags( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ) {
@@ -309,6 +331,17 @@ class GW_All_Fields_Template {
 			$items = $this->get_items( $form, $entry, $display_empty, ! $use_value, $options['format'], $use_admin_label, 'all_fields', $_modifiers );
 		}
 
+		// Add meta fields to the items array.
+		if ( ! empty( $modifiers ) && array_key_exists( 'meta', $modifiers ) ) {
+			$meta_keys = $modifiers['meta'];
+			foreach ( $meta_keys as $key ) {
+				$items[] = array(
+					'label' => $key,
+					'value' => gform_get_meta( $entry['id'], $key ),
+				);
+			}
+		}
+
 		$output = $this->load_template( $template, null, array(
 			'form'  => $form,
 			'entry' => $entry,
@@ -336,7 +369,7 @@ class GW_All_Fields_Template {
 
 	public function parse_modifiers( $modifiers_str ) {
 
-		preg_match_all( '/([a-z]+)(?:(?:\[(.+?)\])|,?)/i', $modifiers_str, $modifiers, PREG_SET_ORDER );
+		preg_match_all( '/([a-z_]+)(?:(?:\[(.+?)\])|,?)/i', $modifiers_str, $modifiers, PREG_SET_ORDER );
 		$parsed = array();
 
 		foreach ( $modifiers as $modifier ) {
@@ -537,6 +570,16 @@ class GW_All_Fields_Template {
 		GFCommon::log_debug( $message );
 	}
 
+	public function clear_order_summary() {
+		remove_filter( 'gform_order_summary', array( $this, 'clear_order_summary' ) );
+		return '';
+	}
+
+	public function hide_order_summary_label() {
+		remove_filter( 'gform_display_product_summary', array( $this, 'hide_order_summary_label' ) );
+		return false;
+	}
+
 	// ### TEMPLATE SYSTEM (compliments of EDD) ###
 
 	public function load_template( $slug, $name = null, $data = array(), $suffixes = array() ) {
@@ -548,7 +591,20 @@ class GW_All_Fields_Template {
 			include( $template );
 		}
 		$content = ob_get_clean();
-		return ! $template ? false : $content;
+
+		/**
+		 * Filters the output loaded by the template.
+		 *
+		 * @since 0.12
+		 *
+		 * @param string $content  The output content loaded by the template.
+		 * @param string $slug     The slug name for the generic template.
+		 * @param string $name     The name of the specialized template.
+		 * @param array  $data     An array of data extracted for use in the template.
+		 * @param array  $suffixes An array of suffixes used to locate the template.
+		 */
+		$content = apply_filters( 'gwaft_template_output', $content, $slug, $name, $data, $suffixes );
+		return ! $template && ! $content ? false : $content;
 	}
 
 	public function get_template_part( $slug, $name = null, $load = true, $suffixes = array() ) {

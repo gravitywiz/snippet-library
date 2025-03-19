@@ -5,7 +5,7 @@
  *
  * Supports all registered meta and as well as the "Payment Status" standard meta.
  * Handles enabling conditional logic evaluation on send for GP Notification Scheduler when notification
- * contains a conditioanl rule for "payment_status".
+ * contains a conditional rule for "payment_status".
  *
  * Requires Gravity Forms 2.6.2.
  *
@@ -13,7 +13,7 @@
  * Plugin URI:   https://gravitywiz.com/
  * Description:  Use the entry meta in conditional logic (e.g. payment status, approval status, etc).
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.3.1
  * Author URI:   https://gravitywiz.com
  */
 class GW_CL_Entry_Meta {
@@ -54,7 +54,9 @@ class GW_CL_Entry_Meta {
 				const entryOptions = <?php echo json_encode( $this->get_conditional_logic_options() ); ?>;
 				gform.addFilter( 'gform_conditional_logic_fields', function( options, form, selectedFieldId ) {
 					for ( const property in entryOptions ) {
-						if ( entryOptions.hasOwnProperty( property ) ) {
+						// Entry meta are already added in Notifications and Confirmations conditional logic but not in feeds.
+						// Let's just make sure that none of our entry meta options have been previously added.
+						if ( entryOptions.hasOwnProperty( property ) && ! options.find( opt => opt.value === entryOptions[ property ].value ) ) {
 							options.push( {
 								label: entryOptions[ property ].label,
 								value: entryOptions[ property ].value
@@ -85,17 +87,51 @@ class GW_CL_Entry_Meta {
 
 		$form_ids = 0;
 
-		// Scope entry meta to the current form for GP Email Users.
-		if ( is_admin() && rgget( 'page' ) === 'gp-email-users' ) {
-			$form_ids = rgpost( '_gform_setting_form' );
-			if ( ! $form_ids ) {
-				$draft    = gp_email_users()->get_draft();
-				$form_ids = $draft['form'];
+		// Scope entry meta to the current form for GP Email Users and other admin screens
+		if ( is_admin() ) {
+			if ( rgget( 'page' ) === 'gp-email-users' ) {
+				$form_ids = rgpost( '_gform_setting_form' );
+				if ( ! $form_ids ) {
+					$draft    = gp_email_users()->get_draft();
+					$form_ids = $draft['form'];
+				}
+			}
+
+			if ( GFForms::get_page() && rgget( 'id' ) ) {
+				$form_ids = rgget( 'id' );
+			}
+		}
+
+		$options = array();
+
+		if ( ! empty( $form_ids ) ) {
+			$post_submission_conditional_logic_field_types = array(
+				'uid' => array(
+					'operators' => array(
+						'is'          => 'is',
+						'isnot'       => 'isNot',
+						'>'           => 'greaterThan',
+						'<'           => 'lessThan',
+						'contains'    => 'contains',
+						'starts_with' => 'startsWith',
+						'ends_with'   => 'endsWith',
+					),
+				),
+			);
+			$form = GFAPI::get_form( is_array( $form_ids ) ? $form_ids[0] : $form_ids );
+			if ( $form ) {
+				$fields = GFAPI::get_fields_by_type( $form, array_keys( $post_submission_conditional_logic_field_types ) );
+				foreach ( $fields as $field ) {
+					$options[ $field->id ] = array(
+						'label'     => $field->label,
+						'value'     => $field->id,
+						'operators' => rgars( $post_submission_conditional_logic_field_types, $field->type . '/operators', array() ),
+					);
+				}
 			}
 		}
 
 		$entry_meta = GFFormsModel::get_entry_meta( $form_ids );
-		$options    = array();
 
 		$choices_by_key = array(
 			'is_approved' => array(
@@ -114,7 +150,21 @@ class GW_CL_Entry_Meta {
 					'isnot' => 'isNot',
 				),
 			);
-			$_choices        = rgar( $choices_by_key, $key );
+
+			$_choices = rgar( $choices_by_key, $key );
+
+			/*
+			 * Use choices by key if exists, otherwise, attempt to pull from $meta/filter/choices, which contains
+			 * array{ text: string, value: string }[]
+			 */
+			if ( empty( $_choices ) ) {
+				$filter_choices = rgars( $meta, 'filter/choices' );
+
+				if ( ! empty( $filter_choices ) ) {
+					$_choices = wp_list_pluck( $filter_choices, 'text', 'value' );
+				}
+			}
+
 			if ( ! empty( $_choices ) ) {
 				$choices = array();
 				foreach ( $_choices as $value => $text ) {
@@ -151,7 +201,7 @@ class GW_CL_Entry_Meta {
 		$target = $rule['fieldId'];
 
 		if ( in_array( $target, $keys ) && $entry ) {
-			if ( $target === 'payment_status' ) {
+			if ( in_array( $target, $this->get_runtime_entry_meta_keys(), true ) ) {
 				// Some payment add-ons do not update the runtime entry but do update the entry in the database.
 				// Fetch the latest from the database.
 				$entry = GFAPI::get_entry( $entry['id'] );
@@ -167,13 +217,26 @@ class GW_CL_Entry_Meta {
 		foreach ( $notifications as $notification ) {
 			$_notification = gp_notification_schedule()->get_notification( $form, $notification['nid'] );
 			foreach ( rgars( $_notification, 'notification_conditional_logic_object/rules' ) as $rule ) {
-				if ( $rule['fieldId'] === 'payment_status' ) {
+				if ( in_array( $rule['fieldId'], $this->get_runtime_entry_meta_keys(), true ) ) {
 					return true;
 				}
 			}
 		}
 
 		return $eval_on_send;
+	}
+
+	/**
+	 * Get the keys for any entry meta that may be updated during a form submission.
+	 *
+	 * Since these are updated mid-submission, conditional logic in some contexts (like notifications triggered by a feed
+	 * action) will be using a stale entry. Identifying these entry meta keys allows us to ensure special functionality
+	 * to support them.
+	 *
+	 * @return mixed|void
+	 */
+	public function get_runtime_entry_meta_keys() {
+		return apply_filters( 'gwclem_runtime_entry_meta_keys', array( 'payment_status' ) );
 	}
 
 }

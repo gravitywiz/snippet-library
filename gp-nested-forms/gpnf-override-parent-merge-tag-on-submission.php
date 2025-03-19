@@ -3,7 +3,7 @@
  * Gravity Perks // Nested Forms // Force {Parent} Merge Tag Replacement on Submission
  * http://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
- * Instruction Video: https://www.loom.com/share/1ccbaa94d6b94f0f97829916a8396ac7
+ * Instruction Video: https://www.loom.com/share/a896446e6a5e42aa93bde0c3dd986e1f
  *
  * Override all {Parent} merge tags when the parent form is submitted or a parent entry is updated.
  */
@@ -95,7 +95,7 @@ class GPNF_Override_Parent_Merge_Tags {
 				}
 
 				foreach ( $inputs as $input ) {
-					$this->override_child_entry_input_value( $entry, $field, $input['id'], rgar( $input, 'defaultValue' ) );
+					$this->override_child_entry_input_value( $entry, $field, $child_form, $input['id'], rgar( $input, 'defaultValue' ) );
 				}
 			}
 		}
@@ -103,7 +103,7 @@ class GPNF_Override_Parent_Merge_Tags {
 		return $entry;
 	}
 
-	function override_child_entry_input_value( $entry, $field, $input_id, $default_value ) {
+	function override_child_entry_input_value( $entry, $field, $child_form, $input_id, $default_value ) {
 
 		preg_match_all( '/{Parent:(\d+(\.\d+)?)[^}]*}/i', $default_value, $matches, PREG_SET_ORDER );
 		if ( empty( $matches ) ) {
@@ -115,8 +115,12 @@ class GPNF_Override_Parent_Merge_Tags {
 			$value = str_replace( $match[0], rgar( $entry, $match[1] ), $value );
 		}
 
+		$default_value   = $value;
 		$child_entry_ids = explode( ',', rgar( $entry, $field->id ) );
 		foreach ( $child_entry_ids as $child_entry_id ) {
+			// If any child entry merge tag is present, replace it with the child entry value before replacing with the Parent merge tag values.
+			$child_entry = GFAPI::get_entry( $child_entry_id );
+			$value       = GFCommon::replace_variables( $default_value, $child_form, $child_entry );
 			GFAPI::update_entry_field( $child_entry_id, $input_id, $value );
 		}
 

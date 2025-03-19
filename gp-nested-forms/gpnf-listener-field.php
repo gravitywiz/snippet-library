@@ -24,6 +24,8 @@
  */
 class GPNF_Listener_Field {
 
+	private $_args = array();
+
 	public function __construct( $args = array() ) {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class

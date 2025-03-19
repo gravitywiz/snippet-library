@@ -3,7 +3,7 @@
  * Gravity Wiz // Gravity Forms // Send Manual Notifications
  * https://gravitywiz.com/send-manual-notifications-with-gravity-forms/
  *
- * Instruction Video: https://www.loom.com/share/d5500924869a44f3857393f9968da684
+ * Instruction Video: https://www.loom.com/share/852360c593eb4e108ca9edb26899f1ec
  *
  * Provides a custom notification event that allows you to create notifications that can be sent
  * manually (via Gravity Forms "Resend Notifications" feature).

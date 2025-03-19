@@ -1,14 +1,6 @@
 <?php
 /**
- * Gravity Perks // Update Perks Tab Field Settings Title
- * https://gravitywiz.com/
+ * We're no longer using the experimental folder for experimental snippets. 🚧
+ * You can now find the snippet here:
+ * https://github.com/gravitywiz/snippet-library/blob/master/gravity-forms/gp-update-perks-tab-title.php
  */
-add_action( 'gform_field_settings_tabs', function( $tabs ) {
-	foreach ( $tabs as &$tab ) {
-		if ( $tab['title'] === __( 'Perks', 'gravityperks' ) ) {
-			// Update "Bonus Features" to whatever you want to call the perks tab.
-			$tab['title'] = 'Bonus Features';
-		}
-	}
-	return $tabs;
-}, 99 );

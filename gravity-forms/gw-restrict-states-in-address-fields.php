@@ -14,6 +14,8 @@
  */
 class GW_Restrict_States_In_Address_Field {
 
+	private $_args = array();
+
 	public function __construct( $args = array() ) {
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
 		$this->_args = wp_parse_args(
@@ -62,7 +64,10 @@ class GW_Restrict_States_In_Address_Field {
 				continue;
 			}
 
-			if ( in_array( $selected_state, $this->_args['allowed_states'], true ) ) {
+			if (
+				in_array( $selected_state, $this->_args['allowed_states'], true )
+				|| array_key_exists( $selected_state, $this->_args['allowed_states'] )
+			) {
 				continue;
 			}
 
@@ -138,6 +143,14 @@ class GW_Restrict_States_In_Address_Field {
 //	'allowed_states' => array(
 //		'California',
 //		'Iowa',
+//	),
+//) );
+// Or when value is different, like using gform_us_states
+// (2 letter state values, full state name label).
+//new GW_Restrict_States_In_Address_Field( array(
+//	'allowed_states' => array(
+//		'CA' => 'California',
+//		'IA' => 'Iowa',
 //	),
 //) );
 

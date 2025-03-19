@@ -55,7 +55,17 @@ add_filter( 'gform_pre_replace_merge_tags', function ( $text, $form, $entry, $ur
 		}
 
 		if ( ! $proto->regionCode ) {
-			continue;
+			// If the region code is not set on the proto (unlikely since it won't get serialized in most cases),
+			// use the utils to get it.
+			if ( class_exists( '\libphonenumber\PhoneNumberUtil' ) ) {
+				$util = \libphonenumber\PhoneNumberUtil::getInstance();
+
+				$proto->regionCode = $util->getRegionCodeForNumber( $proto );
+			}
+
+			if ( ! $proto->regionCode ) {
+				continue;
+			}
 		}
 
 		$countries   = GF_Fields::get( 'address' )->get_default_countries();

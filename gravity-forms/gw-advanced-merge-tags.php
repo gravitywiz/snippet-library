@@ -36,15 +36,10 @@
  *       In this example, "pid" would be passed via the query string from the contact link and "Bob Smith" would be the
  *       "post_title" of the post the user is coming from.
  *
- * @version 1.2
- * @author  David Smith <david@gravitywiz.com>
- * @license GPL-2.0+
- * @link    https://gravitywiz.com/
- *
  * Plugin Name: Gravity Forms Advanced Merge Tags
  * Plugin URI: https://gravitywiz.com
  * Description: Provides a host of new ways to work with Gravity Forms merge tags.
- * Version: 1.1
+ * Version: 1.6
  * Author: Gravity Wiz
  * Author URI: https://gravitywiz.com/
  */
@@ -71,58 +66,38 @@ class GW_Advanced_Merge_Tags {
 	}
 
 	private function __construct( $args ) {
-
-		if ( ! class_exists( 'GFForms' ) ) {
-			return;
-		}
-
 		$this->_args = wp_parse_args( $args, array(
 			'save_source_post_id' => false,
 		) );
 
-		add_action( 'gform_pre_render', array( $this, 'support_default_value_and_html_content_merge_tags' ) );
+		add_action( 'init', array( $this, 'add_hooks' ) );
+	}
+
+	public function add_hooks() {
+		if ( ! class_exists( 'GFForms' ) ) {
+			return;
+		}
+
 		add_action( 'gform_pre_render', array( $this, 'support_dynamic_population_merge_tags' ) );
 
 		add_action( 'gform_merge_tag_filter', array( $this, 'support_html_field_merge_tags' ), 10, 4 );
-		add_action( 'gform_replace_merge_tags', array( $this, 'replace_merge_tags' ), 10, 3 );
+		add_action( 'gform_replace_merge_tags', array( $this, 'replace_merge_tags' ), 12, 3 );
+
+		/**
+		 * `gform_pre_replace_merge_tags` is only called if GFCommon::replace_variables() is called whereas
+		 * `gform_replace_merge_tags` is called if GFCommon::replace_variables() is called or if
+		 * GFCommon::replace_variables_prepopulate() is called independently. Ideally, we want to replace {get} merge
+		 * tags as early as possible so we need to bind to both functions.
+		 */
+
 		add_action( 'gform_pre_replace_merge_tags', array( $this, 'replace_get_variables' ), 10, 5 );
+		add_action( 'gform_replace_merge_tags', array( $this, 'replace_get_variables' ), 10, 5 );
+
 		add_action( 'gform_merge_tag_filter', array( $this, 'handle_field_modifiers' ), 10, 6 );
 
 		if ( $this->_args['save_source_post_id'] ) {
 			add_filter( 'gform_entry_created', array( $this, 'save_source_post_id' ), 10, 2 );
 		}
-
-	}
-
-	public function support_default_value_and_html_content_merge_tags( $form ) {
-
-		$current_page = max( 1, (int) rgars( GFFormDisplay::$submission, "{$form['id']}/page_number" ) );
-		$fields       = array();
-
-		foreach ( $form['fields'] as &$field ) {
-
-			//            $default_value = rgar( $field, 'defaultValue' );
-			//            preg_match_all( '/{.+}/', $default_value, $matches, PREG_SET_ORDER );
-			//            if( ! empty( $matches ) ) {
-			//                if( rgar( $field, 'pageNumber' ) != $current_page ) {
-			//                    $field['defaultValue'] = '';
-			//                } else {
-			//                    $field['defaultValue'] = $this->replace_merge_tags( $default_value, $form, null );
-			//                }
-			//            }
-
-			// only run 'content' filter for fields on the current page
-			//            if( rgar( $field, 'pageNumber' ) != $current_page )
-			//                continue;
-			//
-			//            $html_content = rgar( $field, 'content' );
-			//            preg_match_all( '/{.+}/', $html_content, $matches, PREG_SET_ORDER );
-			//            if( ! empty( $matches ) )
-			//                $field['content'] = $this->replace_merge_tags( $html_content, $form, null );
-
-		}
-
-		return $form;
 	}
 
 	public function support_dynamic_population_merge_tags( $form ) {
@@ -185,48 +160,62 @@ class GW_Advanced_Merge_Tags {
 		// matches {Label:#fieldId#}
 		//         {Label:#fieldId#:#options#}
 		//         {Custom:#options#}
-		while ( preg_match_all( '/{(\w+)(:([\w&,=)(\-]+)){1,2}}/mi', $text, $matches, PREG_SET_ORDER ) ) {
+		preg_match_all( '/{(\w+)(:([\w&,=)(\-]+)){1,2}}/mi', $text, $matches, PREG_SET_ORDER );
 
-			foreach ( $matches as $match ) {
+		foreach ( $matches as $match ) {
 
-				list( $tag, $type, $args_match, $args_str ) = array_pad( $match, 4, false );
-				parse_str( $args_str, $args );
+			list( $tag, $type, $args_match, $args_str ) = array_pad( $match, 4, false );
+			parse_str( $args_str, $args );
 
-				$args  = array_map( array( $this, 'check_for_value_modifiers' ), $args );
-				$value = '';
+			$args  = array_map( array( $this, 'check_for_value_modifiers' ), $args );
+			$value = '';
 
-				switch ( $type ) {
-					case 'post':
-						$value = $this->get_post_merge_tag_value( $args );
+			switch ( $type ) {
+				case 'post':
+					$value = $this->get_post_merge_tag_value( $args );
+					break;
+				case 'post_meta':
+				case 'custom_field':
+					$value = $this->get_post_meta_merge_tag_value( $args );
+					break;
+				case 'source_post':
+					if ( empty( $entry ) || ! rgar( $entry, 'id' ) ) {
 						break;
-					case 'post_meta':
-					case 'custom_field':
-						$value = $this->get_post_meta_merge_tag_value( $args );
+					}
+					$source_post_id = gform_get_meta( $entry['id'], 'source_post_id' );
+					if ( ! $source_post_id ) {
 						break;
-					case 'entry':
-						$args['entry'] = $entry;
-						$value         = $this->get_entry_merge_tag_value( $args );
-						break;
-					case 'entry_meta':
-						$args['entry'] = $entry;
-						$value         = $this->get_entry_meta_merge_tag_value( $args );
-						break;
-					case 'callback':
-						$args['callback'] = array_shift( array_keys( $args ) );
-						unset( $args[ $args['callback'] ] );
-						$args['entry'] = $entry;
-						$value         = $this->get_callback_merge_tag_value( $args );
-						break;
-				}
-
-				// @todo: figure out if/how to support values that are not strings
-				if ( is_array( $value ) || is_object( $value ) ) {
-					$value = '';
-				}
-
-				$text = str_replace( $tag, $value, $text );
-
+					}
+					$args['id']   = $source_post_id;
+					$args['prop'] = $args_str;
+					$value        = $this->get_post_merge_tag_value( $args );
+					break;
+				case 'entry':
+					$args['entry'] = $entry;
+					$value         = $this->get_entry_merge_tag_value( $args );
+					break;
+				case 'entry_meta':
+					$args['entry'] = $entry;
+					$value         = $this->get_entry_meta_merge_tag_value( $args );
+					break;
+					// @todo: Add a whitelist here that the user can provide when they initialize the class.
+					//                  case 'callback':
+					//                      $args['callback'] = array_shift( array_keys( $args ) );
+					//                      unset( $args[ $args['callback'] ] );
+					//                      $args['entry'] = $entry;
+					//                      $value         = $this->get_callback_merge_tag_value( $args );
+					//                      break;
+				default:
+					continue 2;
 			}
+
+			// @todo: figure out if/how to support values that are not strings
+			if ( is_array( $value ) || is_object( $value ) ) {
+				$value = '';
+			}
+
+			$text = str_replace( $tag, $value, $text );
+
 		}
 
 		return $text;
@@ -417,9 +406,17 @@ class GW_Advanced_Merge_Tags {
 
 		foreach ( $matches as $match ) {
 
-			list( $search, $property ) = $match;
+			list( $search, $modifiers ) = $match;
+
+			$modifiers = $this->parse_modifiers( $modifiers );
+			$property  = array_shift( $modifiers );
 
 			$value = stripslashes_deep( rgget( $property, $get ) );
+
+			$whitelist = rgar( $modifiers, 'whitelist', array() );
+			if ( $whitelist && ! in_array( $value, $whitelist ) ) {
+				$value = null;
+			}
 
 			$glue  = gf_apply_filters( array( 'gpamt_get_glue', $property ), ', ', $property );
 			$value = is_array( $value ) ? implode( $glue, $value ) : $value;
@@ -456,30 +453,137 @@ class GW_Advanced_Merge_Tags {
 	 */
 	public function handle_field_modifiers( $value, $input_id, $modifier, $field, $raw_value, $format ) {
 
-		$modifiers = $field->get_modifiers();
+		$modifiers = $this->parse_modifiers( $modifier );
+
 		if ( empty( $modifiers ) ) {
 			return $value;
 		}
 
-		foreach ( $modifiers as $modifier ) {
+		foreach ( $modifiers as $modifier => $modifier_options ) {
 			switch ( $modifier ) {
 				case 'wordcount':
 					// Note: str_word_count() is not a great solution as it does not support characters with accents reliably.
 					// Updated to use the same method we use in GP Pay Per Word.
 					return count( array_filter( preg_split( '/[ \n\r]+/', trim( $value ) ) ) );
-					break;
 				case 'urlencode':
 					return urlencode( $value );
-					break;
 				case 'rawurlencode':
 					return rawurlencode( $value );
+				case 'uppercase':
+					return strtoupper( $value );
+				case 'lowercase':
+					return strtolower( $value );
+				case 'capitalize':
+					return ucwords( strtolower( $value ) );
+				case 'mask':
+					if ( GFCommon::is_valid_email( $value ) ) {
+						list( $name, $domain ) = explode( '@', $value );
+						$frags                 = explode( '.', $domain );
+						$base                  = $this->mask_value( array_shift( $frags ) );
+						$name                  = $this->mask_value( $name );
+						// Example: "one.two.three@domain.gov.uk" → "o***********e@d****n.gov.uk".
+						return sprintf( '%s@%s.%s', $name, $base, implode( '.', $frags ) );
+					} else {
+						// Example: "hello my old friend" → "h*****************d".
+						return $this->mask_value( $value );
+					}
+				case 'abbr':
+					// When used on address field returns two letter code of the selected country.
+					// Example {My Address Field:1.6:abbr}
+					$default_countries = array_flip( GF_Fields::get( 'address' )->get_default_countries() );
+					return rgar( $default_countries, $value );
+				case 'selected':
+					// 'selected' can be used over 'Checkbox' field to target the selected checkbox by its zero-based index.
+					if ( $field->type == 'checkbox' ) {
+						$index = $modifier_options;
+						if ( $index !== 'selected' && is_numeric( $index ) ) {
+							$index = intval( $index );
+						} else {
+							break;
+						}
+
+						$value_array = explode( ',', $value );
+						return rgar( $value_array, $index );
+					}
 					break;
+				case 'gravatar':
+					if ( $field->type !== 'email' ) {
+						break;
+					}
+
+					return $this->generate_gravatar($value, $modifiers);
 			}
 		}
 
 		return $value;
 	}
 
+	public function mask_value( $value ) {
+		$chars = str_split( $value );
+		$first = array( array_shift( $chars ) );
+		$last  = array( array_pop( $chars ) );
+		return implode( '', array_merge( $first, array_pad( array(), count( $chars ), '*' ), $last ) );
+	}
+
+	public function parse_modifiers( $modifiers_str ) {
+
+		preg_match_all( '/([a-z_]+)(?:(?:\[(.+?)\])|,?)/i', $modifiers_str, $modifiers, PREG_SET_ORDER );
+		$parsed = array();
+
+		foreach ( $modifiers as $modifier ) {
+
+			list( $match, $modifier, $value ) = array_pad( $modifier, 3, null );
+			if ( $value === null ) {
+				$value = $modifier;
+			}
+
+			// Split '1,2,3' into array( 1, 2, 3 ).
+			if ( strpos( $value, ',' ) !== false ) {
+				$value = array_map( 'trim', explode( ',', $value ) );
+			}
+
+			$parsed[ strtolower( $modifier ) ] = $value;
+
+		}
+
+		return $parsed;
+	}
+
+	/**
+	 * Generate a Gravatar image URL or image tag.
+	 *
+	 * @param $email
+	 * @param $modifiers
+	 *
+	 * @return string
+	 */
+	public function generate_gravatar( $email, $modifiers ) {
+		$format  = rgar( $modifiers, 'format' );
+		$size    = rgar( $modifiers, 'size', 64 );
+		$default = rgar( $modifiers, 'default' );
+
+		$params = array();
+
+		if ( $default ) {
+			$params['d'] = htmlentities( $default );
+		}
+
+		if ( $size ) {
+			$params['s'] = htmlentities($size);
+		}
+
+		$base_url = 'https://www.gravatar.com/avatar';
+		$hash     = hash( 'sha256', strtolower( trim( $email ) ) );
+		$query    = http_build_query( $params );
+
+		$gravatar_url = sprintf( '%s/%s?%s', $base_url, $hash, $query );
+
+		if ( $format === 'url' ) {
+			return $gravatar_url;
+		}
+
+		return "<img src='{$gravatar_url}' alt='Gravatar Image'/>";
+	}
 }
 
 function gw_advanced_merge_tags( $args = array() ) {

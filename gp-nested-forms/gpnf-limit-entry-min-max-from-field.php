@@ -5,6 +5,8 @@
  */
 class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 
+	private $_args = array();
+
 	public function __construct( $args = array() ) {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
@@ -60,8 +62,11 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 		$entry_ids   = explode( ',', $nested_form_field_value );
 		$entry_count = empty( $nested_form_field_value ) ? 0 : count( $entry_ids );
 
-		$raw_min = rgpost( "input_{$this->_args['min_field_id']}" );
-		$raw_max = rgpost( "input_{$this->_args['max_field_id']}" );
+		$min_field_id = str_replace( '.', '_', $this->_args['min_field_id'] );
+		$max_field_id = str_replace( '.', '_', $this->_args['max_field_id'] );
+
+		$raw_min = rgpost( "input_{$min_field_id}" );
+		$raw_max = rgpost( "input_{$max_field_id}" );
 
 		if ( empty( $raw_min ) ) {
 			$raw_min = $this->_args['default_min'];
@@ -128,7 +133,14 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 
 					self.init = function () {
 
-						var maxFieldId = 'input_' + self.parentFormId + '_' + self.maxFieldId;
+						var attrReadyMaxFieldId = typeof self.maxFieldId === 'string' ? self.maxFieldId.replace('.', '_') : self.maxFieldId;
+						var maxFieldId = 'input_' + self.parentFormId + '_' + attrReadyMaxFieldId;
+
+						// GF uses "1" for the input index in the HTML id attribute for Single Product fields. Weird.
+						var $maxField = $( '#input_' + self.parentFormId + '_' + parseInt( self.maxFieldId ) );
+						if ( $maxField.parents( '.gfield' ).hasClass( 'gfield--input-type-singleproduct' ) ) {
+							maxFieldId = 'input_' + self.parentFormId + '_' + parseInt( self.maxFieldId ) + '_1';
+						}
 
 						gform.addFilter('gpnf_entry_limit_max', function (max, currentFormId, currentFieldId) {
 							if (self.parentFormId != currentFormId || self.nestedFormFieldId != currentFieldId) {
@@ -144,7 +156,7 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 						gform.addAction( 'gform_input_change', function( el, formId, fieldId ) {
 							if ( el.id === maxFieldId ) {
 								// Force Knockout to recalculate the max when the number has changed
-								window[ 'GPNestedForms_{0}_{1}'.format( self.parentFormId, self.nestedFormFieldId ) ].viewModel.entries.valueHasMutated();
+								window[ 'GPNestedForms_{0}_{1}'.gformFormat( self.parentFormId, self.nestedFormFieldId ) ].viewModel.entries.valueHasMutated();
 							}
 						} );
 
@@ -206,3 +218,12 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 	}
 
 }
+
+# Configuration
+
+new GP_Nested_Forms_Dynamic_Entry_Min_Max( array(
+	'parent_form_id'       => 4,
+	'nested_form_field_id' => 3,
+	'max_field_id'         => 1,
+	'min_field_id'         => 2, // (Optional)
+) );

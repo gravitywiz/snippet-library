@@ -1,5 +1,9 @@
 <?php
 /**
+ * WARNING! THIS SNIPPET IS DEPRECATED. 🚧
+ * Nested Forms' sessions are now post-specific by default as of version 1.1.35.
+ */
+/**
  * Gravity Perks // Nested Forms // Post-specific Sessions
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *

@@ -18,6 +18,8 @@
  */
 class GW_Zip_Files {
 
+	private $_args = array();
+
 	public function __construct( $args = array() ) {
 
 		// make sure we're running the required minimum version of Gravity Forms
@@ -43,7 +45,7 @@ class GW_Zip_Files {
 		add_filter( 'gform_entry_meta', array( $this, 'register_entry_meta' ), 10, 2 );
 		add_filter( 'gform_entries_field_value', array( $this, 'modify_zip_display_value' ), 10, 3 );
 
-		add_action( 'gform_entry_created', array( $this, 'archive_files' ), 10, 2 );
+		add_filter( 'gform_entry_post_save', array( $this, 'archive_files' ), 10, 2 );
 		add_filter( 'gform_notification', array( $this, 'add_zip_as_attachment' ), 10, 3 );
 		add_filter( 'gform_replace_merge_tags', array( $this, 'all_files_merge_tag' ), 10, 7 );
 		add_filter( 'gform_replace_merge_tags', array( $this, 'zip_url_merge_tag' ), 10, 3 );
@@ -67,7 +69,7 @@ class GW_Zip_Files {
 	public function archive_files( $entry, $form ) {
 
 		if ( ! $this->is_applicable_form( $form ) || ! $this->has_applicable_field( $form ) ) {
-			return;
+			return $entry;
 		}
 
 		$nested_entries       = $this->get_nested_entries( $entry, $form );
@@ -89,7 +91,7 @@ class GW_Zip_Files {
 		$archive_files = array( $this->get_entry_files( $entry, $form ) );
 		$archive_files = array_merge( $archive_files, $nested_archive_files );
 		if ( empty( $archive_files ) ) {
-			return;
+			return $entry;
 		}
 
 		$archive_file_paths = array();
@@ -103,6 +105,7 @@ class GW_Zip_Files {
 			gform_update_meta( $entry['id'], $this->get_meta_key(), $this->get_zip_paths( $entry, 'url' ) );
 		}
 
+		return $entry;
 	}
 
 	/**
@@ -304,7 +307,7 @@ class GW_Zip_Files {
 
 	public function get_zip_paths( $entry, $type = false ) {
 
-		$filename = $this->get_zip_filename( $entry['id'] );
+		$filename = $this->get_zip_filename( $entry );
 		$paths    = GFFormsModel::get_file_upload_path( $entry['form_id'], $filename );
 
 		foreach ( $paths as &$path ) {
@@ -314,8 +317,12 @@ class GW_Zip_Files {
 		return $type ? rgar( $paths, $type ) : $paths;
 	}
 
-	public function get_zip_filename( $entry_id ) {
-		return $this->get_slug( $this->_args['zip_name'], $entry_id, $this->_args['field_ids'] ) . '.zip';
+	public function get_zip_filename( $entry ) {
+		$form_id  = $entry['form_id'];
+		$form     = GFAPI::get_form( $form_id );
+		// replace merge tags in the zip file name
+		$zip_name = GFCommon::replace_variables( $this->_args['zip_name'], $form, $entry, false, false, false, 'text' );
+		return $this->get_slug( $zip_name, false, $this->_args['field_ids'] ) . '.zip';
 	}
 
 	public function get_meta_key( $entry_id = false ) {
@@ -474,7 +481,7 @@ class GW_Zip_Files {
 new GW_Zip_Files(
 	array(
 		'form_id'       => 123,
-		'zip_name'      => 'my-sweet-archive',
+		'zip_name'      => 'my-sweet-archive', // supports merge tags
 		'notifications' => array( '5f4668ec2afbb' ),
 	)
 );

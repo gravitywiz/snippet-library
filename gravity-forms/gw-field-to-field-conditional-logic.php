@@ -1,9 +1,5 @@
 <?php
 /**
- * ---------------------------------------
- * DO NOT USE. THIS IS A WORK IN PROGRESS.
- * ---------------------------------------
- *
  * Gravity Wiz // Gravity Forms // Field to Field Conditional Logic
  *
  * Compare fields in Gravity Forms conditional logic. Is Field A greater than Field B? Is the emergency contact's name different than
@@ -13,7 +9,7 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Compare fields in Gravity Forms conditional logic.
  * Author:       Gravity Wiz
- * Version:      0.9.1
+ * Version:      0.12
  * Author URI:   http://gravitywiz.com
  *
  * @todo
@@ -70,7 +66,7 @@ class GF_Field_To_Field_Conditional_Logic {
 					}
 					var value = '{:' + field.id + ':value}';
 					var isSelected = value === selectedValue;
-					fieldOptions.push( '<option value="{0}" {2}>{1}</option>'.format( value, GetLabel( field ), isSelected ? 'selected' : '' ) );
+					fieldOptions.push( '<option value="{0}" {2}>{1}</option>'.gformFormat( value, GetLabel( field ), isSelected ? 'selected' : '' ) );
 					if ( isSelected ) {
 						var $choiceSelect = jQuery( '<select>' + choiceOptions + '</select>' );
 						$choiceSelect.find( 'option:selected' ).remove();
@@ -79,7 +75,7 @@ class GF_Field_To_Field_Conditional_Logic {
 					}
 				}
 
-				markup = '{0}<optgroup label="Field Choices">{1}</optgroup><optgroup label="Fields">{2}</optgroup>{3}'.format(
+				markup = '{0}<optgroup label="Field Choices">{1}</optgroup><optgroup label="Fields">{2}</optgroup>{3}'.gformFormat(
 					match ? match[1] : '',
 					choiceOptions,
 					fieldOptions.join( "\n" ),
@@ -142,6 +138,10 @@ class GF_Field_To_Field_Conditional_Logic {
 							}
 
 							rule.value = GFMergeTag.getMergeTagValue( formId, mergeTags[0][1], mergeTags[0][3] );
+							var fieldNumberFormat = gf_get_field_number_format( rule.fieldId, formId, 'value' );
+							if( fieldNumberFormat ) {
+								rule.value = gf_format_number( rule.value, fieldNumberFormat );
+							}
 
 							return rule;
 						} );
@@ -182,10 +182,6 @@ class GF_Field_To_Field_Conditional_Logic {
 		foreach ( $object as $prop => $value ) {
 			if ( $prop === 'conditionalLogic' && ! empty( $value ) ) {
 				foreach ( $object[ $prop ]['rules'] as $rule ) {
-					// GF core only supports comparing fields to values but Gravity Perks supports other comparisons.
-					if ( ! is_numeric( $rule['fieldId'] ) ) {
-						continue;
-					}
 					$matches = $this->parse_merge_tags( $rule['value'] );
 					if ( ! empty( $matches ) ) {
 						$tag_field_id = $matches[0][1];
@@ -227,6 +223,7 @@ class GF_Field_To_Field_Conditional_Logic {
 	 */
 	public function modify_rule( $rule, $form, $logic, $field_values, $entry ) {
 
+		static $_current_entry;
 		static $_is_modifying_rule;
 		static $_rule_cache;
 
@@ -235,20 +232,37 @@ class GF_Field_To_Field_Conditional_Logic {
 		}
 
 		if ( $entry === null ) {
-			$_is_modifying_rule = true;
-			$entry              = GFFormsModel::get_current_lead();
-			$_is_modifying_rule = false;
+			if ( ! $_current_entry ) {
+				$_is_modifying_rule = true;
+				$_current_entry     = GFFormsModel::get_current_lead();
+				$_is_modifying_rule = false;
+
+				/*
+				 * Clear the GF visibility cache for this form. When we get the current lead, the visibility is cached
+				 * without the logic from this snippet.
+				 *
+				 * This then caches some fields into a hidden state which causes them to not be validated.
+				 */
+				if ( ! empty( $form['fields'] ) && is_array( $form['fields'] ) ) {
+					foreach ( $form['fields'] as $field ) {
+						GFCache::delete( 'GFFormsModel::is_field_hidden_' . $form['id'] . '_' . $field->id );
+					}
+				}
+			}
+
+			$entry = $_current_entry;
 		}
 
-		if ( ! isset( $_rule_cache[ $entry['id'] ] ) ) {
-			$_rule_cache[ $entry['id'] ] = array();
+		$entry_id = rgar( $entry, 'id' );
+		if ( ! isset( $_rule_cache[ $entry_id ] ) ) {
+			$_rule_cache[ $entry_id ] = array();
 		}
 
-		if ( isset( $_rule_cache[ $entry['id'] ][ $rule['value'] ] ) ) {
-			$value = $_rule_cache[ $entry['id'] ][ $rule['value'] ];
+		if ( isset( $_rule_cache[ $entry_id ][ $rule['value'] ] ) ) {
+			$value = $_rule_cache[ $entry_id ][ $rule['value'] ];
 		} else {
-			$value = GFCommon::replace_variables( $rule['value'], $form, $entry );
-			$_rule_cache[ $entry['id'] ][ $rule['value'] ] = $value;
+			$value                                      = GFCommon::replace_variables( $rule['value'], $form, $entry );
+			$_rule_cache[ $entry_id ][ $rule['value'] ] = $value;
 		}
 
 		$rule['value'] = $value;

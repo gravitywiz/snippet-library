@@ -18,8 +18,11 @@
  */
 add_filter( 'gppa_live_merge_tag_value', function( $value, $merge_tag, $form, $field_id, $entry_values ) {
 
-	$lmt       = GP_Populate_Anything_Live_Merge_Tags::get_instance();
-	$modifiers = $lmt->extract_merge_tag_modifiers( $merge_tag );
+	if ( ! gp_populate_anything()->live_merge_tags ) {
+		return $value;
+	}
+
+	$modifiers = gp_populate_anything()->live_merge_tags->extract_merge_tag_modifiers( $merge_tag );
 	if ( ! rgar( $modifiers, 'img' ) ) {
 		return $value;
 	}

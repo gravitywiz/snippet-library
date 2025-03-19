@@ -8,12 +8,14 @@
  * Plugin URI:  https://gravitywiz.com/submit-gravity-form-access-content/
  * Description: Require that a form be submitted before a post or page can be accessed.
  * Author:      Gravity Wiz
- * Version:     1.11
+ * Version:     1.14
  * Author URI:  https://gravitywiz.com
  */
 class GW_Submit_Access {
 
 	private static $instance = null;
+
+	public $_args = array();
 
 	private function __construct( $args = array() ) {
 
@@ -24,6 +26,7 @@ class GW_Submit_Access {
 			'loading_message'             => '', // set later so we can use GFCommon to get URL to GF spinner,
 			'enable_user_meta'            => false,
 			'is_persistent'               => true,
+			'cookie_expiration'           => null,
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -228,10 +231,11 @@ class GW_Submit_Access {
 
 		if ( ! empty( $form_ids ) ) {
 
-			ob_start();
 			$form = GFAPI::get_form( $form_ids[0] );
 			require_once( GFCommon::get_base_path() . '/form_display.php' );
 			GFFormDisplay::print_form_scripts( $form, true );
+
+			ob_start();
 			gravity_form( $form_ids[0], false, false, false, array(), $this->_args['bypass_cache'] );
 			$form_markup = ob_get_clean();
 
@@ -318,6 +322,16 @@ class GW_Submit_Access {
 	}
 
 	public function requires_access( $post_id ) {
+
+		// Never require access for edit API requests. Interferes with the Block Editor.
+		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+			$route   = untrailingslashit( $GLOBALS['wp']->query_vars['rest_route'] ) ?: '/';
+			$request = new WP_REST_Request( $_SERVER['REQUEST_METHOD'], $route );
+			if ( $request->get_method() !== 'GET' || ( $request['context'] === 'edit' && current_user_can( 'edit_post', $post_id ) ) ) {
+				return false;
+			}
+		}
+
 		return get_post_meta( $post_id, 'gwsa_require_submission', true ) == true;
 	}
 
@@ -355,7 +369,7 @@ class GW_Submit_Access {
 			if ( $this->_args['enable_user_meta'] && is_user_logged_in() ) {
 				update_user_meta( get_current_user_id(), 'gwsa_submitted_forms', $submitted_forms );
 			} else {
-				$expiration = $this->_args['is_persistent'] ? strtotime( '+1 year' ) : null;
+				$expiration = $this->_args['is_persistent'] ? rgar( $this->_args, 'cookie_expiration', strtotime( '+1 year' ) ) : null;
 				setcookie( 'gwsa_submitted_forms', json_encode( $submitted_forms ), $expiration, '/' );
 			}
 		}

@@ -23,7 +23,7 @@ function get_custom_order_summary_markup( $markup, $order, $form, $entry, $order
 			<tr style="<?php gp_ecommerce_fields()->style( '.order-summary/tbody/tr' ); ?>">
 				<td style="<?php gp_ecommerce_fields()->style( '.order-summary/tbody/tr/td.column-1' ); ?>">
 					<div style="<?php gp_ecommerce_fields()->style( '.order-summary/.product-name' ); ?>">
-						<?php echo esc_html( $product['name'] . ' ' . $product['price'] ); ?>
+						<?php echo esc_html( $product['name'] ); ?>
 					</div>
 					<ul style="<?php gp_ecommerce_fields()->style( '.order-summary/.product-options' ); ?>">
 						<?php

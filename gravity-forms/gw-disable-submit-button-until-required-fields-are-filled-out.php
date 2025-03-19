@@ -1,10 +1,10 @@
 <?php
 /**
-* Gravity Wiz // Gravity Forms // Disable Submit Button Until Required Fields are Field Out
+* Gravity Wiz // Gravity Forms // Disable Submit Button Until Required Fields are Filled Out
 *
 * Disable submit buttones until all required fields have been filled out. Currently only supports single-page forms.
 *
-* @version   1.0
+* @version   1.2
 * @author    David Smith <david@gravitywiz.com>
 * @license   GPL-2.0+
 * @link      http://gravitywiz.com/...
@@ -14,24 +14,33 @@ class GW_Disable_Submit {
 
 	public static $script_output = false;
 
+	public $form_id;
+
 	public function __construct( $form_id ) {
 
-		add_action( "gform_pre_render_{$form_id}", array( $this, 'maybe_output_script' ) );
-		add_action( "gform_register_init_scripts_{$form_id}", array( $this, 'add_init_script' ) );
+		$this->form_id = $form_id;
+
+		add_action( 'gform_pre_render', array( $this, 'maybe_output_script' ) );
+		add_action( 'gform_register_init_scripts', array( $this, 'add_init_script' ) );
 
 	}
 
 	public function maybe_output_script( $form ) {
 
+		if ( $form['id'] != $this->form_id ) {
+			return $form;
+		}
+
 		if ( ! self::$script_output ) {
-			$this->script();
+			add_action( 'wp_footer', array( $this, 'output_script' ) );
+			add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
 			self::$script_output = true;
 		}
 
 		return $form;
 	}
 
-	public function script() {
+	public function output_script() {
 		?>
 
 		<script type="text/javascript">
@@ -56,14 +65,42 @@ class GW_Disable_Submit {
 							self.runCheck();
 						} );
 
+						// Check for newly uploaded files
+						args.inputHtmlIds.forEach(function (inputHtmlId){
+							let searchTerm = "#gform_preview";
+							let index	   = inputHtmlId.indexOf(searchTerm);
+							if ( index !== -1 ) {
+								let fieldId = inputHtmlId.substring(index + searchTerm.length).trim();
+								window.gfMultiFileUploader.uploaders['gform_multifile_upload' + fieldId].bind('StateChanged', function() {
+									if ( window.gfMultiFileUploader.uploaders['gform_multifile_upload' + fieldId].state == 1 ) {
+										self.runCheck();
+									}
+								});
+							}
+						});
+
+						// Check if field becomes empty on deleting file(s)
+						$(document).on( 'click', '.gform_delete_file', function() {
+							self.runCheck();
+						});
+
+						// Check when fields are repopulated because of GPPA
+						$(document).on( 'gppa_updated_batch_fields', function() {
+							self.runCheck();
+						});
+						// GPPA logic may enable submit button, disable that logic.
+						gform.addFilter( 'gppa_disable_form_navigation_toggling', function() {
+							return true;
+						});
+
 						self.runCheck();
 
 					}
 
 					self.runCheck = function() {
 
-						var submitButton = $( '#gform_submit_button_' + self.formId );
-
+						var $form        = $( '#gform_' + self.formId );
+						var submitButton = $form.find( 'input[type="submit"], input[type="button"], button[type="submit"]' );
 						if( self.areRequiredPopulated() ) {
 							submitButton.attr( 'disabled', false ).removeClass( 'gwds-disabled' );
 						} else {
@@ -89,10 +126,11 @@ class GW_Disable_Submit {
 								return;
 							}
 
-							if( $.trim( $( this ).val() ) ) {
+							if( $.trim( $( this ).val() ) ||
+								$( this ).find( 'input:checked' ).length ||
+								$( this ).find( '.ginput_preview' ).length
+								) {
 								fullCount += 1;
-							} else {
-								return false;
 							}
 
 						} );
@@ -113,6 +151,10 @@ class GW_Disable_Submit {
 
 	public function add_init_script( $form ) {
 
+		if ( $form['id'] != $this->form_id ) {
+			return $form;
+		}
+
 		$args = array(
 			'formId'       => $form['id'],
 			'inputHtmlIds' => $this->get_required_input_html_ids( $form ),
@@ -127,7 +169,7 @@ class GW_Disable_Submit {
 
 	public function get_required_input_html_ids( $form ) {
 
-		$html_ids = '';
+		$html_ids = array();
 
 		foreach ( $form['fields'] as &$field ) {
 
@@ -135,7 +177,7 @@ class GW_Disable_Submit {
 				continue;
 			}
 
-			$input_ids = false;
+			$input_ids = array();
 
 			switch ( GFFormsModel::get_input_type( $field ) ) {
 
@@ -146,6 +188,14 @@ class GW_Disable_Submit {
 				case 'name':
 					$input_ids = array( 1, 2, 3, 4, 5, 6 );
 					break;
+
+				case 'fileupload':
+					// Only multiple files enabled File Upload field has to be handled differently.
+					if ( rgar( $field, 'multipleFiles' ) ) {
+						$html_ids[] = "#gform_preview_{$form['id']}_{$field['id']}";
+						break;
+					}
+					// Let single file enabled File Upload field be handled as default.
 
 				default:
 					$html_ids[] = "#input_{$form['id']}_{$field['id']}";

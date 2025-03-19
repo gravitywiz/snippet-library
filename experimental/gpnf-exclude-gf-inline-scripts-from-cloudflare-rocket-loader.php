@@ -1,11 +1,6 @@
 <?php
 /**
- * Gravity Perks // Nested Forms // Exclude Gravity Forms Inline Scripts from CloudFlare's Rocket Loader™.
- * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
+ * We're no longer using the experimental folder for experimental snippets. 🚧
+ * You can now find the snippet here:
+ * https://github.com/gravitywiz/snippet-library/blob/master/gp-nested-forms/gpnf-exclude-gf-inline-scripts-from-cloudflare-rocket-loader.php
  */
-add_filter( 'wp_inline_script_attributes', function ( $attributes, $javascript ) {
-	if ( strpos( $javascript, 'gform.' ) ) {
-		$attributes['data-cfasync'] = 'false';
-	}
-	return $attributes;
-}, 10, 2 );

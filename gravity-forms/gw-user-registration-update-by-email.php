@@ -15,6 +15,8 @@
  */
 class GW_UR_Update_By_Email {
 
+	private $_args = array();
+
 	public function __construct( $args = array() ) {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
@@ -105,9 +107,7 @@ class GW_UR_Update_By_Email {
 			add_action( 'gform_validation', array( $this, 'validate_role' ) );
 		}
 
-		// let's just be safe and reset current lead to false so it doesn't disrupt the normal flow of things...
-		//GFFormsModel::set_current_lead( false );
-
+		return $form;
 	}
 
 	public function add_created_by_by_email( $entry, $form ) {

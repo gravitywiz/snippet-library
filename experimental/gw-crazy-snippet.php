@@ -1,4 +1,6 @@
 <?php
-// Some awesome, crazy snippet.
-// No, seriously. It's CRAZY!
-// Nov 27, 2021 — Just checked. Still crazy. 😅
+/**
+ * We're no longer using the experimental folder for experimental snippets. 🚧
+ * You can now find the snippet here:
+ * https://github.com/gravitywiz/snippet-library/blob/master/gravity-forms/gw-crazy-snippet.php
+ */

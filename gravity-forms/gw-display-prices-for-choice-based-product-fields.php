@@ -17,8 +17,9 @@
 add_filter( 'gform_field_choice_markup_pre_render', function ( $choice_markup, $choice, $field, $value ) {
 
 	if ( $field->type == 'product' ) {
-		$new_string = sprintf( '>%s - %s<', $choice['text'], GFCommon::to_money( $choice['price'] ) );
-		return str_replace( ">{$choice['text']}<", $new_string, $choice_markup );
+		$search  = sprintf( '>%s<', esc_html( $choice['text'] ) );
+		$replace = sprintf( '>%s - %s<', $choice['text'], GFCommon::to_money( $choice['price'] ) );
+		return str_replace( $search, $replace, $choice_markup );
 	}
 
 	return $choice_markup;

@@ -40,7 +40,7 @@ function gfcf_validation( $validation_result ) {
 		$confirm_error = true;
 
 		foreach ( $form['fields'] as &$field ) {
-			if ( ! in_array( $field['id'], $confirm_fields ) ) {
+			if ( ! in_array( $field['id'], $confirm_fields ) || RGFormsModel::is_field_hidden( $form, $confirm_field, array() ) ) {
 				continue;
 			}
 
@@ -50,7 +50,7 @@ function gfcf_validation( $validation_result ) {
 			}
 
 			$field['failed_validation']  = true;
-			$field['validation_message'] = 'Your values do not match.';
+			$field['validation_message'] = $confirm_fields['validation_message'];
 		}
 	}
 
@@ -60,7 +60,7 @@ function gfcf_validation( $validation_result ) {
 	return $validation_result;
 }
 
-function register_confirmation_fields( $form_id, $fields ) {
+function register_confirmation_fields( $form_id, $fields, $validation_message = 'Your values do not match.' ) {
 	global $gfcf_fields;
 
 	if ( ! $gfcf_fields ) {
@@ -72,6 +72,12 @@ function register_confirmation_fields( $form_id, $fields ) {
 	}
 
 	$gfcf_fields[ $form_id ][] = $fields;
+
+	// Get the current $fields location on array
+	$index = count( $gfcf_fields[ $form_id ] ) - 1;
+
+	// store the custom validation message
+	$gfcf_fields[ $form_id ][ $index ]['validation_message'] = $validation_message;
 }
 
 register_confirmation_fields( 1, array( 2, 3 ) );

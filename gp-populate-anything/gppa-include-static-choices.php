@@ -31,13 +31,21 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 
 	if ( strpos( $field->cssClass, 'gppa-sort-static-choices-asc' ) !== false ) {
 		usort( $choices, function ( $choice1, $choice2 ) {
-			return $choice1['text'] <=> $choice2['text'];
+			if ( $choice1['text'] == $choice2['text'] ) {
+				return 0;
+			}
+
+			return ( $choice1['text'] < $choice2['text'] ) ? -1 : 1;
 		});
 	}
 
 	if ( strpos( $field->cssClass, 'gppa-sort-static-choices-desc' ) !== false ) {
 		usort( $choices, function ( $choice1, $choice2 ) {
-			return $choice2['text'] <=> $choice1['text'];
+			if ( $choice1['text'] == $choice2['text'] ) {
+				return 0;
+			}
+
+			return ( $choice1['text'] < $choice2['text'] ) ? 1 : -1;
 		});
 	}
 

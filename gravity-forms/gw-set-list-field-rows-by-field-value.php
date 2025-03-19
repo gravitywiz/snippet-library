@@ -10,12 +10,14 @@
  * Plugin URI:   https://gravitywiz.com/set-number-of-list-field-rows-by-field-value/
  * Description:  This snippet adds/removes list field rows automatically based on the value entered in the specified field.
  * Author:       Gravity Wiz
- * Version:      1.3.1
+ * Version:      1.4
  * Author URI:   https://gravitywiz.com
  */
 class GWAutoListFieldRows {
 
 	private static $_is_script_output;
+
+	private $_args = array();
 
 	public function __construct( $args = array() ) {
 
@@ -83,7 +85,7 @@ class GWAutoListFieldRows {
 
 						// Hide add/remove buttons
 						// Also align list column title
-						$("#field_{0}_{1}".format( this.formId, this.listFieldId ) ).find( '.gfield_header_item--icons, .gfield_list_icons' ).hide();
+						$("#field_{0}_{1}".gformFormat( this.formId, this.listFieldId ) ).find( '.gfield_header_item--icons, .gfield_list_icons' ).hide();
 
 					}
 

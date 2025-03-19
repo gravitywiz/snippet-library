@@ -10,9 +10,6 @@
  *
  * this: First Choice, Second Choice, Third Choice
  * to:   First Choice, Second Choice, and Third Choice.
- *
- * This does not currently work in conjunction with the :value modifier as Gravity Forms does not support more than a single
- * modifier on Checkbox field merge tags. Also, this will not work if your choices contain a comma.
  */
 add_filter( 'gform_merge_tag_filter', function( $value, $input_id, $modifier, $field, $raw_values, $format ) {
 
@@ -25,7 +22,15 @@ add_filter( 'gform_merge_tag_filter', function( $value, $input_id, $modifier, $f
 		return $value;
 	}
 
-	$values = array_map( 'trim', explode( ',', $value ) );
+	$values = $raw_values;
+	if ( $field->storageType === 'json' ) {
+		$values = json_decode( $values );
+		if ( ! is_array( $values ) ) {
+			$values = array();
+		}
+	}
+
+	$values = array_filter( array_map( 'trim', $values ) );
 	$count  = count( $values );
 
 	if ( $count > 1 ) {

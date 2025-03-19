@@ -42,6 +42,11 @@ add_filter( 'gform_pre_render', 'gw_daily_form_schedule' );
 add_filter( 'gform_pre_validation', 'gw_daily_form_schedule' );
 function gw_daily_form_schedule( $form ) {
 
+	// Skip "Gravity Forms Daily Form Schedule" for the forms having set schedule start and schedule end date via Form Settings.
+	if ( strstr( $form['scheduleStart'], '/' ) || strstr( $form['scheduleEnd'], '/' ) ) {
+		return $form;
+	}
+
 	$days = array( 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' );
 
 	if ( rgar( $form, 'scheduleForm' ) ) {
@@ -52,10 +57,20 @@ function gw_daily_form_schedule( $form ) {
 
 		if ( ! $form['scheduleStart'] || $form['scheduleStart'] <= 6 ) {
 			if ( ! rgblank( $form['scheduleStart'] ) && $form['scheduleStart'] <= 6 ) {
+
 				$is_interweek = $form['scheduleStart'] > $form['scheduleEnd'];
-				$week_phrase  = (int) $form['scheduleStart'] === 0 || $is_interweek ? 'last week' : 'this week';
+				// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+				$current_day = (int) date( 'w' );
+
+				// If it's a Thursday and the schedule starts on Friday, assume the current schedule is for the previous week.
+				// Pro Tip: In PHP, Monday is the first day of the week.
+				$is_current_day_less_than_schedule_day = $current_day < $form['scheduleStart'] && $current_day !== 0;
+				$use_last_week                         = $is_interweek && $is_current_day_less_than_schedule_day;
+				$week_phrase                           = (int) $form['scheduleStart'] === 0 || $use_last_week ? 'last week' : 'this week';
+
 				// Sunday last week, Monday this week.
 				$time = strtotime( "{$days[ $form['scheduleStart'] ]} {$week_phrase}", $time );
+
 			}
 
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date

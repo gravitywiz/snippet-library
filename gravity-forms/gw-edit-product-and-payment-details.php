@@ -106,10 +106,28 @@ class GW_Edit_Products {
 		}
 
 		if ( $has_product_field ) {
-			// calculate the total once product fields have been restored to their original types
-			$total = GFCommon::get_order_total( $form, $entry );
 			foreach ( $form['fields'] as &$field ) {
-				if ( $field->type == 'total' ) {
+				if ( $field->type == 'subtotal' ) {
+					$order            = GFCommon::get_product_fields( $form, $entry, false );
+					$exclude_products = array();
+
+					if ( $field->subtotalProductsType === 'exclude' ) {
+						$exclude_products = $field->subtotalProducts;
+					} elseif ( $field->subtotalProductsType === 'include' ) {
+						$exclude_products = array_diff( array_keys( $order['products'] ), $field->subtotalProducts );
+					}
+
+					$subtotal = GF_Field_Subtotal::get_subtotal( $order, $exclude_products );
+
+					GFAPI::update_entry_field( $entry['id'], $field->id, $subtotal );
+				} elseif ( $field->type === 'discount' ) {
+					$order    = GFCommon::get_product_fields( $form, $entry, false );
+					$discount = rgars( $order, "products/{$field->id}/price" );
+
+					GFAPI::update_entry_field( $entry['id'], $field->id, $discount );
+				} elseif ( $field->type == 'total' ) {
+					// calculate the total once product fields have been restored to their original types
+					$total = GFCommon::get_order_total( $form, $entry );
 					GFAPI::update_entry_field( $entry['id'], $field->id, $total );
 				}
 			}

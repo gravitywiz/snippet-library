@@ -1,6 +1,6 @@
 /**
  * Gravity Perks // Populate Anything // Custom Field Refresh Trigger
- * https://gravitywiz.comhttps://gravitywiz.com/documentation/gravity-forms-populate-anything/
+ * https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  */
 // Update "1" and "2" to the field IDs that should trigger a Populate Anything refresh.
 $( '#field_GFFORMID_1, #field_GFFORMID_2' ).find( 'input' ).on( 'change', function() {

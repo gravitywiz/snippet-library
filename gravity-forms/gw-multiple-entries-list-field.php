@@ -3,17 +3,19 @@
  * Gravity Wiz // Gravity Forms // Multiple Entries by List Field
  * https://gravitywiz.com/
  *
- * Create multiple by entries based on the rows of a List field. All other field data will be duplicated for each entry.
+ * Create multiple entries based on the rows of a List field. All other field data will be duplicated for each entry.
  * List field inputs are mapped to Admin-only fields on the form.
  *
  * Plugin Name:  Gravity Forms - Multiple Entries by List Field
  * Plugin URI:   https://gravitywiz.com/
  * Description:  Create multiple by entries based on the rows of a List field.
  * Author:       Gravity Wiz
- * Version:      0.6
+ * Version:      0.7
  * Author URI:   https://gravitywiz.com/
  */
 class GW_Multiple_Entries_List_Field {
+
+	private $_args = array();
 
 	public function __construct( $args = array() ) {
 
@@ -25,7 +27,9 @@ class GW_Multiple_Entries_List_Field {
 			'preserve_list_data' => false,
 			'append_list_data'   => false,
 			'formatter'          => function( $value, $field_id, $instance ) {
-				return $value; },
+				return $value;
+			},
+			'send_notifications' => false,
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -60,6 +64,7 @@ class GW_Multiple_Entries_List_Field {
 
 		$data          = maybe_unserialize( $data );
 		$working_entry = $entry;
+		$form          = GFAPI::get_form( $entry['form_id'] );
 
 		if ( ! $this->_args['preserve_list_data'] ) {
 			$working_entry[ $this->_args['field_id'] ] = null;
@@ -81,6 +86,15 @@ class GW_Multiple_Entries_List_Field {
 				gform_add_meta( $working_entry['id'], 'gwmelf_parent_entry', true );
 				gform_add_meta( $working_entry['id'], 'gwmelf_group_entry_id', $working_entry['id'] );
 
+				/**
+				 * Sync the parent entry with our working entry so when it is passed onto other plugins using this filter,
+				 * it is up-to-date and if the entry is updated via this filter (looking at you, GFPaymentAddOn::entry_post_save()),
+				 * our changes will be preserved.
+				 */
+				$entry                          = $working_entry;
+				$entry['gwmelf_parent_entry']   = true;
+				$entry['gwmelf_group_entry_id'] = $working_entry['id'];
+
 			} else {
 
 				$working_entry['id'] = null;
@@ -90,6 +104,11 @@ class GW_Multiple_Entries_List_Field {
 				gform_add_meta( $entry_id, 'gwmelf_parent_entry', false );
 				gform_add_meta( $entry_id, 'gwmelf_group_entry_id', $entry['id'] );
 
+			}
+
+			// send Gravity Forms notifications, if enabled
+			if ( $this->_args['send_notifications'] ) {
+				GFAPI::send_notifications( $form, $working_entry );
 			}
 		}
 
@@ -147,4 +166,5 @@ new GW_Multiple_Entries_List_Field( array(
 	),
 	'preserve_list_data' => true,
 	'append_list_data'   => true,
+	'send_notifications' => false,
 ) );

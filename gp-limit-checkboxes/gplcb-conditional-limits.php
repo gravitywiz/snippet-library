@@ -20,6 +20,8 @@ class GPLCB_Conditional_Limits {
 
 	protected static $is_script_output = false;
 
+	private $_args = array();
+
 	public function __construct( $args = array() ) {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
@@ -65,7 +67,8 @@ class GPLCB_Conditional_Limits {
 	public function load_form_script( $form, $is_ajax_enabled ) {
 
 		if ( $this->is_applicable_form( $form ) && ! self::$is_script_output && ! $this->is_ajax_submission( $form['id'], $is_ajax_enabled ) ) {
-			$this->output_script();
+			add_action( 'wp_footer', array( $this, 'output_script' ) );
+			add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
 		}
 
 		return $form;

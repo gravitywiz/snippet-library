@@ -149,7 +149,7 @@ class GF_CLO_Is_In {
 
 	public function evaluate_operator( $is_match, $field_value, $target_value, $operation, $source_field, $rule ) {
 
-		if ( $rule['operator'] !== 'is_in' || $rule['gwcloinEvaluatingOperator'] ) {
+		if ( $rule['operator'] !== 'is_in' || rgar( $rule, 'gwcloinEvaluatingOperator' ) ) {
 			return $is_match;
 		}
 

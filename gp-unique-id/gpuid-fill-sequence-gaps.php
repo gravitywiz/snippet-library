@@ -12,16 +12,17 @@
 add_filter( 'gpui_sequential_unique_id_pre_insert_519_5', function ( $uid, $form_id, $field_id ) {
 	global $wpdb;
 
-	$result = $wpdb->get_results( $wpdb->prepare( "
-		select value 
-		from {$wpdb->prefix}rg_lead_detail 
-		where form_id = %d and field_number = %d", $form_id, $field_id ) );
+	$table_name = GFFormsModel::get_entry_meta_table_name();
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$result = $wpdb->get_results( $wpdb->prepare( "select meta_value from {$table_name}
+		where form_id = %d and meta_key = %d", $form_id, $field_id ) );
 
 	if ( empty( $result ) ) {
 		return $uid;
 	}
 
-	$_uids   = wp_list_pluck( $result, 'value' );
+	$_uids   = wp_list_pluck( $result, 'meta_value' );
 	$form    = GFAPI::get_form( $form_id );
 	$field   = GFFormsModel::get_field( $form, $field_id );
 	$numbers = array();

@@ -5,7 +5,7 @@
  * Ensure that a value entered in Form A has been previously submitted on Form B. This is useful if you're generating a reference number of some sort
  * on Form B and would like the user to enter it on Form A.
  *
- * @version   1.9
+ * @version   1.10
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      https://gravitywiz.com/require-existing-value-submission-gravity-forms/
@@ -13,6 +13,7 @@
 class GW_Value_Exists_Validation {
 
 	protected static $is_script_output = false;
+	private $_args                     = array();
 
 	public function __construct( $args = array() ) {
 
@@ -131,10 +132,15 @@ class GW_Value_Exists_Validation {
 			);
 		}
 
-		$entries = GFAPI::get_entries( $form_id, array(
-			'status'        => 'active',
-			'field_filters' => $field_filters,
+		$args = apply_filters( 'gwvev_get_entries_args', array(
+			$form_id,
+			array(
+				'status'        => 'active',
+				'field_filters' => $field_filters,
+			),
 		) );
+
+		$entries = GFAPI::get_entries( $args[0], $args[1] );
 
 		return reset( $entries );
 	}
@@ -170,7 +176,8 @@ class GW_Value_Exists_Validation {
 
 		// Do not output main script if AJAX is enabled
 		if ( ! $is_ajax_enabled && $this->is_applicable_form( $form ) && ! self::$is_script_output && ! $this->is_ajax_submission( $form['id'], $is_ajax_enabled ) ) {
-			$this->output_script();
+			add_action( 'wp_footer', array( $this, 'output_script' ) );
+			add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
 		}
 
 		return $form;
@@ -217,7 +224,7 @@ class GW_Value_Exists_Validation {
 									break;
 								}
 							}
-							values[ inputId ] = $( this ).val();
+							values[ sourceFieldId ? sourceFieldId : inputId ] = $( this ).val();
 						} );
 						return values;
 					}
@@ -276,7 +283,7 @@ class GW_Value_Exists_Validation {
 					}
 
 					self.getIndicatorId = function( inputId ) {
-						return 'response_{0}_{1}'.format( self.targetFormId, inputId );
+						return 'response_{0}_{1}'.gformFormat( self.targetFormId, inputId );
 					}
 
 					self.getIndicatorTemplate = function() {
@@ -302,7 +309,7 @@ class GW_Value_Exists_Validation {
 					}
 
 					self.addIndicator = function( $elem, inputId, cssClass, icon ) {
-						$elem.after( self.getIndicatorTemplate().format( self.getIndicatorId( inputId ), cssClass, icon ) );
+						$elem.after( self.getIndicatorTemplate().gformFormat( self.getIndicatorId( inputId ), cssClass, icon ) );
 					}
 
 					self.spinner = function( elem, imageSrc, inlineStyles ) {

@@ -6,17 +6,17 @@
  * the visitor's IP address, the user's ID, the user's role, a specific form URL, or the value of a specific field.
  * These "limiters" can be combined to create more complex limitations.
  *
- * @version 3.0
+ * @version 3.0.1
  * @author  David Smith <david@gravitywiz.com>
  * @license GPL-2.0+
  * @link    http://gravitywiz.com/better-limit-submission-per-time-period-by-user-or-ip/
  */
 class GW_Submission_Limit {
 
-	var $_args;
 	var $_notification_event;
 
 	private static $forms_with_individual_settings = array();
+	private $_args                                 = array();
 
 	public function __construct( $args ) {
 

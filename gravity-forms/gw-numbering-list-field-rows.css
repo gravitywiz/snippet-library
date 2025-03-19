@@ -6,36 +6,26 @@
  *
  * To use the CSS, add the 'gw-number-rows' class to the List field's "Custom CSS Class" property.
  */
-.gw-number-rows .gfield_list,
-body .gw-number-rows table.gfield_list {
-	counter-reset: gflistrowcounter;
-	margin-left: -24px;
-}
-
 .gw-number-rows .gfield_list {
+	counter-reset: gflistrowcounter;
 	margin-left: -2rem;
 }
 
-.gw-number-rows .gfield_list thead tr:before {
-	content:'';
+.gw-number-rows .gfield_list_header {
+	margin-left: 2rem;
 }
 
-.gw-number-rows .gfield_list_group:before,
-.gw-number-rows .gfield_list tbody tr:before {
+.gw-number-rows .gfield_list_group {
+	align-items: center;
+}
+
+.gw-number-rows .gfield_list_group:before {
 	content: counter(gflistrowcounter);
 	counter-increment: gflistrowcounter;
 }
 
-.gw-number-rows .gfield_list_group:before,
-.gw-number-rows .gfield_list thead tr:before,
-.gw-number-rows .gfield_list tbody tr:before {
-	display: table-cell;
-	width: 18px;
-	text-align: right;
-	padding-right: 6px;
-}
-
 .gw-number-rows .gfield_list_group:before {
+	text-align: right;
 	width: 2rem;
 	padding-right: 0.5rem;
 }

@@ -3,10 +3,10 @@
  * http://gravitywiz.com/documentation/gravity-forms-address-autocomplete
  *
  * Instruction Video: https://www.loom.com/share/e97dee6de5fa4741a1171f6d6e39b95d
- * 
+ *
  * Instructions:
  *     1. Install our free Custom Javascript for Gravity Forms plugin.
- *        Download the plugin here: https://gravitywiz.com/gravity-forms-custom-javascript/
+ *        Download the plugin here: https://gravitywiz.com/gravity-forms-code-chest/
  *     2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
  *     3. Change addressFieldId to the Address Field's ID
  */
@@ -20,7 +20,7 @@ var addAction = window.gform.addAction;
 // Set all inputs in the Address Field to read only by default
 $('#field_GFFORMID_' + addressFieldId + ' input').prop('readonly', true);
 
-// Disable individual options in the select as select's cannot be readonly. 
+// Disable individual options in the select as select's cannot be readonly.
 // When an Address is selected, the selected country will have the disabled prop removed.
 $('#field_GFFORMID_' + addressFieldId + ' select option').prop('disabled', true);
 

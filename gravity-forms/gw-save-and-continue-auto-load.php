@@ -15,6 +15,8 @@
  */
 class GW_Save_Continue_Auto_Load {
 
+	private $_args = array();
+
 	public function __construct( $args = array() ) {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
@@ -165,8 +167,9 @@ class GW_Save_Continue_Auto_Load {
 
 	public function is_applicable_form( $form ) {
 		$form_id = isset( $form['id'] ) ? $form['id'] : $form;
+		$form    = GFAPI::get_form( $form_id );
 
-		if ( $this->is_editing_entry( $form_id ) ) {
+		if ( $this->is_editing_entry( $form_id ) || ! rgars( $form, 'save/enabled' ) ) {
 			return false;
 		}
 

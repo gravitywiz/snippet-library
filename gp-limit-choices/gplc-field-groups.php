@@ -9,10 +9,12 @@
  * Plugin URI:  http://gravitywiz.com/documentation/gp-limit-choices/
  * Description: Specify a group of fields that should create a unique choice to be limited.
  * Author:      Gravity Wiz
- * Version:     1.6.1
+ * Version:     1.7
  * Author URI:  http://gravitywiz.com
  */
 class GP_Limit_Choices_Field_Group {
+
+	private $_args = array();
 
 	public function __construct( $args = array() ) {
 
@@ -221,7 +223,7 @@ class GP_Limit_Choices_Field_Group {
 						var groupsToRefresh = [];
 						for ( var i = 0, max = GPLCFieldGroupConditionalLogic.length; i < max; i ++ ) {
 							var group       = GPLCFieldGroupConditionalLogic[i];
-							var formFieldId = "{0}_{1}".format( group.formId, group.targetFieldId );
+							var formFieldId = "{0}_{1}".gformFormat( group.formId, group.targetFieldId );
 
 							// Skip inapplicable and hidden target fields
 							if ( formId != group.formId || groupsToRefresh[formFieldId] || ! group.$targetField.is( ':visible' ) ) {
@@ -255,8 +257,8 @@ class GP_Limit_Choices_Field_Group {
 
 					self.init = function () {
 
-						self.$form = $( '#gform_wrapper_{0}'.format( self.formId ) );
-						self.$targetField = $( '#field_{0}_{1}'.format( self.formId, self.targetFieldId ) );
+						self.$form = $( '#gform_wrapper_{0}'.gformFormat( self.formId ) );
+						self.$targetField = $( '#field_{0}_{1}'.gformFormat( self.formId, self.targetFieldId ) );
 
 						gform.addAction( 'gform_input_change', function ( elem, formId, fieldId ) {
 							if ( $.inArray( parseInt( fieldId ), self.triggerFieldIds ) !== - 1 ) {
