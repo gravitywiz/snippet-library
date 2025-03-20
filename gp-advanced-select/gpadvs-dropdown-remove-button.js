@@ -2,8 +2,7 @@
  * Gravity Perks // Advanced Select // Dropdown Remove Button
  * https://gravitywiz.com/documentation/gravity-forms-advanced-select/
  *
- * Adds a Remove button to selection options in Dropdown fields. By default,
- * the remove button is only added to Multi-Select fields.
+ * Adds a Remove button to selection options in Dropdown and MultiSelect fields.
  * 
  * The Remove Button is a built in plugin of Tom Select.
  * @reference https://tom-select.js.org/plugins/remove-button/ 
