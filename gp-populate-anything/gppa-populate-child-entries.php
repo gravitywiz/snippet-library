@@ -70,8 +70,8 @@ class GPPA_Populate_Child_Entries {
 			// try to find cookie, if available.
 			if ( ! $cookie ) {
 				$cookie_name = 'gpnf_form_session_';
-				$pattern = '/^' . preg_quote( $cookie_name, '/' ) . '[\w\W]*/';
-				$matches = preg_grep($pattern, array_keys($_COOKIE));
+				$pattern     = '/^' . preg_quote( $cookie_name, '/' ) . '[\w\W]*/';
+				$matches     = preg_grep( $pattern, array_keys( $_COOKIE ) );
 				if ( ! empty( $matches ) ) {
 					foreach ( $matches as $matched_cookie ) {
 						$cookie = json_decode(stripslashes( $_COOKIE[ $matched_cookie ] ), true);
