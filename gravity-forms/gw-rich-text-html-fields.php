@@ -9,8 +9,7 @@
  *
  * @todo
  * 1. Add merge tag selector.
- * 2. Allow switching to text mode: window.switchEditors.go( 'rich_field_content', mode )
- * 3. Add support for inserting images.
+ * 2. Add support for inserting images.
  */
 
 add_action( 'admin_init', function() {
@@ -68,8 +67,16 @@ add_action( 'gform_field_standard_settings_200', function() {
 			} );
 		} );
 		jQuery( document).on( 'tinymce-editor-setup', function ( event, editor ) {
-			if ( editor.id === 'field_rich_content' ) {
+			var editorId = 'field_rich_content';
+			if ( editor.id === editorId ) {
 				editor.settings.toolbar1 = 'bold,italic,underline,bullist,numlist,alignleft,aligncenter,alignright,link';
+
+				// Switch to visual/text mode.
+				jQuery(`#wp-${editorId}-wrap .switch-tmce, #wp-${editorId}-wrap .switch-html`).on('click', function() {
+					var mode = jQuery(this).hasClass('switch-tmce') ? 'tmce' : 'html';
+
+					window.switchEditors.go(editorId, mode);
+				});
 			}
 		} );
 	</script>
