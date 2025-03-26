@@ -1,5 +1,7 @@
 <?php
 /**
+ * WARNING! THIS SNIPPET IS DEPRECATED. 🚧
+ *
  * Gravity Perks // Inventory // Inventory Shortcode
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
  *
