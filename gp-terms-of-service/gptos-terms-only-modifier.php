@@ -8,7 +8,7 @@
  * Instruction Video: https://www.loom.com/share/d69c48bea2d1429ab019310d2bc6c1e6
  */
 add_filter( 'gform_merge_tag_filter', function ( $value, $merge_tag, $options, $field ) {
-	if ( $field['type'] != 'tos' ) {
+	if ( $field['type'] !== 'tos' ) {
 		return $value;
 	}
 
@@ -17,7 +17,7 @@ add_filter( 'gform_merge_tag_filter', function ( $value, $merge_tag, $options, $
 		return $value;
 	}
 
-	if ( $merge_tag != 'all_fields' ) {
+	if ( $merge_tag !== 'all_fields' ) {
 		$value = '<ul><li>' . $value . '</li></ul>';
 	}
 
