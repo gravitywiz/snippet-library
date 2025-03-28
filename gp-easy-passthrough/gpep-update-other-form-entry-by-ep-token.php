@@ -28,9 +28,9 @@
  *
  * 4. Install and configure this snippet per the inline instructions.
  */
-// Update "123" to the form ID that should trigger an update to the other form's entry.
-add_action( 'gform_after_submission_123', function( $entry, $form ) {
 
+// Update "123" to the form ID that should trigger an update to the other form's entry.
+add_action( 'gform_after_submission_123', function ( $entry, $form ) {
 	// Update "4" to the ID of the field that is populated with the EP token.
 	$token_field_id = 4;
 
@@ -43,7 +43,8 @@ add_action( 'gform_after_submission_123', function( $entry, $form ) {
 	$token        = $entry[ $token_field_id ];
 	$source_entry = gp_easy_passthrough()->get_entry_for_token( $token );
 	if ( $source_entry ) {
-		GFAPI::update_entry_field( $source_entry['id'], $target_field_id, $update_value );
+		$source_entry[ $target_field_id ] = $update_value;
+		GFAPI::update_entry( $source_entry );
 	}
 
 }, 10, 2 );
