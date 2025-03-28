@@ -265,6 +265,11 @@ class GF_Field_To_Field_Conditional_Logic {
 			$_rule_cache[ $entry_id ][ $rule['value'] ] = $value;
 		}
 
+		// Clean number values to ensure proper comparison.
+		if ( GFCommon::is_numeric( $value ) ) {
+			$value = GFCommon::clean_number( $value );
+ 		}
+
 		$rule['value'] = $value;
 
 		return $rule;
