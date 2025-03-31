@@ -3,7 +3,7 @@
  * Gravity Perks // Nested Forms // Hide Empty Columns in Summary Table
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
- * Video Instructions: https://www.loom.com/share/84e6d9c5c4334fd79d41e68942fae0d5
+ * Instruction Video: https://www.loom.com/share/84e6d9c5c4334fd79d41e68942fae0d5
  */
 add_filter( 'gp_template_output_nested-entries', function( $markup, $located_template, $load, $args ) {
 	ob_start();
