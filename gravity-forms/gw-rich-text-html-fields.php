@@ -5,6 +5,9 @@
  *
  * Instruction Video: https://www.loom.com/share/fc666b9d3e1f48ed9dc21a3fcadef783
  *
+ */
+
+/*
  * @todo
  * 1. Add merge tag selector.
  * 2. Add support for inserting images.
