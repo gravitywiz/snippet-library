@@ -2,6 +2,15 @@
 /**
  * Gravity Perks // Inventory // WPML Support for Custom Inventory Messages
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
+ *
+ * Instructions
+ *
+ * 1. Install the snippet.
+ *    https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
+ *
+ * 2. View the form on the frontend or via the previewer. Viewing the form registers the custom messages with WPML.
+ *
+ * 3. Navigate to WPML > String Translation in wp-admin, where the strings will be available to translate.
  */
 add_filter( 'gform_pre_render', function( $form ) {
 	if ( ! function_exists( 'icl_register_string' ) || ! function_exists( 'gp_inventory' ) ) {
