@@ -150,7 +150,7 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 							var $maxField = $( '#' + maxFieldId );
 							var value = parseInt($maxField.val());
 
-							return value ? value : self.defaultMax;
+							return isNaN(value) ? Infinity : (value || self.defaultMax);
 						});
 
 						gform.addAction( 'gform_input_change', function( el, formId, fieldId ) {
