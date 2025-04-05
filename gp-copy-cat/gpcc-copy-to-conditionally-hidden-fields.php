@@ -29,8 +29,23 @@ add_action( 'gform_entry_post_save', function( $entry, $form ) {
 				continue;
 			}
 
-			$source_field  = GFAPI::get_field( $form, $target['source'] );
-			$source_values = $source_field->get_value_submission( array() );
+			$source_field    = GFAPI::get_field( $form, $target['source'] );
+			$source_values   = $source_field->get_value_submission( array() );
+			$condition_field = GFAPI::get_field( $form, $target['condition'] );
+			$condition_value = $condition_field->get_value_submission( $entry );
+			
+			// for multi-input fields, we need to check the index
+			// to see if the condition is met.
+			if ( strpos( $target['condition'], '.' ) !== false ) {
+				list( $base, $index ) = explode( '.', $target['condition'] );
+				if ( isset( $condition_field['choices'][ (int) $index ] ) ) {
+					if ( $condition_field['choices'][ (int) $index ]['value'] !== $condition_value ) {
+						continue;
+					}
+				} else {
+					continue;
+				}
+			}
 
 			if ( is_array( $source_values ) ) {
 				foreach ( $source_values as $input_id => $source_value ) {
