@@ -25,9 +25,18 @@ add_filter( 'gwaft_template_output', function( $content, $slug, $name, $data, $s
 	$pages = $data['form']['pagination']['pages'];
 	$page_groups = array();
 	foreach ( $data['items'] as $item ) {
-		$field = $item['field'];
+		$field = rgar( $item, 'field' );
+
+		// Add Order Summary as a separate last page.
+		if ( ! $field && rgar( $item, 'label' ) == apply_filters( 'gwaft_order_summary_label', 'Order Summary' ) ) {
+			// Storing order summary page as '-1' to be the last page, and avoid conflicts with the actual page numbers.
+			$page_groups[-1][] = $item;
+			$pages[-1]         = apply_filters( 'gwaft_order_summary_label', 'Order Summary' );
+			continue;
+		}
+
 		// Skip hidden fields.
-		if ( $field->type === 'hidden' || $field->visibility === 'hidden' ) {
+		if ( ! $field || $field->type === 'hidden' || $field->visibility === 'hidden' ) {
 			continue;
 		}
 		// Adjust pageNumber to be zero-based.
