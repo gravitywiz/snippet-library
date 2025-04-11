@@ -72,15 +72,58 @@ add_action( 'gform_field_standard_settings_200', function() {
 			if ( editor.id === editorId ) {
 				editor.settings.toolbar1 = 'bold,italic,underline,bullist,numlist,alignleft,aligncenter,alignright,link';
 
+				// Set the initial mode based on previous user selection.
+				var savedMode = localStorage.getItem('editorMode');
+
+				// Wait until the TinyMCE editor is initialized before switching mode.
+				function waitForEditorToBeReady(callback) {
+					var interval = setInterval(function () {
+						if (typeof tinymce !== 'undefined' && tinymce.get(editorId)) {
+							clearInterval(interval);
+							callback();
+						}
+					}, 100);
+				}
+
+				waitForEditorToBeReady(function () {
+					if (savedMode === 'html') {
+						window.switchEditors.go(editorId, 'html');
+					} else {
+						window.switchEditors.go(editorId, 'tmce');
+					}
+				});
+
+				// Set the content when save.
+				window.SetFieldContentProperty = function () {
+					var mode = jQuery('#wp-' + editorId + '-wrap').hasClass('html-active') ? 'html' : 'tmce';
+					var content = '';
+
+					if (mode === 'html') {
+						content = jQuery('#' + editorId).val();
+					} else if (tinymce.get(editorId)) {
+						content = tinymce.get(editorId).getContent();
+					}
+
+					SetFieldProperty('content', content);
+				};
+
+				// Update the content.
+				jQuery(document).on('change', `#${editorId}`, function () {
+					window.SetFieldContentProperty();
+				});
+
 				// Switch to visual/text mode.
 				jQuery(`#wp-${editorId}-wrap .switch-tmce, #wp-${editorId}-wrap .switch-html`).on('click', function() {
 					var mode = jQuery(this).hasClass('switch-tmce') ? 'tmce' : 'html';
 
 					window.switchEditors.go(editorId, mode);
+
+					// Save the current mode to localStorage.
+					localStorage.setItem('editorMode', mode);
 				});
 			}
 		} );
-	</script>
+    </script>
 
 	<?php
 } );
