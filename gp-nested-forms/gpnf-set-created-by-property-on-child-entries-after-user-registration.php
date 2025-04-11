@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // Nested Forms // Set Created By Propery on Child Entries After User Account Registration.
+ * Gravity Perks // Nested Forms // Set Created By Property on Child Entries After User Account Registration.
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
  * Set the created by property of the child entries that is embedded on a user registration form
