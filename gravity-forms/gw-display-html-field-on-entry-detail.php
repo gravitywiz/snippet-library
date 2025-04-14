@@ -104,6 +104,9 @@ class GW_Display_HTML_Field_Entry_Detail {
 				$content = gp_populate_anything()->live_merge_tags->replace_live_merge_tags_static( $content, $form, $entry );
 			}
 
+			// Process static merge tags.
+			$content = GFCommon::replace_variables( $content, $form, $entry );
+
 			// Process shortcodes.
 			$content = do_shortcode( $content );
 
