@@ -16,6 +16,7 @@
 add_action( 'admin_init', function() {
 	if ( GFForms::get_page() === 'form_editor' ) {
 		wp_enqueue_editor();
+		wp_enqueue_media(); // Required for media uploads
 	}
 } );
 
@@ -70,7 +71,28 @@ add_action( 'gform_field_standard_settings_200', function() {
 		jQuery( document).on( 'tinymce-editor-setup', function ( event, editor ) {
 			var editorId = 'field_rich_content';
 			if ( editor.id === editorId ) {
-				editor.settings.toolbar1 = 'bold,italic,underline,bullist,numlist,alignleft,aligncenter,alignright,link';
+				editor.settings.toolbar1 = 'bold,italic,underline,bullist,numlist,alignleft,aligncenter,alignright,link,image';
+
+				// Handle image insertion from media library
+				editor.addButton( 'image', {
+					icon: 'image',
+					tooltip: 'Insert Image',
+					onclick: function() {
+						var frame = wp.media({
+							title: 'Insert Media',
+							button: { text: 'Insert into HTML Field' },
+							multiple: false,
+							library: { type: 'image' }
+						} );
+
+						frame.on('select', function() {
+							var attachment = frame.state().get('selection').first().toJSON();
+							editor.insertContent('<img src="' + attachment.url + '" alt="' + attachment.alt + '" />');
+						} );
+
+						frame.open();
+					}
+				} );
 
 				// Switch to visual/text mode.
 				jQuery(`#wp-${editorId}-wrap .switch-tmce, #wp-${editorId}-wrap .switch-html`).on('click', function() {
