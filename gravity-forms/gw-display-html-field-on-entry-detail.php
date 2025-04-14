@@ -2,6 +2,8 @@
 /**
  * Gravity Wiz // Gravity Forms // Display HTML Field on Entry Details
  *
+ * Instruction Video: https://www.loom.com/share/fa4b49240b6447c7839392af69476bf2
+ *
  * Save and display HTML field content (including Live Merge Tags and shortcodes) in the entry detail view.
  * Useful for retaining dynamic HTML field output as it appeared when the entry was submitted.
  *
