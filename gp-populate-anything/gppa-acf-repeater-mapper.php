@@ -67,26 +67,34 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 
 		if ( $rows ) {
 			foreach ( $rows as $row ) {
-				$label = isset( $map['label'] ) ?
-						apply_filters( 'gppa_acfrm_label', rgar( $row, $map['label'] ), $row, $map['label'] ) :
-						str_replace( 'gf_custom:', '', $custom_map['label'] );
+				$choice['text'] = isset( $map['label'] ) ?
+					apply_filters( 'gppa_acfrm_label', rgar( $row, $map['label'] ), $row, $map['label'] ) :
+					( isset( $custom_map['label'] ) ? str_replace( 'gf_custom:', '', $custom_map['label'] ) : '' );
 
-				$value = isset( $map['value'] ) ?
-						apply_filters( 'gppa_acfrm_value', rgar( $row, $map['value'] ), $row, $map['value'] ) :
-						str_replace( 'gf_custom:', '', $custom_map['value'] );
+				$choice['value'] = isset( $map['value'] ) ?
+					apply_filters( 'gppa_acfrm_value', rgar( $row, $map['value'] ), $row, $map['value'] ) :
+					( isset( $custom_map['value'] ) ? str_replace( 'gf_custom:', '', $custom_map['value'] ) : '' );
 
-				$choice = array(
-					'value' => $value,
-					'text'  => $label,
-				);
+				$image = isset( $map['image'] ) ?
+					apply_filters( 'gppa_acfrm_image', rgar( $row, $map['image'] ), $row, $map['image'] ) :
+					( isset( $custom_map['image'] ) ? str_replace( 'gf_custom:', '', $custom_map['image'] ) : '' );
+
+				if ( $image ) {
+					// Get the attachment id from the image url as `Image Choice` field requires `attachment_id` to display image.
+					$attachment_id = attachment_url_to_postid( $image );
+
+					if ( $attachment_id ) {
+						$choice['attachment_id'] = $attachment_id;
+					}
+				}
 
 				if ( isset( $map['inventory_limit'] ) ) {
 					$choice['inventory_limit'] = apply_filters( 'gppa_acfrm_inventory_limit', rgar( $row, $map['inventory_limit'] ), $row, $map['inventory_limit'] );
 				}
 
 				$choice['price'] = isset( $map['price'] ) ?
-								apply_filters( 'gppa_acfrm_price', rgar( $row, $map['price'] ), $row, $map['price'] ) :
-								str_replace( 'gf_custom:', '', $custom_map['price'] );
+					apply_filters( 'gppa_acfrm_price', rgar( $row, $map['price'] ), $row, $map['price'] ) :
+					( isset( $custom_map['price'] ) ? str_replace( 'gf_custom:', '', $custom_map['price'] ) : '' );
 
 				$choices[] = $choice;
 			}
