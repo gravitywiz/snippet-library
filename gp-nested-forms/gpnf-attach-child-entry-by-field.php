@@ -52,7 +52,11 @@ class GPNF_Attach_Child_Entry_By_Field {
 	}
 
 	public function hide_parent_entry_id_field( $form ) {
-		if ( ! $this->is_applicable_child_form( $form ) || rgar( $_REQUEST, 'action' ) !== 'gpnf_refresh_markup' ) {
+		if ( 
+			! $this->is_applicable_child_form( $form ) || 
+			( ! in_array( rgar( $_REQUEST, 'action' ), array( 'gpnf_refresh_markup', 'gpnf_edit_entry' ), true ) 
+			  && ! rgpost( 'gform_submission_method' ) ) 
+		) {		
 			return $form;
 		}
 		foreach ( $form['fields'] as &$field ) {
