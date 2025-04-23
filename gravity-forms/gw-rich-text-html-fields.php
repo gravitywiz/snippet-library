@@ -19,6 +19,12 @@ add_action( 'admin_init', function() {
 	}
 } );
 
+add_action( 'gform_field_standard_settings', function() {
+	if ( did_action( 'gform_field_standard_settings_200' ) < 1 ) {
+		do_action( 'gform_field_standard_settings_200', rgget( 'id' ) );
+	}
+} );
+
 add_action( 'gform_field_standard_settings_200', function() {
 	?>
 
