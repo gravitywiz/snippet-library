@@ -264,8 +264,16 @@ class GW_All_Fields_Template {
 					}
 					break;
 				case 'updated':
-					// If current value matches original value, it was not changed so we skip it.
-					if ( $this->original_entry[ $field['id'] ] == $value ) {
+					if ( ! is_array( $raw_value ) ) {
+						$raw_value = array( $field->id => $raw_value );
+					}
+					$has_change = false;
+					foreach ( $raw_value as $input_id => $input_value ) {
+						if ( rgar( $this->original_entry, $input_id ) != $input_value ) {
+							$has_change = true;
+						}
+					}
+					if ( ! $has_change ) {
 						$value = false;
 					}
 					break;
