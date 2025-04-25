@@ -90,7 +90,9 @@ class GW_Choice_Count {
 					// Event handler for all listeners to avoid DRY and to maintain a pointer reference to the function
 					// which we can use to explicity unbind event handlers
 					self.updateChoiceEventHandler = function() {
-						self.updateChoiceCount( self.formId, self.choiceFieldIds, self.countFieldId, self.values );
+						requestAnimationFrame( function() {
+							self.updateChoiceCount( self.formId, self.choiceFieldIds, self.countFieldId, self.values );
+						});
 					};
 
 					self.init = function() {
