@@ -92,7 +92,7 @@ class GW_Choice_Count {
 					self.updateChoiceEventHandler = function() {
 						requestAnimationFrame( function() {
 							self.updateChoiceCount( self.formId, self.choiceFieldIds, self.countFieldId, self.values );
-						}); // 10ms delay gives DOM time to reflect input change
+						});
 					};
 
 					self.init = function() {
