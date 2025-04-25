@@ -90,9 +90,9 @@ class GW_Choice_Count {
 					// Event handler for all listeners to avoid DRY and to maintain a pointer reference to the function
 					// which we can use to explicity unbind event handlers
 					self.updateChoiceEventHandler = function() {
-						setTimeout( function() {
+						requestAnimationFrame( function() {
 							self.updateChoiceCount( self.formId, self.choiceFieldIds, self.countFieldId, self.values );
-						}, 10 ); // 10ms delay gives DOM time to reflect input change
+						}); // 10ms delay gives DOM time to reflect input change
 					};
 
 					self.init = function() {
