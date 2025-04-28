@@ -237,12 +237,12 @@ class GPNF_Sortable_Entries {
 					}
 
 					gform.addAction( 'gpnf_session_initialized', function(gpnf) {
-						if ( gpnf.formId != self.formId ) {
+						if ( self.formId && gpnf.formId != self.formId ) {
 							return;
 						}
 
-						var $form = $( '#gform_' + self.formId );
-						var $field = $form.find( '#field_' + self.formId + '_' + self.fieldId );
+						var $form = $( '#gform_' + gpnf.formId );
+						var $field = $form.find( '#field_' + gpnf.formId + '_' + gpnf.fieldId );
 						var $entries = $field.find('.gpnf-nested-entries tbody');
 
 						$entries.sortable({
