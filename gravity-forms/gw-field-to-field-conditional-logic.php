@@ -227,10 +227,6 @@ class GF_Field_To_Field_Conditional_Logic {
 		static $_is_modifying_rule;
 		static $_rule_cache;
 
-		if ( $_is_modifying_rule ) {
-			return $rule;
-		}
-
 		if ( $entry === null ) {
 			if ( ! $_current_entry ) {
 				$_is_modifying_rule = true;
