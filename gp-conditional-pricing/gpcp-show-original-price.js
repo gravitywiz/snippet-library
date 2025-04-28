@@ -7,14 +7,14 @@
  *        Download the plugin here: https://gravitywiz.com/gravity-forms-code-chest/
  *     2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
  */
- gform.addAction( 'gpcp_after_update_pricing', function( productId, GWConditionalPricing ) {
+gform.addAction( 'gpcp_after_update_pricing', function( triggerFieldId, GWConditionalPricing, productId ) {
 
 	var basePrice = GWConditionalPricing.getBasePrice( productId );
 	if ( ! basePrice ) {
 		return;
 	}
 
-	var $input = $( '#input_{0}_{1}'.gformFormat( GWConditionalPricing._formId, productId ) );
+	var $input = $( '#field_{0}_{1}'.gformFormat( GWConditionalPricing._formId, productId ) );
 	if ( ! $input.length ) {
 		return;
 	}
