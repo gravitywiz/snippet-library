@@ -81,8 +81,20 @@ class GF_CLO_Does_Not_Contain {
 								return isMatch;
 							}
 
-							var fieldValue = $( '#input_' + formId + '_' + rule.fieldId ).val();
-							isMatch = fieldValue.indexOf( rule.value ) === -1;
+							var fieldValue = '';
+							var $field = $( '#input_' + formId + '_' + rule.fieldId );
+
+							// Handle different field types
+							if ( $field.is(':checkbox') || $field.is(':radio') ) {
+								fieldValue = $field.filter(':checked').map(function() { 
+									return this.value; 
+								}).get().join(',');
+							} else if ( $field.is('select[multiple]') ) {
+								fieldValue = $field.val() ? $field.val().join(',') : '';
+							} else {
+								fieldValue = $field.val() || '';
+							}
+							isMatch = typeof fieldValue === 'string' && fieldValue.indexOf( rule.value ) === -1;
 
 							return isMatch;
 						} );
