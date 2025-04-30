@@ -1,5 +1,5 @@
 /**
- * Gravity Perks // Auto List Field // Dynamic Row Labels for List Fields
+ * Gravity Perks // Auto List Field // Count Only Non Blank Rows.
  * https://gravitywiz.com/documentation/gravity-forms-auto-list-field/
  *
  * Count only non-blank rows in a List field.
