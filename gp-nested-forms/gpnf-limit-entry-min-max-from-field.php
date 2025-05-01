@@ -154,9 +154,18 @@ class GP_Nested_Forms_Dynamic_Entry_Min_Max {
 						});
 
 						gform.addAction( 'gform_input_change', function( el, formId, fieldId ) {
+							// Force Knockout to recalculate the max when the number has changed
 							if ( el.id === maxFieldId ) {
-								// Force Knockout to recalculate the max when the number has changed
-								window[ 'GPNestedForms_{0}_{1}'.gformFormat( self.parentFormId, self.nestedFormFieldId ) ].viewModel.entries.valueHasMutated();
+								const gpnfViewModel = window[ 'GPNestedForms_{0}_{1}'.gformFormat( self.parentFormId, self.nestedFormFieldId ) ]?.viewModel;
+
+								// Use the standard Knockout method if available.
+								if ( typeof gpnfViewModel?.entries?.valueHasMutated === 'function' ) {
+									gpnfViewModel.entries.valueHasMutated();
+								// Fallback for scenarios where 'entries' is a computed observable (no valueHasMutated).
+								// Trigger reactivity by reassigning a shallow copy of the observable array.
+								} else if ( typeof gpnfViewModel?.entriesRaw === 'function' ) {
+									gpnfViewModel.entriesRaw( gpnfViewModel.entriesRaw()?.slice() );
+								}
 							}
 						} );
 
