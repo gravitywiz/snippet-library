@@ -13,7 +13,7 @@
  * Author:       Gravity Wiz
  * Version:      1.0
  */
-class GPPA_Color_Picker_Template {
+class GPPA_Compatibility_JetSloth_Color_Picker_Template {
 
 	public function __construct() {
 		add_filter( 'gppa_input_choice', array( $this, 'add_colorpicker_to_choice' ), 10, 4 );
@@ -51,4 +51,4 @@ class GPPA_Color_Picker_Template {
 	}
 }
 
-new GPPA_Color_Picker_Template();
+new GPPA_Compatibility_JetSloth_Color_Picker_Template();
