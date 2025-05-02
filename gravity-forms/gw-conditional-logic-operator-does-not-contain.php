@@ -45,6 +45,14 @@ class GF_CLO_Does_Not_Contain {
 				operators.does_not_contain = 'does not contain';
 				return operators;
 			} );
+			gform.addFilter( 'gform_conditional_logic_values_input', function( str, objectType, ruleIndex, selectedFieldId, value ) {
+				const operator = jQuery( '#field_rule_operator_' + ruleIndex ).val();
+				if ( operator !== 'does_not_contain' ) {
+					return str;
+				}
+				str = '<input type="text" placeholder="Enter a value" data-js-rule-input="value" class="gfield_rule_select gfield_rule_input active" id="field_rule_value_' + ruleIndex + '" name="field_rule_value_' + ruleIndex + '" value="' + value + '">';
+				return str;
+			} );
 		</script>
 		<?php
 	}
