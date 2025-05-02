@@ -22,34 +22,29 @@ add_filter( 'gwaft_template_output', function( $content, $slug, $name, $data, $s
 		return $content;
 	}
 	$original_entry = gw_all_fields_template()->get_original_entry();
+	ob_start();
 	?>
-	<div class="gwaft-compare-grid">
+	<table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+		<thead>
+			<tr>
+				<th style="text-align: left; border-bottom: 2px solid #ddd; padding: 0.5rem;">Field</th>
+				<th style="text-align: left; border-bottom: 2px solid #ddd; padding: 0.5rem;">Previous Value</th>
+				<th style="text-align: left; border-bottom: 2px solid #ddd; padding: 0.5rem;">Current Value</th>
+			</tr>
+		</thead>
+		<tbody>
 		<?php foreach ( $data['items'] as $item ):
 			$raw_field_value = GFFormsModel::get_lead_field_value( $original_entry, $item['field'] );
 			$previous_value  = GFCommon::get_lead_field_display( $item['field'], $raw_field_value, rgar( $original_entry, 'currency' ), true, 'html', 'email' );
 			?>
-			<div class="gwaft-compare-label"><?php echo $item['label']; ?></div>
-			<div class="gwaft-compare-prev"><?php echo $previous_value; ?></div>
-			<div class="gwaft-compare-current"><?php echo $item['value']; ?></div>
+			<tr>
+				<td style="padding: 0.5rem; border-bottom: 1px solid #ddd;"><?php echo esc_html( $item['label'] ); ?></td>
+				<td style="padding: 0.5rem; border-bottom: 1px solid #ddd;"><?php echo $previous_value; ?></td>
+				<td style="padding: 0.5rem; border-bottom: 1px solid #ddd;"><?php echo $item['value']; ?></td>
+			</tr>
 		<?php endforeach; ?>
-	</div>
-	<?php
-	?>
-	<style>
-	.gwaft-compare-grid {
-		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
-		margin-top: 1rem;
-		padding: 0.5rem;
-	}
-	.gwaft-compare-grid > div {
-		padding: 0.5rem;
-		border-bottom: 1px solid #ddd;
-	}
-	.gwaft-compare-label {
-		font-weight: bold;
-	}
-	</style>
+		</tbody>
+	</table>
 	<?php
 	return ob_get_clean();
 }, 10, 5 );
