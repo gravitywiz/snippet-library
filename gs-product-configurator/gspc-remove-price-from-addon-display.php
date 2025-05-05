@@ -17,7 +17,7 @@
  * First Choice × 2
  */
 add_filter( 'gspc_show_addon_price', function( $show, $product_field ) {
-	if ( strpos( $field->cssClass, 'gspc-remove-price' ) !== false ) {
+	if ( strpos( $product_field->cssClass, 'gspc-remove-price' ) !== false ) {
 		return false;
 	}
 
