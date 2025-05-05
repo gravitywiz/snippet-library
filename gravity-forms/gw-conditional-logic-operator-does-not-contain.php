@@ -46,9 +46,11 @@ class GF_CLO_Does_Not_Contain {
 				return operators;
 			} );
 
+			let origRuleNeedsTextValue = window.ruleNeedsTextValue;
 			// Override the default GF function to add our custom operator.
 			function ruleNeedsTextValue( rule ) {
-				return ['does_not_contain','contains', 'starts_with', 'ends_with', '<', '>' ].indexOf ( rule.operator ) !== -1;
+				let needsTextValue = origRuleNeedsTextValue( rule );
+				return needsTextValue || rule.operator.indexOf( 'does_not_contain' ) !== -1;
 			}
 		</script>
 		<?php
