@@ -86,8 +86,15 @@ add_action( 'gform_field_standard_settings_200', function() {
 						} );
 
 						frame.on('select', function() {
-							var attachment = frame.state().get('selection').first().toJSON();
-							editor.insertContent('<img src="' + attachment.url + '" alt="' + attachment.alt + '" />');
+							var selection = frame.state().get('selection').first();
+							if (!selection) {
+								return;
+							}
+
+							var attachment = selection.toJSON();
+							var url = attachment.url.replace(/"/g, '&quot;');
+							var alt = (attachment.alt || '').replace(/"/g, '&quot;');
+							editor.insertContent('<img src="' + url + '" alt="' + alt + '" />');
 						} );
 
 						frame.open();
