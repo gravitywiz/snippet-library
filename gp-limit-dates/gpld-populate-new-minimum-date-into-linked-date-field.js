@@ -10,6 +10,17 @@
  * 1. Install this snippet with our free Custom JavaScript plugin.
  *    https://gravitywiz.com/gravity-forms-code-chest/
  */
- gform.addAction( 'gpld_after_set_min_date', function( $input, date ) {
- 	$input.datepicker( 'setDate', date );
+const sourceFieldId = 25; // Replace with the ID of the source field (Field A)
+document.addEventListener( 'gform/post_render', ( event ) => {
+	const $field = jQuery( `#input_GFFORMID_${sourceFieldId}` );
+	const value  = $field.val();
+	if ( value ) {
+		requestAnimationFrame( function(){
+			$field.trigger( 'input' ).trigger( 'change' );
+		});
+	}
+});
+
+gform.addAction( 'gpld_after_set_min_date', function( $input, date ) {
+	$input.datepicker( 'setDate', date );
 } );
