@@ -46,3 +46,20 @@ gform.addFilter('gform_merge_tag_value_pre_calculation', function (value, match,
 
 	return nonBlankCount;
 });
+
+$(document).ready(function () {
+	// Recalculate when a list field is changed.
+	$(document).on('change', '.gfield_list_group_item input', function () {
+		var $group = $(this).parents('.gfield_list_group');
+		var $container = $group.parents('.gfield_list_container');
+		var formId = $container.closest('.gform_wrapper').attr('id').replace('gform_wrapper_', '');
+
+		if ( !formId || typeof window.gf_global.gfcalc[formId] === 'undefined') {
+			return;
+		}
+
+		var calcObject = window.gf_global.gfcalc[formId];
+
+		calcObject.runCalcs(formId, calcObject.formulaFields);
+	});
+});
