@@ -1,7 +1,7 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Conditional Logic Operator: "Does Not Contain"
- * 
+ *
  * Instruction Video: https://www.loom.com/share/8e1b27ec47b341dbb4f0da2bec6a960b
  *
  * Check if a source field value does NOT contain a specific substring using the "does not contain" conditional logic operator.
@@ -42,9 +42,21 @@ class GF_CLO_Does_Not_Contain {
 			}
 
 			gform.addFilter( 'gform_conditional_logic_operators', function( operators ) {
-				operators.does_not_contain = 'does not contain';
+				// Injects our "does_not_contain" operator directly below the "contains" operator for logical ordering.
+				operators = Object.fromEntries(
+					Object.entries(operators).flatMap(([k, v]) =>
+						k === "contains" ? [[k, v], ['does_not_contain', 'does not contain']] : [[k, v]]
+					)
+				);
 				return operators;
 			} );
+
+			let origRuleNeedsTextValue = window.ruleNeedsTextValue;
+			// Override the default GF function to add our custom operator.
+			window.ruleNeedsTextValue = function( rule ) {
+				let needsTextValue = origRuleNeedsTextValue( rule );
+				return needsTextValue || rule.operator.indexOf( 'does_not_contain' ) !== -1;
+			}
 		</script>
 		<?php
 	}
@@ -82,18 +94,21 @@ class GF_CLO_Does_Not_Contain {
 							}
 
 							var fieldValue = '';
-							var $field = $( '#input_' + formId + '_' + rule.fieldId );
+							var $field     = $( '#input_' + formId + '_' + rule.fieldId );
+							var $inputs    = $field.find( 'input, select, textarea' );
 
-							// Handle different field types
-							if ( $field.is(':checkbox') || $field.is(':radio') ) {
-								fieldValue = $field.filter(':checked').map(function() { 
-									return this.value; 
+							// This is a quick-and-dirty way to get the value of the field. We may need to revisit for
+							// edge cases in the future.
+							if ( $inputs.is(':checkbox') || $inputs.is(':radio') ) {
+								fieldValue = $inputs.filter(':checked').map(function() {
+									return this.value;
 								}).get().join(',');
-							} else if ( $field.is('select[multiple]') ) {
-								fieldValue = $field.val() ? $field.val().join(',') : '';
+							} else if ( $inputs.is('select[multiple]') ) {
+								fieldValue = $inputs.val() ? $inputs.val().join(',') : '';
 							} else {
 								fieldValue = $field.val() || '';
 							}
+
 							isMatch = typeof fieldValue === 'string' && fieldValue.indexOf( rule.value ) === -1;
 
 							return isMatch;
