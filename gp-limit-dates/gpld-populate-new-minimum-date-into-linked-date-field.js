@@ -14,7 +14,7 @@ const sourceFieldId = 25; // Replace with the ID of the source field (Field A)
 
 // Initialize field events on form render.
 document.addEventListener( 'gform/post_render', (event) => {
-	const formId = event.detail.formId; // Get the form ID from the event
+	const formId = event.detail.formId;
 	const $field = getSourceField(formId, sourceFieldId);
 	triggerFieldEventsIfValueExists($field);
 });
