@@ -120,21 +120,17 @@ class GPPA_Populate_Child_Entries {
 
 						self.$peidField = $( '#input_{0}_{1}'.gformFormat( self.formId, self.fieldId ) );
 
-						if ( typeof window[ 'gpnfSessionPromise_' + self.formId ] === 'undefined' ) {
-							gform.addAction( 'gpnf_session_initialized', function() {
-								self.setupPeidField();
-							} );
-						} else {
-							self.setupPeidField();
-						}
-
+						// Make sure cookies are set.
+                        gform.addAction( 'gpnf_session_initialized', function() {
+                            self.setupPeidField();
+                        } );
 					};
 
 					self.setupPeidField = function() {
 
-						var gpnfCookie = $.parseJSON( self.getCookie( 'gpnf_form_session_{0}'.gformFormat( self.formId ) ) );
+						var gpnfCookie = $.parseJSON( self.getCookie( self.cookieName ));
 
-						if ( ! self.$peidField.val() ) {
+						if ( ! self.$peidField.val() && gpnfCookie ) {
 							self.$peidField
 								.val( gpnfCookie.hash )
 								.change();
@@ -182,6 +178,7 @@ class GPPA_Populate_Child_Entries {
 			'formId'             => $form['id'],
 			'fieldId'            => $this->get_parent_entry_id_field( $form ),
 			'nestedFormFieldIds' => wp_list_pluck( $this->get_nested_form_fields( $form ), 'id' ),
+			'cookieName'         => ( new GPNF_Session( $form['id'] ) )->get_cookie_name(),
 		);
 
 		$script = 'new GPPAPopulateChildEntries( ' . json_encode( $args ) . ' );';
