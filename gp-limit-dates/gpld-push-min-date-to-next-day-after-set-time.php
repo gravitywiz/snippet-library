@@ -13,7 +13,8 @@ add_filter( 'gpld_limit_dates_options_123_4', function( $options ) {
 	$current_time = new DateTime( wp_timezone_string() );
 	$cutoff_time  = ( new DateTime( wp_timezone_string() ) )->setTime( $cutoff_hour, 0 );
 	if ( $current_time > $cutoff_time ) {
-		$options['minDate'] = wp_date( 'm/d/Y', strtotime( 'midnight tomorrow', $current_time->getTimestamp() ) );
+		$tomorrow           = new DateTime( 'tomorrow midnight', $current_time->getTimezone() );
+		$options['minDate'] = wp_date( 'm/d/Y', $tomorrow->getTimestamp() );
 	}
 	return $options;
 } );
