@@ -23,6 +23,11 @@ document.addEventListener( 'gform/post_render', (event) => {
 gform.addAction(
 	'gform_post_conditional_logic_field_action',
 	(formId, action, targetId, defaultValues, isInit) => {
+		// Only for fields and when we are not hiding them.
+		if (action == 'hide' || targetId == '#gform_submit_button_' + formId) {
+			return;
+		}
+
 		const $field = getSourceField(formId, sourceFieldId);
 		triggerFieldEventsIfValueExists($field);
 	}
