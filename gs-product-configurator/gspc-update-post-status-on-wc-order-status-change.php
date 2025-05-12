@@ -1,12 +1,13 @@
 <?php
 /**
- * Gravity Forms Advanced Post Creation // Product Configurator
+ * Gravity Wiz // GS Product Configurator // Update Post Status on WooCommerce Order Status Change
+ * https://gravitywiz.com/documentation/gravity-shop-product-configurator/
  *
- * This snippet will update the post status of the post created by Gravity Forms Advanced Post Creation when the WooCommerce order status is changed.
+ * This snippet will update the post status of the post created by Gravity Forms Advanced Post Creation when the
+ * WooCommerce order status is changed.
  *
- * Possible statuses are: publish, future, draft, pending, private, trash, wc-active, wc-switched, wc-expired, wc-pending-cancel, wc-pending, wc-processing, wc-on-hold, wc-completed, wc-cancelled, wc-refunded, wc-failed
- *
- * https://gravitywiz.com/documentation/gs-product-configurator/
+ * Possible statuses are: publish, future, draft, pending, private, trash, wc-active, wc-switched, wc-expired,
+ * wc-pending-cancel, wc-pending, wc-processing, wc-on-hold, wc-completed, wc-cancelled, wc-refunded, wc-failed.
  *
  *  Instructions:
  *    1. Install per https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
