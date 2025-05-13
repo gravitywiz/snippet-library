@@ -10,7 +10,21 @@
 document.addEventListener( 'keydown', function(e) {
 	var isGravityForm = e.target.closest( '.gform_wrapper' ) !== null;
 	var code = e.keyCode || e.which;
-	if ( code == 13 && ! jQuery( e.target ).is( 'textarea,input[type="submit"],input[type="button"]' )  && isGravityForm ) {
+	if ( code == 13 && isGravityForm ) {
+		var isTextarea = e.target.tagName.toLowerCase() === 'textarea';
+		var isSubmitOrButton = jQuery(e.target).is('input[type="submit"], input[type="button"]');
+
+		// Allow default for submit/buttons.
+		if (isSubmitOrButton) {
+			return;
+		}
+
+		// Allow Shift+Enter in textarea for line breaks.
+		if (isTextarea && e.shiftKey) {
+			return;
+		}
+
+		// Block everything else.
 		e.stopImmediatePropagation();
 		e.preventDefault();
 	}
