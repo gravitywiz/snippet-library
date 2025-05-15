@@ -19,7 +19,7 @@ add_action( 'gform_post_submission_123', function ( $entry, $form ) {
 	foreach ( $source_field_ids as $field_id ) {
 		if ( isset( $entry[ $field_id ] ) && ! empty( $entry[ $field_id ] ) ) {
 			$field_values = unserialize( $entry[ $field_id ] );
-			$combined	 = array_merge( $combined, $field_values );
+			$combined     = array_merge( $combined, $field_values );
 		}
 	}
 
@@ -27,7 +27,7 @@ add_action( 'gform_post_submission_123', function ( $entry, $form ) {
 	$combined = array_values( $combined );
 
 	// Serialize the combined array and update the target field and entry.
-	$finalSerialized		   = serialize( $combined );
+	$finalSerialized           = serialize( $combined );
 	$entry[ $target_field_id ] = $finalSerialized;
 
 	GFAPI::update_entry( $entry );
