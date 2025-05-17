@@ -193,7 +193,7 @@ class GW_Coupons_Exclude_Products {
 		if ( $this->_args['exclude_options_from_fields'] ) {
 			if ( $coupon['type'] == 'percentage' && ! ( $amount == 100 && $this->_args['skip_for_100_percent'] ) ) {
 				$discount = $discount - ( $price * ( $amount / 100 ) );
-			} else {
+			} elseif ( $this->excluded_total < $discount) {
 				$discount = $this->excluded_total;
 			}
 		} elseif ( $coupon['type'] == 'percentage' && ! ( $amount == 100 && $this->_args['skip_for_100_percent'] ) ) {
