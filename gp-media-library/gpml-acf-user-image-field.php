@@ -44,6 +44,31 @@ class GPML_ACF_User_Image_Field {
 				$value         = array_merge( $current_value, $value );
 			}
 
+			// Check for uploaded files in the $_POST data, we may need to prevent the ACF field from being set to empty.
+			$raw_json = $_POST['gform_uploaded_files'] ?? '';
+			if ( empty( $value ) && $raw_json ) {
+				$clean_json = stripslashes( $raw_json );
+
+				$uploaded_files_array = json_decode( $clean_json, true );
+
+				$field_id = $this->_args['field_id'];
+				$key      = 'input_' . $field_id;
+
+				if ( isset( $uploaded_files_array[ $key ][0]['uploaded_filename'] ) ) {
+					$filename = $uploaded_files_array[ $key ][0]['uploaded_filename'];
+
+					global $wpdb;
+					$attachment_id = $wpdb->get_var( $wpdb->prepare(
+						"SELECT ID FROM $wpdb->posts WHERE post_type = 'attachment' AND guid LIKE %s LIMIT 1",
+						'%' . $wpdb->esc_like( $filename ) . '%'
+					));
+
+					if ( $attachment_id ) {
+						$value = $attachment_id;
+					}
+				}
+			}
+
 			if ( empty( $value ) && ! $this->_args['remove_if_empty'] ) {
 				return;
 			}
