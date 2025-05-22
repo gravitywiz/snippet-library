@@ -23,7 +23,7 @@ add_filter( 'gform_product_info', function( $product_info, $form, $entry ) use (
 
 		$child_products = array();
 
-		preg_match_all( '/{[^{]*?:([0-9]+):(sum|total|count)=?([0-9]*)}/', $field->calculationFormula, $matches, PREG_SET_ORDER );
+		preg_match_all( '/{[^{]*?:([0-9]+):(sum|total)=?([0-9]*)}/', $field->calculationFormula, $matches, PREG_SET_ORDER );
 		foreach ( $matches as $match ) {
 
 			list( ,$nested_form_field_id,, ) = $match;
