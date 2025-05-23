@@ -53,7 +53,7 @@ class GPUID_Generate_Post_Workflow {
 
 	public function maybe_generate_unique_id( $step_id, $entry_id, $form_id, $status ) {
 
-		if ( $step_id == $this->_args['step_id'] && $form_id == $this->_args['form_id'] ) {
+		if ( (int) $step_id === $this->_args['step_id'] && (int) $form_id === $this->_args['form_id'] ) {
 			$entry = GFAPI::get_entry( $entry_id );
 			if ( ! is_wp_error( $entry ) && empty( $entry[ $this->_args['field_id'] ] ) ) {
 				$uid_field = GFAPI::get_field( $form_id, $this->_args['field_id'] );
