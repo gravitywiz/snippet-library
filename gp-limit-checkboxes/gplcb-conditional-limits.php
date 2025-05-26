@@ -1,19 +1,15 @@
 <?php
 /**
- * Gravity Wiz // Gravity Perks // GP Limit Checkboxes // Conditional Limits
+ * Gravity Perks // Limit Checkboxes // Conditional Limits
+ * https://gravitywiz.com/documentation/gravity-forms-limit-checkboxes/
  *
  * Provide conditional min/max for your checkbox fields.
  *
- * @version   0.5
- * @author    David Smith <david@gravitywiz.com>
- * @license   GPL-2.0+
- * @link      http://gravitywiz.com/...
- *
  * Plugin Name: GP Limit Checkboxes - Conditional Limits
- * Plugin URI: http://gravitywiz.com/...
+ * Plugin URI: https://gravitywiz.com/documentation/gravity-forms-limit-checkboxes/
  * Description: Provide conditional min/max for your checkbox fields.
  * Author: Gravity Wiz
- * Version: 0.4
+ * Version: 0.5
  * Author URI: http://gravitywiz.com
  */
 class GPLCB_Conditional_Limits {
