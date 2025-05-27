@@ -14,6 +14,11 @@ class GPEB_Filter_By_Nested_Entry {
 	private $nested_target_field_id;
 
 	public function __construct( $config = array() ) {
+		// check if required parameters are provided
+		if ( empty( $config['parent_form_id'] ) || empty( $config['nested_form_id'] ) || empty( $config['parent_hidden_field_id'] ) || empty( $config['nested_target_field_id'] ) ) {
+			return;
+		}
+
 		$this->parent_form_id         = rgar( $config, 'parent_form_id' );
 		$this->nested_form_id         = rgar( $config, 'nested_form_id' );
 		$this->parent_hidden_field_id = rgar( $config, 'parent_hidden_field_id' );
@@ -42,6 +47,10 @@ class GPEB_Filter_By_Nested_Entry {
 		foreach ( $form['fields'] as &$field ) {
 			if ( $field->id == $this->parent_hidden_field_id ) {
 				$nested_form_field = GFAPI::get_field( $this->nested_form_id, $this->nested_target_field_id );
+				if ( ! $nested_form_field ) {
+					error_log( sprintf( 'Nested form field with ID %d not found in form %d.', $this->nested_target_field_id, $this->nested_form_id ) );
+					continue;
+				}
 				$field = $nested_form_field;
 				$field->id = $this->parent_hidden_field_id;
 			}
@@ -68,6 +77,11 @@ class GPEB_Filter_By_Nested_Entry {
 				),
 			),
 		) );
+
+		if ( is_wp_error( $nested_entries ) ) {
+			error_log( sprintf( 'Error retrieving nested entries: %s', $nested_entries->get_error_message() ) );
+			return $entries;
+		}
 
 		$entries = array();
 		$parent_entry_ids = array();
