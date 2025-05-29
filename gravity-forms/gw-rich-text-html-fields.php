@@ -50,6 +50,9 @@ add_action( 'gform_field_standard_settings_200', function() {
 		.content_setting:not( .rich_content_setting ) {
 			display: none !important;
 		}
+		.rich_content_setting i.mce-i-image {
+			font-size: 20px;
+		}
 	</style>
 
 	<script>
