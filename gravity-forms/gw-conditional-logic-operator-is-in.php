@@ -34,7 +34,7 @@ class GF_CLO_Is_In {
 	}
 
 	public function output_admin_inline_script() {
-		if ( ! GFForms::get_page() && ! is_admin() && ! in_array( rgget( 'page' ), array( 'gp-email-users' ) ) ) {
+		if ( ! GFForms::get_page() && is_admin() && ! in_array( rgget( 'page' ), array( 'gp-email-users' ) ) ) {
 			return;
 		}
 		?>
