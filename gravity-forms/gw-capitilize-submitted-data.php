@@ -28,6 +28,11 @@ function gw_capitalize_submitted_data( $form ) {
 			}
 		} else {
 			$input_key = sprintf( 'input_%s', $field['id'] );
+			// Value hidden or empty, skip it.
+			if ( empty( $_POST[ $input_key ] ) ) {
+				continue;
+			}
+
 			if ( $field->type == 'list' ) {
 				$_POST[ $input_key ] = array_map( function( $value ) {
 					return ucwords( strtolower( $value ) );
