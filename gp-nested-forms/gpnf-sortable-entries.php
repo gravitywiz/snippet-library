@@ -185,6 +185,7 @@ class GPNF_Sortable_Entries {
 		if ( $this->is_applicable_form( $form ) && ! has_action( 'wp_footer', array( $this, 'output_script' ) ) ) {
 			add_action( 'wp_footer', array( $this, 'output_script' ) );
 			add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
+			add_action( 'admin_footer', array( $this, 'output_script' ) );
 		}
 
 		return $form;
