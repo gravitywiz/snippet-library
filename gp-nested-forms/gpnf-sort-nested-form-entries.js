@@ -1,4 +1,8 @@
 /**
+ * WARNING! THIS SNIPPET IS DEPRECATED. 🚧
+ * Unified JS and PHP snippet is available here: https://github.com/gravitywiz/snippet-library/blob/master/gp-nested-forms/gpnf-sort-nested-form-entries.php
+ */
+/**
  * Gravity Perks // Nested Forms // Sort Nested Form Entries
  *
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/

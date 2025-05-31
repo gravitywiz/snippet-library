@@ -1,5 +1,9 @@
 <?php
 /**
+ * WARNING! THIS SNIPPET IS DEPRECATED. 🚧
+ * Padding is automatically handled in Advanced Phone Field v1.1+.
+ */
+/**
  * Gravity Perks // Nested Forms // Sort Child Entries by Field Value
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
