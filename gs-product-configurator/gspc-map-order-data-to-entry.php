@@ -25,6 +25,11 @@ class GSPC_Map_Order_Data_to_Entry {
 			'field_map' => array(),
 		) );
 
+		if ( empty( $this->_args['form_id'] ) ) {
+			error_log( 'GSPC_Map_Order_Data_to_Entry requires a form_id.' );
+			return;
+		}
+
 		add_action( 'init', array( $this, 'init' ) );
 	}
 
