@@ -22,13 +22,13 @@ add_filter( 'gform_field_validation', function ( $result, $value, $form, $field 
 
 		if ( ! $alt_text && ! $description ) {
 			$result['is_valid'] = false;
-			$result['message']  = 'Check Post Image. Please enter Alt Text and Description.';
+			$result['message']  = esc_html__( 'Check Post Image. Please enter Alt Text and Description.', 'gravityforms' );
 		} elseif ( ! $alt_text ) {
 			$result['is_valid'] = false;
-			$result['message']  = 'Check Post Image. Please enter Alt Text.';
+			$result['message']  = esc_html__( 'Check Post Image. Please enter Alt Text.', 'gravityforms' );
 		} elseif ( ! $description ) {
 			$result['is_valid'] = false;
-			$result['message']  = 'Check Post Image. Please enter Description.';
+			$result['message']  = esc_html__( 'Check Post Image. Please enter Description.', 'gravityforms' );
 		}
 
 	}
