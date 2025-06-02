@@ -4,13 +4,13 @@
  *
  * Instruction Video: https://www.loom.com/share/2328e327125844bebdcabf7c9baaabca
  */
-var formId = GFFORMID;
+const formId = GFFORMID;
 
 // Map count field IDs to arrays of file upload field IDs
-var countMapping = {
+const countMapping = {
 	5: [1, 3, 4],    // Number Field ID 5 counts files from File Upload Field IDs 1, 3, 4
 	10: [7, 8, 9]    // Number Field ID 10 counts files from File Upload Field IDs 7, 8, 9
-	// Add more mappings if needed
+	// Add more mappings as needed: countFieldID: [uploadFieldID1, uploadFieldID2, ...]
 };
 
 // Find all GPFUP keys for the form
@@ -18,14 +18,10 @@ var gpfupInstances = Object.keys(window).filter(function (key) {
 	return key.startsWith('GPFUP_' + formId + '_');
 });
 
-if (!gpfupInstances.length) {
-	return;
-}
-
 // Build reverse lookup: uploadFieldID => associated countFieldIDs
-var uploadToCountMap = {};
-Object.entries(countMapping).forEach(function ([countFieldID, uploadFieldIDs]) {
-	uploadFieldIDs.forEach(function (uploadFieldID) {
+const uploadToCountMap = {};
+Object.entries(countMapping).forEach(([countFieldID, uploadFieldIDs]) => {
+	uploadFieldIDs.forEach((uploadFieldID) => {
 		if (!uploadToCountMap[uploadFieldID]) {
 			uploadToCountMap[uploadFieldID] = [];
 		}
@@ -35,32 +31,37 @@ Object.entries(countMapping).forEach(function ([countFieldID, uploadFieldIDs]) {
 
 // Function to update all relevant count fields
 function updateAllCountFields() {
-	Object.entries(countMapping).forEach(function ([countFieldID, uploadFieldIDs]) {
-		var total = uploadFieldIDs.reduce(function (sum, uploadFieldID) {
-			var key = 'GPFUP_' + formId + '_' + uploadFieldID;
-			var store = window[key] && window[key].$store;
+	Object.entries(countMapping).forEach(([countFieldID, uploadFieldIDs]) => {
+		const total = uploadFieldIDs.reduce((sum, uploadFieldID) => {
+			const key = 'GPFUP_' + formId + '_' + uploadFieldID;
+			const store = window[key]?.$store;
 			return sum + (store ? (store.state.files.length || 0) : 0);
 		}, 0);
 
-		var selector = '#input_' + formId + '_' + countFieldID;
-		jQuery(selector).val(total).change();
+		const selector = '#input_' + formId + '_' + countFieldID;
+		const $field = jQuery(selector);
+		if ($field.length) {
+			$field.val(total).change();
+		}
 	});
 }
 
-// Subscribe to relevant GPFUP fields
-gpfupInstances.forEach(function (key) {
-	var parts = key.split('_');
-	var fieldID = parseInt(parts[2]); // GPFUP_formId_fieldId
-	var store = window[key].$store;
+if (gpfupInstances.length) {
+	// Subscribe to relevant GPFUP fields
+	gpfupInstances.forEach((key) => {
+		const parts = key.split('_');
+		const fieldID = parseInt(parts[2]); // GPFUP_formId_fieldId
+		const store = window[key].$store;
 
-	if (uploadToCountMap[fieldID]) {
-		store.subscribe(function (mutation, state) {
-			if (mutation.type === 'SET_FILES') {
-				updateAllCountFields();
-			}
-		});
-	}
-});
+		if (uploadToCountMap[fieldID]) {
+			store.subscribe((mutation, state) => {
+				if (mutation.type === 'SET_FILES') {
+					updateAllCountFields();
+				}
+			});
+		}
+	});
+}
 
 // Initial count on load
 updateAllCountFields();
