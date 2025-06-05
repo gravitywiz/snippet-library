@@ -15,46 +15,55 @@
  *
  * 2. Update the variables to match your own field IDs.
  */
-var streamFieldId = 3;
-var promptFieldId = 1;
-var responseFieldId = 4;
-var appendButtonFieldId = responseFieldId;
+// Add one or more mappings for your Stream Field, Prompt Field, and Response Field.
+const streamFieldMappings = [
+	{
+		streamFieldId: 3,      // Stream Field.
+		promptFieldId: 1,      // Prompt Field.
+		responseFieldId: 4     // Paragraph/Text Field where response content should go.
+	},
+	{
+		streamFieldId: 6,
+		promptFieldId: 5,
+		responseFieldId: 7
+	},
+	// Add more mappings here (as needed).
+];
 
-var $streamFieldInput = $( `#input_GFFORMID_${streamFieldId}` );
-var $streamButton     = $streamFieldInput.closest( '.gfield' ).find( '.gcoai-trigger' );
+streamFieldMappings.forEach(({ streamFieldId, promptFieldId, responseFieldId }) => {
+	const $streamFieldInput = $(`#input_GFFORMID_${streamFieldId}`);
+	const $streamButton = $streamFieldInput.closest('.gfield').find('.gcoai-trigger');
 
-$streamFieldInput.on( 'change', function() {
-	$input = $( `#input_GFFORMID_${responseFieldId}` );
-	var inputValue = this.value;
+	// When the stream field changes (OpenAI output comes in)
+	$streamFieldInput.on('change', function () {
+		const $responseInput = $(`#input_GFFORMID_${responseFieldId}`);
+		const value = this.value;
+		const tiny = window.tinyMCE && tinyMCE.get($responseInput.attr('id'));
 
-	// Check if the response field has TinyMCE enabled.
-	var tiny = window.tinyMCE && tinyMCE.get( $input.attr( 'id' ) );
+		if (tiny) {
+			const html = $streamFieldInput.closest('.gfield').find('.gcoai-output').html();
+			tiny.setContent(html);
+		} else {
+			$responseInput.val(value);
+		}
+	});
 
-	// Get HTML for the response field if TinyMCE is available.
-	if (tiny) {
-		var html = $streamFieldInput.closest( '.gfield' ).find('.gcoai-output').html();
-		
-		// Set HTML content in TinyMCE.
-		tiny.setContent( html );
-	} else {
-		// If TinyMCE is not available, use plain text.
-		$input.val( inputValue );
+	// Add a secondary button that re-triggers OpenAI generation
+	const $newButton = $streamButton
+		.clone()
+		.attr('style', 'margin-top: var(--gf-label-space-primary, 8px);')
+		.on('click', function () {
+			$streamButton.trigger('click');
+		})
+		.insertAfter($(`#input_GFFORMID_${responseFieldId}`));
+
+	const $wpEditor = $newButton.parents('.wp-editor-container');
+	if ($wpEditor.length) {
+		$newButton.insertAfter($wpEditor);
 	}
-});
 
-let $newButton = $streamButton
-	.clone()
-	.attr( 'style', 'margin-top: var(--gf-label-space-primary, 8px);' )
-	.on( 'click', function() {
-		$streamButton.trigger( 'click' );
-	} )
-	.insertAfter( $( `#input_GFFORMID_${appendButtonFieldId}` ) );
-
-$wpEditor = $newButton.parents( '.wp-editor-container' );
-if ( $wpEditor.length ) {
-	$newButton.insertAfter( $wpEditor );
-}
-
-$( `#input_GFFORMID_${promptFieldId}` ).on( 'blur', function() {
-	$streamButton.trigger( 'click' );
+	// Optional: auto-trigger generation on prompt field blur
+	$(`#input_GFFORMID_${promptFieldId}`).on('blur', function () {
+		$streamButton.trigger('click');
+	});
 });
