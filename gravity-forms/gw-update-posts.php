@@ -134,8 +134,6 @@ class GW_Update_Posts {
 				if ( $image_id ) {
 					set_post_thumbnail( $post, $image_id );
 				}
-			} elseif ( $this->_args['delete_if_empty'] ) {
-				delete_post_meta( $post->ID, '_thumbnail_id' );
 			}
 		}
 
