@@ -30,7 +30,8 @@
  */
 class GW_Shortcode_Attr_Field_Props {
 
-	private $_field_props;
+	private $_args        = array();
+	private $_field_props = array();
 
 	public function __construct( $args = array() ) {
 
