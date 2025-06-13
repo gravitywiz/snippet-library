@@ -30,8 +30,9 @@ Object.entries(countMapping).forEach(([countFieldID, uploadFieldIDs]) => {
 });
 
 // Function to update all relevant count fields
-function updateAllCountFields() {
-	Object.entries(countMapping).forEach(([countFieldID, uploadFieldIDs]) => {
+function updateCountFields(countFieldIDs = Object.keys(countMapping)) {
+	countFieldIDs.forEach((countFieldID) => {
+		const uploadFieldIDs = countMapping[countFieldID];
 		const total = uploadFieldIDs.reduce((sum, uploadFieldID) => {
 			const key = 'GPFUP_' + formId + '_' + uploadFieldID;
 			const store = window[key]?.$store;
@@ -56,12 +57,12 @@ if (gpfupInstances.length) {
 		if (uploadToCountMap[fieldID]) {
 			store.subscribe((mutation, state) => {
 				if (mutation.type === 'SET_FILES') {
-					updateAllCountFields();
+					updateCountFields(uploadToCountMap[fieldID]);
 				}
 			});
 		}
 	});
 }
 
-// Initial count on load
-updateAllCountFields();
+// Initial count on load for all fields
+updateCountFields();
