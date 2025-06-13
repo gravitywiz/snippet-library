@@ -46,14 +46,14 @@ class GPML_ACF_User_Image_Field {
 
 			// Check for uploaded files in the $_POST data, we may need to prevent the ACF field from being set to empty.
 			$raw_json = $_POST['gform_uploaded_files'] ?? '';
+			$field_id = $this->_args['field_id'];
+			$key      = 'input_' . $field_id;
+
 			if ( empty( $value ) && $raw_json ) {
 				$clean_json = stripslashes( $raw_json );
-
 				$uploaded_files_array = json_decode( $clean_json, true );
 
-				$field_id = $this->_args['field_id'];
-				$key      = 'input_' . $field_id;
-
+				// Multi-file upload check (existing logic)
 				if ( isset( $uploaded_files_array[ $key ][0]['uploaded_filename'] ) ) {
 					$filename = $uploaded_files_array[ $key ][0]['uploaded_filename'];
 
@@ -66,6 +66,22 @@ class GPML_ACF_User_Image_Field {
 					if ( $attachment_id ) {
 						$value = $attachment_id;
 					}
+				}
+			}
+
+			$form  = GFAPI::get_form( $entry['form_id'] );
+			$field = GFFormsModel::get_field( $form, $field_id );
+			if ( empty( $value ) && ! $field->multipleFiles && isset( $_FILES[ $key ] ) && ! empty( $_FILES[ $key ]['name'] ) ) {
+				$filename = $_FILES[ $key ]['name'];
+
+				global $wpdb;
+				$attachment_id = $wpdb->get_var( $wpdb->prepare(
+					"SELECT ID FROM $wpdb->posts WHERE post_type = 'attachment' AND guid LIKE %s LIMIT 1",
+					'%' . $wpdb->esc_like( $filename ) . '%'
+				));
+
+				if ( $attachment_id ) {
+					$value = $attachment_id;
 				}
 			}
 
