@@ -249,7 +249,8 @@ class GW_Populate_Date {
 			// If saved in array format, it will not reload the value after conditional viewing/hiding.
 			$date = "{$hour}:{$minute} {$ampm}";
 		} elseif ( $this->_args['enable_i18n'] ) {
-			$date = strftime( $format, $timestamp );
+			$date = wp_date( $format, $timestamp );
+
 		} else {
 			$date = date( $format, $timestamp );
 		}
