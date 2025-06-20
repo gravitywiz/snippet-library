@@ -4,7 +4,7 @@
  *
  * Use this snippet to copy option field value to a Checkbox field.
  *
- * Screenshot: https://gwiz.io/3wWlUts
+ * Instructions Video: https://www.loom.com/share/0897b49b88ca43be9590e2aef13de50a
  *
  * Instructions:
  * 
