@@ -10,7 +10,7 @@
 // Update "123" to your form ID and "4" to your Phone field ID.
 add_action( 'gform_save_field_value_123_4', function( $value, $entry, $field, $form, $input_id ) {
 
-	if ( ! is_callable( 'gp_advanced_phone_field' ) || ! class_exists( '\libphonenumber\PhoneNumberUtil' ) ) {
+	if ( ! is_callable( 'gp_advanced_phone_field' ) || ! class_exists( '\libphonenumber\PhoneNumberUtil' ) || rgget( 'page' ) != 'gf_entries') {
 		return $value;
 	}
 
@@ -19,6 +19,11 @@ add_action( 'gform_save_field_value_123_4', function( $value, $entry, $field, $f
 	if ( ! $proto ) {
 		return $value;
 	}
-	return $phone_number_util->format( $proto, \libphonenumber\PhoneNumberFormat::NATIONAL );
+	try {
+		return $phone_number_util->format( $proto, \libphonenumber\PhoneNumberFormat::NATIONAL );
+	} catch ( Exception $e ) {
+		error_log( 'Error formatting phone number: ' . $e->getMessage() );
+		return $value;
+	}
 
 }, 10, 5 );
