@@ -33,15 +33,53 @@ class GPML_ACF_User_Image_Field {
 
 	}
 
+	protected function get_attachment_id_by_filename( $filename ) {
+		global $wpdb;
+
+		return $wpdb->get_var( $wpdb->prepare(
+			"SELECT ID FROM $wpdb->posts WHERE post_type = 'attachment' AND guid LIKE %s LIMIT 1",
+			'%' . $wpdb->esc_like( $filename ) . '%'
+		));
+	}
+
 	function update_user_image_field( $user_id, $feed, $entry ) {
 		if ( $entry['form_id'] == $this->_args['form_id'] && is_callable( 'gp_media_library' ) ) {
 
 			$form  = GFAPI::get_form( $entry['form_id'] );
-			$value = gp_media_library()->acf_get_field_value( $this->_args['format'], $entry, GFFormsModel::get_field( $form, $this->_args['field_id'] ), $this->_args['is_multi'] );
+			$value = gp_media_library()->acf_get_field_value(
+				$this->_args['format'],
+				$entry,
+				GFFormsModel::get_field( $form, $this->_args['field_id'] ),
+				$this->_args['is_multi']
+			);
 
 			if ( $value && $this->_args['is_multi'] && $this->_args['append'] ) {
 				$current_value = wp_list_pluck( (array) get_field( $this->_args['meta_key'], 'user_' . $user_id ), 'ID' );
 				$value         = array_merge( $current_value, $value );
+			}
+
+			$raw_json = $_POST['gform_uploaded_files'] ?? '';
+			$field_id = $this->_args['field_id'];
+			$key      = 'input_' . $field_id;
+
+			if ( empty( $value ) && $raw_json ) {
+				$uploaded_files_array = json_decode( stripslashes( $raw_json ), true );
+				if ( isset( $uploaded_files_array[ $key ][0]['uploaded_filename'] ) ) {
+					$filename      = $uploaded_files_array[ $key ][0]['uploaded_filename'];
+					$attachment_id = $this->get_attachment_id_by_filename( $filename );
+					if ( $attachment_id ) {
+						$value = $attachment_id;
+					}
+				}
+			}
+
+			$field = GFFormsModel::get_field( $form, $field_id );
+			if ( empty( $value ) && ! $field->multipleFiles && isset( $_FILES[ $key ] ) && ! empty( $_FILES[ $key ]['name'] ) ) {
+				$filename      = $_FILES[ $key ]['name'];
+				$attachment_id = $this->get_attachment_id_by_filename( $filename );
+				if ( $attachment_id ) {
+					$value = $attachment_id;
+				}
 			}
 
 			if ( empty( $value ) && ! $this->_args['remove_if_empty'] ) {
@@ -49,9 +87,9 @@ class GPML_ACF_User_Image_Field {
 			}
 
 			update_field( $this->_args['meta_key'], $value, 'user_' . $user_id );
-
 		}
 	}
+
 
 }
 
