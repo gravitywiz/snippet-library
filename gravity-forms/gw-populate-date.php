@@ -4,7 +4,7 @@
  *
  * Provides the ability to populate a Date field with a modified date based on the current date or a user-submitted date.
  *
- * @version   2.8
+ * @version   2.9
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/populate-dates-gravity-form-fields/
@@ -289,6 +289,17 @@ class GW_Populate_Date {
 
 			( function( $ ) {
 
+				if ( ! String.prototype.format ) {
+					String.prototype.format = function() {
+						var args = arguments;
+						return this.replace( /{(\d+)}/g, function( match, number ) { 
+							return typeof args[ number ] !== 'undefined'
+								? args[ number ]
+								: match;
+						});
+					};
+				}
+
 				window.GWPopulateDate = function( args ) {
 
 					var self = this;
@@ -307,6 +318,19 @@ class GW_Populate_Date {
 							self.$sourceInputs.change( function() {
 								self.populateDate( self.sourceFieldId, self.targetFieldId, self.getModifier(), self.format );
 							} );
+
+							// Listen for any dynamic content loaded on modifier field (if existing) to refresh values on Target.
+							if ( self.modifier && self instanceof GWPopulateDate ) {
+								var modifier = self.modifier.inputId;
+
+								if ( modifier ) {
+									var modifierParent = '#field_' + self.formId + '_' + modifier;
+									var modifierTarget = '#input_' + self.formId + '_' + modifier;
+									$( modifierParent ).on( 'change', modifierTarget, function() {
+										self.populateDate( self.sourceFieldId, self.targetFieldId, self.getModifier(), self.format );
+									} );
+								}
+							}
 
 							// Listen for GPPA's new `gppa_updated_batch_fields`
 							$( document ).on( 'gppa_updated_batch_fields', function ( e, formId, updatedFieldIDs ) {
