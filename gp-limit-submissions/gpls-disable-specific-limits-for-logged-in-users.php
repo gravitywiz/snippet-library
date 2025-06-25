@@ -1,3 +1,4 @@
+<?php
 /**
  * Gravity Perks // GP Limit Submissions // Disable Specific Limits for Logged In Users
  * https://gravitywiz.com/documentaiton/gravity-forms-limit-submissions/
