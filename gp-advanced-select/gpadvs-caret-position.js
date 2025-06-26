@@ -22,6 +22,9 @@ window.gform.addFilter(
             settings.plugins.caret_position = {
                 title: 'Caret Position',
             };
+            settings.plugins.input_autogrow = {
+                title: 'Input Autogrow',
+            };
         }
 
         return settings;
