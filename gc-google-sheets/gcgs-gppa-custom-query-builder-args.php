@@ -1,7 +1,7 @@
 <?php
 /**
  * Gravity Connect // Google Sheets // Custom Query Build Arguments
- * 
+ *
  * Instruction Video: https://www.loom.com/share/a7bf1139baef48fc8b9b31209827cd17
  *
  * This snippet customizes the generation of query builder arguments for Google Sheets queries.
@@ -29,9 +29,12 @@ add_filter( 'gcgs_gppa_query_builder_args', function( $query_builder_args, $args
 	// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 	extract( $args );
 
-	// TODO : UPDATE 4 to your targetted field ID.
-	// TODO : UPDATE 141 to your targetted form ID.
-	if ( $field->id != '4' || $field->formId != 141 || $filter['operator'] != 'is' ) {
+	// UPDATE 1 to your targeted field ID.
+	$target_field_id = '1';
+	// UPDATE 2 to your targeted form ID.
+	$target_form_id = '2';
+
+	if ( $field->id != $target_field_id || $field->formId != $target_form_id || $filter['operator'] != 'is' ) {
 		return $query_builder_args;
 	}
 
@@ -44,7 +47,7 @@ add_filter( 'gcgs_gppa_query_builder_args', function( $query_builder_args, $args
 			if ( ! empty( $v ) ) {
 				$conditions[] = sprintf( "lower(%s) = '%s'", $column_letter, strtolower( $v ) );
 			}
-	}
+		}
 
 		// Implode the conditions array with ' OR ' to form the $clause.
 		$query_builder_args['where'][ $filter_group_index ][ $filter_group_index ] = implode( ' OR ', $conditions );
