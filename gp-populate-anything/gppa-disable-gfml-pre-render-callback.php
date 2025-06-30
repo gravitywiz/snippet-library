@@ -36,5 +36,6 @@ add_action( 'init', function () {
 	}
 
 	remove_filter( 'gform_pre_render', array( $GLOBALS['wpml_gfml_tm_api'], 'gform_pre_render' ) );
+	remove_filter( 'gform_merge_tag_filter', array( $GLOBALS['wpml_gfml_tm_api'], 'gform_merge_tag_filter' ) );
 
 } );
