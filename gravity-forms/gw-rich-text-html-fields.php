@@ -10,7 +10,6 @@
 /*
  * @todo
  * 1. Add merge tag selector.
- * 2. Add support for inserting images.
  */
 
 add_action( 'admin_init', function() {
@@ -20,7 +19,10 @@ add_action( 'admin_init', function() {
 	}
 } );
 
-add_action( 'gform_field_standard_settings_200', function() {
+add_action( 'gform_field_standard_settings', function( $position ) {
+	if ( $position !== 200 ) {
+		return;
+	}
 	?>
 
 	<li class="content_setting rich_content_setting field_setting">
@@ -41,6 +43,8 @@ add_action( 'gform_field_standard_settings_200', function() {
 
 	<style>
 		.rich_content_setting label {
+			/* Display the label above the editor without overlapping the Visual/Code tabs. */
+			display: inline-block !important;
 			position: relative;
 			z-index: 2;
 		}
