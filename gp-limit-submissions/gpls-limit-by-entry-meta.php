@@ -6,7 +6,7 @@
  * This snippet allows you use a Limit Submissions feed to limit by entry meta by setting a filter in the feed name.
  * This is a stop-gap approach until we can add full support for entry meta to core.
  *
- * # Usage Instructions #
+ * Instructions:
  *
  * 1. Add your feed name (e.g. Limit by Passed Quizzes).
  * 2. Append your entry meta filter (e.g. Limit by Passed Quizzes [gquiz_is_pass:1]).
