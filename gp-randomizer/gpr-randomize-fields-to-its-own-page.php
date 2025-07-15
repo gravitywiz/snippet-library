@@ -7,15 +7,18 @@
  *
  * See video: https://www.loom.com/share/2dd4f3c6995349ae91d4b88f3990294b
  */
-add_filter( 'gpr_filtered_fields', function( $filtered_fields, $form, $display_count ) {
+add_filter( 'gpr_filtered_fields', function( $filtered_fields, $form ) {
 
-	if ( ! $display_count ) {
+	$feed_id = gp_randomizer()->get_default_feed_id( $form['id'] );
+	$settings = rgar( gp_randomizer()->get_feed( $feed_id ), 'meta', array() );
+
+	if ( ! $settings['display_count'] ) {
 		$filtered_fields = randomize_fields_within_pages( $form['fields'] );
 	} else {
 		$filtered_fields = arrange_fields_by_page( $form['fields'], $filtered_fields );
 	}
 	return $filtered_fields;
-}, 10, 3 );
+}, 10, 2 );
 
 function arrange_fields_by_page( $fields_backup, $filtered_fields ) {
 	$filtered_map = array();
