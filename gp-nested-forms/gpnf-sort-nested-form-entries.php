@@ -17,6 +17,7 @@
 class GPNF_Sort_Nested_Entries {
 
 	private $_args = array();
+	private $_is_date_field = false;
 
 	public function __construct( $args = array() ) {
 		$this->_args = wp_parse_args( $args, array(
@@ -30,8 +31,24 @@ class GPNF_Sort_Nested_Entries {
 	}
 
 	public function init() {
+		$this->_is_date_field = $this->is_date_field();
 		add_filter( "gpnf_template_args_{$this->_args['parent_form_id']}_{$this->_args['nested_field_id']}", array( $this, 'sort_entries_php' ) );
 		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
+	}
+
+	private function is_date_field() {
+		$nested_field = GFAPI::get_field( $this->_args['parent_form_id'], $this->_args['nested_field_id'] );
+		if ( ! $nested_field || empty( $nested_field->gpnfForm ) ) {
+			return false;
+		}
+
+		$child_form = GFAPI::get_form( $nested_field->gpnfForm );
+		if ( ! $child_form ) {
+			return false;
+		}
+
+		$sort_field = GFAPI::get_field( $child_form, $this->_args['sort_field_id'] );
+		return $sort_field && $sort_field->type === 'date';
 	}
 
 	public function sort_entries_php( $args ) {
@@ -45,6 +62,11 @@ class GPNF_Sort_Nested_Entries {
 
 				if ( $first == $second ) {
 					return 0;
+				}
+
+				if ( $this->_is_date_field ) {
+					$first  = strtotime( $first );
+					$second = strtotime( $second );
 				}
 
 				if ( $order === 'asc' ) {
@@ -73,6 +95,7 @@ class GPNF_Sort_Nested_Entries {
 			'nestedFieldId' => (int) $this->_args['nested_field_id'],
 			'sortFieldId'   => (int) $this->_args['sort_field_id'],
 			'sortOrder'     => strtolower( $this->_args['sort_order'] ),
+			'isDateField'   => $this->_is_date_field,
 		);
 		?>
 
@@ -80,6 +103,7 @@ class GPNF_Sort_Nested_Entries {
 			(function($) {
 				const sortFieldId = "<?php echo esc_js( $args['sortFieldId'] ); ?>";
 				const sortOrder   = "<?php echo esc_js( $args['sortOrder'] ); ?>";
+				const isDateField = <?php echo $args['isDateField'] ? 'true' : 'false'; ?>;
 
 				window.gform.addFilter('gpnf_sorted_entries', function(entries, formId, fieldId, gpnf) {
 					if (!entries || !entries.length || !entries[0][sortFieldId]) {
@@ -90,6 +114,16 @@ class GPNF_Sort_Nested_Entries {
 					return entries.sort((a, b) => {
 						let valA = a[sortFieldId]?.label || '';
 						let valB = b[sortFieldId]?.label || '';
+
+						if (isDateField) {
+							const dateA = new Date(valA);
+							const dateB = new Date(valB);
+
+							if (sortOrder === 'desc') {
+								return dateB - dateA;
+							}
+							return dateA - dateB;
+						}
 
 						if (sortOrder === 'desc') {
 							return valB.localeCompare(valA);
