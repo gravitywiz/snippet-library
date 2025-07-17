@@ -119,10 +119,13 @@ class GPNF_Sort_Nested_Entries {
 							const dateA = new Date(valA);
 							const dateB = new Date(valB);
 
+							const timeA = isNaN(dateA.getTime()) ? 0 : dateA.getTime();
+							const timeB = isNaN(dateB.getTime()) ? 0 : dateB.getTime();
+
 							if (sortOrder === 'desc') {
-								return dateB - dateA;
+								return timeB - timeA;
 							}
-							return dateA - dateB;
+							return timeA - timeB;
 						}
 
 						if (sortOrder === 'desc') {
