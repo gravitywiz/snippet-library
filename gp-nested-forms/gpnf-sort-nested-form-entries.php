@@ -65,8 +65,11 @@ class GPNF_Sort_Nested_Entries {
 				}
 
 				if ( $this->_is_date_field ) {
-					$first  = strtotime( $first );
-					$second = strtotime( $second );
+					$first_time  = strtotime( $first );
+					$second_time = strtotime( $second );
+
+					$first  = ( $first_time  !== false ) ? $first_time  : 0;
+					$second = ( $second_time !== false ) ? $second_time : 0;
 				}
 
 				if ( $order === 'asc' ) {
