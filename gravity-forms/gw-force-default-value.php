@@ -80,10 +80,14 @@ class GW_Force_Default_Value {
 				continue;
 			}
 
-			$value = GFCommon::replace_variables( $value, $form, $entry );
+			$value = is_string( $value ) ? GFCommon::replace_variables( $value, $form, $entry ) : $value;
 
 			if ( $value != $entry_value ) {
 				$requires_update     = true;
+				// For array based values like Date Field and Time Field.
+				if ( is_array( $value ) ) {
+					$value = $field->get_value_save_entry( $value, $form, null, null, null );
+				}
 				$entry[ $field->id ] = $value;
 			}
 		}
@@ -109,7 +113,7 @@ class GW_Force_Default_Value {
 			return $text;
 		}
 		$chars = str_split( trim( $text ) );
-		if ( $chars[0] === '{' && $chars[ count( $chars ) - 1 ] === '}' ) {
+		if ( rgar( $chars, 0 ) === '{' && rgar( $chars, count( $chars ) - 1 ) === '}' ) {
 			$text = '';
 		}
 		return $text;
