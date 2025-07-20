@@ -8,9 +8,11 @@
  * have the date fields converted for all users (including desktop).
  *
  * Instructions:
- *     1. Install our free Custom JavaScript for Gravity Forms plugin.
- *	     Download the plugin here: https://gravitywiz.com/gravity-forms-code-chest/
- *     2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
+ * 
+ * 1. Install our free Custom JavaScript for Gravity Forms plugin.
+ *     Download the plugin here: https://gravitywiz.com/gravity-forms-code-chest/
+ *
+ * 2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
  */
 
 var onlyConvertOnMobile = true; // Change to false if you wish for all devices to use HTML5 datepicker
