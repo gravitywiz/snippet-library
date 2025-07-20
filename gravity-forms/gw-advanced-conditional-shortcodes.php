@@ -1,6 +1,7 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Advanced Conditional Shortcodes
+ * https://gravitywiz.com/gravity-forms-advanced-conditional-shortcode/
  *
  * Allows multiple conditions in a single Gravity Forms shortcode.
  *
