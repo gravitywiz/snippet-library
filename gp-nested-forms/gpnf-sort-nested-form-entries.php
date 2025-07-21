@@ -115,8 +115,14 @@ class GPNF_Sort_Nested_Entries {
 					}
 
 					return entries.sort((a, b) => {
-						let valA = a[sortFieldId]?.label || '';
-						let valB = b[sortFieldId]?.label || '';
+						let valA, valB;
+						if (isDateField) {
+							valA = a[sortFieldId]?.value || '';
+							valB = b[sortFieldId]?.value || '';
+						} else {
+							valA = a[sortFieldId]?.label || '';
+							valB = b[sortFieldId]?.label || '';
+						}
 
 						if (isDateField) {
 							const dateA = new Date(valA);
