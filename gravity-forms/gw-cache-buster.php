@@ -285,6 +285,10 @@ class GW_Cache_Buster {
 	}
 
 	public function is_cache_busting_applicable() {
+		if ( isset( $_POST['gform_submit'] ) ) {
+			return false;
+		}
+		
 		// POSTED and LOGGED-IN requests are not typically cached
 		return empty( $_POST ) || ! is_user_logged_in();
 	}
