@@ -49,7 +49,7 @@ add_action( 'gform_entry_post_save', function( $entry, $form ) {
 
 			if ( is_array( $source_values ) ) {
 				foreach ( $source_values as $input_id => $source_value ) {
-					$target_input_id           = str_replace( "{$source_field->id}.", "{$target['target']}.", $input_id );
+					$target_input_id           = "{$target['target']}.{$input_id}";
 					$entry[ $target_input_id ] = $source_value;
 				}
 			} else {
