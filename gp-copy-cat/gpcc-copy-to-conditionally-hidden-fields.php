@@ -32,7 +32,7 @@ add_action( 'gform_entry_post_save', function( $entry, $form ) {
 			$source_field    = GFAPI::get_field( $form, $target['source'] );
 			$source_values   = $source_field->get_value_submission( array() );
 			$condition_field = GFAPI::get_field( $form, $target['condition'] );
-			$condition_value = $condition_field->get_value_submission( $entry );
+			$condition_value = $condition_field ? $condition_field->get_value_submission( $entry ) : null;
 			
 			// for multi-input fields, we need to check the index
 			// to see if the condition is met.
