@@ -47,13 +47,14 @@ add_action( 'gform_entry_post_save', function( $entry, $form ) {
 				}
 			}
 
-			if ( is_array( $source_values ) ) {
-				foreach ( $source_values as $input_id => $source_value ) {
-					$target_input_id           = "{$target['target']}.{$input_id}";
-					$entry[ $target_input_id ] = $source_value;
+			$values = is_array( $source_values ) ? array_values( $source_values ) : [ $source_values ];
+
+			foreach ( $values as $index => $value ) {
+				$target_input_id           = is_array( $source_values ) ? "{$target['target']}." . ( $index + 1 ) : $target['target'];
+				$entry[ $target_input_id ] = $value;
+				if ( ! is_array( $source_values ) ) {
+					break;
 				}
-			} else {
-				$entry[ $target['target'] ] = $source_values;
 			}
 		}
 	}
