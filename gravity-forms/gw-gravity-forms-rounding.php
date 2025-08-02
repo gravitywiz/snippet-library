@@ -189,6 +189,9 @@ class GW_Rounding {
 						var value = self.getRoundedValue( $input );
 						if( $input.val() != value ) {
 							$input.val( value ).change();
+							const input = $input[0];
+							// Ensure Gravity Forms detects the programmatic value change by dispatching a native input event
+							input.dispatchEvent( new Event( 'input', { bubbles: true } ) );
 						}
 					};
 
@@ -216,7 +219,7 @@ class GW_Rounding {
 
 						}
 
-						if( value != '' ) {
+						if( value !== '' ) {
 							for( var i = 0; i < actions.length; i++ ) {
 								value = GWRounding.round( value, actions[i].actionValue, actions[i].action );
 							}
