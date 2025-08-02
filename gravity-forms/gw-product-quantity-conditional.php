@@ -56,22 +56,6 @@ class GW_Product_Quantity_Conditional {
 					}
 					return false;
 				},
-				
-				// Check if field is a custom quantity field
-				isCustomQtyField: function(fieldId) {
-					return typeof fieldId === 'string' && fieldId.indexOf('quantity_') === 0;
-				},
-				
-				// Get the product field ID from a quantity field ID
-				getCustomQtyFieldId: function(fieldId) {
-					return fieldId.replace('quantity_', '');
-				},
-
-				isQtyField: function(fieldId) {
-					var field = GetFieldById(fieldId);
-					return field && field.type == 'quantity';
-				}
-				
 			};
 
 			gform.addFilter('gform_conditional_logic_fields', function(options, form, selectedFieldId) {
