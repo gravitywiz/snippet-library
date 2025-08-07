@@ -122,6 +122,9 @@ class GPUID_Multiple_IDs {
 			if ( isset( $count['choices'] ) ) {
 				$value = call_user_func( 'array_shift', explode( '|', rgar( $entry, $count['field_id'] ) ) );
 				$count = rgar( $count['choices'], $value );
+			} elseif ( ! empty( $count['field_ids'] ) && is_array( $count['field_ids'] ) ) {
+				$counts = array_map( fn ( string|int|float $id ): string|int => rgar( $entry, $id ), $count['field_ids'] );
+				$count  = array_reduce( $counts, fn ( int $carry, string|int $count ): int => $carry + absint( $count ), 0 );
 			} else {
 				$count = rgar( $entry, $count['field_id'] );
 			}
@@ -187,4 +190,16 @@ class GPUID_Multiple_IDs {
 //             'Chip-In Sponsor ($500)'         => 0
 //         )
 //     )
+// ) );
+
+// new GPUID_Multiple_IDs( array(
+//     'form_id'         => 694,
+//     'target_field_id' => 36,
+//     'source_field_id' => 35,
+//     'count'           => array(
+//         'field_ids'   => array(
+//             '11.3',
+//             20,
+//         ),
+//     ),
 // ) );
