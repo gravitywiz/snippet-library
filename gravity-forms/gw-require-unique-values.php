@@ -52,6 +52,10 @@ class GW_Require_Unique_Values {
 		add_filter( sprintf( 'gform_field_validation_%s', $this->_args['form_id'] ), array( $this, 'validate' ), 10, 4 );
 	}
 
+	private function get_all_field_ids() {
+		return array_merge( $this->_args['field_ids'], array( $this->_args['master_field_id'] ) );
+	}
+
 	public function validate( $result, $value, $form, $field ) {
 
 		if ( ! $this->is_applicable_field( $field ) ) {
@@ -84,7 +88,7 @@ class GW_Require_Unique_Values {
 			$values = $this->get_group_values( $form, $field->id );
 
 			// Check if this should be validated as whole field
-			$all_field_ids = array_merge( $this->_args['field_ids'], array( $this->_args['master_field_id'] ) );
+			$all_field_ids = $this->get_all_field_ids();
 			$validate_as_whole = in_array( $field->id, $all_field_ids );
 
 			// If the field has inputs, let's loop through them and check if they are unique.
@@ -200,7 +204,7 @@ class GW_Require_Unique_Values {
 
 		// When using a field ID (not input ID) for multi-input fields, combine all subfield values into one for validation.
 		if ( ! $input_id && is_array( $field->inputs ) && is_array( $value ) ) {
-			$all_field_ids = array_merge( $this->_args['field_ids'], array( $this->_args['master_field_id'] ) );
+			$all_field_ids = $this->get_all_field_ids();
 			if ( in_array( $field->id, $all_field_ids ) ) {
 				$combined_parts = array();
 				foreach ( $field->inputs as $input ) {
