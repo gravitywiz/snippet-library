@@ -1,12 +1,12 @@
 <?php
 /**
- * Gravity Wiz // Gravity Forms // Product Quantity Conditional
+ * Gravity Wiz // Gravity Forms // Product Quantity Conditional Logic
  *
  * Instruction Video: https://www.loom.com/share/38547a28853f4706b10cfdb42eaa45ca
  *
  * Adds quantity field options to conditional logic for Single Product fields.
  *
- * Plugin Name:  GF Product Quantity Conditional
+ * Plugin Name:  GF Product Quantity Conditional Logic
  * Plugin URI:   https://gravitywiz.com/
  * Description:  Adds quantity field options to conditional logic for Single Product fields that don't have dedicated quantity fields
  * Author:       Gravity Wiz
