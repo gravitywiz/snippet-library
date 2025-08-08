@@ -9,6 +9,13 @@
  * [1]: https://gravitywiz.com/gravity-forms-code-chest/
  */
 gform.addFilter( 'gpppw_word_count', function( wordCount ) {
-  // Update "4" to the ID of the field which should be populated with the word count.
-	$( '#input_GFFORMID_4' ).val( wordCount ).change();
+	// Update "2" to the ID of the field which should be populated with the word count.
+	var $field = $( '#input_GFFORMID_2' );
+
+	// Only update if value is actually different
+	if ( $field.val() != wordCount ) {
+		$field.val( wordCount ).change();
+	}
+
+	return wordCount;
 }, 11 );
