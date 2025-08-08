@@ -4,16 +4,42 @@
  * https://gravitywiz.com/documentation/gravity-forms-entry-blocks/
  */
 add_filter( 'gpeb_entry', function( $entry, $form ) {
+
+	// Configure star settings
+	$config = [
+		'star_size'        => '24',      // Width/height of stars in pixels
+		'star_color'       => '#FFAC33', // Color of the stars
+		'stroke_width'     => '1.5',     // Thickness of star outline
+		'show_empty_stars' => false,     // Whether to show empty stars
+	];
+
+	$star_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' . $config['star_size'] . '" height="' . $config['star_size'] . '" viewBox="0 0 24 24" stroke="' . $config['star_color'] . '" stroke-width="' . $config['stroke_width'] . '" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+
 	foreach ( $form['fields'] as $field ) {
 		if ( $field->get_input_type() === 'rating' ) {
 			$selected_value = $entry[ $field->id ];
 			foreach ( $field->choices as $index => $choice ) {
 				if ( $choice['value'] === $selected_value ) {
-					$entry[ $field->id ] = str_repeat( '⭐', $index + 1 );
-					break 2;
+					$filled_stars = str_repeat(str_replace('<svg ', '<svg fill="' . $config['star_color'] . '" class="gpeb-filled-star" ', $star_svg), $index + 1);
+					$empty_stars = $config['show_empty_stars'] ? str_repeat(str_replace('<svg ', '<svg fill="none" class="gpeb-outline-star" ', $star_svg), 5 - ($index + 1)) : '';
+
+					$entry[$field->id] = $filled_stars . $empty_stars;
+					break;
 				}
 			}
 		}
 	}
 	return $entry;
 }, 10, 2 );
+
+// Unescape HTML-encoded SVG content for rating fields
+function decode_rating_field_svgs($content, $entry_form, $entry) {
+	foreach ($entry_form['fields'] as $field) {
+		if ($field->get_input_type() === 'rating' && isset($entry[$field->id]) && strpos($entry[$field->id], '<svg') !== false) {
+			$content = str_replace(htmlspecialchars($entry[$field->id], ENT_QUOTES), $entry[$field->id], $content);
+		}
+	}
+	return $content;
+}
+add_filter('gpeb_loop_entry_content', 'decode_rating_field_svgs', 10, 3);
+add_filter('gpeb_view_entry_content', 'decode_rating_field_svgs', 10, 3);
