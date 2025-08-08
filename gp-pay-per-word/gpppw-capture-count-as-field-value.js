@@ -13,8 +13,8 @@ gform.addFilter( 'gpppw_word_count', function( wordCount ) {
 	var $field = $( '#input_GFFORMID_2' );
 
 	// Only update if value is actually different
-		if ( $field.val() != wordCount ) {
-		$field.val( wordCount).change();
+	if ( $field.val() != wordCount ) {
+		$field.val( wordCount ).change();
 	}
 
 	return wordCount;
