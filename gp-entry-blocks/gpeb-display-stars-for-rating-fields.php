@@ -37,13 +37,15 @@ add_filter( 'gpeb_entry', function( $entry, $form ) {
 }, 10, 2 );
 
 // Unescape HTML-encoded SVG content for rating fields
-function decode_rating_field_svgs($content, $entry_form, $entry) {
-	foreach ($entry_form['fields'] as $field) {
-		if ($field->get_input_type() === 'rating' && isset($entry[$field->id]) && strpos($entry[$field->id], '<svg') !== false) {
-			$content = str_replace(htmlspecialchars($entry[$field->id], ENT_QUOTES), $entry[$field->id], $content);
+if ( ! function_exists( 'decode_rating_field_svgs' ) ) {
+	function decode_rating_field_svgs($content, $entry_form, $entry) {
+		foreach ($entry_form['fields'] as $field) {
+			if ($field->get_input_type() === 'rating' && isset($entry[$field->id]) && strpos($entry[$field->id], '<svg') !== false) {
+				$content = str_replace(esc_html($entry[$field->id]), $entry[$field->id], $content);
+			}
 		}
+		return $content;
 	}
-	return $content;
 }
 add_filter('gpeb_loop_entry_content', 'decode_rating_field_svgs', 10, 3);
 add_filter('gpeb_view_entry_content', 'decode_rating_field_svgs', 10, 3);
