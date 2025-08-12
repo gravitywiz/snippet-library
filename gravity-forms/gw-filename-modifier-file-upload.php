@@ -1,8 +1,8 @@
 <?php
 /**
- * Gravity Wizards // Gravity Forms // Custom Modifier for File Upload
+ * Gravity Wizards // Gravity Forms // Filename Modifier for File Upload
  *
- * This snippet is an example of how to add custom modifiers to a Gravity Forms file upload field.
+ * This snippet is an example of how to add filename modifiers to a Gravity Forms file upload field.
  *
  * Instructions:
  *
