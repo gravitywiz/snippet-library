@@ -12,7 +12,7 @@ jobs:
           fetch-depth: 0 # The blame will not work without this
 
       # PHP 8 will throw PHP Fatal error: Uncaught TypeError: vsprintf(): Argument #2 ($values) must be of type array, string given in ...
-      - uses: nanasess/setup-php@v3
+      - uses: nanasess/setup-php@v4.1.0
         with:
           php-version: '7.4'
 
