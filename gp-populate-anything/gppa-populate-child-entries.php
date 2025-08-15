@@ -56,6 +56,7 @@ class GPPA_Populate_Child_Entries {
 		add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 11, 2 );
 
 		add_action( 'gravityview/edit-entry/render/before', array( $this, 'modify_gv_entry' ) );
+		add_action( 'gpeb_before_render_block', array( $this, 'modify_gpeb_entry' ) );
 
 	}
 
@@ -86,6 +87,22 @@ class GPPA_Populate_Child_Entries {
 			unset( $gv_edit_entry_renderer->entry[ $parent_entry_id_field_id ] );
 		}
 
+	}
+
+	/**
+	 * Modify the Gravity Forms Entry Block before rendering.
+	 *
+	 * @param $block
+	 */
+	public function modify_gpeb_entry( $block ) {
+		$form                     = GFAPI::get_form( $block->context['gp-entry-blocks/formId'] );
+		$entry                    = GFAPI::get_entry( rgget( 'edit_entry' ) );
+		$parent_entry_id_field_id = $this->get_parent_entry_id_field( $form );
+
+		if ( $entry && $parent_entry_id_field_id ) {
+			unset( $entry[ $parent_entry_id_field_id ] );
+			GFAPI::update_entry( $entry );
+		}
 	}
 
 	public function load_form_script( $form, $is_ajax_enabled ) {
