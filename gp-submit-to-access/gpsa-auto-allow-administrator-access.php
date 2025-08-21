@@ -4,5 +4,9 @@
  * https://gravitywiz.com/documentation/gravity-forms-submit-to-access/
  */
 add_filter( 'gpsa_has_access', function( $has_access ) {
-	return current_user_can( 'administrator' );
+	if ( current_user_can( 'administrator' ) ) {
+		return true;
+	}
+
+	return $has_access;
 } );
