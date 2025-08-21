@@ -72,6 +72,11 @@ class GW_Deduct_Deposit {
 					self.init = function() {
 						gform.addFilter( 'gform_product_total', function( total, formId ) {
 							if ( formId == self.formId ) {
+								// If deposit is disabled or hidden, return total as it is.
+								if ( $( 'input[name="input_' + self.depositFieldId + '.2"]' ).is( ':disabled' ) ) {
+									return total;
+								}
+								
 								var depositPrice    = $( 'input[name="input_' + self.depositFieldId + '.2"]' ).val();
 								var depositQuantity = $( 'input[name="input_' + self.depositFieldId + '.3"]' ).val();
 
