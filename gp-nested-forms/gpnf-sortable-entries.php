@@ -242,6 +242,17 @@ class GPNF_Sortable_Entries {
 							return;
 						}
 
+						var uniqueEntries = [];
+						var seenIds = {};
+						gpnf.viewModel.entries().forEach(function(entry) {
+							if (entry && !seenIds[entry.id]) {
+								uniqueEntries.push(entry);
+								seenIds[entry.id] = true;
+							}
+						});
+
+						gpnf.viewModel.entries(uniqueEntries);
+
 						var $form = $( '#gform_' + gpnf.formId );
 						var $field = $form.find( '#field_' + gpnf.formId + '_' + gpnf.fieldId );
 						var $entries = $field.find('.gpnf-nested-entries tbody');
