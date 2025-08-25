@@ -17,7 +17,7 @@ class GPNF_Map_Child_Entries_To_ACF_Repeater {
 			'acf_repeater_field_name' => false,
 		) );
 
-		add_action( 'gform_advancedpostcreation_post_after_creation', array( $this, 'gw_child_entries_to_repeater' ), 10, 2 );
+		add_action( 'gform_advancedpostcreation_post_after_creation', array( $this, 'gw_child_entries_to_repeater' ), 10, 4 );
 	}
 
 	function gw_child_entries_to_repeater( $post_id, $feed, $entry, $form ) {
