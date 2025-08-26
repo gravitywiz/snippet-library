@@ -358,7 +358,7 @@ class GW_Update_Posts {
 	 */
 	public function return_ids_instead_of_names( $value, $field, $template_name, $populate, $object, $object_type, $objects, $template ) {
 		// Check if this is for the specific form we want.
-		if ( $field->formId != $this->_args['form_id'] ) {
+		if ( rgar( $field, 'formId' ) != $this->_args['form_id'] ) {
 			return $value;
 		}
 
