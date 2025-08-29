@@ -2,7 +2,7 @@
 /**
  * Gravity Perks // Inventory // Populate Days into Radio Field
  * https://gravitywiz.com/documentation/gravity-forms-inventory/
- * 
+ *
  * Populate a Radio field with the next `n` days, and assign each choice to have `x` inventory.
  *
  * For example, you can populate a Radio field with the next 10 Thursdays, with each Thursday having an inventory of 25.
@@ -10,9 +10,9 @@
  *
  * Additionally, you can set a cutoff day and time for showing a day this week. For example, you can only show the current
  * week's Thursday if it is before 4pm on Tuesday. This is useful if you need to set a cut-off time for bookings this week.
- * 
+ *
  * Instructions:
- * 
+ *
  * 1. Install the snippet.
  *    https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  *
@@ -44,7 +44,7 @@ function gw_populate_days_into_radio( $form ) {
 	// Update `l, F j, Y` to the PHP date format you want the populated days to be shown in.
 	// More information about formats can be found here: https://www.php.net/manual/en/datetime.format.php
 	$format = 'l, F j, Y';
-	
+
 	// That's it, stop editing!
 
 	static $has_run = false;
@@ -56,12 +56,12 @@ function gw_populate_days_into_radio( $form ) {
 	foreach ( $form['fields'] as &$field ) {
 		if ( $field->id == $field_id && $field->type == 'radio' ) {
 
-			$choices = array();
-			$today   = new DateTime();
+			$choices   = array();
+			$today     = new DateTime();
 			$start_day = new DateTime( 'this ' . $day );
 
 			// If it's past the cutoff, also skip this week's day
-			if ( ( $today->format('N') == $cutoff_day && (int)$today->format('H') >= $cutoff_time ) || $today->format('N') > $cutoff_day && $today->format('N') <= $start_day->format('N') ) {
+			if ( ( $today->format('N') == $cutoff_day && ( int )$today->format('H') >= $cutoff_time ) || $today->format('N') > $cutoff_day && $today->format('N') <= $start_day->format('N') ) {
 				$start_day->modify('+1 week');
 			}
 
@@ -69,8 +69,8 @@ function gw_populate_days_into_radio( $form ) {
 			for ( $i = 0; $i < $number_of_days; $i++ ) {
 				$label = $start_day->format( $format );
 				$choices[] = array( 
-					'text' => $label,
-					'value' => $label,
+					'text'            => $label,
+					'value'           => $label,
 					'inventory_limit' => $inventory,
 				);
 				$start_day->modify('+1 week');
