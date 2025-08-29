@@ -61,13 +61,13 @@ function gw_populate_days_into_radio( $form ) {
 			$start_day = new DateTime( 'this ' . $day );
 
 			// If it's past the cutoff, also skip this week's day
-			if ( ( $today->format('N') == $cutoff_day && ( int )$today->format('H') >= $cutoff_time ) || $today->format('N') > $cutoff_day && $today->format('N') <= $start_day->format('N') ) {
-				$start_day->modify('+1 week');
+			if ( ( $today->format( 'N' ) == $cutoff_day && ( int )$today->format( 'H' ) >= $cutoff_time ) || $today->format( 'N' ) > $cutoff_day && $today->format( 'N' ) <= $start_day->format( 'N' ) ) {
+				$start_day->modify( '+1 week' );
 			}
 
 			// Generate next n days
 			for ( $i = 0; $i < $number_of_days; $i++ ) {
-				$label = $start_day->format( $format );
+				$label     = $start_day->format( $format );
 				$choices[] = array( 
 					'text'            => $label,
 					'value'           => $label,
