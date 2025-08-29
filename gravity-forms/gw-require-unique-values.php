@@ -203,7 +203,7 @@ class GW_Require_Unique_Values {
 		}
 
 		// When using a field ID (not input ID) for multi-input fields, combine all subfield values into one for validation.
-		if ( ! $input_id && is_array( $field->inputs ) && is_array( $value ) ) {
+		if ( ! $input_id && is_array( $field->inputs ) && is_array( $value ) && $field->type != 'email' ) {
 			$all_field_ids = $this->get_all_field_ids();
 			if ( in_array( $field->id, $all_field_ids ) ) {
 				$combined_parts = array();
@@ -218,6 +218,7 @@ class GW_Require_Unique_Values {
 		}
 
 		$value = ! is_array( $value ) ? array( $value ) : $value;
+		$value = $field->type == 'email' ? array( $value[0] ) : $value;
 		$value = array_filter( $value );
 
 		return $value;
