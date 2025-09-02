@@ -6,9 +6,10 @@
  * an address of "310 Edwin Drive, Virginia Beach, VA 23462".
  *
  * Instructions:
- *     1. Install this snippet with our free Code Chest plugin.
- *        Download the plugin here: https://gravitywiz.com/gravity-forms-code-chest/
- *     2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
+ * 
+ * 1. Install this snippet with our free Code Chest plugin.
+ *     Download the plugin here: https://gravitywiz.com/gravity-forms-code-chest/
+ * 2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
  */
 
 // Enable search by Place Name
