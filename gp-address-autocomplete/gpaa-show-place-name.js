@@ -8,7 +8,9 @@
  * Instructions:
  * 
  * 1. Install this snippet with our free Code Chest plugin.
- *     Download the plugin here: https://gravitywiz.com/gravity-forms-code-chest/
+ *
+ *    Download the plugin here: https://gravitywiz.com/gravity-forms-code-chest/
+ *
  * 2. Copy and paste the snippet into the editor of the Custom Javascript for Gravity Forms plugin.
  */
 
