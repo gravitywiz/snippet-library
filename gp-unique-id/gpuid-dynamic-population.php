@@ -11,6 +11,13 @@
  */
 add_filter( 'gform_field_value_uid', function( $value, $field ) {
 
+	static $processing = array();
+	$key = $field->formId . '_' . $field->id;
+	if ( isset( $processing[ $key ] ) ) {
+		return $value;
+	}
+	$processing[ $key ] = true;
+
 	// Update what type of unique ID you would like to generate. Accepts 'alphanumeric', 'numeric', or 'sequential'.
 	$type_of_id = 'alphanumeric';
 
@@ -28,5 +35,6 @@ add_filter( 'gform_field_value_uid', function( $value, $field ) {
 		$value = $gw_uid;
 	}
 
+	unset( $processing[ $key ] );
 	return $value;
 }, 10, 2 );
