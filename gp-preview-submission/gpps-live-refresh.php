@@ -88,7 +88,16 @@ class GPPS_Live_Refresh {
 						};
 
 						self.$form.find( 'input, select, textarea' ).each( function() {
-							data[ $( this ).attr( 'name' ) ] = $( this ).val();
+							var $input = $( this ),
+								name   = $input.attr( 'name' );
+
+							if ( $input.is(':radio') ) {
+								if ( $input.is(':checked') ) {
+									data[name] = $input.val();
+								}
+							} else {
+								data[name] = $input.val();
+							}
 						} );
 
 						$.post( self.ajaxUrl, data, function( response ) {
