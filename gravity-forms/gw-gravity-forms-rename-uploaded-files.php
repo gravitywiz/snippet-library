@@ -13,7 +13,7 @@
  *  + add a prefix or suffix to file uploads
  *  + include identifying submitted data in the file name like the user's first and last name
  *
- * @version   2.6
+ * @version   2.7
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/rename-uploaded-files-for-gravity-form/
@@ -98,11 +98,23 @@ class GW_Rename_Uploaded_Files {
 
 				$result = rename( $file, $renamed_file );
 
-				$renamed_files[] = $this->get_url_by_path( $renamed_file, $form['id'] );
+				$renamed_url = $this->get_url_by_path( $renamed_file, $form['id'] );
+				$renamed_files[] = $renamed_url;
 
+				// Keep Gravity Forms file-path meta in sync with the renamed URL.
+				$root = GF_Field_FileUpload::get_upload_root_info( $form['id'] );
+				gform_update_meta(
+					$entry['id'],
+					GF_Field_FileUpload::get_file_upload_path_meta_key_hash( $renamed_url ),
+					array(
+						'path'      => trailingslashit( $root['path'] ),
+						'url'       => trailingslashit( $root['url'] ),
+						'file_name' => wp_basename( $renamed_url ),
+					)
+				);
 			}
 
-			// In cases where 3rd party add-ons offload the image to a remote location, no images can be renamed.
+			// In cases where 3rd party add-ons offload the image to a remote location, nfo images can be renamed.
 			if ( empty( $renamed_files ) ) {
 				continue;
 			}
