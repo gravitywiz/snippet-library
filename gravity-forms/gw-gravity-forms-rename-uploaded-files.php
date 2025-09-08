@@ -114,7 +114,7 @@ class GW_Rename_Uploaded_Files {
 				);
 			}
 
-			// In cases where 3rd party add-ons offload the image to a remote location, nfo images can be renamed.
+			// In cases where 3rd party add-ons offload the image to a remote location, no images can be renamed.
 			if ( empty( $renamed_files ) ) {
 				continue;
 			}
