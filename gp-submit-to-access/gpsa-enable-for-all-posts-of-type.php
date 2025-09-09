@@ -6,115 +6,102 @@
  *
  * Enables GPSA for all posts of a specific type.
  *
- * @param string $post_type The post type to enable GPSA for.
+ * Instructions:
+ *
+ * 1. Install the snippet.
+ *    https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
+ * 2. Customize instantiation of the GPSA_Enable_For_All_Posts_Of_Type
+ *    class by passing the `post_type` and `settings` you would like
+ *    to use. (See "Configuration" section at the bottom of the snippet
+ *    for an example)
+ *
+ *
+ * @phpstan-type AccessExpiration array{
+ *      type: 'session' | 'never' | 'custom',
+ *      duration: array{
+ *          value: int,
+ *          unit: 'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes' | 'seconds',
+ *      }
+ * }
+ *
+ * @phpstan-type AccessBehavior 'show_message' | 'redirect'
+ *
+ * @phpstan-type GPSADocumentSettings array{
+ *      gpsa_access: AccessExpiration,
+ *      gpsa_enabled: bool,
+ *      gpsa_content_loading_message: string,
+ *      gpsa_form_redirect_path: string,
+ *      gpsa_require_unique_form_submission: bool,
+ *      gpsa_required_form_ids: array<int>,
+ *      gpsa_requires_access_message: string,
+ *      gpsa_access_behavior: AccessBehavior
+ * }
  */
-function gpsa_enable_for_all_posts_of_type( $post_type, $settings = array() ) {
-	add_filter( 'gpsa_supported_post_types', function( $post_types ) use ( $post_type ) {
-		if ( ! in_array( $post_type, $post_types ) ) {
-			$post_types[] = $post_type;
+class GPSA_Enable_For_All_Posts_Of_Type {
+	/**
+	* @var boolean
+	*/
+	public static $post_type;
+
+	/**
+	 * @var GPSADocumentSettings
+	 */
+	public static $settings;
+
+	/**
+	 * @param array{
+	 *  post_type: string
+	 *  settings: GPSADocumentSettings
+	 * } $args
+	*/
+	public function __construct( $args = array() ) {
+		$args = wp_parse_args( $args, array(
+			'post_type' => 'post',
+			'settings'  => array(),
+		) );
+
+		self::$post_type = $args['post_type'];
+		self::$settings  = wp_parse_args( $args['settings'], array(
+			'gpsa_enabled' => true,
+		) );
+
+		add_filter( 'gpsa_supported_post_types', array( self::class, 'ensure_supported_post_types' ), 10, 1 );
+		add_filter( 'gpsa_document_settings', array( self::class, 'override_document_level_settings' ), 10, 2 );
+	}
+
+	public static function ensure_supported_post_types( $post_types ) {
+		if ( ! in_array( self::$post_type, $post_types ) ) {
+			$post_types[] = self::$post_type;
 		}
 
 		return $post_types;
-	});
+	}
 
-	add_filter('gpsa_document_settings', function( $base_settings, $post_id ) use ( $post_type, $settings ) {
+	public static function override_document_level_settings( $settings, $post_id ) {
 		$post = get_post( $post_id );
-		if ( $post->post_type === $post_type ) {
+		if ( $post->post_type === self::$post_type ) {
 			$settings = array_merge(
-				$base_settings,
-				$settings
+				$settings,
+				self::$settings
 			);
 		}
 
 		return $settings;
-	}, 10, 2);
+	}
 }
 
 // Configuration:
 
 /**
  * Minimal configuration to enable for all posts of type `drum-machine`.
- *
- * Usage:
- *  1. Update this argument to match the `$post_type` of the posts you'd like to target.
- *  2. Update gpsa_required_form_ids with the form ID you want to require.
 */
-gpsa_enable_for_all_posts_of_type(
-	'drum-machine',
+new GPSA_Enable_For_All_Posts_Of_Type(
 	array(
-		/**
-		* @var boolean
-		*/
-		'gpsa_enabled'           => true,
-		/**
-		* @var array<int>
-		*/
-		'gpsa_required_form_ids' => array( 1 ), // UPDATE `1` with the form id you want to require.
+		'post_type' => 'drum-machine', // Update `drum-machine` to match the post type you want to target.
+		'settings'  => array(
+			'gpsa_required_form_ids' => array( 3 ), // UPDATE `1` with the form id you want to require.
+			// optionally add other settings to the array. See the GPSADocumentSettings in the above
+			// doc blocks for available options.
+		),
 	)
 );
-
-
-/**
- * Advanced configuration to enable for all posts of type `drum-machine`.
-
- * Usage:
- *  1. Update this argument to match the `$post_type` of the posts you'd like to target.
- *  2. Update gpsa_required_form_ids with the form ID you want to require.
- *  3. Optionally uncomment and provide values for the additional settings.
-*/
-// gpsa_enable_for_all_posts_of_type(
-// 	'drum-machine',
-// 	array(
-// 		/**
-// 		* @var boolean
-// 		*/
-// 		'gpsa_enabled'           => true,
-//
-// 		/**
-// 		* @var array<int>
-// 		*/
-// 		'gpsa_required_form_ids' => array( 1 ), // UPDATE `1` with the form id you want to require.
-//
-// 		/**
-// 		* optionally override the default message to display while the content is loading
-// 		* @var string
-// 		*/
-// 		// 'gpsa_content_loading_message' => '',
-//
-// 		/**
-// 		* optionally redirect to a specific URL where the access form is located
-// 		* @var string
-// 		*/
-// 		// 'gpsa_form_redirect_path' => '',
-//
-// 		/**
-// 		* optionally require a unique form submission for every post
-// 		* @var boolean
-// 		*/
-// 		// 'gpsa_require_unique_form_submission' => false,
-//
-// 		/**
-// 		* optionally override the default access duration.
-// 		* @var array{
-// 		*      type: 'session' | 'never' | 'custom',
-// 		*      duration: array{
-// 		*          value: number,
-// 		*          unit: 'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes' | 'seconds',
-// 		*      }
-// 		* }
-// 		*/
-// 		// 'gpsa_access' => '',
-//
-// 		/**
-// 		* optionally override the default requires access message
-// 		* @var string
-// 		*/
-// 		// 'gpsa_requires_access_message' = '',
-//
-// 		/**
-// 		* optionally override the default access behavior
-// 		* @var string 'show_message' | 'redirect'
-// 		*/
-// 		// 'gpsa_access_behavior' = '',
-// 	),
-// );
