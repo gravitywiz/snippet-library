@@ -3,7 +3,6 @@
  * https://gravitywiz.com/documentation/gravity-forms-copy-cat/
  *
  * Copy checked checkbox values from multiple Checkbox fields to a single List field.
- * [Screenshot](https://gwiz.io/3hhPeXH).
  *
  * Instructions:
  *
