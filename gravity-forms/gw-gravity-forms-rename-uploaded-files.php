@@ -98,6 +98,11 @@ class GW_Rename_Uploaded_Files {
 
 				$result = rename( $file, $renamed_file );
 
+				if ( ! $result ) {
+					$renamed_files[] = $_file;
+					continue;
+				}
+
 				$renamed_url = $this->get_url_by_path( $renamed_file, $form['id'] );
 				$renamed_files[] = $renamed_url;
 
