@@ -2,13 +2,13 @@
 /**
  * Gravity Perks // Limit Submissions // Dynamically Set Limit by User WooCommerce Product Purchase Count
  * https://gravitywiz.com/documentaiton/gravity-forms-limit-submissions/
- * 
+ *
  * Dynamically set the limit by how many times the current user has purchased a specific WooCommerce product.
  * This is useful when a user must complete a form once each time they purchase the product.
  * Note: This requires users to be logged in, so does not work for guest purchases.
- * 
+ *
  * Instructions:
- * 
+ *
  * 1. Install the snippet.
  *    https://gravitywiz.com/documentation/managing-snippets/
  *
@@ -20,7 +20,7 @@ add_filter( 'gpls_rule_groups_123', function ( $rule_groups ) {
 	$target_product_id = 4; // Update "4" to your Woo product ID
 	
 	$current_user_id = get_current_user_id();
-	if( !$current_user_id ){
+	if ( !$current_user_id ){
 		$rule_groups[0]->limit = 0;
 		return $rule_groups;
 	}
@@ -45,6 +45,6 @@ add_filter( 'gpls_rule_groups_123', function ( $rule_groups ) {
 		}
 	}
 	
-	$rule_groups[0]->limit = (int) $count;
+	$rule_groups[0]->limit = (int) $purchase_count;
 	return $rule_groups;
 } );
