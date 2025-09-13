@@ -16,19 +16,19 @@
  */
 // Update "123" to your form ID.
 add_filter( 'gpls_rule_groups_123', function ( $rule_groups ) {
-	
+
 	$target_product_id = 4; // Update "4" to your Woo product ID
-	
+
 	$current_user_id = get_current_user_id();
 	if ( !$current_user_id ){
 		$rule_groups[0]->limit = 0;
 		return $rule_groups;
 	}
-	
+
 	$customer_orders = wc_get_orders(
 		array(
 			'limit'    => -1,
-			'status'   => array( 'completed', 'processing'),
+			'status'   => array( 'completed', 'processing' ),
 			'customer' => $current_user_id,
 		)
 	);
@@ -44,7 +44,7 @@ add_filter( 'gpls_rule_groups_123', function ( $rule_groups ) {
 			}
 		}
 	}
-	
+
 	$rule_groups[0]->limit = (int) $purchase_count;
 	return $rule_groups;
 } );
