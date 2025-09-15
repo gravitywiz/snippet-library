@@ -10,7 +10,7 @@
  * Plugin URI:   https://gravitywiz.com/
  * Description:  Check if a source value is in a comma-delimited list of values.
  * Author:       Gravity Wiz
- * Version:      1.1
+ * Version:      1.2
  * Author URI:   https://gravitywiz.com
  */
 class GF_CLO_Is_In {
@@ -30,6 +30,11 @@ class GF_CLO_Is_In {
 		add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
 		add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
 		add_filter( 'gform_is_value_match', array( $this, 'evaluate_operator' ), 10, 6 );
+
+		// Add support for GP Conditional Pricing import operators
+		if ( class_exists( 'GP_Conditional_Pricing' ) ) {
+			add_filter( 'gpcp_supported_import_operators', array( $this, 'add_import_operator' ) );
+		}
 
 	}
 
@@ -198,6 +203,21 @@ class GF_CLO_Is_In {
 	public function is_applicable_form( $form ) {
 		// @todo we will need to recursively search conditional logic for "is in" operator (see GPCLD).
 		return GFFormDisplay::has_conditional_logic( $form );
+	}
+
+	/**
+	 * Register CSV import operator(s) for GP Conditional Pricing.
+	 *
+	 * Maps the "~" token to the internal 'is_in' operator.
+	 *
+	 * @param array $operators Operator map of CSV token => internal operator.
+	 * @return array
+	 * 
+	 *  @since 1.2
+	 */
+	public function add_import_operator( $operators ) {
+		$operators['~'] = 'is_in';
+		return $operators;
 	}
 
 }
