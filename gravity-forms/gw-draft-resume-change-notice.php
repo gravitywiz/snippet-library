@@ -3,7 +3,7 @@
  * Gravity Wiz // Gravity Forms // Draft Resume Change Notice
  * https://gravitywiz.com/
  *
- * Use this snippet to display a notice when the user resumes a draft from a different location, browser or device.
+ * Use this snippet to display a notice when the user resumes draft from a different location, browser or device.
  */
 add_filter( 'gform_get_form_filter', function( $form_markup, $form ) {
 
@@ -14,6 +14,8 @@ add_filter( 'gform_get_form_filter', function( $form_markup, $form ) {
 
 	global $wpdb;
 	$table = GFFormsModel::get_draft_submissions_table_name();
+    
+    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	$draft = $wpdb->get_row(
 		$wpdb->prepare(
 			"SELECT form_id, ip, submission FROM {$table} WHERE uuid = %s",
@@ -32,11 +34,11 @@ add_filter( 'gform_get_form_filter', function( $form_markup, $form ) {
 	$submission_data = json_decode( $draft->submission, true );
 	$submission_data = is_array( $submission_data ) ? $submission_data : array();
 
-	$stored_user_agent = $submission_data['partial_entry']['user_agent'] ?? '';
+	$stored_user_agent  = $submission_data['partial_entry']['user_agent'] ?? '';
 	$current_user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
-	$stored_ip   = $draft->ip ?? '';
-	$current_ip  = GFFormsModel::get_ip();
+	$stored_ip  = $draft->ip ?? '';
+	$current_ip = GFFormsModel::get_ip();
 
 	$ip_changed      = ( $stored_ip && $current_ip && $stored_ip !== $current_ip );
 	$browser_changed = ( $stored_user_agent && $current_user_agent && $stored_user_agent !== $current_user_agent );
@@ -45,10 +47,10 @@ add_filter( 'gform_get_form_filter', function( $form_markup, $form ) {
 		return $form_markup;
 	}
 
-	// Configure Messages
-	$ip_changed_message      = "🌍 Your location has changed since last editing this draft";
-	$browser_changed_message = "💻 Your browser or device has changed since last editing this draft";
-	$both_changed_message    = "🔒 Your location and device have both changed since last editing this draft";
+    // Configure Messages
+	$ip_changed_message      = '🌍 Your location has changed since last editing this draft';
+	$browser_changed_message = '💻 Your browser or device has changed since last editing this draft';
+	$both_changed_message    = '🔒 Your location AND device have both changed since last editing this draft';
 
 	$message = $both_changed_message;
 	if ( $ip_changed && ! $browser_changed ) {
