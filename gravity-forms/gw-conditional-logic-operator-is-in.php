@@ -31,7 +31,7 @@ class GF_CLO_Is_In {
 		add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
 		add_filter( 'gform_is_value_match', array( $this, 'evaluate_operator' ), 10, 6 );
 
-		// Add support for Conditional Pricing import operators
+		// Add support for GP Conditional Pricing import operators
 		if ( class_exists( 'GP_Conditional_Pricing' ) ) {
 			add_filter( 'gpcp_supported_import_operators', array( $this, 'add_import_operator' ) );
 		}
@@ -205,7 +205,16 @@ class GF_CLO_Is_In {
 		return GFFormDisplay::has_conditional_logic( $form );
 	}
 
-	// Register 'is_in' operator for GP Conditional Pricing CSV imports.
+	/**
+	 * Register CSV import operator(s) for GP Conditional Pricing.
+	 *
+	 * Maps the "~" token to the internal 'is_in' operator.
+	 *
+	 * @param array $operators Operator map of CSV token => internal operator.
+	 * @return array
+	 * 
+	 *  @since 1.2
+	 */
 	public function add_import_operator( $operators ) {
 		$operators['~'] = 'is_in';
 		return $operators;
