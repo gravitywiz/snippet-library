@@ -10,7 +10,7 @@ add_filter( 'gform_get_form_filter', function( $form_markup, $form ) {
 	if ( empty( $_GET['gf_token'] ) ) {
 		return $form_markup;
 	}
-    $token = sanitize_text_field( wp_unslash( $_GET['gf_token'] ) );
+	$token = sanitize_text_field( wp_unslash( $_GET['gf_token'] ) );
 
 	global $wpdb;
 	$table = GFFormsModel::get_draft_submissions_table_name();
