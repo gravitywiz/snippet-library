@@ -112,11 +112,16 @@ class GPNF_Sortable_Entries {
 		// Sort $args['entries'] which contains Gravity Forms entries arrays. They contain an 'id' key.
 		// $cookie_entries contains the entry IDs in the order they should be displayed.
 		$sorted_entries = array();
+		$valid_entry_ids = array();
 
 		foreach ( $cookie_entries as $entry_id ) {
+			$entry_id_str = (string) $entry_id;
+
 			foreach ( $args['entries'] as $entry ) {
-				if ( $entry['id'] == $entry_id ) {
+				// Use strict comparison and prevent duplicates
+				if ( (string) $entry['id'] === $entry_id_str && ! in_array( $entry_id_str, $valid_entry_ids, true ) ) {
 					$sorted_entries[] = $entry;
+					$valid_entry_ids[] = $entry_id_str;
 					break;
 				}
 			}
