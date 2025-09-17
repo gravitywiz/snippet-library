@@ -163,8 +163,13 @@ function gpnf_hec_output_script() {
 
 function gpnf_hec_column_has_value( $field_id, $entries ) {
 	foreach ( $entries as $entry ) {
-		if ( rgar( $entry, $field_id ) ) {
-			return true;
+		foreach ( $entry as $key => $value ) {
+			// Match $field_id or subfield IDs (For fields like Name, Address, etc).)
+			if ( preg_match( '/^' . preg_quote( $field_id, '/' ) . '(\.\d+)?$/', $key ) ) {
+				if ( ! rgblank( $value ) ) {
+					return true;
+				}
+			}
 		}
 	}
 	return false;
