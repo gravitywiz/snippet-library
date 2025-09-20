@@ -8,6 +8,6 @@
  */
 // Update "123" to your form ID and "4" to your Phone field ID.
 add_filter( 'gpapf_init_args_123_4', function( $args ) {
-  $args['countriesAction'] = 'all';
-  return $args;
+	$args['countriesAction'] = 'all';
+	return $args;
 } );
