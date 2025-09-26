@@ -51,6 +51,7 @@ class GW_Delayed_Feed_Processing_Till_User_Registration {
 
 			// Process the feed for the specified form or for all forms if no form_id is passed.
 			if ( $feed_class && ( empty( $this->_args['form_id'] ) || rgar( $feed, 'form_id' ) == $this->_args['form_id'] ) ) {
+				$form = GFAPI::get_form( rgar( $entry, 'form_id' ) );
 				$feed_class->maybe_process_feed( $entry, $form );
 			}
 		}
