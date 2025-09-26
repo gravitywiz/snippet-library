@@ -206,7 +206,7 @@ class GPB_Daily_Service_Limit {
 
 # Configuration
 new GPB_Daily_Service_Limit( array(
-    'form_id' => 123,
+	'form_id' => 123,
     'service_ids' => array( 45, 67 ),
     'daily_limit' => 10,
     // 'capacity_message' => '',
