@@ -20,18 +20,18 @@
  */
 class GPB_Daily_Service_Limit {
 
-    private $form_id;
-    private $service_ids;
-    private $daily_limit;
-    private $capacity_message;
+	private $form_id;
+	private $service_ids;
+	private $daily_limit;
+	private $capacity_message;
 
-    public function __construct( array $args ) {
-        $args = wp_parse_args( $args, array(
-            'form_id'          => false,
-            'service_ids'      => array(),
-            'daily_limit'      => 10,
-            'capacity_message' => __( 'We are fully booked for that day. Please choose another date.', 'gp-bookings' ),
-        ) );
+	public function __construct( array $args ) {
+		$args = wp_parse_args( $args, array(
+			'form_id'          => false,
+			'service_ids'      => array(),
+			'daily_limit'      => 10,
+			'capacity_message' => __( 'We are fully booked for that day. Please choose another date.', 'gp-bookings' ),
+		));
 
         $this->form_id          = $args['form_id'];
         $this->service_ids      = array_map( 'intval', (array) $args['service_ids'] );
@@ -147,8 +147,8 @@ class GPB_Daily_Service_Limit {
     }
 
     private function get_total_for_date( string $date ): int {
-        $start    = $date . ' 00:00:00';
-        $end      = $date . ' 23:59:59';
+        $start = $date . ' 00:00:00';
+        $end   = $date . ' 23:59:59';
 		// Count both pending and confirmed bookings to reflect in-progress reservations.
         $bookings = \GP_Bookings\Queries\Booking_Query::get_bookings_in_range(
             $start,
