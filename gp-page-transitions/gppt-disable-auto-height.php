@@ -14,7 +14,7 @@ add_filter( "gppt_script_args_{$target_form_id}", function( $args, $form ) {
 }, 10, 2 );
 
 add_filter( "gform_pre_render_{$target_form_id}", function( $form ) {
-	add_action( 'wp_head', 'disable_auto_height_styles' );
+	disable_auto_height_styles();
 	return $form;
 });
 
