@@ -14,12 +14,15 @@ add_filter( 'gform_get_form_filter', function( $form_markup, $form ) {
 
 	global $wpdb;
 	$table = GFFormsModel::get_draft_submissions_table_name();
-    
+
     // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	$draft = $wpdb->get_row(
 		$wpdb->prepare(
-			"SELECT form_id, ip, submission FROM {$table} WHERE uuid = %s",
-			$token
+			sprintf(
+				"SELECT form_id, ip, submission FROM `%s` WHERE uuid = %%s",
+				esc_sql( $table )
+			),
+			$uuid
 		)
 	);
 
@@ -47,7 +50,7 @@ add_filter( 'gform_get_form_filter', function( $form_markup, $form ) {
 		return $form_markup;
 	}
 
-    // Configure Messages
+	// Configure Messages
 	$ip_changed_message      = '🌍 Your location has changed since last editing this draft';
 	$browser_changed_message = '💻 Your browser or device has changed since last editing this draft';
 	$both_changed_message    = '🔒 Your location AND device have both changed since last editing this draft';
