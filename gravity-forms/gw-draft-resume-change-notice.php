@@ -19,10 +19,10 @@ add_filter( 'gform_get_form_filter', function( $form_markup, $form ) {
 	$draft = $wpdb->get_row(
 		$wpdb->prepare(
 			sprintf(
-				"SELECT form_id, ip, submission FROM `%s` WHERE uuid = %%s",
+				'SELECT form_id, ip, submission FROM `%s` WHERE uuid = %%s',
 				esc_sql( $table )
 			),
-			$uuid
+			$token
 		)
 	);
 
