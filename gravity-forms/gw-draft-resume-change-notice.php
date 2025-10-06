@@ -15,8 +15,8 @@ add_filter( 'gform_get_form_filter', function( $form_markup, $form ) {
 	global $wpdb;
 	$table = GFFormsModel::get_draft_submissions_table_name();
 
-    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	$draft = $wpdb->get_row(
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 		$wpdb->prepare(
 			sprintf(
 				'SELECT form_id, ip, submission FROM `%s` WHERE uuid = %%s',
