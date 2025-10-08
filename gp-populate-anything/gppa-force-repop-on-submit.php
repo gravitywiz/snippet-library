@@ -34,9 +34,12 @@ add_filter( 'gform_pre_process', function( $form ) {
 		}
 
 		$working_field_values = $field_values;
-		unset( $working_field_values[ $field->id ] );
 
-		$populated_field = gp_populate_anything()->populate_field( $field, $form, $working_field_values, null, true );
+		// Unset existing values so GPPA doesn't fetch it as a fallback when retrieving the populated value.
+		unset( $working_field_values[ $field->id ] );
+		$_POST["input_{$field->id}"] = null;
+
+		$populated_field = gp_populate_anything()->populate_field( $field, $form, $working_field_values, null, false );
 		$correct_value   = $populated_field['field_value'];
 
 		$working_field_values[ $field->id ] = $correct_value;
