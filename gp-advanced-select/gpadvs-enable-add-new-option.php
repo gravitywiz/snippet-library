@@ -25,6 +25,7 @@ class GPASVS_Enable_Add_New_Option {
 			'form_id'           => false,
 			'field_id'          => false,
 			'insert_new_option' => false,
+			'hide_no_results_text'   => false,
 		) );
 
 		// do version check in the init to make sure if GF is going to be loaded, it is already loaded
@@ -84,6 +85,14 @@ class GPASVS_Enable_Add_New_Option {
 
 					settings.create = true;
 
+					// Hide "No results found" message if enabled
+					if ( args.hideNoResultsText ) {
+						if ( ! settings.render ) {
+							settings.render = {};
+						}
+						settings.render.no_results = null;
+					}
+
 					/**
 					 * Uncomment the below code to customize the display of the "Add New" option.
 					 */
@@ -113,6 +122,7 @@ class GPASVS_Enable_Add_New_Option {
 		$args = array(
 			'formId'  => $this->_args['form_id'],
 			'fieldId' => $this->_args['field_id'],
+			'hideNoResultsText' => $this->_args['hide_no_results_text'],
 		);
 
 		$script = 'new GPADVSEnableAddNewOption( ' . json_encode( $args ) . ' );';
@@ -305,7 +315,16 @@ class GPASVS_Enable_Add_New_Option {
 		}
 
 		if ( is_array( $choices ) && rgar( $choices[0], 'gppaErrorChoice' ) == 'no_choices' ) {
-			unset( $choices[0]['gppaErrorChoice'] );
+			// If hide_no_results_text is enabled, remove the choice entirely
+			if ( $this->_args['hide_no_results_text'] ) {
+				array_shift( $choices );
+			} else {
+				unset( $choices[0]['gppaErrorChoice'] );
+
+				if ( isset( $choices[0]['text'] ) ) {
+					$choices[0]['text'] = html_entity_decode( $choices[0]['text'] );
+				}
+			}
 		}
 		return $choices;
 	}
@@ -316,4 +335,5 @@ class GPASVS_Enable_Add_New_Option {
 new GPASVS_Enable_Add_New_Option(array(
 	'form_id' => 123,
 	// 'field_id' => 4,
+	// 'hide_no_results_text' => true,
 ));
