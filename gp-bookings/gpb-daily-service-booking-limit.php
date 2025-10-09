@@ -31,11 +31,11 @@ class GPB_Daily_Service_Limit {
 		$this->daily_limit = (int) $args['daily_limit'];
 
 		if ( empty( $this->service_ids ) || $this->daily_limit < 1 ) {
-            return;
-        }
+			return;
+		}
 
 		// Guard creation and REST availability so the cap is enforced everywhere.
-        add_action( 'gpb_before_booking_created', array( $this, 'guard_booking_creation' ), 10, 2 );
+		add_action( 'gpb_before_booking_created', array( $this, 'guard_booking_creation' ), 10, 2 );
 		add_filter( 'rest_post_dispatch', array( $this, 'filter_rest_availability' ), 10, 3 );
 	}
 
@@ -109,7 +109,7 @@ class GPB_Daily_Service_Limit {
 		return $response;
 	}
 
-	private function exceeds_limit( array $dates, int $incoming_quantity = 0, ?int $exclude_booking_id = null ): bool {
+	private function exceeds_limit( array $dates, int $incoming_quantity = 0, $exclude_booking_id = null ): bool {
 		$dates  = array_filter( array_unique( $dates ) );
 		$totals = $dates ? $this->get_daily_totals( $dates, $exclude_booking_id ) : array();
 
@@ -123,7 +123,7 @@ class GPB_Daily_Service_Limit {
 		return false;
 	}
 
-	private function get_daily_totals( array $dates, ?int $exclude_booking_id = null ): array {
+	private function get_daily_totals( array $dates, $exclude_booking_id = null ): array {
 		$dates = array_values( array_filter( array_unique( array_map( 'trim', $dates ) ) ) );
 		if ( ! $dates ) {
 			return array();
@@ -135,7 +135,7 @@ class GPB_Daily_Service_Limit {
 		return $this->get_totals_for_range( $start_datetime, $end_datetime, $exclude_booking_id );
 	}
 
-	private function get_totals_for_range( string $start_datetime, string $end_datetime, ?int $exclude_booking_id = null ): array {
+	private function get_totals_for_range( string $start_datetime, string $end_datetime, $exclude_booking_id = null ): array {
 		if ( '' === $start_datetime || '' === $end_datetime ) {
 			return array();
 		}
