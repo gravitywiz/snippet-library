@@ -18,10 +18,14 @@
  *
  * 2. Follow the inline instructions to configure the snippet for your form.
  */
-// Change `123` to your form ID
-add_filter( 'gform_pre_render_123', 'gw_populate_days_into_radio', 5, 1 );
-add_filter( 'gform_pre_validation_123', 'gw_populate_days_into_radio', 5, 1 );
+add_filter( 'gform_pre_render', 'gw_populate_days_into_radio', 5, 1 );
+add_filter( 'gform_pre_validation', 'gw_populate_days_into_radio', 5, 1 );
 function gw_populate_days_into_radio( $form ) {
+
+	// Change `123` to your form ID
+	if ( (int) rgar( $form, 'id' ) !== 123 ) {
+		return $form;
+	}
 
 	// Update `1` with your Radio Button field ID
 	$field_id = 1;
