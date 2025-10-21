@@ -8,8 +8,6 @@
  */
 add_filter( 'gpls_should_apply_rules', function( $should_apply, $form_id, $rule_test ) {
 
-	static $skip_feed_ids = array();
-
 	if ( ! $should_apply || empty( $rule_test->rules ) || empty( $rule_test->rule_group ) ) {
 		return $should_apply;
 	}
@@ -23,7 +21,7 @@ add_filter( 'gpls_should_apply_rules', function( $should_apply, $form_id, $rule_
 
 	$feed_id = method_exists( $rule_test->rule_group, 'get_feed_id' ) ? $rule_test->rule_group->get_feed_id() : null;
 
-	if ( $feed_id && isset( $skip_feed_ids[ $feed_id ] ) ) {
+	if ( $feed_id && ! empty( $rule_test->skip_limit_feed_on_blank ) ) {
 		return false;
 	}
 
@@ -42,9 +40,7 @@ add_filter( 'gpls_should_apply_rules', function( $should_apply, $form_id, $rule_
 			$value = GFCommon::trim_deep( $value );
 
 			if ( GFCommon::is_empty_array( $value ) ) {
-				if ( $feed_id ) {
-					$skip_feed_ids[ $feed_id ] = true;
-				}
+				$rule_test->skip_limit_feed_on_blank = true;
 				return false;
 			}
 
@@ -56,9 +52,7 @@ add_filter( 'gpls_should_apply_rules', function( $should_apply, $form_id, $rule_
 		}
 
 		if ( rgblank( $value ) ) {
-			if ( $feed_id ) {
-				$skip_feed_ids[ $feed_id ] = true;
-			}
+			$rule_test->skip_limit_feed_on_blank = true;
 			return false;
 		}
 	}
