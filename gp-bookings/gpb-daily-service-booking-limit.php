@@ -194,7 +194,12 @@ class GPB_Daily_Service_Limit {
 		return in_array( $service_id, $this->service_ids, true );
 	}
 
-	private function normalize_booking_date( $start, $end, $bookable ): ?string {
+	/**
+	 * Normalize booking date.
+	 *
+	 * @return string|null Returns the normalized start date (Y-m-d) or null on failure.
+	 */
+	private function normalize_booking_date( $start, $end, $bookable ) {
 		try {
 			$normalized = \GP_Bookings\Booking::normalize_datetime_values( $start, $end, $bookable );
 		} catch ( \Throwable $e ) {
