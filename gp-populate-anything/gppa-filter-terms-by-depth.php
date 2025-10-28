@@ -43,15 +43,32 @@ add_filter( 'gppa_input_choices', function( $choices, $field, $objects ) {
 	};
 
 	$terms   = $walker( $all_terms, wp_list_pluck( $objects, 'term_id' ) );
-	$choices = array();
+	$filtered_choices = array();
 
 	foreach ( $terms as $object ) {
-		$choices[] = array(
+		$choice = array(
 			'value'  => $object->term_id,
 			'text'   => $object->name,
 			'object' => $object,
 		);
+		
+		// For Multi Choice fields with persistent choices, preserve existing choice structure.
+		if ( method_exists( $field, 'has_persistent_choices' ) && $field->has_persistent_choices() ) {
+			// Find matching choice in original choices to preserve key and other properties
+			foreach ( $choices as $original_choice ) {
+				if ( isset( $original_choice['object'] ) && $original_choice['object']->term_id == $object->term_id ) {
+					$choice = array_merge( $original_choice, $choice );
+					break;
+				}
+			}
+			// If no existing choice found, generate key for new choices
+			if ( ! isset( $choice['key'] ) ) {
+				$choice['key'] = md5( $object->term_id );
+			}
+		}
+		
+		$filtered_choices[] = $choice;
 	}
 
-	return $choices;
+	return $filtered_choices;
 }, 10, 3 );
