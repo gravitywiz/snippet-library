@@ -66,6 +66,8 @@ class GPI_Waiting_List {
 
 		// Allow negative stock to be used for conditional logic validation.
 		add_filter( 'gpi_allow_negative_stock', array( $this, 'allow_negative_stock_for_conditional_logic' ), 10, 3 );
+
+		add_filter( 'gform_order_summary', array( $this, 'add_waiting_list_to_order_summary' ), 11, 3 );
 	}
 
 	public function is_applicable_form( $form ) {
@@ -270,6 +272,39 @@ class GPI_Waiting_List {
 		return true;
 	}
 
+	public function add_waiting_list_to_order_summary( $markup, $form, $entry ) {
+		if ( empty( $entry ) ) {
+			return $markup;
+		}
+
+		$products = GFCommon::get_product_fields( $form, $entry );
+		if ( empty( $products['products'] ) ) {
+			return $markup;
+		}
+
+		libxml_use_internal_errors( true );
+		$dom = new DOMDocument();
+		$dom->loadHTML( mb_convert_encoding( $markup, 'HTML-ENTITIES', 'UTF-8' ) );
+
+		$xpath        = new DOMXPath( $dom );
+		$productNodes = $xpath->query( "//div[contains(@class, 'product_name')]" );
+		foreach ( $productNodes as $node ) {
+			foreach ( $products['products'] as $product_id => $product ) {
+				if ( $product['name'] == $node->nodeValue ) {
+					$field        = GFAPI::get_field( $form, $product_id );
+					$gpi_instance = gp_inventory_type_simple()::$type === rgar( $field, 'gpiInventory' ) ? gp_inventory_type_simple() : gp_inventory_type_advanced();
+					$available    = (int) $gpi_instance->get_available_stock( $field );
+					if ( $available <= 0 ) {
+						$node->nodeValue .= $this->waitlist_message;
+					}
+					break;
+				}
+			}
+		}
+
+		$markup = $dom->saveHTML();
+		return $markup;
+	}
 }
 
 new GPI_Waiting_List();
