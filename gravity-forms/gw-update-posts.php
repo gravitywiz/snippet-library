@@ -25,6 +25,7 @@ class GW_Update_Posts {
 				'title'           => false,
 				'content'         => false,
 				'author'          => false,
+				'excerpt'		  => false,
 				'status'          => false,
 				'slug'            => false,
 				'terms'           => array(),
@@ -104,6 +105,10 @@ class GW_Update_Posts {
 		if ( $this->_args['author'] ) {
 			$post->post_author = (int) rgar( $entry, $this->_args['author'] );
 		}
+		
+		if ($this->_args['excerpt']) {
+            $post->post_excerpt = rgar($entry, $this->_args['excerpt']);
+        }
 
 		if ( $this->_args['status'] ) {
 			$stati  = get_post_stati();
@@ -419,5 +424,3 @@ class GW_Update_Posts {
 		return gmdate( 'Y-m-d H:i:s', strtotime( sprintf( '%s %s:%s:00', $date, $hour, $min ) ) );
 	}
 }
-
-
