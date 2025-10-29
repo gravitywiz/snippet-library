@@ -1,17 +1,18 @@
 <?php
 /**
+ * Gravity Perks // Nested Forms // Duplicate Child Entires on Parent Duplication
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
- * https://gravityview.co/
  *
- * Installation Instructions: https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
+ * Duplicate child entries when parent forms are duplicated using Entry Blocks or GravityView.
  *
- * Duplicate child entries when parent forms are duplicated using Gravity View.
+ * Installation Instructions: 
+ * 
+ * 1. Install the snippet: https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
+ * 2. Update `$parent_form_ids` to match the form IDs that need to have their Nested Form field child entries duplicated.
+ * 3. Update `$parent_form_field_ids` to include the Nested Form field IDs that should have their child entries duplicated.
+ *    
+ *    As an example, this snippet is configured to duplicate child entries for Nested Form fields 1 and 2 in form 17.
  *
- * Configuring:
- *  * Update $parent_form_ids to match the form IDs that need to have their Nested Form field child entries duplicated
- *  * Update $parent_form_field_ids to include the Nested Form field IDs that should have their child entries duplicated
- *
- * As an example, this snippet is configured to duplicate child entries for Nested Form fields 1 and 2 in form 17.
  */
 add_action( 'gravityview/duplicate-entry/duplicated', function ( $duplicated_entry, $original_entry ) {
 	gpnf_duplicate_child_entries( $duplicated_entry, $original_entry );
