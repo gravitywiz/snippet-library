@@ -5,7 +5,7 @@
  *
  * Duplicate child entries when parent forms are duplicated using Entry Blocks or GravityView.
  *
- * Installation Instructions: 
+ * Instructions: 
  * 
  * 1. Install the snippet: https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  * 2. Update `$parent_form_ids` to match the form IDs that need to have their Nested Form field child entries duplicated.
