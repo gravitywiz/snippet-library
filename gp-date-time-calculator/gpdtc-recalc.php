@@ -17,9 +17,10 @@ add_action( 'wp_loaded', function() {
 	$field_id = 4;    // Change this to the Calculation field's ID.
 
 	$values      = array();
-	$calculating = false;
+	$calculating = false; // Flag to prevent infinite recursion
 
-	add_filter( sprintf( 'gform_get_input_value_%s', $form_id ), function( $value, $entry, $field, $input_id ) use ( $field_id, &$values, $calculating ) {
+	add_filter( sprintf( 'gform_get_input_value_%s', $form_id ), function( $value, $entry, $field, $input_id ) use ( $field_id, &$values, &$calculating ) {
+		// Prevent infinite recursion
 		if ( $calculating ) {
 			return $value;
 		}
@@ -29,16 +30,15 @@ add_action( 'wp_loaded', function() {
 			return $value;
 		}
 
-		// Set flag to prevent infinite recursion.
+		// Set flag to prevent recursion
 		$calculating = true;
 
-		$form             = GFAPI::get_form( $entry['form_id'] );
-		$_entry           = $entry + $values;
+		$form   = GFAPI::get_form( $entry['form_id'] );
+		$_entry = $entry + $values;
 		$calculated_value = GFCommon::calculate( $field, $form, $_entry );
 
 		GFAPI::update_entry_field( $_entry['id'], $field_id, $calculated_value );
-
-		// Reset flag.
+		// Reset flag
 		$calculating = false;
 
 		return $calculated_value;
@@ -49,7 +49,6 @@ add_action( 'wp_loaded', function() {
 		if ( $field->ID != $field_id && $form->ID != $form_id ) {
 			return $value;
 		}
-
 		$orig_entry = GFAPI::get_entry( $entry->ID );
 		return rgar( $orig_entry, $field_id );
 	}, 10, 5 );
