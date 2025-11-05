@@ -23,47 +23,51 @@ function gw_disable_submit( $form ) {
 
 	<script type="text/javascript">
 
-		jQuery( document ).ready( function( $ ) {
+		document.addEventListener('DOMContentLoaded', function() {
+			if (typeof jQuery !== 'undefined') {
+				jQuery( document ).ready( function( $ ) {
 
-			var formId = '<?php echo $form['id']; ?>';
+				var formId = '<?php echo $form['id']; ?>';
 
-			$( '#gform_submit_button_' + formId ).on( 'click', function( event ) {
+				$( '#gform_submit_button_' + formId ).on( 'click', function( event ) {
 
-				if( hasPendingFileUploads( formId ) ) {
-					return;
-				}
-
-				var $submitCopy = $( this ).clone();
-
-				$submitCopy
-					.attr( 'id', '' )
-					.prop( 'disabled', true )
-					.attr( 'value', 'Processing...' )
-					.insertBefore( $( this ) );
-
-				$( this ).css( { visibility: 'hidden', position: 'absolute', transition: 'all 0s ease 0s' } );
-
-			} );
-
-			function hasPendingFileUploads() {
-
-				if( ! window[ 'gfMultiFileUploader' ] ) {
-					return false;
-				}
-
-				var pendingUploads = false;
-
-				$.each( gfMultiFileUploader.uploaders, function( i, uploader ) {
-					if( uploader.total.queued > 0 ) {
-						pendingUploads = true;
-						return false;
+					if( hasPendingFileUploads( formId ) ) {
+						return;
 					}
+
+					var $submitCopy = $( this ).clone();
+
+					$submitCopy
+						.attr( 'id', '' )
+						.prop( 'disabled', true )
+						.attr( 'value', 'Processing...' )
+						.insertBefore( $( this ) );
+
+					$( this ).css( { visibility: 'hidden', position: 'absolute', transition: 'all 0s ease 0s' } );
+
 				} );
 
-				return pendingUploads;
-			}
+				function hasPendingFileUploads() {
 
-		} );
+					if( ! window[ 'gfMultiFileUploader' ] ) {
+						return false;
+					}
+
+					var pendingUploads = false;
+
+					$.each( gfMultiFileUploader.uploaders, function( i, uploader ) {
+						if( uploader.total.queued > 0 ) {
+							pendingUploads = true;
+							return false;
+						}
+					} );
+
+					return pendingUploads;
+				}
+
+				} );
+			}
+		});
 
 	</script>
 
