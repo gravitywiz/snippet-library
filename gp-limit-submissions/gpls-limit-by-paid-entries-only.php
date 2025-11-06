@@ -2,7 +2,7 @@
 /**
  * Gravity Perks // Limit Submissions // Limit by Paid Entries Only
  * https://gravitywiz.com/documentation/gravity-forms-limit-submissions
- * 
+ *
  * Only count entries with a Paid payment status when enforcing Limit Submissions rules so users with failed payments can submit again.
  */
 add_action( 'gpls_before_query', function ( $ruletest ) {
