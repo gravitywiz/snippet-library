@@ -40,16 +40,16 @@ class GPLD_Limit_Year_Dropdown {
 			return $default_year;
 		}
 
-		$options = gp_limit_dates()->get_limit_dates_field_options( $field );
+		$options  = gp_limit_dates()->get_limit_dates_field_options( $field );
 		$date_key = $type . 'Date';
-		$mod_key = $type . 'DateMod';
+		$mod_key  = $type . 'DateMod';
 
 		if ( empty( $options[ $date_key ] ) ) {
 			return $default_year;
 		}
 
 		$date_value = $options[ $date_key ];
-		$modifier = rgar( $options, $mod_key );
+		$modifier   = rgar( $options, $mod_key );
 
 		if ( $date_value == '{today}' ) {
 			$timestamp = strtotime( 'today midnight' );
@@ -64,7 +64,7 @@ class GPLD_Limit_Year_Dropdown {
 		}
 
 		if ( $timestamp ) {
-			$calculated_year = date( 'Y', $timestamp );
+			$calculated_year = gmdate( 'Y', $timestamp );
 			return $type === 'min' ? max( $calculated_year, $default_year ) : min( $calculated_year, $default_year );
 		}
 
