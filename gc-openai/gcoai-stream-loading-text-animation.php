@@ -153,16 +153,16 @@ class GCOAI_Loading_Animation {
 		$shimmer = esc_attr( $this->args['shimmer_color'] );
 		$dur     = esc_attr( $this->args['shimmer_duration'] );
 
-		return 
-			".shimmer-wrapper { display: inline-flex; align-items: center; gap: 8px; } " .
-			".shimmer-spinner { flex-shrink: 0; } " .
-			".spinner-rotate { transform-origin: center; animation: spinner-rotation 2s linear infinite; } " .
-			".spinner-rotate circle { stroke-linecap: round; animation: spinner-stroke 1.5s ease-in-out infinite; } " .
-			"@keyframes spinner-rotation { 100% { transform: rotate(360deg); } } " .
-			"@keyframes spinner-stroke { 0% { stroke-dasharray: 0 150; stroke-dashoffset: 0; } 47.5% { stroke-dasharray: 42 150; stroke-dashoffset: -16; } 95%, 100% { stroke-dasharray: 42 150; stroke-dashoffset: -59; } } " .
+		return
+			'.shimmer-wrapper { display: inline-flex; align-items: center; gap: 8px; } ' .
+			'.shimmer-spinner { flex-shrink: 0; } ' .
+			'.spinner-rotate { transform-origin: center; animation: spinner-rotation 2s linear infinite; } ' .
+			'.spinner-rotate circle { stroke-linecap: round; animation: spinner-stroke 1.5s ease-in-out infinite; } ' .
+			'@keyframes spinner-rotation { 100% { transform: rotate(360deg); } } ' .
+			'@keyframes spinner-stroke { 0% { stroke-dasharray: 0 150; stroke-dashoffset: 0; } 47.5% { stroke-dasharray: 42 150; stroke-dashoffset: -16; } 95%, 100% { stroke-dasharray: 42 150; stroke-dashoffset: -59; } } ' .
 			".shimmer-text { display: inline-block; color: {$base}; line-height: 1.2; } " .
 			".shimmer { display: inline-block; color: {$base}; line-height: 1.2; background: {$base} linear-gradient(to left, {$base}, {$shimmer} 50%, {$base}); background-position: -4rem top; background-repeat: no-repeat; background-size: 4rem 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer {$dur} infinite; } " .
-			"@keyframes shimmer { 0% { background-position: -4rem top; } 70%, 100% { background-position: 12.5rem top; } }";
+			'@keyframes shimmer { 0% { background-position: -4rem top; } 70%, 100% { background-position: 12.5rem top; } }';
 	}
 }
 
