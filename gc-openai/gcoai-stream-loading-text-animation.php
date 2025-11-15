@@ -102,7 +102,7 @@ class GCOAI_Loading_Animation {
 
 		$css = $this->get_styles_css();
 		echo '<style class="gw-gcoai-shimmer-style">' . $css . '</style>';
-		
+
 		self::$styles_output = true;
 	}
 
