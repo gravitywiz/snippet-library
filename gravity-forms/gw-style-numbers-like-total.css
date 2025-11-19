@@ -1,0 +1,18 @@
+/**
+ * Gravity Wiz // Gravity Forms // Style Number Fields like Total Field
+ *
+ * Use "gf_price" and "gf_total" CSS classes via the "CSS Class Name" setting to style your Number fields like a product
+ * price (red) or total (green).
+ */
+.gform_wrapper .gf_price input[type=text],
+.gform_wrapper .gf_price input[type=number] {
+	border: 0;
+	font-size: 1.2em;
+	color: #060;
+	text-indent: 0;
+	padding: 0;
+}
+.gform_wrapper .gf_total input[type=text],
+.gform_wrapper .gf_total input[type=number] {
+	color: #060;
+}
