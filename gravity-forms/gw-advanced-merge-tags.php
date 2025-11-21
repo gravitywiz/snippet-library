@@ -512,6 +512,9 @@ class GW_Advanced_Merge_Tags {
 					}
 
 					return $this->generate_gravatar($value, $modifiers);
+				case 'base64':
+					return base64_encode( $value );
+					break;
 			}
 		}
 
@@ -527,7 +530,7 @@ class GW_Advanced_Merge_Tags {
 
 	public function parse_modifiers( $modifiers_str ) {
 
-		preg_match_all( '/([a-z_]+)(?:(?:\[(.+?)\])|,?)/i', $modifiers_str, $modifiers, PREG_SET_ORDER );
+		preg_match_all( '/([a-z0-9_]+)(?:(?:\[(.+?)\])|,?)/i', $modifiers_str, $modifiers, PREG_SET_ORDER );
 		$parsed = array();
 
 		foreach ( $modifiers as $modifier ) {
