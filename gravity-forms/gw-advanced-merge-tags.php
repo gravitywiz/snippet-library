@@ -2,43 +2,82 @@
 /**
  * Gravity Wiz // Gravity Forms // Advanced Merge Tags
  *
- * Adds support for several advanced merge tags:
+ * Adds support for advanced Gravity Forms merge tags and field modifiers.
+ *
+ * Advanced merge tags:
  *   + post:id=xx&prop=xxx
- *       retrieve the desired property of the specified post (by ID)
+ *       Retrieve the desired property of the specified post (by ID).
  *   + post_meta:id=xx&meta_key=xxx
- *       retrieve the desired post meta value from the specified post and meta key
+ *     custom_field:id=xx&meta_key=xxx
+ *       Retrieve the desired post meta value from the specified post and meta key.
+ *   + source_post:xxx
+ *       Retrieve a property from the source post that displayed the form (when save_source_post_id is enabled).
+ *   + entry:id=xx&prop=xxx
+ *       Retrieve a core entry property (e.g. id, date_created, payment_status).
+ *   + entry_meta:id=xx&meta_key=xxx
+ *       Retrieve an entry meta value for the specified entry and meta key.
+ *
+ * Value helpers:
  *   + get() modifier
- *       retrieve the desired property from the query string ($_GET)
- *       Example: post_meta:id=get(xx)&meta_key=xxx
+ *       Retrieve a value from the query string ($_GET).
+ *       Example: post_meta:id=get(pid)&meta_key=xxx
  *   + post() modifier
- *       retrieve the enclosed property from the $_POST
- *       Example: post_meta:id=post(xx)&meta_key=xxx
- *   + get:xxx
- *      retrieve property from query string
- *   + HTML fields
- *      {HTML:3}
- *      {all_fields:allowHtmlFields}
+ *       Retrieve a value from the current POST payload ($_POST).
+ *       Example: post_meta:id=post(pid)&meta_key=xxx
  *
- * Coming soon...
- *   + {Address:1}
- *        Output values from all Address inputs.
- *   + {Name:1}
- *        Output values from all Name inputs.
- *   + {Date:1:mdy}
- *        Format date field output: https://gist.github.com/spivurno/f1fb2f0f3650d63acfb5ed644296abda
+ * GET merge tags:
+ *   + {get:foo}
+ *       Retrieve the "foo" query string parameter.
+ *   + {get:foo[whitelist=one,two,three]}
+ *       Only output the value when it matches the whitelist.
  *
- * Use Cases
+ * Dynamic population:
+ *   + Supports using advanced merge tags in "Allow field to be populated dynamically" parameter names.
+ *     Example: a field with parameter name "{post:id=get(pid)&prop=post_title}" will be pre-populated accordingly.
  *
- *   + You have a multiple realtors each represented by their own WordPress page. On each page is a "Contact this Realtor"
- *       link. The user clicks the link and is directed to a contact form. Rather than creating a host of different
- *       contact forms for each realtor, you can use this snippet to populate a HTML field with a bit of text like:
- *       "You are contacting realtor Bob Smith" except instead of Bob Smith, you would use "{post:id=pid&prop=post_title}.
- *       In this example, "pid" would be passed via the query string from the contact link and "Bob Smith" would be the
- *       "post_title" of the post the user is coming from.
+ * HTML fields:
+ *   + {HTML:3}
+ *       Output the content of HTML field ID 3.
+ *   + {all_fields:allowHtmlFields}
+ *       Include HTML field content when outputting {all_fields}.
+ *
+ * Field modifiers (used as :modifier on merge tags/fields):
+ *   + :wordcount
+ *       Return the word count for the field value.
+ *   + :urlencode
+ *       URL-encode the value.
+ *   + :rawurlencode
+ *       Raw URL-encode the value.
+ *   + :uppercase
+ *       Convert the value to uppercase.
+ *   + :lowercase
+ *       Convert the value to lowercase.
+ *   + :capitalize
+ *       Capitalize each word in the value.
+ *   + :mask
+ *       Mask the value, preserving only the first and last character. Special handling for email addresses.
+ *   + :abbr
+ *       For Address fields, return the two-letter country code of the selected country.
+ *   + :selected[0]
+ *       For Checkbox and Multi Select fields, return the selected choice at the given zero-based index.
+ *   + :gravatar[format=url,size=64,default=...]
+ *       For Email fields, output a Gravatar URL or image tag based on the email address.
+ *   + :base64
+ *       Return the base64-encoded value.
+ *
+ * Example use case:
+ *
+ *   You have multiple realtors, each represented by their own WordPress page. On each page is a
+ *   "Contact this Realtor" link that passes the realtor page ID as "pid" in the query string. A
+ *   single contact form can then display:
+ *
+ *     "You are contacting realtor {post:id=get(pid)&prop=post_title}."
+ *
+ *   This retrieves the post_title (e.g. "Bob Smith") of the realtor page the visitor came from.
  *
  * Plugin Name: Gravity Forms Advanced Merge Tags
  * Plugin URI: https://gravitywiz.com
- * Description: Provides a host of new ways to work with Gravity Forms merge tags.
+ * Description: Provides a host of new ways to work with Gravity Forms merge tags and field modifiers.
  * Version: 1.6
  * Author: Gravity Wiz
  * Author URI: https://gravitywiz.com/
