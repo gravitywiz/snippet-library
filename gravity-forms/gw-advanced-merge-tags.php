@@ -552,8 +552,34 @@ class GW_Advanced_Merge_Tags {
 
 					return $this->generate_gravatar($value, $modifiers);
 				case 'base64':
+					if ( $field->get_input_type() === 'fileupload' ) {
+						// Handle file upload fields by encoding the actual file contents
+						if ( ! empty( $raw_value ) ) {
+							// Handle multiple files (array) or single file (string)
+							$files = is_array( $raw_value ) ? $raw_value : json_decode( $raw_value, true );
+
+							if ( ! is_array( $files ) ) {
+								$files = array( $raw_value );
+							}
+
+							$encoded_files = array();
+
+							foreach ( $files as $file_url ) {
+								$file_path = $this->get_file_path_from_url( $file_url );
+
+								if ( $file_path && file_exists( $file_path ) ) {
+									$file_contents = file_get_contents( $file_path );
+									if ( $file_contents !== false ) {
+										$encoded_files[] = base64_encode( $file_contents );
+									}
+								}
+							}
+
+							// Return first file if single file, or JSON array if multiple
+							return count( $encoded_files ) === 1 ? $encoded_files[0] : json_encode( $encoded_files );
+						}
+					}
 					return base64_encode( $value );
-					break;
 			}
 		}
 
@@ -565,6 +591,30 @@ class GW_Advanced_Merge_Tags {
 		$first = array( array_shift( $chars ) );
 		$last  = array( array_pop( $chars ) );
 		return implode( '', array_merge( $first, array_pad( array(), count( $chars ), '*' ), $last ) );
+	}
+
+	/**
+	 * Convert a file URL to a local file path.
+	 *
+	 * @param string $url File URL
+	 *
+	 * @return string|false File path on success, false on failure
+	 */
+	public function get_file_path_from_url( $url ) {
+		// Remove query string if present
+		$url = strtok( $url, '?' );
+
+		// Get upload directory info
+		$upload_dir = wp_upload_dir();
+
+		// Check if URL is from the uploads directory
+		if ( strpos( $url, $upload_dir['baseurl'] ) === 0 ) {
+			// Replace the base URL with the base path
+			$file_path = str_replace( $upload_dir['baseurl'], $upload_dir['basedir'], $url );
+			return $file_path;
+		}
+
+		return false;
 	}
 
 	public function parse_modifiers( $modifiers_str ) {
