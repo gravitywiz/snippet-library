@@ -1,7 +1,7 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // Hide All Non-visible Fields via Modifier
- * https://gravitywiz.com
+ * https://gravitywiz.com/how-to-not-show-hidden-fields-using-all-fields-merge-tag/
  *
  * By default, the {all_fields:nohidden} merge tag will only hide Hidden fields. This snippet will also hide fields that
  * have a Visibility of "Hidden" and fields that are hidden via the "gf_hidden" or "gf_invisible" CSS classes.
