@@ -11,7 +11,7 @@
  * Credit: Dennis Hunink
  *
  * Instructions:
- * 1. [Install the snippet.](https://gravitywiz.com/documentation/managing-snippets/#where-do-i-put-snippets)
+ * 1. Install per https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  * 2. Add the CSS class `wpml-limit-to-current-language` to any GPPA-enabled field you want filtered.
  * 3. Populate that field with posts; the snippet filters choices to the current WPML language.
  */
