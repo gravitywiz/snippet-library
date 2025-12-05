@@ -33,7 +33,7 @@ function hb_wpml_limit_gppa_choices_to_current_language( $choices, $field, $obje
 		return $choices;
 	}
 
-	$filtered_choices = [];
+	$filtered_choices = array();
 
 	foreach ( $choices as $index => $choice ) {
 		$post_id   = 0;
@@ -64,10 +64,10 @@ function hb_wpml_limit_gppa_choices_to_current_language( $choices, $field, $obje
 			$choice_lang = apply_filters(
 				'wpml_element_language_code',
 				null,
-				[
+				array(
 					'element_id'   => $post_id,
 					'element_type' => $element_type,
-				]
+				)
 			);
 
 			// If WPML knows the language and it does not match the current language, skip this choice.
