@@ -60,32 +60,25 @@ add_action( 'gform_field_standard_settings', function( $position ) {
 	</style>
 
 	<script>
+		var gwRichTextMode;
 		jQuery( document ).on( 'gform_load_field_settings', function( event, field ) {
+			gwRichTextMode = field.gwRichTextMode || 'tmce';
+
 			var id = 'field_rich_content';
-			
-			// Ensure complete cleanup of existing editor
-			if ( tinymce.get( id ) ) {
-				tinymce.get( id ).remove();
-			}
 			wp.editor.remove( id );
-			
-			// Clear the textarea value and set new content
 			jQuery( '#' + id ).val( field.content );
-			
-			// Small delay to ensure cleanup is complete before reinitializing
-			setTimeout( function() {
-				wp.editor.initialize( id, {
-					tinymce: {
-						forced_root_block: false,
-						setup: function( editor ) {
-							editor.on( 'Paste Change input Undo Redo', function () {
-								SetFieldProperty( 'content', editor.getContent() );
-							} );
-						}
-					},
-					quicktags: true
-				} );
-			}, 100 );
+			wp.editor.initialize( id, {
+				tinymce: {
+					forced_root_block: false,
+					height: 250,
+					setup: function( editor ) {
+						editor.on( 'Paste Change input Undo Redo', function () {
+							SetFieldProperty( 'content', editor.getContent() );
+						} );
+					}
+				},
+				quicktags: true
+			} );
 		} );
 
 		jQuery( document).on( 'tinymce-editor-setup', function ( event, editor ) {
@@ -121,11 +114,49 @@ add_action( 'gform_field_standard_settings', function( $position ) {
 					}
 				} );
 
+				// Wait until the TinyMCE editor is initialized before switching mode.
+				const waitForEditorToBeReady = (callback, timeout = 5000) => {
+					const start = Date.now();
+					const interval = setInterval(() => {
+						const editor = typeof tinymce !== 'undefined' && tinymce.get(editorId);
+						if (editor) {
+							clearInterval(interval);
+							callback();
+						} else if (Date.now() - start > timeout) {
+							clearInterval(interval);
+						}
+					}, 100);
+				};
+
+				waitForEditorToBeReady(() => window.switchEditors.go(editorId, gwRichTextMode === 'html' ? 'html' : 'tmce'));
+
+				// Set the content when save.
+				window.SetFieldContentProperty = function () {
+					var mode = jQuery('#wp-' + editorId + '-wrap').hasClass('html-active') ? 'html' : 'tmce';
+					var content = '';
+
+					if (mode === 'html') {
+						content = jQuery('#' + editorId).val();
+					} else if (tinymce.get(editorId)) {
+						content = tinymce.get(editorId).getContent();
+					}
+
+					SetFieldProperty('content', content);
+				};
+
+				// Update the content.
+				jQuery(document).on('change', `#${editorId}`, function () {
+					window.SetFieldContentProperty();
+				});
+
 				// Switch to visual/text mode.
 				jQuery(`#wp-${editorId}-wrap .switch-tmce, #wp-${editorId}-wrap .switch-html`).on('click', function() {
 					var mode = jQuery(this).hasClass('switch-tmce') ? 'tmce' : 'html';
 
 					window.switchEditors.go(editorId, mode);
+
+					// Save the current mode to field property.
+					SetFieldProperty('gwRichTextMode', mode)
 				});
 			}
 		} );
