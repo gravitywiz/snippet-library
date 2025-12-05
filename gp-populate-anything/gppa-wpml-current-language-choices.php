@@ -8,6 +8,8 @@
  * language and filter by that language with the existing UI. This snippet automatically
  * filters posts by the current language.
  *
+ * Credit: Dennis Hunink
+ *
  * Instructions:
  * 1. [Install the snippet.](https://gravitywiz.com/documentation/managing-snippets/#where-do-i-put-snippets)
  * 2. Add the CSS class `wpml-limit-to-current-language` to any GPPA-enabled field you want filtered.
