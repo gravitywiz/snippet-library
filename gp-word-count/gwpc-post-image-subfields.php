@@ -55,21 +55,21 @@ class GW_Post_Image_Word_Count {
 	// Map subfield keys to their input suffixes and labels.
 	public function get_subfields() {
 		return array(
-			'caption'     => array( 
+			'caption'     => array(
 				'suffix' => '4', 
-				'label'  => __( 'Caption', 'gravityforms' )
+				'label'  => __( 'Caption', 'gravityforms' ),
 			),
 			'description' => array(
 				'suffix' => '7',
-				'label'  => __( 'Description', 'gravityforms' )
+				'label'  => __( 'Description', 'gravityforms' ),
 			),
-			'alt'         => array( 
+			'alt'         => array(
 				'suffix' => '2', 
-				'label'  => __( 'Alt Text', 'gravityforms' )
+				'label'  => __( 'Alt Text', 'gravityforms' ),
 			),
-			'title'       => array( 
+			'title'       => array(
 				'suffix' => '1', 
-				'label'  => __( 'Title', 'gravityforms' )
+				'label'  => __( 'Title', 'gravityforms' ),
 			),
 		);
 	}
@@ -210,11 +210,11 @@ new GW_Post_Image_Word_Count( array(
 	'limits'   => array(
 		'caption'	  => array(
 			'min' => 3,
-			'max' => 10
+			'max' => 10,
 		),
 		'description' => array(
 			'min' => 2,
-			'max' => 20
+			'max' => 20,
 		),
 		// 'alt'	      => array(
 		// 	'min' => 1,
