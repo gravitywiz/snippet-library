@@ -60,6 +60,20 @@ add_action( 'gform_field_standard_settings', function( $position ) {
 	</style>
 
 	<script>
+		// Immediately disable HTML click.
+		jQuery( '.gf-html-container' )
+			.css( 'pointer-events', 'none' )
+			.css( 'opacity', '0.6' );
+
+		// Re-enable only after full load of page.
+		jQuery( window ).on( 'load', function() {
+			setTimeout( function() {
+				jQuery( '.gf-html-container' )
+					.css( 'pointer-events', 'auto' )
+					.css( 'opacity', '1' );
+			}, 800 );
+		});
+
 		var gwRichTextMode;
 		jQuery( document ).on( 'gform_load_field_settings', function( event, field ) {
 			gwRichTextMode = field.gwRichTextMode || 'tmce';
