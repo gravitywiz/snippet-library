@@ -15,7 +15,7 @@
 class GW_Post_Image_Word_Count {
 
 	private static $_instance = null;
-	private $_configs = array();
+	private $_configs         = array();
 
 	public static function get_instance() {
 		if ( self::$_instance === null ) {
@@ -29,7 +29,7 @@ class GW_Post_Image_Word_Count {
 		$this->_configs[] = array_merge( array(
 			'form_id'  => false,
 			'field_id' => false,
-			'limits'   => array()
+			'limits'   => array(),
 		), $config );
 
 		add_action( 'init', array( $this, 'init' ) );
@@ -55,10 +55,22 @@ class GW_Post_Image_Word_Count {
 	// Map subfield keys to their input suffixes and labels.
 	public function get_subfields() {
 		return array(
-			'caption'     => array( 'suffix' => '4', 'label' => __( 'Caption', 'gravityforms' ) ),
-			'description' => array( 'suffix' => '7', 'label' => __( 'Description', 'gravityforms' ) ),
-			'alt'         => array( 'suffix' => '2', 'label' => __( 'Alt Text', 'gravityforms' ) ),
-			'title'       => array( 'suffix' => '1', 'label' => __( 'Title', 'gravityforms' ) ),
+			'caption'     => array( 
+				'suffix' => '4', 
+				'label'  => __( 'Caption', 'gravityforms' )
+			),
+			'description' => array(
+				'suffix' => '7',
+				'label'  => __( 'Description', 'gravityforms' )
+			),
+			'alt'         => array( 
+				'suffix' => '2', 
+				'label'  => __( 'Alt Text', 'gravityforms' )
+			),
+			'title'       => array( 
+				'suffix' => '1', 
+				'label'  => __( 'Title', 'gravityforms' )
+			),
 		);
 	}
 
@@ -103,7 +115,7 @@ class GW_Post_Image_Word_Count {
 				$max    = isset( $limits['max'] ) ? intval( $limits['max'] ) : 0;
 
 				$args = array(
-					'formId'                 => $form_id,
+					'formId'                  => $form_id,
 					'limit'                   => $max,
 					'min'                     => $min,
 					'truncate'                => true,
@@ -162,7 +174,7 @@ class GW_Post_Image_Word_Count {
 					if ( $min && $word_count < $min ) {
 						$field->failed_validation = true;
 						$field->validation_message = sprintf(
-							_n( '%s must be at least %s word.', '%s must be at least %s words.', $min, 'gp-word-count' ),
+							_n( '%1$s must be at least %2$s word.', '%1$s must be at least %2$s words.', $min, 'gp-word-count' ),
 							$label, $min
 						);
 						$result['is_valid'] = false;
@@ -171,7 +183,7 @@ class GW_Post_Image_Word_Count {
 					if ( $max && $word_count > $max ) {
 						$field->failed_validation = true;
 						$field->validation_message = sprintf(
-							_n( '%s may only be %s word.', '%s may only be %s words.', $max, 'gp-word-count' ),
+							_n( '%1$s may only be %2$s word.', '%1$s may only be %2$s words.', $max, 'gp-word-count' ),
 							$label, $max
 						);
 						$result['is_valid'] = false;
@@ -196,10 +208,22 @@ new GW_Post_Image_Word_Count( array(
 	'form_id'  => 1, // Form ID (optional, can be false to apply to all forms)
 	'field_id' => 3, // Post Image field ID
 	'limits'   => array(
-		'caption'	 => array( 'min' => 3, 'max' => 10 ),
-		'description' => array( 'min' => 2, 'max' => 20 ),
-		// 'alt'	  => array( 'min' => 1, 'max' => 5 ),
-		// 'title'	=> array( 'min' => 1, 'max' => 5 ),
+		'caption'	  => array(
+			'min' => 3,
+			'max' => 10
+		),
+		'description' => array(
+			'min' => 2,
+			'max' => 20
+		),
+		// 'alt'	      => array(
+		// 	'min' => 1,
+		// 	'max' => 5
+		// ),
+		// 'title'	      => array(
+		// 	'min' => 1,
+		// 	'max' => 5
+		// ),
 	),
 ) );
 
