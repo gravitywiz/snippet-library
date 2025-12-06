@@ -56,7 +56,7 @@ class GW_Post_Image_Word_Count {
 	public function get_subfields() {
 		return array(
 			'caption'     => array(
-				'suffix' => '4', 
+				'suffix' => '4',
 				'label'  => __( 'Caption', 'gravityforms' ),
 			),
 			'description' => array(
@@ -64,11 +64,11 @@ class GW_Post_Image_Word_Count {
 				'label'  => __( 'Description', 'gravityforms' ),
 			),
 			'alt'         => array(
-				'suffix' => '2', 
+				'suffix' => '2',
 				'label'  => __( 'Alt Text', 'gravityforms' ),
 			),
 			'title'       => array(
-				'suffix' => '1', 
+				'suffix' => '1',
 				'label'  => __( 'Title', 'gravityforms' ),
 			),
 		);
