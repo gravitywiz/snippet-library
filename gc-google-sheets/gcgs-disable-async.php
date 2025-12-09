@@ -10,9 +10,9 @@
  *   1. Install per https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  */
 add_filter( 'gform_is_feed_asynchronous', function( $is_async, $feed, $entry, $form ) {
-  if ( $feed['addon_slug'] === 'gp-google-sheets' ) {
-    return false;
-  }
+	if ( $feed['addon_slug'] === 'gp-google-sheets' ) {
+		return false;
+	}
 
-  return $is_async;
+	return $is_async;
 }, 50, 4 );
