@@ -5,7 +5,7 @@
  * Populate each related post as a separate choice when populating data from an ACF Relationship custom field.
  *
  * Plugin Name:  GPPA ACF Relationships
- * Plugin URI:   http:///gravitywiz.com.com/documentation/gravity-forms-populate-anything/
+ * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-populate-anything/
  * Description:  Populate each related post as a separate choice when populating data from an ACF Relationship custom field.
  * Author:       Gravity Wiz
  * Version:      0.2
