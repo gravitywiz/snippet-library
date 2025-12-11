@@ -5,7 +5,7 @@
  * This snippet demonstrates how to create a relation between two tables in Airtable
  * when a GC Airtable feed is being processed. It uses an example assuming the following:
  *
- *   1. Theree is an Airtable Base with at least two tables.
+ *   1. There is an Airtable Base with at least two tables.
  *   2. There is a Gravity Forms feed that is connected to one of the tables in the Airtable Base.
  *
  * TIP: you can easily find the following by creating a new GC Airtable feed, connecting
