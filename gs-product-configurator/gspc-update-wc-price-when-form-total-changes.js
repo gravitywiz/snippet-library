@@ -12,5 +12,5 @@ jQuery('.ginput_total_GFFORMID').on('change', function() {
   // Find any character outside of 0-9, period, or comma and wrap it with span.woocommerce-Price-currencySymbol
   formatted = formatted.replace(/[^0-9\.,]/g, '<span class="woocommerce-Price-currencySymbol">$&</span>');
 
-  jQuery('p.price .woocommerce-Price-amount bdi').html(formatted);
+  jQuery('.woocommerce-Price-amount bdi').html(formatted);
 });
