@@ -83,12 +83,12 @@ class GW_CL_Entry_Meta {
 		endif;
 	}
 
-	public function get_conditional_logic_options() {
+	public function get_conditional_logic_options( $form_id = null ) {
 
-		$form_ids = 0;
+		$form_ids = $form_id ? $form_id : 0;
 
 		// Scope entry meta to the current form for GP Email Users and other admin screens
-		if ( is_admin() ) {
+		if ( ! $form_ids && is_admin() ) {
 			if ( rgget( 'page' ) === 'gp-email-users' ) {
 				$form_ids = rgpost( '_gform_setting_form' );
 				if ( ! $form_ids ) {
@@ -127,6 +127,38 @@ class GW_CL_Entry_Meta {
 						'value'     => $field->id,
 						'operators' => rgars( $post_submission_conditional_logic_field_types, $field->type . '/operators', array() ),
 					);
+				}
+			}
+
+			if ( function_exists( 'gp_email_validator' ) ) {
+				$email_fields = GFAPI::get_fields_by_type( $form, 'email' );
+				foreach ( $email_fields as $field ) {
+					if ( gp_email_validator()->is_email_validator_field( $field ) ) {
+						$props = array(
+							'free'       => esc_html__( 'Is Free Email', 'gravityforms' ),
+							'disposable' => esc_html__( 'Is Disposable Email', 'gravityforms' ),
+						);
+						foreach ( $props as $prop => $label ) {
+							$options[ "gpev_is_{$prop}_{$field->id}" ] = array(
+								'label'     => sprintf( '%s (%s)', $field->label, $label ),
+								'value'     => "gpev_is_{$prop}_{$field->id}",
+								'operators' => array(
+									'is'    => 'is',
+									'isnot' => 'isNot',
+								),
+								'choices'   => array(
+									array(
+										'text'  => esc_html__( 'Yes', 'gravityforms' ),
+										'value' => '1',
+									),
+									array(
+										'text'  => esc_html__( 'No', 'gravityforms' ),
+										'value' => '0',
+									),
+								),
+							);
+						}
+					}
 				}
 			}
 		}
@@ -197,7 +229,7 @@ class GW_CL_Entry_Meta {
 
 	public function set_rule_source_value( $source_value, $rule, $form, $logic, $entry ) {
 
-		$keys   = array_keys( $this->get_conditional_logic_options() );
+		$keys   = array_keys( $this->get_conditional_logic_options( $form['id'] ) );
 		$target = $rule['fieldId'];
 
 		if ( in_array( $target, $keys ) && $entry ) {
@@ -206,7 +238,12 @@ class GW_CL_Entry_Meta {
 				// Fetch the latest from the database.
 				$entry = GFAPI::get_entry( $entry['id'] );
 			}
-			$source_value = rgar( $entry, $rule['fieldId'] );
+
+			if ( strpos( $target, 'gpev_is_' ) === 0 ) {
+				$source_value = $this->get_email_validator_result_value( $entry, $target );
+			} else {
+				$source_value = rgar( $entry, $rule['fieldId'] );
+			}
 		}
 
 		return $source_value;
@@ -237,6 +274,51 @@ class GW_CL_Entry_Meta {
 	 */
 	public function get_runtime_entry_meta_keys() {
 		return apply_filters( 'gwclem_runtime_entry_meta_keys', array( 'payment_status' ) );
+	}
+
+	public function get_email_validator_result_value( $entry, $target ) {
+
+		if ( ! preg_match( '/^gpev_is_(free|disposable)_(\d+)$/', $target, $matches ) ) {
+			return '';
+		}
+
+		$prop     = $matches[1];
+		$field_id = $matches[2];
+		$services = array( 'basic', 'kickbox', 'zerobounce' );
+		$result   = false;
+
+		foreach ( $services as $service ) {
+			$data = gform_get_meta( $entry['id'], "gpev_{$service}_result_{$field_id}" );
+			if ( empty( $data ) || empty( $data['metadata'] ) ) {
+				continue;
+			}
+
+			$meta = $data['metadata'];
+
+			if ( $prop === 'free' ) {
+				if ( isset( $meta['free'] ) ) {
+					$result = $meta['free'];
+				} elseif ( isset( $meta['is_free_email'] ) ) {
+					$result = $meta['is_free_email'];
+				} elseif ( isset( $meta['free_email'] ) ) {
+					$result = $meta['free_email'];
+				}
+			} elseif ( $prop === 'disposable' ) {
+				if ( isset( $meta['disposable'] ) ) {
+					$result = $meta['disposable'];
+				} elseif ( isset( $meta['is_disposable'] ) ) {
+					$result = $meta['is_disposable'];
+				} elseif ( isset( $meta['sub_status'] ) && $meta['sub_status'] === 'disposable' ) {
+					$result = true;
+				}
+			}
+
+			if ( $result ) {
+				break;
+			}
+		}
+
+		return $result ? '1' : '0';
 	}
 
 }
