@@ -171,8 +171,19 @@ class GPI_Waiting_List {
 			return $product_info;
 		}
 
+		if ( empty( $entry ) || ! is_array( $entry ) || empty( $entry['id'] ) ) {
+			return $product_info;
+		}
+
+		if ( empty( $product_info['products'] ) || ! is_array( $product_info['products'] ) ) {
+			return $product_info;
+		}
+
 		foreach ( $product_info['products'] as $field_id => &$product ) {
 			$field = GFAPI::get_field( $form, $field_id );
+			if ( ! $field ) {
+				continue;
+			}
 
 			if ( ! $this->is_applicable_field( $field ) ) {
 				continue;
@@ -182,6 +193,7 @@ class GPI_Waiting_List {
 				$product['name'] .= ' ' . $this->waitlist_message;
 			}
 		}
+		unset( $product );
 
 		return $product_info;
 	}
