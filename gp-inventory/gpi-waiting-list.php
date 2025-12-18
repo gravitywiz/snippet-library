@@ -49,6 +49,9 @@ class GPI_Waiting_List {
 		add_filter( 'gform_entries_field_value', array( $this, 'entries_field_value_with_waitlist_message' ), 10, 4 );
 		add_filter( 'gform_entry_field_value', array( $this, 'add_waitlist_message_to_entry_value' ), 10, 4 );
 
+		// Add support for order summary in entry details
+		add_filter( 'gform_product_info', array( $this, 'add_waitlist_message_to_product_info' ), 10, 3 );
+
 		/**
 		 * Single products
 		 */
@@ -134,35 +137,65 @@ class GPI_Waiting_List {
 		return $choice;
 	}
 
+	private function is_entry_item_waitlisted( $entry, $field, $value ) {
+		if ( gp_inventory_type_choices()->is_applicable_field( $field ) ) {
+			foreach ( $field->choices as $choice ) {
+				if ( $choice['text'] != $value && $choice['value'] != $value ) {
+					continue;
+				}
+				return (bool) gform_get_meta( $entry['id'], sprintf( 'gpi_is_waitlisted_%d_%s', $field->id, sanitize_title( $choice['value'] ) ) );
+			}
+		}
+
+		if ( gp_inventory_type_simple()->is_applicable_field( $field ) || gp_inventory_type_advanced()->is_applicable_field( $field ) ) {
+			return (bool) gform_get_meta( $entry['id'], sprintf( 'gpi_is_waitlisted_%d', $field->id ) );
+		}
+
+		return false;
+	}
+
 	public function add_waitlist_message_to_entry_value( $value, $field, $entry, $form ) {
 		if ( ! $this->is_applicable_form( $form ) || ! $this->is_applicable_field( $field ) ) {
 			return $value;
 		}
 
-		if ( gp_inventory_type_choices()->is_applicable_field( $field ) ) {
-			foreach ( $field->choices as $choice ) {
-				if ( $choice['text'] != $value ) {
-					continue;
-				}
-
-				$is_waitlisted = gform_get_meta( $entry['id'], sprintf( 'gpi_is_waitlisted_%d_%s', $field->id, sanitize_title( $choice['value'] ) ) );
-
-				if ( $is_waitlisted ) {
-					$choice = $this->apply_waitlist_message_to_choice( $choice, $field, $form );
-					$value  = $choice['text'];
-				}
-			}
-		}
-
-		if ( gp_inventory_type_simple()->is_applicable_field( $field ) || gp_inventory_type_advanced()->is_applicable_field( $field ) ) {
-			$is_waitlisted = gform_get_meta( $entry['id'], sprintf( 'gpi_is_waitlisted_%d', $field->id ) );
-
-			if ( $is_waitlisted ) {
-				$value .= ' ' . $this->waitlist_message;
-			}
+		if ( $this->is_entry_item_waitlisted( $entry, $field, $value ) && strpos( $value, $this->waitlist_message ) === false ) {
+			$value .= ' ' . $this->waitlist_message;
 		}
 
 		return $value;
+	}
+
+	public function add_waitlist_message_to_product_info( $product_info, $form, $entry ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $product_info;
+		}
+
+		if ( empty( $entry ) || ! is_array( $entry ) || empty( $entry['id'] ) ) {
+			return $product_info;
+		}
+
+		if ( empty( $product_info['products'] ) || ! is_array( $product_info['products'] ) ) {
+			return $product_info;
+		}
+
+		foreach ( $product_info['products'] as $field_id => &$product ) {
+			$field = GFAPI::get_field( $form, $field_id );
+			if ( ! $field ) {
+				continue;
+			}
+
+			if ( ! $this->is_applicable_field( $field ) ) {
+				continue;
+			}
+
+			if ( $this->is_entry_item_waitlisted( $entry, $field, $product['name'] ) && strpos( $product['name'], $this->waitlist_message ) === false ) {
+				$product['name'] .= ' ' . $this->waitlist_message;
+			}
+		}
+		unset( $product );
+
+		return $product_info;
 	}
 
 	public function add_entry_meta( $entry, $form ) {
@@ -253,8 +286,10 @@ class GPI_Waiting_List {
 			$available = (int) $gpi_instance->get_available_stock( $field );
 
 			if ( $available <= 0 ) {
-				$message             = $this->waitlist_message;
-				$field->description  = '<div class="gpi-available-inventory-message" style="padding-bottom: 13px;">' . $message . '</div>' . $field->description;
+				$message = $this->waitlist_message;
+				if ( strpos( $field->description, $this->waitlist_message ) === false ) {
+					$field->description = '<div class="gpi-available-inventory-message" style="padding-bottom: 13px;">' . $message . '</div>' . $field->description;
+				}
 				$field->isWaitlisted = true;
 			}
 		}
