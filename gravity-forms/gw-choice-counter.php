@@ -72,7 +72,7 @@ class GW_Choice_Count {
 
 							var choiceFieldId       = self.choiceFieldIds[i],
 								choiceFieldSelector = '#input_' + self.formId + '_' + choiceFieldId,
-								$choiceField        = $(choiceFieldSelector),
+								$choiceField        = jQuery(choiceFieldSelector),
 								$parentForm         = $choiceField.parents('form');
 
 							$parentForm.off( 'click', choiceFieldSelector, self.updateChoiceEventHander );
@@ -101,7 +101,7 @@ class GW_Choice_Count {
 						self.updateChoiceEventHandler();
 
 						// Listen for `gppa_updated_batch_fields` and update count as GPPA may have re-written choice fields
-						$( document ).on( 'gppa_updated_batch_fields', function( e, formId ) {
+						jQuery( document ).on( 'gppa_updated_batch_fields', function( e, formId ) {
 							if ( parseInt( formId ) === self.formId ) {
 								self.updateEventHandlers();
 								self.updateChoiceEventHandler();
@@ -115,14 +115,14 @@ class GW_Choice_Count {
 
 					self.updateChoiceCount = function( formId, choiceFieldIds, countFieldId, values ) {
 
-						var countField = $( '#input_' + formId + '_' + countFieldId ),
+						var countField = jQuery( '#input_' + formId + '_' + countFieldId ),
 							count      = 0;
 
 						// Prevent count field from being recalculated if it's hidden.
 						if ( ! gformIsHidden( countField ) ) {
 							for ( var i = 0; i < choiceFieldIds.length; i++ ) {
 
-								var $choiceField = $( '#input_' + formId + '_' + choiceFieldIds[ i ] );
+								var $choiceField = jQuery( '#input_' + formId + '_' + choiceFieldIds[ i ] );
 								if ( ! values ) {
 									// If no values provided in the config, just get the number of checkboxes checked.
 									if ( self.isCheckableField( $choiceField ) ) {
