@@ -11,9 +11,9 @@
  *
  * 1. [Install and activate this snippet.](https://gravitywiz.com/documentation/managing-snippets/#where-do-i-put-snippets)
  * 2. Use any of these formats in your email content:
- *    - <img src="cid:my-logo" alt="Logo" />
- *    - <img src="cid:2025/07/image.jpg" alt="Image" />
- *    - <img src="cid:https://domain.com/wp-content/uploads/image.jpg" alt="Full URL" />
+ *    - `<img src="cid:my-logo" alt="Logo" />`
+ *    - `<img src="cid:2025/07/image.jpg" alt="Image" />`
+ *    - `<img src="cid:https://domain.com/wp-content/uploads/image.jpg" alt="Full URL" />`
  * 3. Images will be automatically detected, located, and embedded inline.
  *
  * Plugin Name:  GW CID Image Handler
