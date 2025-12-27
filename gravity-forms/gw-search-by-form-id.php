@@ -21,12 +21,12 @@ add_filter( 'gform_form_list_forms', function( $forms, $search_query, $active, $
 		$form = GFAPI::get_form( $search_id );
 		if ( ! empty( $form ) ) {
 			// Convert to object with required properties for list table
-			$form_obj = new stdClass();
-			$form_obj->id = isset( $form['id'] ) ? $form['id'] : $form->id;
-			$form_obj->title = isset( $form['title'] ) ? $form['title'] : $form->title;
-			$form_obj->is_active = isset( $form['is_active'] ) ? $form['is_active'] : $form->is_active;
+			$form_obj              = new stdClass();
+			$form_obj->id          = isset( $form['id'] ) ? $form['id'] : $form->id;
+			$form_obj->title       = isset( $form['title'] ) ? $form['title'] : $form->title;
+			$form_obj->is_active   = isset( $form['is_active'] ) ? $form['is_active'] : $form->is_active;
 			$form_obj->entry_count = 0;
-			$form_obj->view_count = 0;
+			$form_obj->view_count  = 0;
 			$forms[] = $form_obj;
 		}
 	}
