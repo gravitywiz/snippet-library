@@ -318,7 +318,7 @@ class GW_Update_Posts {
 						( $acf_field['type'] === 'relationship' || ( $acf_field['type'] === 'post_object' && ! empty( $acf_field['multiple'] ) ) )
 						&& ! is_array( $meta_value )
 					) {
-						$meta_value = array_filter( array_map( 'intval', array_map( 'trim', explode( ',', $meta_value ) ) ) );
+						$meta_value = array_filter( array_map( 'intval', array_map( 'trim', explode( ',', (string) $meta_value ) ) ) );
 					}
 					$meta_value = $acf_field['type'] == 'google_map' && $field_type == 'address' ? array(
 						'address' => $meta_value,
