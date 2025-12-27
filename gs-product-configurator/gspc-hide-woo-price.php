@@ -9,8 +9,8 @@
  *   1. Install per https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  */
 add_filter( 'woocommerce_get_price_html', function( $price, $product ) {
-  if ( ! is_admin() && gspc_get_product_form_id( $product ) ) {
-    return '';
-  }
-  return $price;
+	if ( ! is_admin() && gspc_get_product_form_id( $product ) ) {
+		return '';
+	}
+	return $price;
 }, 10, 2 );
