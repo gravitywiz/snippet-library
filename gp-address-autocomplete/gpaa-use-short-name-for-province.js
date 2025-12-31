@@ -6,6 +6,8 @@
  *
  * This was develope for a customer using Address Autocomplete in Italy. The province was retuned as
  * "Città Metropolitana di Torino" where they wanted to use the province code instead (e.g. "TO").
+ *
+ * Note: This snippet is only intended for use with Gravity Forms’ default International Address field type.
  */
 gform.addFilter("gpaa_values", function (values, place) {
   for (var i = 0; i < place.address_components.length; i++) {
