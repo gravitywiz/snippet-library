@@ -5,7 +5,7 @@
  *
  * Update existing post title, content, author and custom fields with values from Gravity Forms.
  *
- * @version 0.6
+ * @version 0.7
  * @author  Scott Ryer <scott@gravitywiz.com>
  * @license GPL-2.0+
  * @link    http://gravitywiz.com
@@ -186,7 +186,7 @@ class GW_Update_Posts {
 					}
 
 					// If the taxonomy is not hierarchical, we need to get the term names from the term ids.
-					if( ! $this->is_taxonomy_hierarchical( $taxonomy ) ) {
+					if( ! $this->gw_is_taxonomy_hierarchical( $taxonomy ) ) {
 						$terms = $this->get_term_names_by_ids( $terms, $taxonomy );
 					}
 
@@ -211,7 +211,7 @@ class GW_Update_Posts {
 	 *
 	 * @return bool
 	 */
-	function is_taxonomy_hierarchical( $taxonomy ) {
+	function gw_is_taxonomy_hierarchical( $taxonomy ) {
 		$taxonomy_object = get_taxonomy( $taxonomy );
 
 		if ( ! $taxonomy_object ) {
@@ -314,6 +314,12 @@ class GW_Update_Posts {
 			if ( ! rgblank( $meta_value ) ) {
 				$acf_field = $this->acf_get_field_object_by_name( $key, $group );
 				if ( $acf_field ) {
+					if (
+						( $acf_field['type'] === 'relationship' || ( $acf_field['type'] === 'post_object' && ! empty( $acf_field['multiple'] ) ) )
+						&& ! is_array( $meta_value )
+					) {
+						$meta_value = array_filter( array_map( 'intval', array_map( 'trim', explode( ',', (string) $meta_value ) ) ) );
+					}
 					$meta_value = $acf_field['type'] == 'google_map' && $field_type == 'address' ? array(
 						'address' => $meta_value,
 						'lat'     => rgar( $entry, "gpaa_lat_{$field->id}" ),
