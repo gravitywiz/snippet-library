@@ -1,5 +1,12 @@
 <?php
 /**
+ * WARNING! THIS SNIPPET IS DEPRECATED. 🚧
+ * As of Gravity Forms 2.9.14 this functionality is available directly in core. You can use the
+ * [GF_ENABLE_NOTIFICATION_EMAIL_HEADER](https://docs.gravityforms.com/gf_enable_notification_email_header/) constant to enable
+ * and the [gform_notification_email_header](https://docs.gravityforms.com/gform_notification_email_header/) filter to modify
+ * the data included in the notification header.
+ */
+/**
  * Gravity Wiz // Gravity Forms // Email Header to Identify Notification Source
  * https://gravitywiz.com/
  *
