@@ -9,9 +9,9 @@ add_action( 'gpb_after_booking_created', function ( $booking, $booking_data, $ob
 
 	// Configuration
 	$pending_threshold = 5; // Set the pending threshold
-	$target_form_ids = array( 123 ); // Leave empty to apply to all forms
+	$target_form_ids   = array( 123 ); // Leave empty to apply to all forms
 
-	if ( ! $booking instanceof \GP_Bookings\Booking || $booking->get_type() !== 'service' ) {
+	if ( empty( $booking ) || ! $booking instanceof \GP_Bookings\Booking || $booking->get_type() !== 'service' ) {
 		return;
 	}
 
@@ -23,7 +23,7 @@ add_action( 'gpb_after_booking_created', function ( $booking, $booking_data, $ob
 	}
 
 	$occupancy = $booking->get_occupancy();
-	if ( $occupancy === null ) {
+	if ( $occupancy == null ) {
 		return;
 	}
 
