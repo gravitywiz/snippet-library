@@ -1,5 +1,5 @@
 /**
- * Gravity Perks // Address Autocomplete // Capture Neighborhood Seperately
+ * Gravity Perks // Address Autocomplete // Capture Neighborhood Separately
  * https://gravitywiz.com/documentation/gravity-forms-address-autocomplete/
  *
  * To capture the county instead, replace 'neighborhood' with 'administrative_area_level_2'.
