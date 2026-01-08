@@ -18,12 +18,24 @@ add_filter( 'gpb_capacity_limit_for_slot', function ( $limit, $start_datetime, $
 
 	// Configure time-based capacity rules
 	$time_capacity_rules = array(
-		array( 'start' => '08:00', 'end' => '12:00', 'capacity' => 2 ),
-		array( 'start' => '12:00', 'end' => '17:00', 'capacity' => 1 ),
-		array( 'start' => '17:00', 'end' => '20:00', 'capacity' => 3 ),
+		array(
+			'start'    => '08:00',
+			'end'      => '12:00',
+			'capacity' => 2,
+		),
+		array(
+			'start'    => '12:00',
+			'end'      => '17:00',
+			'capacity' => 1,
+		),
+		array(
+			'start'    => '17:00',
+			'end'      => '20:00',
+			'capacity' => 3,
+		),
 	);
 
-	$start = \GP_Bookings\Utils\DateTimeUtils::parse( $start_datetime );
+	$start         = \GP_Bookings\Utils\DateTimeUtils::parse( $start_datetime );
 	$start_minutes = (int) $start->format( 'H' ) * 60 + (int) $start->format( 'i' );
 
 	$time_to_minutes = function ( $time ) {
