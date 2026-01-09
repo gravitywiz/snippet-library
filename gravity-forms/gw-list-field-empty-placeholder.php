@@ -2,16 +2,11 @@
 /**
  * Gravity Wiz // Gravity Forms // List Field Empty Placeholder
  * https://gravitywiz.com/
- * 
+ *
+ * Instruction Video: https://www.loom.com/share/31db165c2a604a8b8573247c9416de2f
+ *
  * Adds a placeholder value (default: 'N/A') to any empty List field cells during form submission.
  * This ensures that empty list field values display consistently instead of being blank.
- *
- * Instructions:
- * 
- * 1. Add this snippet to your site. See https://gravitywiz.com/documentation/how-do-i-install-a-snippet/.
- * 2. Update the form ID in the filter hook from "27" to your form ID.
- * 3. Update the field IDs in the $field_ids array to match your List field IDs.
- * 4. Optionally, change the $placeholder_val to your preferred placeholder text.
  */
 // Update "27" to your form ID.
 add_filter( 'gform_pre_submission_filter_27', function ( $form ) {
