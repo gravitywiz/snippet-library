@@ -37,64 +37,64 @@ class GCAPI_Dynamic_Bearer_Auth_Handler extends Auth_Handler {
 	 * @return array
 	 */
 	public function get_config_fields(): array {
-		return [
-			'token_endpoint' => [
+		return array(
+			'token_endpoint'    => array(
 				'type'        => 'text',
 				'label'       => 'Token Endpoint URL',
 				'description' => 'The API endpoint that generates authentication tokens',
 				'required'    => true,
-			],
-			'username' => [
+			),
+			'username'          => array(
 				'type'        => 'text',
 				'label'       => 'Credential Value',
 				'description' => 'Your API token, username, client ID, or key (field name configured below)',
 				'required'    => true,
-			],
-			'password' => [
+			),
+			'password'          => array(
 				'type'        => 'password',
 				'label'       => 'Credential Secret',
 				'description' => 'Your API secret, password, or client secret (field name configured below)',
 				'required'    => true,
-			],
-			'username_field' => [
+			),
+			'username_field'    => array(
 				'type'        => 'text',
 				'label'       => 'Token Field Name',
 				'description' => 'What the API calls this value in requests. Examples: username, api_token, token, client_id, api_key, consumer_key, app_id',
 				'default'     => 'username',
-			],
-			'password_field' => [
+			),
+			'password_field'    => array(
 				'type'        => 'text',
 				'label'       => 'Secret Field Name',
 				'description' => 'What the API calls this value in requests. Examples: password, api_secret, secret, client_secret, consumer_secret, app_secret',
 				'default'     => 'password',
-			],
-			'token_body_format' => [
+			),
+			'token_body_format' => array(
 				'type'        => 'select',
 				'label'       => 'Token Request Body Format',
 				'description' => 'How to send credentials to the token endpoint',
 				'default'     => 'json',
-				'options'     => [
+				'options'     => array(
 					'json' => 'JSON (application/json)',
 					'form' => 'Form (application/x-www-form-urlencoded)',
-				],
-			],
-			'send_basic_auth' => [
+				),
+			),
+			'send_basic_auth'   => array(
 				'type'        => 'select',
 				'label'       => 'Send Basic Authorization Header',
 				'description' => 'Include Authorization: Basic header with the credentials',
 				'default'     => 'yes',
-				'options'     => [
+				'options'     => array(
 					'yes' => 'Yes',
 					'no'  => 'No',
-				],
-			],
-			'token_ttl' => [
+				),
+			),
+			'token_ttl'         => array(
 				'type'        => 'number',
 				'label'       => 'Token Lifetime (seconds)',
 				'description' => 'How long tokens are valid (default: 3600).',
 				'default'     => HOUR_IN_SECONDS,
-			],
-		];
+			),
+		);
 	}
 
 	/**
@@ -239,11 +239,11 @@ class GCAPI_Dynamic_Bearer_Auth_Handler extends Auth_Handler {
 	 * @throws Exception If authentication fails
 	 */
 	protected function authenticate( Connection_Profile $profile ): ?string {
-		$token_endpoint = $profile->get_auth_config_value( 'token_endpoint' );
-		$username       = $profile->get_auth_config_value( 'username' );
-		$password       = $profile->get_auth_config_value( 'password' );
-		$username_field = $profile->get_auth_config_value( 'username_field', 'username' );
-		$password_field = $profile->get_auth_config_value( 'password_field', 'password' );
+		$token_endpoint    = $profile->get_auth_config_value( 'token_endpoint' );
+		$username          = $profile->get_auth_config_value( 'username' );
+		$password          = $profile->get_auth_config_value( 'password' );
+		$username_field    = $profile->get_auth_config_value( 'username_field', 'username' );
+		$password_field    = $profile->get_auth_config_value( 'password_field', 'password' );
 		$token_body_format = $profile->get_auth_config_value( 'token_body_format', 'json' );
 		$send_basic_auth   = $profile->get_auth_config_value( 'send_basic_auth', 'yes' );
 
@@ -261,14 +261,14 @@ class GCAPI_Dynamic_Bearer_Auth_Handler extends Auth_Handler {
 			$password_field = 'password';
 		}
 
-		$payload = [
+		$payload = array(
 			$username_field => $username,
 			$password_field => $password,
-		];
+		);
 
-		$headers = [
+		$headers = array(
 			'Accept' => 'application/json',
-		];
+		);
 
 		if ( $send_basic_auth !== 'no' ) {
 			$headers['Authorization'] = 'Basic ' . base64_encode( $username . ':' . $password );
@@ -286,11 +286,11 @@ class GCAPI_Dynamic_Bearer_Auth_Handler extends Auth_Handler {
 		}
 
 		// Make authentication request
-		$response = wp_remote_post( $token_endpoint, [
+		$response = wp_remote_post( $token_endpoint, array(
 			'headers' => $headers,
 			'body'    => $body,
 			'timeout' => 30,
-		] );
+		) );
 
 		if ( is_wp_error( $response ) ) {
 			throw new Exception( 'Token request failed: ' . $response->get_error_message() );
