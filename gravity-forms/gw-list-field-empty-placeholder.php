@@ -11,8 +11,9 @@
 // Update "27" to your form ID.
 add_filter( 'gform_pre_submission_filter_27', function ( $form ) {
 
-	$field_ids       = array( 1 ); // List field IDs
-	$placeholder_val = 'N/A';      // Change placeholder text if needed
+	$field_ids       = array( 1 );    // List field IDs
+	$column_numbers  = array( 3, 4 ); // Column numbers to apply logic to (1-based). Use empty array() for all columns
+	$placeholder_val = 'N/A';         // Change placeholder text if needed
 
 	foreach ( $form['fields'] as &$field ) {
 
@@ -30,8 +31,11 @@ add_filter( 'gform_pre_submission_filter_27', function ( $form ) {
 		foreach ( $_POST[ $input_name ] as $index => $value ) {
 
 			if ( trim( (string) $value ) === '' ) {
-				$column_index                   = $index % $columns_count;
-				$_POST[ $input_name ][ $index ] = $placeholder_val;
+				$column_index = $index % $columns_count;
+				// Check if current column is in the target columns array, or apply to all if array is empty.
+				if ( empty( $column_numbers ) || in_array( $column_index + 1, $column_numbers, true ) ) {
+					$_POST[ $input_name ][ $index ] = $placeholder_val;
+				}
 			}
 		}
 	}
