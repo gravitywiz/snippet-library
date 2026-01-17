@@ -1,9 +1,9 @@
 <?php
 /**
- * Gravity Perks // Limit Dates // Universal Exceptions
+ * Gravity Perks // Limit Dates // Universal Date Exceptions
  * https://gravitywiz.com/documentation/gravity-forms-limit-dates/
  *
- * Except dates across all Date fields on all forms.
+ * Except dates across all Date fields on all forms. You can also skip applying exceptions for certain forms and fields.
  */
 add_filter( 'gpld_limit_dates_options', function( $field_options, $form, $field ) {
 	// Optional exclusions: add IDs to skip applying exceptions.
