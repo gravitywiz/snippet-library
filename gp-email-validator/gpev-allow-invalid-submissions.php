@@ -6,7 +6,7 @@
  * Allow form submissions to go through regardless of email validation status, while still preserving
  * the original validation results (status, reasons, and technical details) in entry meta.
  */
-$gpev_failures = [];
+$gpev_failures = array();
 
 // Update "123" to your form ID and "4" to your Email field ID.
 add_filter( 'gpev_validation_result_123_4', function( $validation_result, $value, $field, $form, $validator ) use ( &$gpev_failures ) {
