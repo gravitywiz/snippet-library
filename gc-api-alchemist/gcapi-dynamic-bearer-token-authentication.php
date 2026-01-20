@@ -36,7 +36,7 @@ class GCAPI_Dynamic_Bearer_Auth_Handler extends Auth_Handler {
 	 *
 	 * @return array
 	 */
-	public function get_config_fields(): array {
+	public function get_config_fields(): ?array {
 		return array(
 			'token_endpoint'    => array(
 				'type'        => 'text',
@@ -119,7 +119,7 @@ class GCAPI_Dynamic_Bearer_Auth_Handler extends Auth_Handler {
 	 * @return void
 	 * @throws Exception If authentication fails
 	 */
-	public function apply_authentication( Connection_Profile $profile, array &$guzzle_options ) {
+	public function apply_authentication( Connection_Profile $profile, array &$guzzle_options ): void {
 		$token = $this->get_stored_token( $profile );
 
 		if ( empty( $token ) ) {
@@ -147,7 +147,7 @@ class GCAPI_Dynamic_Bearer_Auth_Handler extends Auth_Handler {
 	 * @param Connection_Profile $profile The connection profile
 	 * @return string|null
 	 */
-	protected function get_stored_token( Connection_Profile $profile ) {
+	protected function get_stored_token( Connection_Profile $profile ): ?string {
 		// Check for cached token
 		$cached_token = $profile->get_auth_config_value( 'session_token' );
 		$expires_at   = $profile->get_auth_config_value( 'expires_at' );
@@ -168,7 +168,7 @@ class GCAPI_Dynamic_Bearer_Auth_Handler extends Auth_Handler {
 	 * @param int|null           $expires_at Unix timestamp when token expires
 	 * @return void
 	 */
-	protected function set_stored_token( Connection_Profile $profile, string $token, $expires_at = null ) {
+	protected function set_stored_token( Connection_Profile $profile, string $token, ?int $expires_at ): void {
 		$profile->set_auth_config_value( 'session_token', $token );
 		$profile->set_auth_config_value( 'expires_at', $expires_at !== null ? (int) $expires_at : null );
 	}
@@ -179,7 +179,7 @@ class GCAPI_Dynamic_Bearer_Auth_Handler extends Auth_Handler {
 	 * @param Connection_Profile $profile The connection profile
 	 * @return int|null
 	 */
-	protected function get_token_expiration( Connection_Profile $profile ) {
+	protected function get_token_expiration( Connection_Profile $profile ): ?int {
 		$expires_at = $profile->get_auth_config_value( 'expires_at' );
 		if ( empty( $expires_at ) ) {
 			return null;
@@ -194,7 +194,7 @@ class GCAPI_Dynamic_Bearer_Auth_Handler extends Auth_Handler {
 	 * @param Connection_Profile $profile The connection profile
 	 * @return void
 	 */
-	protected function clear_stored_token( Connection_Profile $profile ) {
+	protected function clear_stored_token( Connection_Profile $profile ): void {
 		$profile->set_auth_config_value( 'session_token', null );
 		$profile->set_auth_config_value( 'expires_at', null );
 	}
