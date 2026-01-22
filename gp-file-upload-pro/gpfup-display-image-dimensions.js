@@ -4,12 +4,14 @@
  *
  * Displays image width/height next to the file size or filename in the file list.
  *
- * Instruction Video: https://www.loom.com/edit/ef7c047ada5641bd937365b3f29600bc
+ * Instruction Video: https://www.loom.com/share/ef7c047ada5641bd937365b3f29600bc
  *
  * Instructions:
- * 1. Install the free Custom JavaScript for Gravity Forms plugin.
- *    Download: https://gravitywiz.com/gravity-forms-code-chest/
- * 2. Paste this snippet into the Custom JavaScript editor.
+ *
+ * 1. Install this snippet with our free Code Chest plugin.
+ *    https://gravitywiz.com/gravity-forms-code-chest/
+ *
+ * 2. Configure the snippet based on inline instructions.
  */
 gform.addAction( 'gpfup_uploader_ready', function ( gpfup ) {
 	const store = gpfup.$store;
