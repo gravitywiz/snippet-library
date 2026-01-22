@@ -2,7 +2,7 @@
 /**
  * Gravity Wiz // Gravity Forms // Restrict Coupons by Page ID
  * https://gravitywiz.com/
- * 
+ *
  * Instruction Video: https://www.loom.com/share/d34a76c4450c478f8db6c601260e6115
  *
  * Restrict coupon usage based on the current page ID where the form is being displayed.
