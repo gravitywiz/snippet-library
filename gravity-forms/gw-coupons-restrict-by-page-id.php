@@ -13,8 +13,8 @@ add_filter( 'gform_coupons_can_apply_coupon', function ( $can_apply, $coupon_cod
 
 	// TODO: Define coupon restrictions by page ID.
 	$coupon_page_restrictions = array(
-		'abc' => array( 57 ),    // Coupon 'abc' only works on page ID 57
-		'xyz' => array( 59 ),    // Coupon 'xyz' only works on page ID 59
+		'abc' => array( 57 ),    // Coupon code 'abc' only works on page ID 57
+		'xyz' => array( 59 ),    // Coupon code 'xyz' only works on page ID 59
 		// Add more coupon restrictions as needed.
 	);
 
