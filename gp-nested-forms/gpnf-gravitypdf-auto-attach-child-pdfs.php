@@ -9,6 +9,26 @@ add_filter( 'gform_notification', function ( $notification, $form, $entry ) {
 		return $notification;
 	}
 
+	// Attach child PDFs to specific notifications.
+	$notification_config = array(
+		// Example: Only attach to specific notifications on form ID 123 (parent form).
+		// 123 => array( 'Admin Notification', 'User Notification' ),
+	);
+
+	$form_id = rgar( $form, 'id' );
+
+	// Check if this form has specific notification restrictions.
+	if ( isset( $notification_config[ $form_id ] ) && ! empty( $notification_config[ $form_id ] ) ) {
+		$allowed_notifications = $notification_config[ $form_id ];
+		$notification_name     = rgar( $notification, 'name' );
+		$notification_id       = rgar( $notification, 'id' );
+
+		// Check if this notification is in the allowed list (by name or ID).
+		if ( ! in_array( $notification_name, $allowed_notifications, true ) && ! in_array( $notification_id, $allowed_notifications, true ) ) {
+			return $notification;
+		}
+	}
+
 	// Initialize attachments array.
 	if ( ! isset( $notification['attachments'] ) ) {
 		$notification['attachments'] = array();
