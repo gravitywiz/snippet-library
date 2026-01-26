@@ -102,7 +102,7 @@ new GPB_Capacity_Limit_By_Time_And_Day( array(
 			'start'    => '08:00',
 			'end'      => '17:00',
 			'capacity' => 4,
-			'days'       => array( 'mon', 'tue', 'wed', 'thu', 'fri' ),
+			'days'     => array( 'mon', 'tue', 'wed', 'thu', 'fri' ),
 		),
 		array(
 			'start'    => '10:00',
