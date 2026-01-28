@@ -13,12 +13,17 @@ class GW_Feed_Forge_Auto_Queue_Child_Entries {
 
 	public function __construct( $args = array() ) {
 		$this->args = wp_parse_args( $args, array(
-			'parent_form_id'  => 0,
-			'nested_field_id' => 0,
-			'child_feed_ids'  => array(),
+			'parent_form_id'   => 0,
+			'nested_field_id'  => 0,
+			'child_feed_ids'   => array(),
+			'throttle_seconds' => 0,
 		) );
 
 		add_action( 'gfff_entry_queued', array( $this, 'queue_child_entries' ), 10, 5 );
+
+		if ( ! empty( $this->args['throttle_seconds'] ) ) {
+			add_filter( 'wp_gf_feed_processor_seconds_between_batches', array( $this, 'maybe_throttle_feed_processor' ) );
+		}
 	}
 
 	public function queue_child_entries( $entry_id, $entry, $feed, $form, $addon ) {
@@ -66,6 +71,31 @@ class GW_Feed_Forge_Auto_Queue_Child_Entries {
 		}
 	}
 
+	public function maybe_throttle_feed_processor( $seconds ) {
+		$throttle_seconds = (int) $this->args['throttle_seconds'];
+
+		if ( $throttle_seconds <= 0 ) {
+			return $seconds;
+		}
+
+		// Only throttle during active Feed Forge batch processing
+		if ( ! $this->is_feed_forge_batch_active() ) {
+			return $seconds;
+		}
+
+		return max( $seconds, $throttle_seconds );
+	}
+
+	private function is_feed_forge_batch_active() {
+		if ( ! class_exists( 'GWiz_GF_Feed_Forge' ) ) {
+			return false;
+		}
+
+		$batch_option_names = get_transient( GWiz_GF_Feed_Forge::TRANSIENT_CURRENT_BATCH_OPTION_NAMES );
+
+		return is_array( $batch_option_names ) && ! empty( $batch_option_names );
+	}
+
 	private function get_child_ids_from_field( $entry, $entry_id, $field_id ) {
 		$raw = rgar( $entry, $field_id );
 
@@ -108,4 +138,10 @@ new GW_Feed_Forge_Auto_Queue_Child_Entries( array(
 	'parent_form_id'  => 123,
 	'nested_field_id' => 4,
 	'child_feed_ids'  => array( 56 ),
+	/**
+	 * Optional: Add delay between feed processing to prevent rate limit errors when processing Google Sheets feeds
+	 * that can break parent->child ordering. This is normally only necessary when bulk processing 100+ entries,
+	 * but can vary based on various factors. A 2-3 second delay is usually sufficient to avoid rate limits.
+	 */
+	// 'throttle_seconds' => 3,
 ) );
