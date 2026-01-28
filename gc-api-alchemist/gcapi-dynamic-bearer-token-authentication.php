@@ -45,7 +45,7 @@ function gcapi_register_dynamic_bearer_handler() {
 		 *
 		 * @return array
 		 */
-		// phpcs:ignore PHPCompatibility.FunctionDeclarations.NewReturnTypeDeclarations
+		// phpcs:ignore PHPCompatibility.FunctionDeclarations.NewReturnTypeDeclarations, PHPCompatibility.ParameterTypeHints.NullableTypeNotSupported
 		public function get_config_fields(): ?array {
 			return array(
 				'token_endpoint'    => array(
@@ -158,7 +158,7 @@ function gcapi_register_dynamic_bearer_handler() {
 		 * @param Connection_Profile $profile The connection profile
 		 * @return string|null
 		 */
-		// phpcs:ignore PHPCompatibility.FunctionDeclarations.NewReturnTypeDeclarations
+		// phpcs:ignore PHPCompatibility.FunctionDeclarations.NewReturnTypeDeclarations, PHPCompatibility.ParameterTypeHints.NullableTypeNotSupported
 		protected function get_stored_token( Connection_Profile $profile ): ?string {
 			// Check for cached token
 			$cached_token = $profile->get_auth_config_value( 'session_token' );
@@ -180,7 +180,7 @@ function gcapi_register_dynamic_bearer_handler() {
 		 * @param int|null           $expires_at Unix timestamp when token expires
 		 * @return void
 		 */
-		// phpcs:ignore PHPCompatibility.FunctionDeclarations.NewReturnTypeDeclarations
+		// phpcs:ignore PHPCompatibility.FunctionDeclarations.NewReturnTypeDeclarations, PHPCompatibility.ParameterTypeHints.NullableTypeNotSupported
 		protected function set_stored_token( Connection_Profile $profile, string $token, ?int $expires_at ): void {
 			$profile->set_auth_config_value( 'session_token', $token );
 			$profile->set_auth_config_value( 'expires_at', $expires_at !== null ? (int) $expires_at : null );
@@ -192,7 +192,7 @@ function gcapi_register_dynamic_bearer_handler() {
 		 * @param Connection_Profile $profile The connection profile
 		 * @return int|null
 		 */
-		// phpcs:ignore PHPCompatibility.FunctionDeclarations.NewReturnTypeDeclarations
+		// phpcs:ignore PHPCompatibility.FunctionDeclarations.NewReturnTypeDeclarations, PHPCompatibility.ParameterTypeHints.NullableTypeNotSupported
 		protected function get_token_expiration( Connection_Profile $profile ): ?int {
 			$expires_at = $profile->get_auth_config_value( 'expires_at' );
 			if ( empty( $expires_at ) ) {
