@@ -4,7 +4,7 @@
  *
  * Adds a new field type to Gravity Forms that automatically calculates and adds credit card processing fees
  * to orders. The fee is calculated based on a configurable fixed fee + percentage rate.
- */ 
+ */
 // Configuration constants - Edit these values as needed
 if ( ! defined( 'CREDIT_CARD_FEE_FIXED' ) ) {
 	define( 'CREDIT_CARD_FEE_FIXED', 0.30 ); // Fixed fee (e.g., $0.30)
@@ -64,13 +64,18 @@ if ( ! class_exists( 'GF_Field_Credit_Card_Fee' ) && class_exists( 'GF_Field_Sub
 
 			foreach ( $fee_fields as $fee_field ) {
 				$subtotal = GF_Field_Subtotal::get_subtotal( $order );
-				
+
 				// Calculate credit card fee: ( subtotal + fixed_fee ) / ( 1 - percentage_rate ) - subtotal
-				$fixed_fee = CREDIT_CARD_FEE_FIXED;
+				$fixed_fee       = CREDIT_CARD_FEE_FIXED;
 				$percentage_rate = CREDIT_CARD_FEE_PERCENTAGE;
-				
+
 				if ( $percentage_rate >= 1 ) {
 					$percentage_rate = $percentage_rate / 100; // Convert to decimal if provided as percentage
+				}
+
+				// Prevent division by zero - cap percentage rate at 99.9%
+				if ( $percentage_rate >= 1 ) {
+					$percentage_rate = 0.999;
 				}
 
 				$fee = ( ( $subtotal + $fixed_fee ) / ( 1 - $percentage_rate ) ) - $subtotal;
@@ -170,15 +175,20 @@ function add_credit_card_fee_to_product_info( $product_info, $form, $entry ) {
 		foreach ( $product_info['products'] as $product ) {
 			$subtotal += floatval( $product['price'] ) * floatval( $product['quantity'] );
 		}
-		
+
 		// Calculate credit card fee
 		$fixed_fee       = CREDIT_CARD_FEE_FIXED;
 		$percentage_rate = CREDIT_CARD_FEE_PERCENTAGE;
-		
+
 		if ( $percentage_rate >= 1 ) {
 			$percentage_rate = $percentage_rate / 100;
 		}
-		
+
+		// Prevent division by zero - cap percentage rate at 99.9%
+		if ( $percentage_rate >= 1 ) {
+			$percentage_rate = 0.999;
+		}
+
 		$fee = ( ( $subtotal + $fixed_fee ) / ( 1 - $percentage_rate ) ) - $subtotal;
 		$fee = max( 0, $fee );
 
@@ -228,6 +238,11 @@ function get_credit_card_fee_script( $form_id ) {
 		function calculateCreditCardFee(subtotal, fixedFee, percentageRate) {
 			if (percentageRate >= 1) {
 				percentageRate = percentageRate / 100; // Convert to decimal if provided as percentage
+			}
+			
+			// Prevent division by zero - cap percentage rate at 99.9%
+			if (percentageRate >= 1) {
+				percentageRate = 0.999;
 			}
 			
 			var fee = ((subtotal + fixedFee) / (1 - percentageRate)) - subtotal;
