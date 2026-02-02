@@ -4,6 +4,7 @@
  *
  * Adds a new field type to Gravity Forms that automatically calculates and adds credit card processing fees
  * to orders. The fee is calculated based on a configurable fixed fee + percentage rate.
+ * Ensure the form has a total or subtotal field for accurate calculations.
  */
 // Configuration constants - Edit these values as needed
 if ( ! defined( 'CREDIT_CARD_FEE_FIXED' ) ) {
@@ -229,7 +230,7 @@ function has_credit_card_fee_field( $form ) {
 }
 
 function get_credit_card_fee_script( $form_id ) {
-	$fixed_fee = CREDIT_CARD_FEE_FIXED;
+	$fixed_fee       = CREDIT_CARD_FEE_FIXED;
 	$percentage_rate = CREDIT_CARD_FEE_PERCENTAGE;
 
 	return "
