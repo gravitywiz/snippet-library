@@ -6,19 +6,21 @@
  * to orders. The fee is calculated based on a configurable fixed fee + percentage rate.
  * Ensure the form has a total or subtotal field for accurate calculations.
  */
-// Configuration constants - Edit these values as needed
-if ( ! defined( 'CREDIT_CARD_FEE_FIXED' ) ) {
-	define( 'CREDIT_CARD_FEE_FIXED', 0.30 ); // Fixed fee (e.g., $0.30)
-}
+// Ensure this runs after all plugins are loaded
+add_action( 'plugins_loaded', function() {
+	// Configuration constants - Edit these values as needed
+	if ( ! defined( 'CREDIT_CARD_FEE_FIXED' ) ) {
+		define( 'CREDIT_CARD_FEE_FIXED', 0.30 ); // Fixed fee (e.g., $0.30)
+	}
 
-if ( ! defined( 'CREDIT_CARD_FEE_PERCENTAGE' ) ) {
-	define( 'CREDIT_CARD_FEE_PERCENTAGE', 0.033 ); // Percentage rate (e.g., 3.3%)
-}
+	if ( ! defined( 'CREDIT_CARD_FEE_PERCENTAGE' ) ) {
+		define( 'CREDIT_CARD_FEE_PERCENTAGE', 0.033 ); // Percentage rate (e.g., 3.3%)
+	}
 
-/**
- * Add Credit Card Fee Field Class, but ensure GP Ecommerce Fields is active.
- */
-if ( ! class_exists( 'GF_Field_Credit_Card_Fee' ) && class_exists( 'GF_Field_Subtotal' ) ) {
+	/**
+	 * Add Credit Card Fee Field Class, but ensure GP Ecommerce Fields is active.
+	 */
+	if ( ! class_exists( 'GF_Field_Credit_Card_Fee' ) && class_exists( 'GF_Field_Subtotal' ) ) {
 
 	class GF_Field_Credit_Card_Fee extends GF_Field_Subtotal {
 
@@ -151,8 +153,8 @@ if ( ! class_exists( 'GF_Field_Credit_Card_Fee' ) && class_exists( 'GF_Field_Sub
 
 	// Register the field
 	GF_Fields::register( new GF_Field_Credit_Card_Fee() );
-}
-
+	}
+}, 20 );
 
 // Add credit card fees to product info for proper total calculation
 add_filter( 'gform_product_info', 'add_credit_card_fee_to_product_info', 10, 3 );
