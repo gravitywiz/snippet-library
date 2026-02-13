@@ -9,8 +9,18 @@
  * Instruction Video: https://www.loom.com/share/0aaf48acb14346d8b9486dac539057df
  *
  * Instructions:
- *     1. Install our free [Gravity Forms Code Chest](https://gravitywiz.com/gravity-forms-code-chest/) plugin.
- *     2. Copy and paste the snippet into the JavaScript section of Code Chest for the Popup form you wish to apply this snippet to.
+ * 
+ * 1. Install this snippet with our free Code Chest plugin.
+ *    https://gravitywiz.com/gravity-forms-code-chest/
+ *
+ * 2. Configure the snippet based on inline instructions.
+ *
+ * Plugin Name:  GP Popups — Instant Close on Form Submission
+ * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-popups/
+ * Description:  Enable instant popup closing after form submission.
+ * Author:       Gravity Wiz
+ * Version:      0.1
+ * Author URI:   https://gravitywiz.com
  */
 var $doc = window.parent ? jQuery(window.parent.document) : jQuery(document);
 
