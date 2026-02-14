@@ -2,7 +2,7 @@
 /**
  * Gravity Perks // Bookings // Sync Bookings on Entry Trash/Restore
  * https://gravitywiz.com/documentation/gravity-forms-bookings/
- * 
+ *
  * Experimental Snippet 🧪
  *
  * Deletes bookings when an entry is trashed and recreates them when restored.
