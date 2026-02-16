@@ -14,13 +14,6 @@
  *    https://gravitywiz.com/gravity-forms-code-chest/
  *
  * 2. Configure the snippet based on inline instructions.
- *
- * Plugin Name:  GP Popups — Instant Close on Form Submission
- * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-popups/
- * Description:  Enable instant popup closing after form submission.
- * Author:       Gravity Wiz
- * Version:      0.1
- * Author URI:   https://gravitywiz.com
  */
 var $doc = window.parent ? jQuery(window.parent.document) : jQuery(document);
 
