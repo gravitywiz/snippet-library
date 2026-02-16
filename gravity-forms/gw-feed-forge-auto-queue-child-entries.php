@@ -19,17 +19,19 @@ class GW_Feed_Forge_Auto_Queue_Child_Entries {
 			'throttle_seconds' => 0,
 		) );
 
-		add_action( 'gfff_entry_queued', array( $this, 'queue_child_entries' ), 10, 5 );
+		add_action( 'gfff_entry_queued', array( $this, 'queue_child_entries' ), 10, 4 );
 
 		if ( ! empty( $this->args['throttle_seconds'] ) ) {
 			add_filter( 'wp_gf_feed_processor_seconds_between_batches', array( $this, 'maybe_throttle_feed_processor' ) );
 		}
 	}
 
-	public function queue_child_entries( $entry_id, $entry, $feed, $form, $addon ) {
+	public function queue_child_entries( $entry, $feed, $form, $addon ) {
 		if ( (int) $form['id'] !== (int) $this->args['parent_form_id'] ) {
 			return;
 		}
+
+		$entry_id = $entry['id'];
 
 		$child_entry_ids = $this->get_child_ids_from_field( $entry, $entry_id, $this->args['nested_field_id'] );
 
