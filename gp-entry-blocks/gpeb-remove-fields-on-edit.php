@@ -31,6 +31,21 @@ function gpeb_remove_fields_on_edit( $form ) {
 		if ( strpos( $field->cssClass, 'gpeb-remove-on-edit' ) !== false ) {
 			$field->visibility = 'administrative';
 		}
+
+		// For pages, we add conditional logic if its marked for removal.
+		if ( $field->type == 'page' && strpos( $field->cssClass, 'gpeb-remove-on-edit' ) !== false ) {
+			$field->conditionalLogic = array(
+				'actionType' => 'show',
+				'logicType'  => 'all',
+				'rules'      => array(
+					array(
+						'fieldId'  => 9999, // A dummy field ID that will never match.
+						'operator' => 'is',
+						'value'    => 'hide'
+					)
+				)
+			);
+		}
 	}
 
 	return $form;
