@@ -89,6 +89,11 @@ class GPB_Trash_Sync {
 	}
 
 	private function retry_orphaned_bookings( $form_id, $skip_id = 0 ) {
+		$sorting = array(
+			'key'       => 'date_created',
+			'direction' => 'ASC',
+		);
+
 		$entries = GFAPI::get_entries( $form_id, array(
 			'status'        => 'active',
 			'field_filters' => array(
@@ -97,12 +102,9 @@ class GPB_Trash_Sync {
 					'value' => '1',
 				),
 			),
-		), array(
-			'key' => 'date_created',
-			'direction' => 'ASC',
-		) );
+		), $sorting );
 
-		if ( empty( $entries ) ) {
+		if ( is_wp_error( $entries ) || empty( $entries ) ) {
 			return;
 		}
 
