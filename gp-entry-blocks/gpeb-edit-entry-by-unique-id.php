@@ -21,10 +21,10 @@
  */
 class GPEB_Edit_Entry_By_Unique_ID {
 
-	private $_args = array();
+	private $_args           = array();
 	private $mapped_entry_id = null;
-	private $mapped_entry = null;
-	private $did_lookup = false;
+	private $mapped_entry    = null;
+	private $did_lookup      = false;
 
 	public function __construct( $args = array() ) {
 		$this->_args = wp_parse_args( $args, array(
@@ -150,7 +150,10 @@ class GPEB_Edit_Entry_By_Unique_ID {
 				),
 			),
 			null,
-			array( 'offset' => 0, 'page_size' => 2 )
+			array(
+				'offset' => 0,
+				'page_size' => 2,
+			)
 		);
 
 		if ( is_wp_error( $entries ) || count( $entries ) !== 1 ) {
