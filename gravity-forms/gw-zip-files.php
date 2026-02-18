@@ -51,7 +51,7 @@ class GW_Zip_Files {
 		add_filter( 'gform_replace_merge_tags', array( $this, 'all_files_merge_tag' ), 10, 7 );
 		add_filter( 'gform_replace_merge_tags', array( $this, 'zip_url_merge_tag' ), 10, 3 );
 
-		if ( $this->_args['delete_after'] ) {
+		if ( $this->_args['delete_after'] && $this->_args['form_id'] ) {
 			$this->cleanup_hook = 'gw_zip_cleanup_' . $this->_args['form_id'];
 			add_action( 'init', array( $this, 'schedule_cleanup_cron' ) );
 			add_action( $this->cleanup_hook, array( $this, 'cleanup_expired_zips' ) );
@@ -490,7 +490,7 @@ class GW_Zip_Files {
 	public function cleanup_expired_zips() {
 		$meta_key  = $this->get_meta_key();
 		$form_id   = $this->_args['form_id'];
-		$threshold = date( 'Y-m-d H:i:s', strtotime( "-{$this->_args['delete_after']} days" ) );
+		$threshold = gmdate( 'Y-m-d H:i:s', strtotime( "-{$this->_args['delete_after']} days" ) );
 		$page_size = 50;
 		$offset    = 0;
 
