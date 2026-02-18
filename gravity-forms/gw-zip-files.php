@@ -11,10 +11,10 @@
  *  - add UI for naming zips
  *  - add UI for attaching zip to notification
  *
- * @version   1.5
+ * @version   1.6
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
- * @link      http://gravitywiz.com/
+ * @link      https://gravitywiz.com/
  */
 class GW_Zip_Files {
 
@@ -38,6 +38,7 @@ class GW_Zip_Files {
 				'form_id'   => false,
 				'field_ids' => false,
 				'zip_name'  => 'gf-uploads',
+				'delete_after' => false,
 			)
 		);
 
@@ -49,6 +50,12 @@ class GW_Zip_Files {
 		add_filter( 'gform_notification', array( $this, 'add_zip_as_attachment' ), 10, 3 );
 		add_filter( 'gform_replace_merge_tags', array( $this, 'all_files_merge_tag' ), 10, 7 );
 		add_filter( 'gform_replace_merge_tags', array( $this, 'zip_url_merge_tag' ), 10, 3 );
+
+		if ( $this->_args['delete_after'] && $this->_args['form_id'] ) {
+			$this->cleanup_hook = 'gw_zip_cleanup_' . $this->_args['form_id'];
+			add_action( 'init', array( $this, 'schedule_cleanup_cron' ) );
+			add_action( $this->cleanup_hook, array( $this, 'cleanup_expired_zips' ) );
+		}
 
 	}
 
@@ -474,6 +481,64 @@ class GW_Zip_Files {
 		return $notification;
 	}
 
+	public function schedule_cleanup_cron() {
+		if ( ! wp_next_scheduled( $this->cleanup_hook ) ) {
+			wp_schedule_event( time(), 'daily', $this->cleanup_hook );
+		}
+	}
+
+	public function cleanup_expired_zips() {
+		$meta_key  = $this->get_meta_key();
+		$form_id   = $this->_args['form_id'];
+		$threshold = gmdate( 'Y-m-d H:i:s', strtotime( "-{$this->_args['delete_after']} days" ) );
+		$page_size = 50;
+		$offset    = 0;
+
+		$search = array(
+			'status'        => 'active',
+			'field_filters' => array(
+				array(
+					'key'      => $meta_key,
+					'operator' => 'isnot',
+					'value'    => '',
+				),
+			),
+		);
+
+		do {
+			$paging = array(
+				'offset'    => $offset,
+				'page_size' => $page_size,
+			);
+
+			$entries = GFAPI::get_entries( $form_id ? $form_id : 0, $search, null, $paging );
+
+			if ( empty( $entries ) ) {
+				break;
+			}
+
+			foreach ( $entries as $entry ) {
+				if ( $entry['date_created'] > $threshold ) {
+					continue;
+				}
+
+				// Use the stored URL from meta and convert to path,
+				// rather than get_zip_paths() which generates a path based on today's date.
+				$zip_url  = gform_get_meta( $entry['id'], $meta_key );
+				$zip_path = $zip_url ? $this->convert_url_to_path( $zip_url ) : false;
+
+				if ( $zip_path && file_exists( $zip_path ) ) {
+					wp_delete_file( $zip_path );
+				}
+
+				gform_delete_meta( $entry['id'], $meta_key );
+			}
+
+			$offset += $page_size;
+
+		} while ( count( $entries ) === $page_size );
+	}
+
 }
 
 # Configuration
@@ -483,5 +548,6 @@ new GW_Zip_Files(
 		'form_id'       => 123,
 		'zip_name'      => 'my-sweet-archive', // supports merge tags
 		'notifications' => array( '5f4668ec2afbb' ),
+		// 'delete_after'  => 30, // Auto-delete zip files after 30 days
 	)
 );
