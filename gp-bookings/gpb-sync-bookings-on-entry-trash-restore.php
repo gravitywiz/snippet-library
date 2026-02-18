@@ -97,7 +97,10 @@ class GPB_Trash_Sync {
 					'value' => '1',
 				),
 			),
-		), array( 'key' => 'date_created', 'direction' => 'ASC' ) );
+		), array(
+			'key' => 'date_created',
+			'direction' => 'ASC',
+		) );
 
 		if ( empty( $entries ) ) {
 			return;
