@@ -75,8 +75,11 @@ class GW_Choice_Count {
 								$choiceField        = jQuery(choiceFieldSelector),
 								$parentForm         = $choiceField.parents('form');
 
-							$parentForm.off( 'click', choiceFieldSelector, self.updateChoiceEventHander );
-							$parentForm.off( 'change', choiceFieldSelector, self.updateChoiceEventHander );
+							// Do not disable previous select event for multi-select because we may have multiple instances on same choice fields.
+							if ( $choiceField.attr('multiple') !== 'multiple'  && !Boolean( $choiceField.find(':checkbox').length ) ) { 
+								$parentForm.off( 'click', choiceFieldSelector, self.updateChoiceEventHander );
+								$parentForm.off( 'change', choiceFieldSelector, self.updateChoiceEventHander );
+							}
 
 							if ( self.isCheckableField( $choiceField ) ) {
 								$parentForm.on( 'click', choiceFieldSelector, self.updateChoiceEventHandler );
