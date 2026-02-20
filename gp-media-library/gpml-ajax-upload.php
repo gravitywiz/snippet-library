@@ -11,7 +11,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-media-library/
  * Description:  Upload images to the Media Library as they are uploaded via the Gravity Forms Multi-file Upload field.
  * Author:       Gravity Wiz
- * Version:      0.14
+ * Version:      0.15
  * Author URI:   https://gravitywiz.com/
  */
 class GPML_Ajax_Upload {
@@ -45,6 +45,11 @@ class GPML_Ajax_Upload {
 		// This filter ensures that this snippet is called on Gravity Flow inbox pages which do not
 		// seem to trigger `gform_entry_post_save` when updating entries.
 		add_filter( 'gravityflow_next_step', array( $this, 'gpml_gflow_next_step' ), 10, 4 );
+
+		// Bypass GF's file URL validation for fields already uploaded and validated during the
+		// AJAX upload step. GF rejects these URLs because they point to wp-content/uploads/
+		// instead of GF's expected temp directory.
+		add_filter( 'gform_field_validation', function( $result, $value, $form, $field ) {
 
 	}
 
@@ -107,7 +112,7 @@ class GPML_Ajax_Upload {
 			'data'   => array(
 				'temp_filename'     => $tmp_file_name,
 				'uploaded_filename' => str_replace( "\\'", "'", urldecode( $uploaded_filename ) ), //Decoding filename to prevent file name mismatch.
-				'url'               => wp_get_attachment_image_url( $id[0] ),
+				'url'               => wp_get_attachment_url( $id[0] ),
 			),
 		);
 
@@ -115,6 +120,31 @@ class GPML_Ajax_Upload {
 
 		die( $output );
 
+	}
+
+	public function bypass_file_validation( $result, $value, $form, $field ) {
+
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $result;
+		}
+
+		if ( $field->get_input_type() !== 'fileupload' || ! $field->multipleFiles ) {
+			return $result;
+		}
+
+		if ( ! gp_media_library()->is_applicable_field( $field ) ) {
+			return $result;
+		}
+
+		$field_uid = implode( '_', array( rgpost( 'gform_unique_id' ), $field->id ) );
+		$ids       = gform_get_meta( $this->_args['default_entry_id'], sprintf( 'gpml_ids_%s', $field_uid ) );
+
+		if ( ! empty( $ids ) && ! $result['is_valid'] ) {
+			$result['is_valid'] = true;
+			$result['message']  = '';
+		}
+
+		return $result;
 	}
 
 	public function update_entry_field_values( $entry, $form ) {
