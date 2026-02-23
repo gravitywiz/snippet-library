@@ -49,7 +49,7 @@ class GPML_Ajax_Upload {
 		// Bypass GF's file URL validation for fields already uploaded and validated during the
 		// AJAX upload step. GF rejects these URLs because they point to wp-content/uploads/
 		// instead of GF's expected temp directory.
-		add_filter( 'gform_field_validation', function( $result, $value, $form, $field ) {
+		add_filter( 'gform_field_validation', array( $this, 'bypass_file_validation' ), 10, 4 );
 
 	}
 
