@@ -144,6 +144,9 @@ new GW_Feed_Forge_Auto_Queue_Child_Entries( array(
 	 * Optional: Add delay between feed processing to prevent rate limit errors when processing Google Sheets feeds
 	 * that can break parent->child ordering. This is normally only necessary when bulk processing 100+ entries,
 	 * but can vary based on various factors. A 2-3 second delay is usually sufficient to avoid rate limits.
+	 *
+	 * Note: If preserving parent->child row order is critical for your workflow, we recommend handling ordering
+	 * in the spreadsheet using a formula-based solution.
 	 */
 	// 'throttle_seconds' => 3,
 ) );
