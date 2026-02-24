@@ -39,14 +39,14 @@
  */
 class GPSA_Enable_For_All_Posts_Of_Type {
 	/**
-	* @var boolean
-	*/
-	public static $post_type;
+	 * @var string
+	 */
+	public $post_type;
 
 	/**
 	 * @var GPSADocumentSettings
 	 */
-	public static $settings;
+	public $settings;
 
 	/**
 	 * @param array{
@@ -60,29 +60,32 @@ class GPSA_Enable_For_All_Posts_Of_Type {
 			'settings'  => array(),
 		) );
 
-		self::$post_type = $args['post_type'];
-		self::$settings  = wp_parse_args( $args['settings'], array(
+		$this->post_type = $args['post_type'];
+		$this->settings  = wp_parse_args( $args['settings'], array(
 			'gpsa_enabled' => true,
 		) );
 
-		add_filter( 'gpsa_supported_post_types', array( self::class, 'ensure_supported_post_types' ), 10, 1 );
-		add_filter( 'gpsa_document_settings', array( self::class, 'override_document_level_settings' ), 10, 2 );
+		add_filter( 'gpsa_supported_post_types', array( $this, 'ensure_supported_post_types' ), 10, 1 );
+		add_filter( 'gpsa_document_settings', array( $this, 'override_document_level_settings' ), 10, 2 );
 	}
 
-	public static function ensure_supported_post_types( $post_types ) {
-		if ( ! in_array( self::$post_type, $post_types ) ) {
-			$post_types[] = self::$post_type;
+	public function ensure_supported_post_types( $post_types ) {
+
+		if ( ! in_array( $this->post_type, $post_types ) ) {
+			$post_types[] = $this->post_type;
 		}
 
 		return $post_types;
 	}
 
-	public static function override_document_level_settings( $settings, $post_id ) {
+	public function override_document_level_settings( $settings, $post_id ) {
+
 		$post = get_post( $post_id );
-		if ( $post->post_type === self::$post_type ) {
+
+		if ( $post && $post->post_type === $this->post_type ) {
 			$settings = array_merge(
 				$settings,
-				self::$settings
+				$this->settings
 			);
 		}
 
