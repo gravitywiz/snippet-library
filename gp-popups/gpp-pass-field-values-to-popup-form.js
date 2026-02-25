@@ -61,12 +61,12 @@
 		return '';
 	}
 
-	document.addEventListener( 'gp_popup_iframe_url', function( event ) {
-		if ( event.detail.feedId !== feedId ) {
-			return;
+	window.gform.addFilter( 'gpp_popup_config', function( config ) {
+		if ( config.feedId !== feedId ) {
+			return config;
 		}
 
-		var url = event.detail.url;
+		var url = new URL( config.iframeUrl );
 
 		fieldMap.forEach( function( mapping ) {
 			var value = getFieldValue( mapping.fieldId );
@@ -74,6 +74,10 @@
 				url.searchParams.set( mapping.param, value );
 			}
 		} );
+
+		config.iframeUrl = url.toString();
+
+		return config;
 	} );
 
 } )();
