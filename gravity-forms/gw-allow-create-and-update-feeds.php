@@ -17,7 +17,7 @@
  */
 class GW_GFUR_Update_Create_Same_Form {
 
-	private $_args = array();
+	private array $_args = array();
 
 	public function __construct( $args = array() ) {
 
