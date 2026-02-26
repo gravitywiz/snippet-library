@@ -138,7 +138,6 @@ new GPECF_Tax_Amounts_By_Field_Value( array(
 // Option 2 — Pull tax amount dynamically from another field
 new GPECF_Tax_Amounts_By_Field_Value( array(
 	'form_id'             => 123,
-	'value_field_id'      => 1,
 	'tax_field_id'        => 5,
 	'tax_amount_field_id' => 7,
 ) );
