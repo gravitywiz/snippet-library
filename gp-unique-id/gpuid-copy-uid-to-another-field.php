@@ -23,7 +23,7 @@ add_filter( 'gform_entry_post_save_123', function( $entry ) {
 	// update "2" and "3" to whatever field IDs you would like to copy the unique ID, if you only need one, format it like this: array( 2 )
 	$copy_to_field_ids = array( 2, 3 );
 
-	foreach( $copy_to_field_ids as $copy_to_field_id ) {
+	foreach ( $copy_to_field_ids as $copy_to_field_id ) {
 		$entry[ $copy_to_field_id ] = $entry[ $uid_field_id ];
 	}
 
