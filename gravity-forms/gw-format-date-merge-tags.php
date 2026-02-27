@@ -1,13 +1,13 @@
 <?php
 /**
- * Gravity Wiz // Gravity Forms // Format Date Merge Tags
+ * Gravity Wiz // Gravity Forms // Format Date & Time Merge Tags
  * https://gravitywiz.com/gravity-forms-date-merge-tags/
  *
- * Adds merge tag modifiers for formatting date merge tags using PHP Date Formats.
+ * Adds merge tag modifiers for formatting date and time merge tags using PHP Date Formats.
  *
- * Plugin Name:  Gravity Forms — Format Date Merge Tags
+ * Plugin Name:  Gravity Forms — Format Date & Time Merge Tags
  * Plugin URI:   https://gravitywiz.com/gravity-forms-date-merge-tags/
- * Description:  Adds merge tag modifiers for formatting date merge tags using PHP Date Formats.
+ * Description:  Adds merge tag modifiers for formatting date and time merge tags using PHP Date Formats.
  * Author:       Gravity Wiz
  * Version:      0.6
  * Author URI:   https://gravitywiz.com
@@ -51,7 +51,8 @@ class GW_Format_Date_Merge_Tag {
 			$input_id = $match[1];
 			$field    = GFFormsModel::get_field( $form, $input_id );
 
-			if ( ! $field || $field->get_input_type() !== 'date' ) {
+			// ✅ Minimal change: allow date AND time fields
+			if ( ! $field || ! in_array( $field->get_input_type(), array( 'date', 'time' ), true ) ) {
 				continue;
 			}
 
@@ -67,8 +68,26 @@ class GW_Format_Date_Merge_Tag {
 				continue;
 			}
 
-			$format      = $field->dateFormat ? $field->dateFormat : 'mdy';
-			$parsed_date = GFCommon::parse_date( $value, $format );
+			if ( $field->get_input_type() === 'date' ) {
+
+				$format      = $field->dateFormat ? $field->dateFormat : 'mdy';
+				$parsed_date = GFCommon::parse_date( $value, $format );
+
+				$timestamp = strtotime(
+					sprintf(
+						'%d-%d-%d',
+						$parsed_date['year'],
+						$parsed_date['month'],
+						$parsed_date['day']
+					)
+				);
+
+			} else { // time field
+
+				// Handles formats like "2:30 pm" or "14:30"
+				$timestamp = strtotime( $value );
+
+			}
 
 			// On the Notifications/Confirmation side, & gets encoded to &amp;. Decode it back.
 			$modifier = htmlspecialchars_decode( $modifier );
@@ -76,8 +95,6 @@ class GW_Format_Date_Merge_Tag {
 			// For whatever reason, Populate Anything's LMTs works better with `&comma` than `&#44;`. But... date() doesn't
 			// like it so let's replace it before we pass it to date().
 			$modifier = str_replace( '&comma;', ',', $modifier );
-
-			$timestamp = strtotime( sprintf( '%d-%d-%d', $parsed_date['year'], $parsed_date['month'], $parsed_date['day'] ) );
 
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 			$replace = wp_date( $modifier, $timestamp, new DateTimeZone( 'UTC' ) );
