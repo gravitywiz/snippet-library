@@ -18,6 +18,7 @@ var dateFieldId   = 3; // Update "3" to your Date field ID.
 var sourceFieldId = 5; // Update "5" to your Choice field ID with date values.
 var exceptionMode = 'disable'; // 'disable' = block these dates, 'enable' = only allow these dates, 'default' = invert availability.
 var selectedOnly  = false; // Set to true to only use selected/checked choices as exceptions.
+var dateFormat    = 'yyyy-mm-dd'; // Update to your date format (e.g. 'mm/dd/yyyy', 'dd.mm.yyyy', 'yyyy-mm-dd')
 
 if ( ! window._gwGpldEfcInit ) {
 	window._gwGpldEfcInit = true;
@@ -82,10 +83,25 @@ function gwGetChoiceDates() {
 }
 
 function gwToMdy( value ) {
-	var m = String( value || '' ).trim().match( /^(\d{1,4})[\/\-](\d{1,2})[\/\-](\d{1,4})$/ );
-	if ( ! m ) return null;
+	var valStr = String( value || '' ).trim();
+	var fmt = String( typeof dateFormat !== 'undefined' ? dateFormat : 'yyyy-mm-dd' ).toLowerCase();
+
+	var sep = fmt.replace( /[dmy]/g, '' )[0];
+	if ( ! sep ) return null;
+
+	var tokens = fmt.split( sep );
+	var pos = {};
+	for ( var i = 0; i < 3; i++ ) {
+		pos[ tokens[i] ] = i;
+	}
+
+	var parts = valStr.match( /\d+/g );
+	if ( ! parts || parts.length < 3 ) return null;
+
+	var d = parts[ pos.dd ], m = parts[ pos.mm ], y = parts[ pos.yyyy ];
+	
+	if ( ! d || ! m || ! y || String( y ).length !== 4 ) return null;
+
 	var p = function( n ) { return ( '0' + n ).slice( -2 ); };
-	return m[1].length === 4
-		? p( m[2] ) + '/' + p( m[3] ) + '/' + m[1]
-		: p( m[1] ) + '/' + p( m[2] ) + '/' + m[3];
+	return p( m ) + '/' + p( d ) + '/' + y;
 }
