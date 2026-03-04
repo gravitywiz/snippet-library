@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Wiz // Form Notices // Apply Form Notices Feed Globally or to Multiple Forms
+ * Gravity Wiz // Form Notices // Apply Form Notices Globally or to Multiple Forms
  * https://gravitywiz.com/gravity-forms-form-notices/
  *
  * Instruction Video: https://www.loom.com/share/0407ade615a04d1a8c73b837cfdc3f1c
