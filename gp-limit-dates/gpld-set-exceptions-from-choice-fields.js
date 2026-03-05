@@ -10,7 +10,9 @@
  * 1. Install this snippet with our free Code Chest plugin.
  *    https://gravitywiz.com/gravity-forms-code-chest/
  *
- * 2. Add a choice-based field with date values as choices (e.g. 2025-03-15).
+ * 2. Add a choice-based field with date values as choices. Each choice value must match
+ *    the format specified in the `dateFormat` variable below (e.g. if `dateFormat` is
+ *    'yyyy-mm-dd', choices should look like 2026-03-15).
  *
  * 3. Update the configuration variables below.
  */
