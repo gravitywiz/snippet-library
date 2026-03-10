@@ -89,6 +89,9 @@ class GSPC_WC_CSV_Import_Export {
 		}
 
 		$resolved_id = $this->resolve_form_id( $form_id, $title );
+		if ( ! $resolved_id ) {
+			return $product;
+		}
 		$wc_admin->update_product_form_attachment( $product, $resolved_id );
 
 		return $product;
@@ -103,13 +106,20 @@ class GSPC_WC_CSV_Import_Export {
 			return 0;
 		}
 
+		$matched_id = 0;
 		foreach ( GFAPI::get_forms() as $form ) {
-			if ( strcasecmp( rgar( $form, 'title' ), $title ) === 0 ) {
-				return (int) rgar( $form, 'id' );
+			if ( strcasecmp( (string) rgar( $form, 'title' ), $title ) !== 0 ) {
+				continue;
 			}
+
+			if ( $matched_id ) {
+				return 0;
+			}
+
+			$matched_id = (int) rgar( $form, 'id' );
 		}
 
-		return 0;
+		return $matched_id;
 	}
 
 }
