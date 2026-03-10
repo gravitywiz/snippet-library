@@ -6,11 +6,14 @@
  * Create User Registration feeds that will update the user by the submitted email address, allowing non-logged-in users
  * to be targeted by GFUR update feeds.
  *
+ * Optionally supports changing the user's email address by specifying a separate "New Email" field via
+ * the `new_email_field_id` argument.
+ *
  * Plugin Name: Gravity Forms User Registration - Update by Email
  * Plugin URI: https://gravitywiz.com/
  * Description: Create User Registration feeds that will update the user by the submitted email address, allowing non-logged-in users to be targeted by GFUR update feeds.
  * Author: Gravity Wiz
- * Version: 0.7
+ * Version: 0.8
  * Author URI: https://gravitywiz.com/
  */
 class GW_UR_Update_By_Email {
@@ -23,6 +26,16 @@ class GW_UR_Update_By_Email {
 		$this->_args = wp_parse_args( $args, array(
 			'form_id'    => false,
 			'field_id'   => false,
+			/*
+			 * Specify a separate Email field that contains the user's new/desired email address.
+			 *
+			 * When set, the feed's Email mapping is used to look up the existing user (current email),
+			 * and the new email field value is used to update the user's email address. If the new email
+			 * field is left blank, the existing email is preserved.
+			 *
+			 * When not set, the feed's Email field is used for both lookup and update (default behavior).
+			 */
+			'new_email_field_id' => false,
 			/*
 			 * Require that the logged-in user have a specific capability to be able to edit users by email.
 			 *
@@ -62,6 +75,7 @@ class GW_UR_Update_By_Email {
 			add_action( 'gform_pre_process', array( $this, 'handle_validation' ) );
 			add_filter( 'gform_entry_post_save', array( $this, 'add_created_by_by_email' ), 9, 2 );
 			add_filter( 'gform_gravityformsuserregistration_pre_process_feeds', array( $this, 'filter_feeds' ), 10, 3 );
+			add_filter( 'gform_gravityformsuserregistration_pre_process_feeds', array( $this, 'maybe_update_email' ), 11, 3 );
 		}
 
 	}
@@ -134,6 +148,33 @@ class GW_UR_Update_By_Email {
 		$email_field_id = rgars( $feed, 'meta/email' );
 		$email          = rgar( $entry, $email_field_id );
 		return get_user_by( 'email', $email );
+	}
+
+	/**
+	 * If a new email field is configured and has a value, swap the feed's email mapping so GFUR
+	 * writes the new email. Runs after filter_feeds (priority 11) so user lookup has already
+	 * completed using the original email field.
+	 */
+	public function maybe_update_email( $feeds, $entry, $form ) {
+
+		if ( ! $this->_args['new_email_field_id'] ) {
+			return $feeds;
+		}
+
+		$new_email = rgar( $entry, $this->_args['new_email_field_id'] );
+		if ( empty( $new_email ) ) {
+			return $feeds;
+		}
+
+		foreach ( $feeds as &$feed ) {
+			if ( ! $this->is_update_by_email( $feed ) ) {
+				continue;
+			}
+
+			$feed['meta']['email'] = $this->_args['new_email_field_id'];
+		}
+
+		return $feeds;
 	}
 
 	public function filter_feeds( $feeds, $entry, $form ) {
