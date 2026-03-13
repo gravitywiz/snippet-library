@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Perks // Nested Forms + Gravity PDF // Auto-attach Child PDFs to Parent Form Notifications
+ * Gravity Perks // Nested Forms + Gravity PDF // Auto-attach Child PDFs to Parent Form Notifications (Gravity PDF)
  * http://gravitywiz.com/documentation/gravity-forms-nested-forms/
  */
 add_filter( 'gform_notification', function ( $notification, $form, $entry ) {
