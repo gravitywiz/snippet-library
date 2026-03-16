@@ -6,6 +6,8 @@
  * Maps plain text fields to be used as the customer name in the
  * GP Bookings dashboard (Upcoming Bookings, etc.).
  *
+ * Credit: Gui Lamu
+ *
  * Instructions:
  *
  * 1. Install this snippet by following the steps here:
