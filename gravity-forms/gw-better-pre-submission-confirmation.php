@@ -87,6 +87,10 @@ class GWPreviewConfirmation {
 
 		if ( is_array( rgar( $field, 'inputs' ) ) ) {
 			$value = RGFormsModel::get_lead_field_value( $lead, $field );
+
+			if ( version_compare( GFForms::$version, '2.9.29', '>=' ) ) {
+				return GFCommon::get_lead_field_display( $field, $value, $lead );
+			}
 			return GFCommon::get_lead_field_display( $field, $value, $currency );
 		}
 
@@ -97,7 +101,11 @@ class GWPreviewConfirmation {
 				break;
 			default:
 				$value = self::preview_image_value( "input_{$field['id']}", $field, $form, $lead );
-				$value = GFCommon::get_lead_field_display( $field, $value, $currency );
+				if ( version_compare( GFForms::$version, '2.9.29', '>=' ) ) {
+					$value = GFCommon::get_lead_field_display( $field, $value, $lead );
+				} else {
+					$value = GFCommon::get_lead_field_display( $field, $value, $currency );
+				}
 				break;
 		}
 

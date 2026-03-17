@@ -35,7 +35,12 @@ add_filter( 'gwaft_template_output', function( $content, $slug, $name, $data, $s
 		<tbody>
 		<?php foreach ( $data['items'] as $item ):
 			$raw_field_value = GFFormsModel::get_lead_field_value( $original_entry, $item['field'] );
-			$previous_value  = GFCommon::get_lead_field_display( $item['field'], $raw_field_value, rgar( $original_entry, 'currency' ), true, 'html', 'email' );
+			if ( version_compare( GFForms::$version, '2.9.29', '>=' ) ) {
+				$previous_value  = GFCommon::get_lead_field_display( $item['field'], $raw_field_value, $original_entry, true, 'html', 'email' );
+			} else {
+				$previous_value  = GFCommon::get_lead_field_display( $item['field'], $raw_field_value, rgar( $original_entry, 'currency' ), true, 'html', 'email' );
+			}
+		
 			?>
 			<tr>
 				<td style="padding: 0.5rem; border-bottom: 1px solid #ddd;"><?php echo esc_html( $item['label'] ); ?></td>

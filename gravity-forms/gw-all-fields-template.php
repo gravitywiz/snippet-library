@@ -477,7 +477,12 @@ class GW_All_Fields_Template {
 					}
 
 					$raw_field_value = RGFormsModel::get_lead_field_value( $lead, $field );
-					$field_value     = GFCommon::get_lead_field_display( $field, $raw_field_value, rgar( $lead, 'currency' ), $use_text, $format, 'email' );
+
+					if ( version_compare( GFForms::$version, '2.9.29', '>=' ) ) {
+						$field_value = GFCommon::get_lead_field_display( $field, $raw_field_value, $lead, $use_text, $format, 'email' );
+					} else {
+						$field_value = GFCommon::get_lead_field_display( $field, $raw_field_value, rgar( $lead, 'currency' ), $use_text, $format, 'email' );
+					}
 
 					$display_field = true;
 					//depending on parameters, don't display adminOnly or hidden fields
