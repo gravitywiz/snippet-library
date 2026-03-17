@@ -16,7 +16,7 @@
 class GPB_Block_Size_By_Date {
 
 	private $service_ids = array();
-	private $rules = array();
+	private $rules       = array();
 
 	public function __construct( array $args ) {
 		$this->service_ids = isset( $args['service_ids'] ) ? array_map( 'intval', (array) $args['service_ids'] ) : array();
@@ -61,13 +61,13 @@ class GPB_Block_Size_By_Date {
 
 // Example: 45-minute blocks on weekends.
 new GPB_Block_Size_By_Day( array(
-    'service_ids' => array( 123 ),
-    'rules'       => array(
-        array(
-            'block_size' => 45,
-            'days'       => array( 'sat', 'sun' ),
-        ),
-    ),
+	'service_ids' => array( 123 ),
+	'rules'       => array(
+		array(
+			'block_size' => 45,
+			'days'       => array( 'sat', 'sun' ),
+		),
+	),
 ) );
 
 // Example: 30-minute blocks during specific date-range
