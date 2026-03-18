@@ -60,7 +60,7 @@ class GPB_Block_Size_By_Date {
 # Configuration
 
 // Example: 45-minute blocks on weekends.
-new GPB_Block_Size_By_Day( array(
+new GPB_Block_Size_By_Date( array(
 	'service_ids' => array( 123 ),
 	'rules'       => array(
 		array(
@@ -71,7 +71,7 @@ new GPB_Block_Size_By_Day( array(
 ) );
 
 // Example: 30-minute blocks during specific date-range
-// new GPB_Block_Size_By_Day( array(
+// new GPB_Block_Size_By_Date( array(
 //     'service_ids' => array( 456 ),
 //     'rules'       => array(
 //         array(
