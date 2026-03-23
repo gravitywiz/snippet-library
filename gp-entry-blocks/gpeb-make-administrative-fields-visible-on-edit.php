@@ -31,6 +31,18 @@ class GPEB_Editable_Admin_Fields {
 			return $form;
 		}
 
+		/**
+		 * Allow conditional control over whether admin fields should be made visible.
+		 *
+		 * @param bool  $should_make_visible Default true.
+		 * @param array $form
+		 */
+		$should_make_visible = apply_filters( 'gpeb_eaf_visibility', true, $form );
+
+		if ( ! $should_make_visible ) {
+			return $form;
+		}
+
 		foreach ( $form['fields'] as &$field ) {
 			if ( $field->visibility === 'administrative' ) {
 				$field->visibility = 'visible';
