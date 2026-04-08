@@ -11,8 +11,9 @@
 add_filter( 'gppa_input_choices_123_4', 'gppa_populate_checkboxes_as_choices', 10, 3 );
 function gppa_populate_checkboxes_as_choices( $choices, $field, $objects ) {
 
-	$choices   = array();
-	$templates = rgar( $field, 'gppa-choices-templates', array() );
+	$orig_choices = $choices;
+	$choices      = array();
+	$templates    = rgar( $field, 'gppa-choices-templates', array() );
 
 	if ( empty( $objects ) ) {
 		return $choices;
@@ -22,7 +23,10 @@ function gppa_populate_checkboxes_as_choices( $choices, $field, $objects ) {
 	$source_field_id = str_replace( 'gf_field_', '', rgar( $templates, 'value' ) );
 	$source_field    = GFAPI::get_field( $source_form, $source_field_id );
 
-	foreach ( $objects as $object ) {
+	foreach ( $objects as $index => $object ) {
+		$choice = rgar( $orig_choices, $index );
+		$price  = rgar( $choice, 'price', 0 );
+
 		foreach ( $object as $meta_key => $meta_value ) {
 			if ( absint( $meta_key ) === absint( $source_field_id ) ) {
 				/**
@@ -41,7 +45,10 @@ function gppa_populate_checkboxes_as_choices( $choices, $field, $objects ) {
 
 				foreach ( $meta_value as $value ) {
 					$source_choice = $source_field->get_selected_choice( $value );
-					$choices[]     = $source_choice;
+					if ( $price ) {
+						$source_choice['price'] = $price;
+					}
+					$choices[] = $source_choice;
 				}
 			}
 		}
