@@ -26,6 +26,7 @@ class GW_Choice_Count {
 			'choice_field_id'  => null,
 			'choice_field_ids' => false,
 			'values'           => false,
+			'excluded_values'  => false,
 		) );
 
 		if ( isset( $this->_args['choice_field_id'] ) ) {
@@ -91,7 +92,7 @@ class GW_Choice_Count {
 					// which we can use to explicity unbind event handlers
 					self.updateChoiceEventHandler = function() {
 						requestAnimationFrame( function() {
-							self.updateChoiceCount( self.formId, self.choiceFieldIds, self.countFieldId, self.values );
+							self.updateChoiceCount( self.formId, self.choiceFieldIds, self.countFieldId, self.values, self.excludedValues );
 						});
 					};
 
@@ -113,7 +114,7 @@ class GW_Choice_Count {
 						return Boolean( $field.find( ':checkbox, :radio' ).length );
 					}
 
-					self.updateChoiceCount = function( formId, choiceFieldIds, countFieldId, values ) {
+					self.updateChoiceCount = function( formId, choiceFieldIds, countFieldId, values, excludedValues ) {
 
 						var countField = jQuery( '#input_' + formId + '_' + countFieldId ),
 							count      = 0;
@@ -123,22 +124,39 @@ class GW_Choice_Count {
 							for ( var i = 0; i < choiceFieldIds.length; i++ ) {
 
 								var $choiceField = jQuery( '#input_' + formId + '_' + choiceFieldIds[ i ] );
-								if ( ! values ) {
-									// If no values provided in the config, just get the number of checkboxes checked.
+								if ( ! values && ! excludedValues ) {
+									// If no values or excluded_values provided, just get the number of checkboxes checked.
 									if ( self.isCheckableField( $choiceField ) ) {
 										count += $choiceField.find( ':checked' ).not(':disabled').not(' #choice_' + choiceFieldIds[ i ] + '_select_all').length;
 									} else {
 										count += $choiceField.find( 'option:selected' ).length;
 									}
 								} else {
-									// When values are provided, match the values before adding them to count.
+									// Get selected values for both checkable and select fields
 									var selectedValues = [];
-									$choiceField.find( ':checked' ).each( function( k, $selectedChoice ) {
-										selectedValues.push( $selectedChoice.value );
-									});
-									values.forEach( function( val ) {
-										count += selectedValues.indexOf( val ) >= 0;
-									});
+									if ( self.isCheckableField( $choiceField ) ) {
+										$choiceField.find( ':checked' ).each( function( k, $selectedChoice ) {
+											selectedValues.push( $selectedChoice.value );
+										});
+									} else {
+										$choiceField.find( 'option:selected' ).each( function( k, $selectedOption ) {
+											selectedValues.push( $selectedOption.value );
+										});
+									}
+
+									if ( values ) {
+										// When values are provided, match the values before adding them to count.
+										values.forEach( function( val ) {
+											count += selectedValues.indexOf( val ) >= 0 ? 1 : 0;
+										});
+									} else if ( excludedValues ) {
+										// When excluded_values are provided, count all except those values.
+										selectedValues.forEach( function( val ) {
+											if ( excludedValues.indexOf( val ) < 0 ) {
+												count++;
+											}
+										});
+									}
 								}
 
 							}
@@ -182,6 +200,7 @@ class GW_Choice_Count {
 			'countFieldId'   => $this->_args['count_field_id'],
 			'choiceFieldIds' => $this->_args['choice_field_ids'],
 			'values'         => $this->_args['values'],
+			'excludedValues' => $this->_args['excluded_values'],
 		);
 
 		$script = 'new GWChoiceCount( ' . json_encode( $args ) . ' );';
@@ -217,4 +236,5 @@ new GW_Choice_Count( array(
 	'count_field_id'   => 4,             // Any Number field on your form in which the number of checked checkboxes should be dynamically populated; you can configure conditional logic based on the value of this field.
 	'choice_field_ids' => array( 5, 6 ), // Any array of Checkbox or Multi-select field IDs which should be counted.
 	'values'           => false,         // Specify an array of values that should be counted. Values not in this list will not be counted. Defaults to `false` which will count all values.
+	'excluded_values'  => false,         // Specify an array of values that should be excluded from counting. All other values will be counted. Defaults to `false`. Note: if both 'values' and 'excluded_values' are provided, 'values' takes precedence.
 ) );
