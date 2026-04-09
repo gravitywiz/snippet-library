@@ -113,6 +113,21 @@ new GPB_Capacity_Limit_By_Time_And_Day( array(
 	),
 ) );
 
+// Example: capacity by day only (no time restrictions).
+// new GPB_Capacity_Limit_By_Time_And_Day( array(
+//	'service_ids' => array( 123 ),
+//	'rules'       => array(
+//		array(
+//			'capacity' => 5,
+//			'days'     => array( 'mon', 'tue', 'wed', 'thu', 'fri' ),
+//		),
+//		array(
+//			'capacity' => 2,
+//			'days'     => array( 'sat', 'sun' ),
+//		),
+//	),
+// ) );
+
 // Example: seasonal hours for a date range.
 // new GPB_Capacity_Limit_By_Time_And_Day( array(
 // 	'service_ids' => array( 123 ),
