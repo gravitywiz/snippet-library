@@ -59,6 +59,11 @@ function gpld_extend_modifiers_by_blocked_dates( $end_date, $field, $key, $optio
 		}
 	}
 
+	// The base date isn't part of the modifier range, so don't count it as a blocked day.
+	if ( ! gpld_is_valid_date( $date, $field ) ) {
+		$blocked_count--;
+	}
+
 	if ( ! $blocked_count ) {
 		return $end_date;
 	}
@@ -121,6 +126,11 @@ function gpld_exclude_blocked_dates_js() {
 					if( ! GPLimitDates.isDateShown( date, data, fieldId )[0] ) {
 						blockedCount++;
 					}
+				}
+
+				// The base date isn't part of the modifier range, so don't count it as a blocked day.
+				if( ! GPLimitDates.isDateShown( new Date( startDate ), data, fieldId )[0] ) {
+					blockedCount--;
 				}
 
 				if( ! blockedCount ) {
