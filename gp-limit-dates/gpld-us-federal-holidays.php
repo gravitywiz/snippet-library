@@ -14,8 +14,7 @@
  * 1. Install this snippet by following the steps here:
  *    https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  *
- * 2. Update the "targets" configuration at the bottom of this file
- *    with your own form and field IDs in "formId_fieldId" format.
+ * 2. Update the configuration at the bottom of this file with your form and field IDs.
  */
 class GPLD_US_Federal_Holidays {
 
@@ -25,7 +24,8 @@ class GPLD_US_Federal_Holidays {
 	public function __construct( $args = array() ) {
 
 		$this->_args = wp_parse_args( $args, array(
-			'targets'           => array(),
+			'form_id'           => false,
+			'field_ids'         => array(),
 			'years_to_generate' => 20,
 		) );
 
@@ -35,8 +35,12 @@ class GPLD_US_Federal_Holidays {
 
 	public function init() {
 
-		foreach ( $this->_args['targets'] as $target ) {
-			add_filter( "gpld_limit_dates_options_{$target}", array( $this, 'add_holiday_exceptions' ), 10, 3 );
+		if ( ! $this->_args['form_id'] ) {
+			return;
+		}
+
+		foreach ( (array) $this->_args['field_ids'] as $field_id ) {
+			add_filter( "gpld_limit_dates_options_{$this->_args['form_id']}_{$field_id}", array( $this, 'add_holiday_exceptions' ), 10, 3 );
 		}
 
 	}
@@ -108,9 +112,7 @@ class GPLD_US_Federal_Holidays {
 # Configuration
 
 new GPLD_US_Federal_Holidays( array(
-	'targets'           => array(
-		'123_4', // Form ID 123, Field ID 4
-		// Add more targets as needed
-	),
+	'form_id'           => 123,
+	'field_ids'         => array( 4, 5 ),
 	'years_to_generate' => 20, // Matches the datepicker's default 20-year forward range.
 ) );
