@@ -6,20 +6,20 @@
  * Add US federal holidays as exceptions to your GP Limit Dates fields. Supports fixed-date holidays (e.g.
  * Independence Day) and floating holidays (e.g. Thanksgiving, Memorial Day). Fixed holidays that fall on a
  * Saturday or Sunday are automatically shifted to the observed weekday (Saturday to Friday, Sunday to Monday).
- * 
+ *
  * Credit: Clifford (https://github.com/cliffordp)
  *
  * Instructions:
- * 
+ *
  * 1. Install this snippet by following the steps here:
  *    https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
- * 
+ *
  * 2. Update the "targets" configuration at the bottom of this file
  *    with your own form and field IDs in "formId_fieldId" format.
  */
 class GPLD_US_Federal_Holidays {
 
-	private $_args = array();
+	private $_args     = array();
 	private $_holidays = null;
 
 	public function __construct( $args = array() ) {
