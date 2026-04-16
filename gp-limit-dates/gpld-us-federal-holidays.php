@@ -35,12 +35,23 @@ class GPLD_US_Federal_Holidays {
 
 	public function init() {
 
-		if ( ! $this->_args['form_id'] ) {
+		$form_id   = $this->_args['form_id'];
+		$field_ids = (array) $this->_args['field_ids'];
+
+		if ( ! $form_id ) {
+			// Sitewide: apply to all GPLD-enabled Date fields on all forms.
+			add_filter( 'gpld_limit_dates_options', array( $this, 'add_holiday_exceptions' ), 10, 3 );
 			return;
 		}
 
-		foreach ( (array) $this->_args['field_ids'] as $field_id ) {
-			add_filter( "gpld_limit_dates_options_{$this->_args['form_id']}_{$field_id}", array( $this, 'add_holiday_exceptions' ), 10, 3 );
+		if ( empty( $field_ids ) ) {
+			// Form-wide: apply to all GPLD-enabled Date fields on the specified form.
+			add_filter( "gpld_limit_dates_options_{$form_id}", array( $this, 'add_holiday_exceptions' ), 10, 3 );
+			return;
+		}
+
+		foreach ( $field_ids as $field_id ) {
+			add_filter( "gpld_limit_dates_options_{$form_id}_{$field_id}", array( $this, 'add_holiday_exceptions' ), 10, 3 );
 		}
 
 	}
@@ -111,8 +122,20 @@ class GPLD_US_Federal_Holidays {
 
 # Configuration
 
+# Apply to all GPLD-enabled Date fields on all forms.
 new GPLD_US_Federal_Holidays( array(
-	'form_id'           => 123,
-	'field_ids'         => array( 4, 5 ),
 	'years_to_generate' => 20, // Matches the datepicker's default 20-year forward range.
 ) );
+
+# Apply to all GPLD-enabled Date fields on a specific form.
+//new GPLD_US_Federal_Holidays( array(
+//	'form_id'           => 123,
+//	'years_to_generate' => 20,
+// ) );
+
+# Apply to specific GPLD-enabled Date fields on a specific form.
+//new GPLD_US_Federal_Holidays( array(
+//	'form_id'           => 123,
+//	'field_ids'         => array( 4, 5 ),
+//	'years_to_generate' => 20,
+//) );
