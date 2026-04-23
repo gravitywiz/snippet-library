@@ -54,6 +54,7 @@ class GPNF_GFlow_Delay_Child_Feed {
 		add_filter( $hook, array( $this, 'addon_should_process' ), 9, 6 );
 
 		add_action( 'gravityflow_step_complete', array( $this, 'handle_gravityflow_step_completion' ), 10, 4 );
+		add_action( 'gform_after_submission', array( $this, 'handle_zero_total_submission' ), 10, 2 );
 	}
 
 	function addon_should_process( $should_process_feed, $feed, $context, $parent_form, $nested_form_field, $entry ) {
@@ -75,6 +76,30 @@ class GPNF_GFlow_Delay_Child_Feed {
 		// When add-on workflow step is complete on parent form.
 		$entry       = GFAPI::get_entry( $entry_id );
 		$parent_form = GFAPI::get_form( $form_id );
+
+		// Process nested feeds
+		$this->process_nested_feeds( $entry, $parent_form );
+	}
+
+	function handle_zero_total_submission( $entry, $form ) {
+
+		// Only process if this is a parent form we're watching
+		if ( $this->_args['form_id'] && $form['id'] != $this->_args['form_id'] ) {
+			return;
+		}
+
+		// Check if total is 0 (no payment required)
+		$total = GFCommon::get_order_total( $form, $entry );
+
+		if ( $total > 0 ) {
+			return; // Payment required, let normal workflow handle it
+		}
+
+		// No payment required - process nested feeds immediately
+		$this->process_nested_feeds( $entry, $form );
+	}
+
+	private function process_nested_feeds( $entry, $parent_form ) {
 
 		// Get all nested entries.
 		$nested_entries = array();
