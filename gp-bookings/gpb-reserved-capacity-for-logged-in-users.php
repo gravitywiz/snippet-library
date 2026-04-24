@@ -4,8 +4,8 @@
  * https://gravitywiz.com/documentation/gravity-forms-bookings/
  *
  * Reserve a portion of a service's per-slot capacity for logged-in users until a cutoff
- * number of days before the booking (e.g. on a capacity-2 slot, hold 1 spot for logged-in
- * users until 30 days out). Reserved spots are released to everyone once the cutoff is reached.
+ * number of hours before the booking (e.g. on a capacity-2 slot, hold 1 spot for logged-in
+ * users until 24 hours out). Reserved spots are released to everyone once the cutoff is reached.
  *
  * Instructions:
  *
@@ -15,25 +15,25 @@
  * 2. Update the configuration at the bottom of the snippet:
  *    - List the GP Bookings service IDs that should reserve capacity in service_ids.
  *    - Adjust reserved_capacity to the number of spots per slot reserved for logged-in users.
- *    - Adjust release_days_before to the number of days before the booking date
+ *    - Adjust release_hours_before to the number of hours before the booking start time
  *      at which reserved spots are released to the general public/logged-out users.
  */
 class GPB_Reserved_Capacity {
 
 	private $service_ids;
 	private $reserved_capacity;
-	private $release_days_before;
+	private $release_hours_before;
 
 	public function __construct( array $args ) {
 		$args = wp_parse_args( $args, array(
-			'service_ids'         => array(),
-			'reserved_capacity'   => 0,
-			'release_days_before' => 0,
+			'service_ids'          => array(),
+			'reserved_capacity'    => 0,
+			'release_hours_before' => 0,
 		));
 
-		$this->service_ids         = array_map( 'intval', (array) $args['service_ids'] );
-		$this->reserved_capacity   = max( 0, (int) $args['reserved_capacity'] );
-		$this->release_days_before = max( 0, (int) $args['release_days_before'] );
+		$this->service_ids          = array_map( 'intval', (array) $args['service_ids'] );
+		$this->reserved_capacity    = max( 0, (int) $args['reserved_capacity'] );
+		$this->release_hours_before = max( 0, (int) $args['release_hours_before'] );
 
 		if ( empty( $this->service_ids ) || $this->reserved_capacity < 1 ) {
 			return;
@@ -74,14 +74,14 @@ class GPB_Reserved_Capacity {
 
 	private function is_within_reserved_window( string $start_datetime ): bool {
 		try {
-			$booking_date = \Carbon\Carbon::parse( $start_datetime )->startOfDay();
+			$booking_datetime = \Carbon\Carbon::parse( $start_datetime );
 		} catch ( \Throwable $e ) {
 			return false;
 		}
 
-		$cutoff = \Carbon\Carbon::now()->startOfDay()->addDays( $this->release_days_before );
+		$cutoff = \Carbon\Carbon::now()->addHours( $this->release_hours_before );
 
-		return $booking_date->greaterThan( $cutoff );
+		return $booking_datetime->greaterThan( $cutoff );
 	}
 
 }
@@ -90,8 +90,8 @@ class GPB_Reserved_Capacity {
 
 new GPB_Reserved_Capacity(
 	array(
-		'service_ids'         => array( 123, 456 ), // Enter one or more service IDs
-		'reserved_capacity'   => 1, // Spots per slot reserved for logged-in users
-		'release_days_before' => 30, // Days before booking when reserved spots open to the public
+		'service_ids'          => array( 123, 456 ), // Enter one or more service IDs
+		'reserved_capacity'    => 1, // Spots per slot reserved for logged-in users
+		'release_hours_before' => 24, // Hours before booking when reserved spots open to the public
 	)
 );
