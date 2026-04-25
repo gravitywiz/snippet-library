@@ -7,7 +7,7 @@
  * Independence Day) and floating holidays (e.g. Thanksgiving, Memorial Day). Fixed holidays that fall on a
  * Saturday or Sunday are automatically shifted to the observed weekday (Saturday to Friday, Sunday to Monday).
  *
- * Credit: Clifford (https://github.com/cliffordp)
+ * Credit: Clifford (https://tourkick.com/gravity-forms/)
  *
  * Instructions:
  *
