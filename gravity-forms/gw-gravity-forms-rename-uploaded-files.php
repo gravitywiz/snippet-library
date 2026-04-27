@@ -126,7 +126,7 @@ class GW_Rename_Uploaded_Files {
 
 			if ( $field->get_input_type() == 'post_image' ) {
 				$value = str_replace( $uploaded_files[0], $renamed_files[0], rgar( $entry, $field->id ) );
-			} elseif ( $field->multipleFiles ) {
+			} elseif ( $field->multipleFiles || rgar( $field, 'storageType' ) === 'json' ) {
 				$value = json_encode( $renamed_files );
 			} else {
 				$value = $renamed_files[0];
