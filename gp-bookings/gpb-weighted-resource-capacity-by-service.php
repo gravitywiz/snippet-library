@@ -67,25 +67,26 @@ class GPB_Weighted_Resource_Capacity_By_Service {
 		$table   = \GP_Bookings\Database::table_bookings();
 		$exclude = $this->excluded_booking_id();
 
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is provided by GP Bookings.
 		$rows = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT b.booking_id, b.parent_booking_id, b.quantity, p.object_id AS service_id
-				FROM %i AS b
-				LEFT JOIN %i AS p ON b.parent_booking_id = p.booking_id AND p.object_type = 'service'
+				FROM `{$table}` AS b
+				LEFT JOIN `{$table}` AS p ON b.parent_booking_id = p.booking_id AND p.object_type = 'service'
 				WHERE b.object_id = %d
 				AND b.object_type = 'resource'
 				AND b.start_datetime < %s
 				AND b.end_datetime > %s
 				AND b.status IN ('pending', 'confirmed')",
-				$table,
-				$table,
 				$resource->get_id(),
 				$end_datetime,
 				$start_datetime
 			)
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
-		$raw = $weighted = 0;
+		$raw      = 0;
+		$weighted = 0;
 
 		foreach ( $rows as $row ) {
 			if ( $exclude && ( (int) $row->booking_id === $exclude || (int) $row->parent_booking_id === $exclude ) ) {
@@ -101,7 +102,8 @@ class GPB_Weighted_Resource_Capacity_By_Service {
 	}
 
 	private function units_for( $service_id ) {
-		return $this->service_units[ (int) $service_id ] ?? $this->default_units;
+		$units = $this->service_units[ (int) $service_id ] ?? $this->default_units;
+		return max( 1, (int) $units );
 	}
 
 	private function excluded_booking_id() {
