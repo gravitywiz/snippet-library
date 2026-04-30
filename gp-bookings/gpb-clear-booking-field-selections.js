@@ -33,7 +33,7 @@
 	}
 
 	function clearChoiceField( fieldId ) {
-		var $radios = $form.find( 'input[type="radio"][name^="input_' + fieldId + '"]' );
+		var $radios = $form.find( 'input[type="radio"][name="input_' + fieldId + '"]' );
 		if ( $radios.length ) {
 			var $checked = $radios.filter( ':checked' );
 			$radios.prop( 'checked', false );
