@@ -1,5 +1,5 @@
 /**
- * Gravity Perks // GP Advanced Calculations // Calculation Logic on Text Field
+ * Gravity Perks // GP Advanced Calculations // Capture Calculation Result as Text Field Value
  * https://gravitywiz.com/documentation/gravity-forms-advanced-calculations
  *
  * Instruction Video: https://www.loom.com/share/db50e407e0634748a36b189b63e0bb92
