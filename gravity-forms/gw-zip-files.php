@@ -146,7 +146,9 @@ class GW_Zip_Files {
 			}
 
 			$files = GFFormsModel::get_lead_field_value( $entry, $field );
-			if ( $this->is_multi_file( $field ) ) {
+			if ( is_callable( array( $field, 'to_array' ) ) ) {
+				$files = $field->to_array( $files );
+			} elseif ( $this->is_multi_file( $field ) ) {
 				$files = json_decode( $files );
 			}
 
