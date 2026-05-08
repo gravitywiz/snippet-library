@@ -10,22 +10,30 @@
  *    https://gravitywiz.com/gravity-forms-code-chest/
  */
 gform.addFilter( 'gpadvs_settings', function( settings, gpadvs, selectNamespace ) {
-  if ( gpadvs.formId == GFFORMID ) {
-    settings.onType = function( str ) {
-      const tomSelect = window[ selectNamespace ];
-      const matchedKey = Object.keys( tomSelect.options ).filter( function( key ) {
-        return -1 !== tomSelect.options[ key ].text.toLowerCase().indexOf( str.toLowerCase() );
-      } );
+	if ( gpadvs.formId == GFFORMID ) {
+		let lastQuery = '';
+		settings.onType = function( str ) {
+			lastQuery = str;
+			const tomSelect = window[ selectNamespace ];
+			const matchedKey = Object.keys( tomSelect.options ).filter( function( key ) {
+				return -1 !== tomSelect.options[ key ].text.toLowerCase().indexOf( str.toLowerCase() );
+			} );
 
-      if ( 1 === matchedKey.length ) {
-        tomSelect.setValue( tomSelect.options[ matchedKey[0] ].id, false );
-        // Especially after an option was previously selected, if the first
-        // character typed next to resume search matches just one option,
-        // the dropdown would remain open; blur closes it immediately.
-        tomSelect.blur();
-      }
-    };
-  }
+			if ( 1 === matchedKey.length ) {
+				tomSelect.setValue( tomSelect.options[ matchedKey[0] ].id, false );
+				// Especially after an option was previously selected, if the first
+				// character typed next to resume search matches just one option,
+				// the dropdown would remain open; blur closes it immediately.
+				tomSelect.blur();
+			}
+		};
+
+		const originalOnLoad = settings.onLoad;
+		settings.onLoad = function() {
+			if ( originalOnLoad ) originalOnLoad.call( this );
+			settings.onType( lastQuery );
+		};
+	}
 
 	return settings;
 } );
