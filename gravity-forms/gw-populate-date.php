@@ -1752,7 +1752,7 @@ class GW_Populate_Date {
 											.replace( 'm', GWDates.padDateOrMonth( dateParts.month ) )
 											.replace( 'd', GWDates.padDateOrMonth( dateParts.day ) )
 											.replace( 'y', dateParts.year );
-										$inputs.val( dateStr );
+										$inputs.eq(0).val(dateStr);
 										break;
 									default:
 										break;
