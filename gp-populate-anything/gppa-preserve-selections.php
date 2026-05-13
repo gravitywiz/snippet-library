@@ -27,4 +27,4 @@ add_filter( 'gppa_input_choices_123_4', function( $choices, $field, $objects ) {
 }, 10, 3 );
 
 // Update "123" to your form ID and "4" to your field ID.
-add_filter( 'gppa_field_choices_posted_value_123_4', '__return_false' );
+add_filter( 'gppa_field_has_posted_value_123_4', '__return_false' );
