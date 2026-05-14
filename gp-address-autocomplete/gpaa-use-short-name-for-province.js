@@ -4,7 +4,7 @@
  *
  * Instruction Video: https://www.loom.com/share/f39708854d504d32902b5fca29e73213
  *
- * This was developed for a customer using Address Autocomplete in Italy. The province was retuned as
+ * This was developed for a customer using Address Autocomplete in Italy. The province was returned as
  * "Città Metropolitana di Torino" where they wanted to use the province code instead (e.g. "TO").
  *
  * Note: This snippet is only intended for use with Gravity Forms’ default International Address field type.
