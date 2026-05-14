@@ -6,7 +6,12 @@
  *
  * Instructions:
  *   1. Install per https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
- *   2. Update `$payment_methods`, `$forms`, and `$do_not_process_feeds` accordingly.
+ *   2. Update `$payment_methods`, `$forms`, `$feed_ids`, and `$do_not_process_feeds` accordingly.
+ */
+
+/**
+ * To apply this snippet to a specific feed on a form, set the $feed_ids array below to the feed IDs you want to process.
+ * E.g. $feed_ids = array( 12, 34 );
  */
 
 add_action( 'gform_post_payment_action', function( $entry, $action ) {
@@ -35,6 +40,14 @@ add_action( 'gform_post_payment_action', function( $entry, $action ) {
 	 */
 	$forms = array();
 
+	/**
+	 * Update this with the IDs of the feeds
+	 * for which the snippet should be applied. Else,
+	 * all feeds will be processed for the form(s).
+	 * E.g. $feed_ids = array( 12, 34 );
+	 */
+	$feed_ids = array();
+
 	if ( ! empty( $forms ) && ! in_array( (int) $entry['form_id'], $forms, true ) ) {
 		return;
 	}
@@ -56,8 +69,17 @@ add_action( 'gform_post_payment_action', function( $entry, $action ) {
 		return;
 	}
 
+
 	/** @var GSPCFeed|false $payment_feed */
 	$payment_feed = gs_product_configurator()->get_payment_feed( $entry );
+
+	// If $feed_ids is set, only process if the payment feed's ID is in the list.
+	if ( ! empty( $feed_ids ) ) {
+		$feed_id = is_object( $payment_feed ) && isset( $payment_feed->id ) ? $payment_feed->id : ( is_array( $payment_feed ) && isset( $payment_feed['id'] ) ? $payment_feed['id'] : null );
+		if ( ! $feed_id || ! in_array( (int) $feed_id, $feed_ids, true ) ) {
+			return;
+		}
+	}
 
 	/**
 	 * @var GFForm|null $form
