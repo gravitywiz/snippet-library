@@ -3,6 +3,9 @@
  * Gravity Perks // GP Address Autocomplete // Always Use Short Name for State/Province/Region
  * https://gravitywiz.com/documentation/gravity-forms-address-autocomplete/
  *
+ * This PHP snippet applies the short name rule GLOBALLY to all forms and all address fields using GP Address Autocomplete.
+ * For a per-form JavaScript version, see: https://gravitywiz.com/snippet-library/gpaa-use-short-name-for-province/
+ *
  * Forces GP Address Autocomplete to use the short name (e.g. "TO" instead of "Città Metropolitana di Torino")
  * for state, province, or region components on ALL forms and ALL address fields.
  *

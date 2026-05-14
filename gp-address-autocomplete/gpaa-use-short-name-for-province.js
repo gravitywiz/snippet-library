@@ -4,10 +4,13 @@
  *
  * Instruction Video: https://www.loom.com/share/f39708854d504d32902b5fca29e73213
  *
- * This was develope for a customer using Address Autocomplete in Italy. The province was retuned as
+ * This was developed for a customer using Address Autocomplete in Italy. The province was returned as
  * "Città Metropolitana di Torino" where they wanted to use the province code instead (e.g. "TO").
  *
  * Note: This snippet is only intended for use with Gravity Forms’ default International Address field type.
+ *
+ * This JavaScript snippet applies the short name rule PER FORM. Add it only to forms where you want this behavior.
+ * For a global PHP version, see: https://gravitywiz.com/snippet-library/gpaa-use-short-name-for-province-2/
  */
 gform.addFilter("gpaa_values", function (values, place) {
   for (var i = 0; i < place.address_components.length; i++) {
