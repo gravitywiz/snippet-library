@@ -11,7 +11,7 @@ add_filter( 'gppa_object_type_query', function( $query, $args ) {
 		foreach ( $query['where'] as &$where_group ) {
 			foreach ( $where_group as &$where ) {
 				// Update "Unsure" to the field value you wish to exempt a filter.
-				if ( strpos( $where, 'Unsure' ) !== false ) {
+				if ( is_string( $where ) && strpos( $where, 'Unsure' ) !== false ) {
 					$where = null;
 					unset( $where );
 				}
