@@ -24,5 +24,12 @@ gform.addFilter( 'gpaa_autocomplete_options', function( options ) {
 // Display Place Name
 gform.addAction( 'gpaa_fields_filled', function ( place, instance, formId, fieldId ) {
 	let $addressLine1 = jQuery( '#input_{0}_{1}_1'.gformFormat( formId, fieldId ) );
+
+	// Nested Forms scenario where the value may duplicate.
+	if ( $addressLine1.val().includes( place.name ) ) {
+		$addressLine1.val( place.name ).trigger('change');
+		return;
+	}
+
 	$addressLine1.val( place.name + ', ' + $addressLine1.val() ).trigger('change');
 } );
