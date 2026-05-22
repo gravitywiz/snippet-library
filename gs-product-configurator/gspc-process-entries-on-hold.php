@@ -6,7 +6,7 @@
  *
  * Instructions:
  *   1. Install per https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
- *   2. Update `$payment_methods`, `$forms`, and `$do_not_process_feeds` accordingly.
+ *   2. Update `$payment_methods`, `$forms`, `$feed_ids`, and `$do_not_process_feeds` accordingly.
  */
 
 add_action( 'gform_post_payment_action', function( $entry, $action ) {
@@ -35,6 +35,28 @@ add_action( 'gform_post_payment_action', function( $entry, $action ) {
 	 */
 	$forms = array();
 
+	/**
+	 * Update this with the specific feed IDs to process.
+	 * If specified, only these feed IDs will be processed.
+	 * This takes precedence over $forms.
+	 * 
+	 * Example: $feed_ids = array( 789, 101112 );
+	 */
+	$feed_ids = array();
+
+	if ( ! empty( $feed_ids ) ) {
+		// Filter the feeds to only those matching the specified feed IDs
+		add_filter( 'gform_pre_process_feeds', function( $feeds, $form_id ) use ( $feed_ids ) {
+			if ( empty( $feeds ) ) {
+				return $feeds;
+			}
+			
+			return array_filter( $feeds, function( $feed ) use ( $feed_ids ) {
+				return in_array( $feed['id'], $feed_ids );
+			});
+		}, 10, 2 );
+	}
+
 	if ( ! empty( $forms ) && ! in_array( (int) $entry['form_id'], $forms, true ) ) {
 		return;
 	}
@@ -44,6 +66,10 @@ add_action( 'gform_post_payment_action', function( $entry, $action ) {
 	}
 
 	$wc_order = wc_get_order( absint( $action['transaction_id'] ) );
+
+	if ( ! $wc_order ) {
+		return;
+	}
 
 	if ( ! empty( $payment_methods )
 		&& ! in_array( $wc_order->get_payment_method(), $payment_methods, true ) ) {
@@ -65,6 +91,10 @@ add_action( 'gform_post_payment_action', function( $entry, $action ) {
 	$form = GFAPI::get_form( $entry['form_id'] );
 
 	if ( ! $payment_feed || ! $form ) {
+		// Clean up the filter if it was added
+		if ( ! empty( $feed_ids ) ) {
+			remove_all_filters( 'gform_pre_process_feeds' );
+		}
 		return;
 	}
 
@@ -86,7 +116,13 @@ add_action( 'gform_post_payment_action', function( $entry, $action ) {
 		}
 	}
 
+	// Trigger the feeds
 	gs_product_configurator()->trigger_payment_delayed_feeds( $action['transaction_id'], $payment_feed, $entry, $form );
+
+	// Clean up filters
+	if ( ! empty( $feed_ids ) ) {
+		remove_all_filters( 'gform_pre_process_feeds' );
+	}
 
 	if ( ! empty( $do_not_process_feeds ) ) {
 		foreach ( $do_not_process_feeds as $feed ) {
