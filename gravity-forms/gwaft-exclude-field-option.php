@@ -3,8 +3,7 @@
  * Gravity Wiz // Gravity Forms All Fields Template // Exclude Field from All Fields Template
  * https://gravitywiz.com/gravity-forms-all-fields-template/
  *
- * Adds a checkbox to each field's Advanced settings allowing you to exclude that specific field from the {all_fields}
- * merge tag output when using the All Fields Template plugin.
+ * Adds a checkbox to each field's Advanced settings allowing you to exclude that specific field from the {all_fields} merge tag output when using the All Fields Template plugin.
  *
  * Plugin Name:  GF All Fields Template — Exclude Field
  * Plugin URI:   https://gravitywiz.com/gravity-forms-all-fields-template/
