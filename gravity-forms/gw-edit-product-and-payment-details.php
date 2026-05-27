@@ -4,7 +4,7 @@
  *
  * Edit products (and payment details) via the Gravity Forms Edit Entry view.
  *
- * @version   1.3
+ * @version   1.4
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/
@@ -38,6 +38,8 @@ class GW_Edit_Products {
 		add_filter( 'gform_field_input', array( $this, 'display_product_edit_mode' ), 10, 5 );
 		add_filter( 'gform_after_update_entry', array( $this, 'save_product_edits' ), 10, 2 );
 
+		add_filter( 'gform_product_info', array( $this, 'exclude_removed_products' ), 10, 3 );
+
 		// edit payment status
 		add_filter( 'gform_entry_detail_meta_boxes', array( $this, 'handle_payment_details_meta_box' ), 10, 3 );
 		add_action( 'gform_payment_details', array( $this, 'maybe_render_payment_details_edit_form' ), 10, 2 );
@@ -50,12 +52,35 @@ class GW_Edit_Products {
 			return $input;
 		}
 
-		//$orig_type = $field->type;
+		$form             = GFAPI::get_form( $form_id );
+		$orig_type        = $field->type;
+		$disable_quantity = $field->disableQuantity;
+		$removable        = $this->is_entry_detail_edit() && $this->is_removable_product( $field, $form );
+
+		if ( $removable ) {
+			$field->disableQuantity = false;
+		}
+
 		$field->type = 'GWEP';
 		$input       = $this->get_field_input( $field, $value, $entry_id, $form_id );
-		//$field->type = $orig_type;
+
+		$field->type            = $orig_type;
+		$field->disableQuantity = $disable_quantity;
+
+		if ( $removable ) {
+			$input = str_replace( "class='ginput_quantity' size='10'", "class='ginput_quantity' size='10' min='0' max='1'", $input );
+		}
 
 		return $input;
+	}
+
+	public function is_removable_product( $field, $form ) {
+
+		if ( $field->inputType !== 'singleproduct' || ! $field->disableQuantity ) {
+			return false;
+		}
+
+		return sizeof( GFCommon::get_product_fields_by_type( $form, array( 'quantity' ), $field->id ) ) === 0;
 	}
 
 	public function get_field_input( $field, $value, $entry_id, $form_id ) {
@@ -133,6 +158,17 @@ class GW_Edit_Products {
 			}
 		}
 
+	}
+
+	public function exclude_removed_products( $product_info, $form, $entry ) {
+
+		foreach ( $form['fields'] as $field ) {
+			if ( $this->is_removable_product( $field, $form ) && (string) rgar( $entry, $field->id . '.3' ) === '0' ) {
+				unset( $product_info['products'][ $field->id ] );
+			}
+		}
+
+		return $product_info;
 	}
 
 	public function clear_product_cache( $entry_id ) {
