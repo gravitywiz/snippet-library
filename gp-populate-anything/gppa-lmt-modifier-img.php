@@ -8,7 +8,7 @@
  * For example, here is a field configured to allow the user to select from a list of posts. The value of each choice is
  * the attachment ID of the featured image (e.g. "_thumbnail_id").
  *
- * ![Screenshot of field settings](https://gwiz.io/36LzNPM)
+ * ![Screenshot of field settings](https://gravitywiz.com/app/uploads/2026/05/live-merge-tag-modifier-img.png)
  *
  * In an HTML field on the same form, use the @{Field Label:1:value,img} to take the attachment ID (which is the value
  * of the choice) and output the image it references.
