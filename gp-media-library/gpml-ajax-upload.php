@@ -11,7 +11,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-media-library/
  * Description:  Upload images to the Media Library as they are uploaded via the Gravity Forms Multi-file Upload field.
  * Author:       Gravity Wiz
- * Version:      0.15
+ * Version:      0.16
  * Author URI:   https://gravitywiz.com/
  */
 class GPML_Ajax_Upload {
@@ -50,6 +50,11 @@ class GPML_Ajax_Upload {
 		// AJAX upload step. GF rejects these URLs because they point to wp-content/uploads/
 		// instead of GF's expected temp directory.
 		add_filter( 'gform_field_validation', array( $this, 'bypass_file_validation' ), 10, 4 );
+
+		// Retain AJAX-uploaded files when using Save & Continue. GF strips our uploaded files
+		// from the draft because they include a URL (see GFFormsModel::set_uploaded_files()),
+		// so we re-inject them into the draft submission before it is saved.
+		add_filter( 'gform_incomplete_submission_pre_save', array( $this, 'retain_files_in_draft' ), 10, 3 );
 
 	}
 
@@ -120,6 +125,45 @@ class GPML_Ajax_Upload {
 
 		die( $output );
 
+	}
+
+	public function retain_files_in_draft( $submission_json, $resume_token, $form ) {
+
+		$submission = json_decode( $submission_json, true );
+		$unique_id  = rgar( $submission, 'gform_unique_id' ) ?: rgpost( 'gform_unique_id' );
+		if ( ! $this->is_applicable_form( $form ) || ! is_array( $submission ) || empty( $unique_id ) ) {
+			return $submission_json;
+		}
+
+		foreach ( $form['fields'] as $field ) {
+			if ( $field->get_input_type() != 'fileupload' || ! $field->multipleFiles || ! gp_media_library()->is_applicable_field( $field ) ) {
+				continue;
+			}
+
+			$ids = gform_get_meta( $this->_args['default_entry_id'], sprintf( 'gpml_ids_%s_%s', $unique_id, $field->id ) );
+			if ( empty( $ids ) ) {
+				continue;
+			}
+
+			$files = $urls = array();
+			foreach ( $ids as $id ) {
+				$url = is_wp_error( $id ) ? false : wp_get_attachment_url( $id );
+				if ( ! $url ) {
+					continue;
+				}
+                
+				$files[] = array( 'uploaded_filename' => wp_basename( $url ), 'id' => 'gpml-' . $id );
+				$urls[]  = $url;
+			}
+
+			if ( $files ) {
+				$submission['files'][ 'input_' . $field->id ] = $files;
+				$submission['partial_entry'][ $field->id ]    = json_encode( $urls );
+				$submission['submitted_values'][ $field->id ] = $urls;
+			}
+		}
+
+		return json_encode( $submission );
 	}
 
 	public function bypass_file_validation( $result, $value, $form, $field ) {
