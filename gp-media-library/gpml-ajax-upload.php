@@ -145,14 +145,19 @@ class GPML_Ajax_Upload {
 				continue;
 			}
 
-			$files = $urls = array();
+			$files = array();
+			$urls  = array();
+
 			foreach ( $ids as $id ) {
 				$url = is_wp_error( $id ) ? false : wp_get_attachment_url( $id );
 				if ( ! $url ) {
 					continue;
 				}
-                
-				$files[] = array( 'uploaded_filename' => wp_basename( $url ), 'id' => 'gpml-' . $id );
+
+				$files[] = array(
+					'uploaded_filename' => wp_basename( $url ),
+					'id' => 'gpml-' . $id,
+				);
 				$urls[]  = $url;
 			}
 
