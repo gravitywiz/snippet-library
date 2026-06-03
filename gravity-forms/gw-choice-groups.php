@@ -113,7 +113,6 @@ class GW_Choice_Groups {
 			if ( preg_match( self::GROUP_PATTERN, trim( rgar( $choice, 'text' ) ) ) ) {
 				return true;
 			}
-
 		}
 
 		return false;
@@ -144,15 +143,10 @@ class GW_Choice_Groups {
 			}
 
 			if ( $current_group_index !== null ) {
-
 				$groups[ $current_group_index ]['choices'][] = $choice;
-
 			} else {
-
 				$groups[] = $choice;
-
 			}
-
 		}
 
 		return $groups;
