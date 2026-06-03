@@ -168,11 +168,8 @@ class GW_Choice_Groups {
 			if ( in_array( (string) $choice_value, array_map( 'strval', $value ), true ) ) {
 				$selected = ' selected="selected"';
 			}
-
 		} elseif ( (string) $choice_value === (string) $value ) {
-
 			$selected = ' selected="selected"';
-
 		}
 
 		return sprintf(
