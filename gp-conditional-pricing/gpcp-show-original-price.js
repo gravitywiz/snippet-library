@@ -71,7 +71,9 @@ gform.addAction( 'gpcp_after_update_pricing', function( triggerFieldId, GWCondit
 			$input.before( $basePrice );
 		}
 
-		$basePrice.text( basePrice );
+		if ( $basePrice && typeof $basePrice.text === 'function' ) {
+			$basePrice.text( basePrice );
+		}
 	}
 
 } );
