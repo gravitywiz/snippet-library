@@ -5,10 +5,10 @@
  *
  * Update existing post title, content, author and custom fields with values from Gravity Forms.
  *
- * @version 0.7
+ * @version 0.8
  * @author  Scott Ryer <scott@gravitywiz.com>
  * @license GPL-2.0+
- * @link    http://gravitywiz.com
+ * @link    https://gravitywiz.com
  */
 class GW_Update_Posts {
 
@@ -279,6 +279,13 @@ class GW_Update_Posts {
 			$meta_value = rgar( $entry, $value );
 			// Address input
 			if ( $field_type == 'address' ) {
+				$meta_value = $field->get_value_export( $entry, $value );
+			}
+
+			// File Upload input. As of Gravity Forms 2.10, file upload fields store their value as a
+			// JSON-encoded array (e.g. ["https://.../file.jpg"]), even for single file uploads. Use
+			// get_value_export() to resolve the plain URL(s) rather than storing the raw JSON value.
+			if ( $field_type === 'fileupload' ) {
 				$meta_value = $field->get_value_export( $entry, $value );
 			}
 
