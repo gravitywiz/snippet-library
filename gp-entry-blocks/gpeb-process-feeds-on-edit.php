@@ -47,7 +47,9 @@ add_filter( 'gform_entry_post_save', function( $entry, $form ) {
 	foreach ( $addons as $addon ) {
 		$addon = call_user_func( array( $addon, 'get_instance' ) );
 		if ( $addon instanceof \GFFeedAddOn ) {
+			add_filter( 'gform_allow_feed_reprocessing', '__return_true' );
 			$addon->maybe_process_feed( $entry, $form );
+			add_filter( 'gform_allow_feed_reprocessing', '__return_false' );
 		}
 	}
 
