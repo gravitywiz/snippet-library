@@ -56,6 +56,11 @@ class GPML_Ajax_Upload {
 		// so we re-inject them into the draft submission before it is saved.
 		add_filter( 'gform_incomplete_submission_pre_save', array( $this, 'retain_files_in_draft' ), 10, 3 );
 
+		// GF 2.10.3+ strips file entries with a 'url' key in set_uploaded_files(), which runs
+		// during process_form(). Strip our 'url' key from gform_uploaded_files before that
+		// happens so the temp_filename/uploaded_filename entries survive for validation.
+		add_filter( 'gform_pre_process', array( $this, 'strip_url_from_gform_uploaded_files' ) );
+
 	}
 
 	public function is_applicable_form( $form ) {
@@ -169,6 +174,42 @@ class GPML_Ajax_Upload {
 		}
 
 		return json_encode( $submission );
+	}
+
+	public function strip_url_from_gform_uploaded_files( $form ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return $form;
+		}
+
+		$raw = rgpost( 'gform_uploaded_files' );
+		if ( empty( $raw ) ) {
+			return $form;
+		}
+
+		$uploaded_files = json_decode( $raw, true );
+		if ( ! is_array( $uploaded_files ) ) {
+			return $form;
+		}
+
+		$modified = false;
+		foreach ( $uploaded_files as &$files ) {
+			if ( ! is_array( $files ) || ! isset( $files[0] ) || ! is_array( $files[0] ) ) {
+				continue;
+			}
+			foreach ( $files as &$file ) {
+				if ( isset( $file['url'] ) ) {
+					unset( $file['url'] );
+					$modified = true;
+				}
+			}
+		}
+		unset( $files, $file );
+
+		if ( $modified ) {
+			$_POST['gform_uploaded_files'] = json_encode( $uploaded_files );
+		}
+
+		return $form;
 	}
 
 	public function bypass_file_validation( $result, $value, $form, $field ) {
