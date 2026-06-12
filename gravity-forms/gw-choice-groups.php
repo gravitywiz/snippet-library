@@ -22,7 +22,7 @@
  * Plugin URI:   https://gravitywiz.com/
  * Description:  Organize Drop Down and Multi Select choices into visual groups using special heading choices.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   https://gravitywiz.com/
  */
 
@@ -52,7 +52,7 @@ class GW_Choice_Groups {
 		$select_attributes = array(
 			sprintf( 'name="%s"', esc_attr( $is_multiselect ? 'input_' . $field_id . '[]' : 'input_' . $field_id ) ),
 			sprintf( 'id="input_%d_%d"', $form_id, $field_id ),
-			sprintf( 'class="%s"', esc_attr( $is_multiselect ? 'gfield_multiselect' : 'medium gfield_select' ) ),
+			sprintf( 'class="%s"', esc_attr( $is_multiselect ? 'gfield_multiselect' : 'gfield_select' ) ),
 		);
 
 		if ( $is_multiselect ) {
