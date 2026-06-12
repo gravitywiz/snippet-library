@@ -22,9 +22,9 @@ defined( 'ABSPATH' ) || die();
 
 class GPB_Pricing_By_Days_Of_Month {
 
-	private $service_ids = array();
+	private $service_ids  = array();
 	private $resource_ids = array();
-	private $rules = array();
+	private $rules        = array();
 
 	public function __construct( array $args ) {
 		$this->service_ids  = isset( $args['service_ids'] ) ? array_map( 'intval', (array) $args['service_ids'] ) : array();
@@ -130,15 +130,30 @@ class GPB_Pricing_By_Days_Of_Month {
 		);
 
 		if ( isset( $rule['set_price'] ) ) {
-			return array_merge( array( 'type' => 'set_price', 'base_price' => (float) $rule['set_price'] ), $modifiers );
+			return array_merge(
+				array(
+					'type'       => 'set_price',
+					'base_price' => (float) $rule['set_price'],
+				),
+				$modifiers
+			);
 		}
-
+		
 		if ( isset( $rule['add'] ) ) {
-			return array_merge( array( 'type' => 'addition', 'amount' => (float) $rule['add'] ), $modifiers );
+			return array_merge(
+				array(
+					'type'   => 'addition',
+					'amount' => (float) $rule['add'],
+				),
+				$modifiers
+			);
 		}
-
+		
 		if ( isset( $rule['multiply'] ) ) {
-			return array( 'type' => 'multiplication', 'multiplier' => (float) $rule['multiply'] );
+			return array(
+				'type'       => 'multiplication',
+				'multiplier' => (float) $rule['multiply'],
+			);
 		}
 
 		return array();
