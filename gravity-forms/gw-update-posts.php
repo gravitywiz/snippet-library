@@ -259,14 +259,17 @@ class GW_Update_Posts {
 		foreach ( $meta as $key => $value ) {
 
 			$append = false;
+			// Default to the global 'delete_if_empty' setting; may be overridden per-field below.
+			$delete_if_empty = $this->_args['delete_if_empty'];
 
 			if ( is_array( $value ) ) {
 				if ( ! isset( $value['field_id'] ) ) {
 					$meta_input = $this->prepare_meta_input( $value, $post_id, $entry, $form, $meta_input, $key );
 					continue;
 				} else {
-					$append = rgar( $value, 'append', false );
-					$value  = $value['field_id'];
+					$append          = rgar( $value, 'append', false );
+					$delete_if_empty = rgar( $value, 'delete_if_empty', $delete_if_empty );
+					$value           = $value['field_id'];
 				}
 			}
 
@@ -329,7 +332,7 @@ class GW_Update_Posts {
 				} else {
 					$meta_input[ $key ] = $meta_value;
 				}
-			} elseif ( $this->_args['delete_if_empty'] ) {
+			} elseif ( $delete_if_empty ) {
 				delete_post_meta( $post_id, $key );
 			}
 		}
