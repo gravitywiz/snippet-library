@@ -49,10 +49,17 @@ class GW_Choice_Groups {
 
 		$field_id = (int) $field->id;
 
+		$name  = 'input_' . $field_id . ( $is_multiselect ? '[]' : '' );
+		$class = sprintf(
+			'%s %s',
+			$field->size,
+			$is_multiselect ? 'gfield_multiselect' : 'gfield_select'
+		);
+
 		$select_attributes = array(
-			sprintf( 'name="%s"', esc_attr( $is_multiselect ? 'input_' . $field_id . '[]' : 'input_' . $field_id ) ),
+			sprintf( 'name="%s"', esc_attr( $name ) ),
 			sprintf( 'id="input_%d_%d"', $form_id, $field_id ),
-			sprintf( 'class="%s"', esc_attr( $is_multiselect ? 'gfield_multiselect' : 'gfield_select' ) ),
+			sprintf( 'class="%s"', esc_attr( $class ) ),
 		);
 
 		if ( $is_multiselect ) {
@@ -60,12 +67,9 @@ class GW_Choice_Groups {
 			$select_attributes[] = 'size="5"';
 		}
 
-		$tabindex = $field->get_tabindex();
-
-		if ( $tabindex ) {
+		if ( $tabindex = $field->get_tabindex() ) {
 			$select_attributes[] = trim( $tabindex );
 		}
-
 		$input = sprintf(
 			'<select %s>',
 			implode( ' ', $select_attributes )
