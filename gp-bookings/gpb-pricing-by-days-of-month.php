@@ -138,7 +138,7 @@ class GPB_Pricing_By_Days_Of_Month {
 				$modifiers
 			);
 		}
-		
+
 		if ( isset( $rule['add'] ) ) {
 			return array_merge(
 				array(
@@ -148,7 +148,7 @@ class GPB_Pricing_By_Days_Of_Month {
 				$modifiers
 			);
 		}
-		
+
 		if ( isset( $rule['multiply'] ) ) {
 			return array(
 				'type'       => 'multiplication',
