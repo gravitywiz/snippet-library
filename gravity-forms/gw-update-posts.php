@@ -186,7 +186,7 @@ class GW_Update_Posts {
 					}
 
 					// If the taxonomy is not hierarchical, we need to get the term names from the term ids.
-					if( ! $this->gw_is_taxonomy_hierarchical( $taxonomy ) ) {
+					if ( ! $this->gw_is_taxonomy_hierarchical( $taxonomy ) ) {
 						$terms = $this->get_term_names_by_ids( $terms, $taxonomy );
 					}
 
