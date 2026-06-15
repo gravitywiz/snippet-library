@@ -268,7 +268,7 @@ class GW_Update_Posts {
 					continue;
 				} else {
 					$append          = rgar( $value, 'append', false );
-					$delete_if_empty = rgar( $value, 'delete_if_empty', $delete_if_empty );
+					$delete_if_empty = array_key_exists( 'delete_if_empty', $value ) ? (bool) $value['delete_if_empty'] : $delete_if_empty;
 					$value           = $value['field_id'];
 				}
 			}
