@@ -4,7 +4,7 @@
  *
  * Edit products (and payment details) via the Gravity Forms Edit Entry view.
  *
- * @version   1.4
+ * @version   1.5
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/
@@ -13,7 +13,7 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Edit products (and payment details) via the Gravity Forms Edit Entry view.
  * Author:       Gravity Wiz
- * Version:      1.3
+ * Version:      1.5
  * Author URI:   http://gravitywiz.com
  */
 class GW_Edit_Products {
@@ -31,6 +31,10 @@ class GW_Edit_Products {
 
 		// make sure we're running the required minimum version of Gravity Forms
 		if ( ! property_exists( 'GFCommon', 'version' ) || ! version_compare( GFCommon::$version, '1.8', '>=' ) ) {
+			return;
+		}
+
+		if ( ! $this->is_entry_detail() ) {
 			return;
 		}
 
