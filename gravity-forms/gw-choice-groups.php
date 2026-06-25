@@ -5,14 +5,25 @@
  *
  * Organize Drop Down and Multi Select choices into visual groups using special heading choices.
  *
+ * Syntax:
+ *
+ * [Group Name]
+ * - Choice 1
+ * - Choice 2
+ * [Group Name 2]
+ * - Choice A
+ * - Choice B
+ * Standalone Choice
+ * 
  * Example:
  *
  * [Category 1]
- * First Choice
- * Second Choice
+ * - First Choice
+ * - Second Choice
  * [Category 2]
- * Choice A
- * Choice B
+ * - Choice A
+ * - Choice B
+ * Standalone Choice
  *
  * Supported Fields:
  * - Drop Down
@@ -22,13 +33,14 @@
  * Plugin URI:   https://gravitywiz.com/
  * Description:  Organize Drop Down and Multi Select choices into visual groups using special heading choices.
  * Author:       Gravity Wiz
- * Version:      0.2
+ * Version:      0.3
  * Author URI:   https://gravitywiz.com/
  */
 
 class GW_Choice_Groups {
 
-	const GROUP_PATTERN = '/^\[(.+)\]$/';
+	const GROUP_PATTERN      = '/^\[(.+)\]$/';
+	const GROUP_ITEM_PATTERN = '/^[-*•–]\s*(.+)$/u';
 
 	public function __construct() {
 		add_filter( 'gform_field_input', array( $this, 'field_input' ), 10, 5 );
@@ -133,6 +145,7 @@ class GW_Choice_Groups {
 
 			$text = trim( rgar( $choice, 'text' ) );
 
+			// Start a new group/optgroup.
 			if ( preg_match( self::GROUP_PATTERN, $text, $matches ) ) {
 
 				$groups[] = array(
@@ -146,11 +159,21 @@ class GW_Choice_Groups {
 
 			}
 
-			if ( $current_group_index !== null ) {
+			// This choice belongs to the currently open group (prefixed with -, * or •).
+			if ( $current_group_index !== null && preg_match( self::GROUP_ITEM_PATTERN, $text, $matches ) ) {
+
+				$choice['text'] = trim( $matches[1] );
+
 				$groups[ $current_group_index ]['choices'][] = $choice;
-			} else {
-				$groups[] = $choice;
+
+				continue;
+
 			}
+
+			$current_group_index = null;
+
+			$groups[] = $choice;
+
 		}
 
 		return $groups;
