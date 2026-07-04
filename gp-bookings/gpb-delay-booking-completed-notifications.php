@@ -104,8 +104,8 @@ class GPB_Delay_Completed_Notification {
 		$table_name = \GP_Bookings\Database::table_bookings();
 
 		$booking_id = $wpdb->get_var(
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is provided by GP Bookings.
 			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is provided by GP Bookings.
 				"SELECT booking_id FROM {$table_name}
 				 WHERE gf_entry_id = %d
 				 AND object_type = 'service'
