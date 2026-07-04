@@ -12,7 +12,7 @@
  * 1. Install this snippet by following the steps here:
  *    https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  *
- * 3. Update the configuration at the bottom of the snippet.
+ * 2. Update the configuration at the bottom of the snippet.
  *
  * Notes:
  *  - The delay is measured from when the booking would have notified (within ~an hour
@@ -26,7 +26,7 @@ class GPB_Delay_Completed_Notification {
 	private $delay;
 	private $delay_unit;
 	private $action_hook    = 'gpb_send_delayed_completed_notification';
-	private $is_dispatching  = false;
+	private $is_dispatching = false;
 
 	private static $allowed_units = array( 'hours', 'days', 'weeks', 'months' );
 
@@ -101,14 +101,16 @@ class GPB_Delay_Completed_Notification {
 			return false;
 		}
 
+		$table_name = \GP_Bookings\Database::table_bookings();
+
 		$booking_id = $wpdb->get_var(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is provided by GP Bookings.
 			$wpdb->prepare(
-				"SELECT booking_id FROM %i
+				"SELECT booking_id FROM {$table_name}
 				 WHERE gf_entry_id = %d
 				 AND object_type = 'service'
 				 AND status = 'confirmed'
 				 LIMIT 1",
-				\GP_Bookings\Database::table_bookings(),
 				(int) $entry_id
 			)
 		);
