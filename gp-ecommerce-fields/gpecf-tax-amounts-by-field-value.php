@@ -41,6 +41,7 @@ class GPECF_Tax_Amounts_By_Field_Value {
 
 		add_action( 'gform_product_info', array( $this, 'set_tax_amount_by_field_value_in_order' ), 8, 3 );
 
+		add_action( 'gform_register_init_scripts', array( $this, 'enqueue_script' ), 10, 2 );
 	}
 
 	function set_tax_amount_by_field_value( $form ) {
@@ -116,6 +117,47 @@ class GPECF_Tax_Amounts_By_Field_Value {
 		$form_id = isset( $form['id'] ) ? $form['id'] : $form;
 
 		return empty( $this->_args['form_id'] ) || (int) $form_id === (int) $this->_args['form_id'];
+	}
+
+	public function enqueue_script( $form ) {
+		
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return;
+		}
+		
+		// Only needed when using dynamic tax amount field
+		if ( empty( $this->_args['tax_amount_field_id'] ) ) {
+			return;
+		}
+		
+		$form_id = (int) $form['id'];
+		$tax_field_id = $this->_args['tax_field_id'];
+		$tax_amount_field_id = $this->_args['tax_amount_field_id'];
+		
+		?>
+		<script>
+		(function($) {
+			$(document).ready(function() {
+				var formId = <?php echo $form_id; ?>;
+				var taxFieldId = <?php echo json_encode( $tax_field_id ); ?>;
+				var taxAmountFieldId = <?php echo json_encode( $tax_amount_field_id ); ?>;
+				
+				var taxAmountInput = $('#input_' + formId + '_' + taxAmountFieldId.toString().replace('.', '_'));
+				var taxInput = $('#input_' + formId + '_' + taxFieldId.toString().replace('.', '_'));
+
+				function updateTaxField() {console.log('Updating tax field based on tax amount input change');
+					var amount = parseFloat(taxAmountInput.val()) || 0;
+					taxInput.val(amount.toFixed(2)).trigger('change');
+					if (window.gpecf && typeof window.gpecf.updateTotals === 'function') {
+						window.gpecf.updateTotals();
+					}
+				}
+				
+				taxAmountInput.on('change keyup', updateTaxField);
+			});
+		})(jQuery);
+		</script>
+		<?php
 	}
 
 }
