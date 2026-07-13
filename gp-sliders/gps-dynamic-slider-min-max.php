@@ -18,6 +18,10 @@
  */
 class GPS_Dynamic_Slider_Range {
 
+	// Bounds the number of steps between the dynamic min and max so a huge source
+	// value can't generate millions of snaps/ticks. Applied on both server and client.
+	const MAX_STEPS = 1000;
+
 	private $_args;
 
 	public function __construct( $args = array() ) {
@@ -55,12 +59,25 @@ class GPS_Dynamic_Slider_Range {
 			$min = $this->get_posted_value( $this->_args['min_source_field_id'] );
 			$max = $this->get_posted_value( $this->_args['max_source_field_id'] );
 
+			if ( $min === null && $max === null ) {
+				continue;
+			}
+
 			if ( $min !== null ) {
 				$field->sliderMin = $min;
 			}
 
 			if ( $max !== null ) {
-				$field->sliderMax = max( (float) $field->sliderMin, $max );
+				$field->sliderMax = $max;
+			}
+
+			// Keep the range valid (max >= min) and bounded (MAX_STEPS) so an out-of-order
+			// or huge source value can't break validation or freeze rendering.
+			$step             = (float) $field->sliderStep;
+			$field->sliderMax = max( (float) $field->sliderMin, (float) $field->sliderMax );
+
+			if ( $step > 0 ) {
+				$field->sliderMax = min( (float) $field->sliderMax, (float) $field->sliderMin + self::MAX_STEPS * $step );
 			}
 		}
 
@@ -166,6 +183,9 @@ class GPS_Dynamic_Slider_Range {
 
 						var min = minSource !== null ? minSource : self.defaults.min;
 						var max = Math.max( min, maxSource !== null ? maxSource : self.defaults.max );
+
+						// Bound the range so snap/tick generation stays fast (mirrors the server-side clamp).
+						max = Math.min( max, min + <?php echo (int) self::MAX_STEPS; ?> * step );
 
 						var snaps = [];
 
