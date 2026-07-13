@@ -16,7 +16,7 @@
  * 2. Pick or adjust an example in the configuration area at the bottom of the snippet.
  *    Options can be combined:
  *
- *    - `only_your_own_events_block` (true/false) — Only events you created or organize
+ *    - `only_block_own_events` (true/false) — Only events you created or organize
  *      block availability. Invitations and events added by shared calendars are ignored.
  *    - `ignore_unaccepted_invitations` (true/false) — Ignore invitations you haven't
  *      accepted (tentative, unanswered, declined).
@@ -30,12 +30,15 @@ class GPB_Google_Calendar_Event_Filter {
 	private $config;
 
 	public function __construct( array $config = array() ) {
-		$this->config = array_merge( array(
-			'only_your_own_events_block'    => false,
-			'ignore_unaccepted_invitations' => false,
-			'ignore_if_title_contains'      => array(),
-			'only_block_if_title_contains'  => array(),
-		), $config );
+		$this->config = array_merge(
+			array(
+				'only_block_own_events'         => false,
+				'ignore_unaccepted_invitations' => false,
+				'ignore_if_title_contains'      => array(),
+				'only_block_if_title_contains'  => array(),
+			),
+			$config
+		);
 
 		add_filter( 'gpb_google_calendar_event_block_data', array( $this, 'filter_block_data' ), 10, 2 );
 	}
@@ -45,8 +48,8 @@ class GPB_Google_Calendar_Event_Filter {
 			return $block_data;
 		}
 
-		// organizer/creator "self" is only set for events the connected account owns.
-		if ( $this->config['only_your_own_events_block'] && empty( $event['organizer']['self'] ) && empty( $event['creator']['self'] ) ) {
+		// Organizer/creator "self" is only set for events the connected account owns.
+		if ( $this->config['only_block_own_events'] && empty( $event['organizer']['self'] ) && empty( $event['creator']['self'] ) ) {
 			return null;
 		}
 
@@ -73,17 +76,21 @@ class GPB_Google_Calendar_Event_Filter {
 				return ( $attendee['responseStatus'] ?? '' ) !== 'accepted';
 			}
 		}
+
 		return false;
 	}
 
 	private function title_matches( $title, $needles ) {
 		$title = strtolower( $title );
+
 		foreach ( (array) $needles as $needle ) {
 			$needle = strtolower( trim( (string) $needle ) );
+
 			if ( $needle !== '' && strpos( $title, $needle ) !== false ) {
 				return true;
 			}
 		}
+
 		return false;
 	}
 }
@@ -91,28 +98,37 @@ class GPB_Google_Calendar_Event_Filter {
 # Configuration
 
 // Example: only events you created or organize block availability.
-new GPB_Google_Calendar_Event_Filter( array(
-	'only_your_own_events_block' => true,
-) );
+new GPB_Google_Calendar_Event_Filter(
+	array(
+		'only_block_own_events' => true,
+	)
+);
 
 // Example: everything blocks availability except invitations you haven't accepted.
-// new GPB_Google_Calendar_Event_Filter( array(
-// 	'ignore_unaccepted_invitations' => true,
-// ) );
+// new GPB_Google_Calendar_Event_Filter(
+// 	array(
+// 		'ignore_unaccepted_invitations' => true,
+// 	)
+// );
 
 // Example: events with "Hold" or "Tentative" in the title don't block availability.
-// new GPB_Google_Calendar_Event_Filter( array(
-// 	'ignore_if_title_contains' => array( 'Hold', 'Tentative' ),
-// ) );
+// new GPB_Google_Calendar_Event_Filter(
+// 	array(
+// 		'ignore_if_title_contains' => array( 'Hold', 'Tentative' ),
+// 	)
+// );
 
 // Example: ONLY events with "Busy" or "PTO" in the title block availability.
-// new GPB_Google_Calendar_Event_Filter( array(
-// 	'only_block_if_title_contains' => array( 'Busy', 'PTO' ),
-// ) );
+// new GPB_Google_Calendar_Event_Filter(
+// 	array(
+// 		'only_block_if_title_contains' => array( 'Busy', 'PTO' ),
+// 	)
+// );
 
 // Example: combine options — ignore unaccepted invitations and any event titled "Hold".
-// new GPB_Google_Calendar_Event_Filter( array(
-// 	'ignore_unaccepted_invitations' => true,
-// 	'ignore_if_title_contains'      => array( 'Hold' ),
-// ) );
-
+// new GPB_Google_Calendar_Event_Filter(
+// 	array(
+// 		'ignore_unaccepted_invitations' => true,
+// 		'ignore_if_title_contains'      => array( 'Hold' ),
+// 	)
+// );
