@@ -83,6 +83,13 @@ class GPS_Dynamic_Slider_Range {
 	}
 
 	public function output_script() {
+
+		$script_args = array(
+			'formId'           => (int) $this->_args['form_id'],
+			'sliderFieldId'    => (int) $this->_args['slider_field_id'],
+			'minSourceFieldId' => (int) $this->_args['min_source_field_id'],
+			'maxSourceFieldId' => (int) $this->_args['max_source_field_id'],
+		);
 		?>
 
 		<script type="text/javascript">
@@ -205,12 +212,7 @@ class GPS_Dynamic_Slider_Range {
 					if ( formId == <?php echo (int) $this->_args['form_id']; ?> ) {
 						// GP Sliders creates its slider instances on this same event; defer a tick so it runs first.
 						setTimeout( function () {
-							new GPSDynamicSliderRange( <?php echo json_encode( array(
-								'formId'           => (int) $this->_args['form_id'],
-								'sliderFieldId'    => (int) $this->_args['slider_field_id'],
-								'minSourceFieldId' => (int) $this->_args['min_source_field_id'],
-								'maxSourceFieldId' => (int) $this->_args['max_source_field_id'],
-							) ); ?> );
+							new GPSDynamicSliderRange( <?php echo json_encode( $script_args ); ?> );
 						} );
 					}
 				} );
