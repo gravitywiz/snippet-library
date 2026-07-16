@@ -1,6 +1,6 @@
 <?php
 /**
- * Gravity Wiz // Gravity Forms // Dynamically toggle field as required based on control field value
+ * Gravity Wiz // Gravity Forms // Conditionally toggle field as required based on control field value
  * https://gravitywiz.com/
  *
  * Instruction Video: https://www.loom.com/share/d7499c8ae2924477ab9fbe5ef5be7c07
@@ -10,7 +10,7 @@
  * 1. Install the snippet.
  *    https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  */
-class GW_Dynamic_Required_Fields {
+class GW_Conditionally_Required_Fields {
 
 	public static $instances = array();
 
@@ -44,20 +44,20 @@ class GW_Dynamic_Required_Fields {
 
 		$form_id = $this->args['form_id'];
 
-		add_filter( "gform_pre_validation_{$form_id}", array( $this, 'validate_dynamic_fields' ) );
-		add_filter( "gform_pre_submission_{$form_id}", array( $this, 'validate_dynamic_fields' ) );
+		add_filter( "gform_pre_validation_{$form_id}", array( $this, 'validate_conditionally_required_fields' ) );
+		add_filter( "gform_pre_submission_{$form_id}", array( $this, 'validate_conditionally_required_fields' ) );
 
 		add_filter( 'gform_register_init_scripts', array( $this, 'add_init_script' ), 10, 2 );
 	}
 
 	/**
-	 * Validate dynamic fields based on control field value.
+	 * Validate conditionally required fields based on control field value.
 	 *
 	 * @param array $form The form object.
 	 *
 	 * @return array Modified form object.
 	 */
-	public function validate_dynamic_fields( $form ) {
+	public function validate_conditionally_required_fields( $form ) {
 		$control_value   = rgpost( 'input_' . $this->args['control_field'] );
 		$required_fields = $this->get_required_fields( $control_value );
 
@@ -79,7 +79,7 @@ class GW_Dynamic_Required_Fields {
 	}
 
 	/**
-	 * Add initialization script for dynamic field requirements.
+	 * Add initialization script for conditionally required fields.
 	 *
 	 * @param array $form    The form object.
 	 * @param bool  $is_ajax Whether the form is being submitted via AJAX.
@@ -90,7 +90,7 @@ class GW_Dynamic_Required_Fields {
 		}
 
 		$script = $this->get_js();
-		$slug   = "gw_dynamic_required_{$form['id']}";
+		$slug   = "gw_conditionally_required_{$form['id']}";
 
 		GFFormDisplay::add_init_script( $form['id'], $slug, GFFormDisplay::ON_PAGE_RENDER, $script );
 	}
@@ -128,7 +128,7 @@ class GW_Dynamic_Required_Fields {
 	}
 
 	/**
-	 * Generate JavaScript for dynamic field requirements.
+	 * Generate JavaScript for conditionally required fields.
 	 *
 	 * @return string JavaScript code.
 	 */
@@ -189,7 +189,7 @@ class GW_Dynamic_Required_Fields {
 
 # Configuration
 
-new GW_Dynamic_Required_Fields(
+new GW_Conditionally_Required_Fields(
 	array(
 		'form_id'       => 3,
 		'control_field' => 1,
