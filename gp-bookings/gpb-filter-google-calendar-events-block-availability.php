@@ -24,6 +24,8 @@
  *      contains one of these (case-insensitive).
  *    - `only_block_if_title_contains` (array of phrases) — ONLY events whose title
  *      contains one of these block availability (case-insensitive).
+ *
+ * 3. Re-sync your Google Calendar connection to ensure the updated settings take effect.
  */
 class GPB_Google_Calendar_Event_Filter {
 
