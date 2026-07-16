@@ -1,7 +1,9 @@
 <?php
 /**
- * Gravity Wiz // Gravity Forms // Conditionally toggle field as required based on control field value
+ * Gravity Wiz // Gravity Forms // Conditionally Required Fields
  * https://gravitywiz.com/
+ * 
+ * Conditionally toggle a field as required based on control field value.
  *
  * Instruction Video: https://www.loom.com/share/d7499c8ae2924477ab9fbe5ef5be7c07
  *
