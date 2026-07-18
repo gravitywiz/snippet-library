@@ -12,7 +12,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-unique-id/
  * Description:  Prevent a Unique ID field from generating its value until a specific Gravity Flow step is completed.
  * Author:       Gravity Wiz
- * Version:      0.1
+ * Version:      0.2
  * Author URI:   https://gravitywiz.com
  */
 class GPUID_Generate_Post_Workflow {
@@ -39,6 +39,12 @@ class GPUID_Generate_Post_Workflow {
 
 		add_filter( 'gpui_unique_id', array( $this, 'prevent_unique_id_generation' ), 10, 3 );
 		add_action( 'gravityflow_step_complete', array( $this, 'maybe_generate_unique_id' ), 10, 4 );
+		add_filter( 'gpui_unique_id', function( $unique, $form_id, $field_id ) {
+			// Store the raw unique value somewhere accessible
+			global $raw_gpui_unique_id;
+			$raw_gpui_unique_id = $unique;
+			return $unique;
+		}, 1, 3 ); 
 
 	}
 
@@ -57,7 +63,11 @@ class GPUID_Generate_Post_Workflow {
 			$entry = GFAPI::get_entry( $entry_id );
 			if ( ! is_wp_error( $entry ) && empty( $entry[ $this->_args['field_id'] ] ) ) {
 				$uid_field = GFAPI::get_field( $form_id, $this->_args['field_id'] );
-				$uid_field->save_value( GFAPI::get_entry( $entry_id ), $uid_field, false );
+				$uid_value = gp_unique_id()->get_unique( $form_id, $uid_field, 5, array(), $entry, false );
+
+				global $raw_gpui_unique_id;
+				$entry[ $uid_field->id ] = $raw_gpui_unique_id;
+				GFAPI::update_entry( $entry );
 			}
 		}
 	}
