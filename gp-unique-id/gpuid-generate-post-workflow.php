@@ -44,7 +44,7 @@ class GPUID_Generate_Post_Workflow {
 			global $raw_gpui_unique_id;
 			$raw_gpui_unique_id = $unique;
 			return $unique;
-		}, 1, 3 ); 
+		}, 1, 3 );
 
 	}
 
