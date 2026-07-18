@@ -10,6 +10,16 @@
  */
 add_filter( 'gform_pre_render', function ( $form, $ajax, $field_values ) {
 
+	if ( ! session_id() ) {
+		session_start();
+	}
+
+	if ( ! isset( $_SESSION['gwreadonly_disabled_fields'] ) ) {
+		$_SESSION['gwreadonly_disabled_fields'] = array();
+	}
+
+	$gwreadonly_disabled_fields = $_SESSION['gwreadonly_disabled_fields'];
+
 	foreach ( $form['fields'] as &$field ) {
 
 		if ( ! $field->gwreadonly_enable ) {
@@ -39,10 +49,19 @@ add_filter( 'gform_pre_render', function ( $form, $ajax, $field_values ) {
 			}
 		}
 
+		// Multi page form support.
+		if ( isset( $gwreadonly_disabled_fields[ $field->id ] ) && $gwreadonly_disabled_fields[ $field->id ] ) {
+			$field->gwreadonly_enable = false;
+			continue;
+		}
+
 		if ( ! $value || ( isset( $has_matching_choice ) && ! $has_matching_choice ) ) {
 			$field->gwreadonly_enable = false;
+			$gwreadonly_disabled_fields[ $field->id ] = true;
 		}
 	}
+
+	$_SESSION['gwreadonly_disabled_fields'] = $gwreadonly_disabled_fields;
 
 	return $form;
 }, 10, 3 );
