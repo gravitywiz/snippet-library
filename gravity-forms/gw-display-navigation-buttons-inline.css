@@ -1,0 +1,30 @@
+/**
+ * Gravity Wiz // Gravity Forms // Display Page Navigation Buttons Inline With Fields
+ * https://gravitywiz.com/
+ *
+ * Displays a form page's Previous/Next navigation buttons inline with the
+ * last row of fields, rather than stacked below them.
+ *
+ * Instructions:
+ *
+ * 1. Install Code Chest: https://gravitywiz.com/gravity-forms-code-chest/
+ *
+ * 2. Add this CSS to the form via Code Chest.
+ *
+ * 3. Add the `button-inline` class to the Next button.
+ */
+.gform_page.button-inline {
+	display: flex;
+	align-items: flex-end;
+	gap: 20px;
+}
+
+.gform_page.button-inline .gform_page_fields {
+	flex: 1;
+}
+
+.gform_page.button-inline .gform_page_footer {
+	flex-shrink: 0;
+	margin-top: 0 !important;
+	padding-bottom: 0;
+}
