@@ -23,10 +23,10 @@
 
 class GPB_Block_Resources_From_Service_Timeslots {
 
-	private $service_ids = array();
-	private $resource_ids = array();
+	private $service_ids    = array();
+	private $resource_ids   = array();
 	private $buffer_minutes = 0;
-	private $is_reading = false;
+	private $is_reading     = false;
 
 	public function __construct( array $args ) {
 		$this->service_ids    = isset( $args['service_ids'] ) ? array_map( 'intval', (array) $args['service_ids'] ) : array();
@@ -92,7 +92,7 @@ class GPB_Block_Resources_From_Service_Timeslots {
 		return $blocks;
 	}
 
-	private function apply_buffer( ?string $start_time, ?string $end_time ): array {
+	private function apply_buffer( $start_time, $end_time ): array {
 		if ( $start_time === null || $end_time === null || $this->buffer_minutes === 0 ) {
 			return array(
 				'start_time' => $start_time,
