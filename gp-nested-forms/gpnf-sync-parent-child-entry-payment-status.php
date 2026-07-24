@@ -7,11 +7,14 @@
  * to ensure that limits/inventories applied to child field's will not include child entries where payment has not been
  * collected for their parent entry.
  *
+ * With GP Bookings, this also updates the status of bookings owned by child entries to match GP Bookings' "Confirm On
+ * Payment Status" and "Cancel On Payment Status" settings.
+ *
  * Plugin Name:  GP Nested Forms — Sync Parent/Child Entry Payment Details
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  * Description:  Sync the payment details of child entries with their parent's.
  * Author:       Gravity Wiz
- * Version:      0.3
+ * Version:      0.4
  * Author URI:   https://gravitywiz.com
  */
 add_action( 'gform_after_submission', function( $entry, $form ) {
@@ -74,6 +77,63 @@ if ( ! function_exists( 'gpnf_sync_child_entries_payment_details' ) ) {
 				if ( $parent_entry->$sync_prop !== $child_entry[ $sync_prop ] ) {
 					GFAPI::update_entry_property( $child_entry['id'], $sync_prop, $parent_entry->$sync_prop );
 				}
+			}
+
+			/*
+			 * Run on every sync rather than only when the payment status changed so re-syncing (e.g. via the bulk
+			 * action) also repairs bookings whose status was missed.
+			 */
+			gpnf_sync_child_entry_booking_statuses( $child_entry, $parent_entry->payment_status );
+		}
+
+	}
+}
+
+if ( ! function_exists( 'gpnf_sync_child_entry_booking_statuses' ) ) {
+	/**
+	 * Apply the parent entry's payment status to any GP Bookings bookings owned by a child entry.
+	 *
+	 * GP Bookings stores bookings against the entry containing the Booking field — the child entry — but its only
+	 * payment listener (gform_post_payment_action) receives the parent entry and looks up bookings by that entry's ID,
+	 * so it finds none. This mirrors GP Bookings' own BookingStatuses::handle_payment_action() against the child entry
+	 * so the plugin's payment status settings remain the source of truth.
+	 *
+	 * @param array  $child_entry    The child entry that owns the bookings.
+	 * @param string $payment_status The parent entry's payment status.
+	 */
+	function gpnf_sync_child_entry_booking_statuses( $child_entry, $payment_status ) {
+
+		// Inert when GP Bookings is not active.
+		if ( ! class_exists( '\GP_Bookings\Queries\Booking_Query' ) ) {
+			return;
+		}
+
+		$child_entry['payment_status'] = $payment_status;
+
+		if ( \GP_Bookings\Settings::should_confirm_booking( $child_entry ) ) {
+			$new_status = 'confirmed';
+		} elseif ( \GP_Bookings\Settings::should_cancel_booking( $child_entry ) ) {
+			$new_status = 'cancelled';
+		} else {
+			return;
+		}
+
+		$bookings = \GP_Bookings\Queries\Booking_Query::get_entry_bookings( (int) $child_entry['id'] );
+		$note     = esc_html__( 'Booking status updated to match the parent entry payment status.', 'gp-bookings' );
+
+		foreach ( $bookings as $booking ) {
+			try {
+				// update_status() returns early when the status is unchanged, so this is safe to call repeatedly.
+				$booking->update_status( $new_status, $note );
+			} catch ( Exception $e ) {
+				GFCommon::log_debug( sprintf(
+					'%s(): Unable to set booking #%d on entry #%d to %s: %s',
+					__FUNCTION__,
+					$booking->get_id(),
+					$child_entry['id'],
+					$new_status,
+					$e->getMessage()
+				) );
 			}
 		}
 
