@@ -19,6 +19,47 @@ add_action( 'admin_init', function() {
 	}
 } );
 
+/**
+ * Allow the editor/media scripts and styles through Gravity Forms' No Conflict Mode.
+ */
+add_filter( 'gform_noconflict_scripts', function( $scripts ) {
+	return array_merge( $scripts, array(
+		'editor',
+		'quicktags',
+		'wp-tinymce',
+		'wp-tinymce-root',
+		'editor-buttons',
+		'wplink',
+		'thickbox',
+		'media-upload',
+		'media-views',
+		'media-editor',
+		'media-audiovideo',
+		'mediaelement',
+		'wp-mediaelement',
+		'underscore',
+		'backbone',
+		'wp-backbone',
+		'wp-util',
+		'shortcode',
+		'wp-a11y',
+		'wp-i18n',
+	) );
+} );
+
+add_filter( 'gform_noconflict_styles', function( $styles ) {
+	return array_merge( $styles, array(
+		'editor-buttons',
+		'media-views',
+		'thickbox',
+		'wp-mediaelement',
+		'mediaelement',
+		'imgareaselect',
+		'dashicons',
+		'buttons',
+	) );
+} );
+
 add_action( 'gform_field_standard_settings', function( $position ) {
 	if ( $position !== 200 ) {
 		return;
