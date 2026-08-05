@@ -51,8 +51,14 @@ class GW_Value_Exists_Validation {
 		if ( ! $this->_args['disable_ajax_validation'] ) {
 
 			add_action( 'gform_enqueue_scripts', array( $this, 'enqueue_form_script' ) );
-			add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
 			add_action( 'gform_register_init_scripts', array( $this, 'add_init_script' ) );
+
+			// Register our script in the head so it is always defined before any form init/post-render script runs,
+			// regardless of how/where the form is embedded (page builders, AJAX, late shortcode rendering, etc).
+			add_action( 'wp_enqueue_scripts', array( $this, 'register_script' ), 5 );
+			add_action( 'admin_enqueue_scripts', array( $this, 'register_script' ), 5 );
+			// Last-resort fallback if scripts were already printed by the time the form renders.
+			add_filter( 'gform_pre_render', array( $this, 'load_form_script' ), 10, 2 );
 
 			add_action( 'wp_ajax_gwvev_does_value_exist', array( $this, 'ajax_does_value_exist' ) );
 			add_action( 'wp_ajax_nopriv_gwvev_does_value_exist', array( $this, 'ajax_does_value_exist' ) );
@@ -61,9 +67,26 @@ class GW_Value_Exists_Validation {
 
 	}
 
+	public function register_script() {
+
+		if ( self::$is_script_output || wp_script_is( 'gwvev', 'registered' ) ) {
+			return;
+		}
+
+		wp_register_script( 'gwvev', '', array( 'jquery' ), null, false );
+		wp_add_inline_script( 'gwvev', $this->get_script() );
+		wp_enqueue_script( 'gwvev' );
+
+		self::$is_script_output = true;
+
+	}
+
 	public function enqueue_form_script( $form ) {
 		if ( $this->is_applicable_form( $form ) ) {
 			wp_enqueue_script( 'gform_gravityforms' );
+			if ( wp_script_is( 'gwvev', 'registered' ) ) {
+				wp_enqueue_script( 'gwvev' );
+			}
 		}
 		return $form;
 	}
@@ -174,9 +197,9 @@ class GW_Value_Exists_Validation {
 
 	public function load_form_script( $form, $is_ajax_enabled ) {
 
-		// Do not output main script if AJAX is enabled
-		if ( ! $is_ajax_enabled && $this->is_applicable_form( $form ) && ! self::$is_script_output && ! $this->is_ajax_submission( $form['id'], $is_ajax_enabled ) ) {
-			add_action( 'wp_footer', array( $this, 'output_script' ) );
+		if ( $this->is_applicable_form( $form ) && ! self::$is_script_output ) {
+			self::$is_script_output = true;
+			add_action( 'wp_footer', array( $this, 'output_script' ), 5 );
 			add_action( 'gform_preview_footer', array( $this, 'output_script' ) );
 		}
 
@@ -184,9 +207,12 @@ class GW_Value_Exists_Validation {
 	}
 
 	public function output_script() {
-		?>
+		printf( '<script type="text/javascript">%s</script>', $this->get_script() );
+	}
 
-		<script type="text/javascript">
+	public function get_script() {
+		ob_start();
+		?>
 
 			( function( $ ) {
 
@@ -339,12 +365,8 @@ class GW_Value_Exists_Validation {
 
 			} )( jQuery );
 
-		</script>
-
 		<?php
-
-		self::$is_script_output = true;
-
+		return ob_get_clean();
 	}
 
 	public function add_init_script( $form ) {
