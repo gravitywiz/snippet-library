@@ -46,7 +46,14 @@ class GW_Quantity_Decimal {
 			add_filter( 'gform_field_validation_' . $this->form_id, array( $this, 'allow_quantity_float' ), 10, 4 );
 		}
 
-		if ( GFFormsModel::is_html5_enabled() ) {
+		// The HTML5 output setting was deprecated in GF 2.8 (always enabled) and the method was removed in GF 3.0,
+		// so only check it on older versions where the setting could actually be disabled.
+		$is_html5_enabled = true;
+		if ( version_compare( GFCommon::$version, '2.8', '<' ) && method_exists( 'GFFormsModel', 'is_html5_enabled' ) ) {
+			$is_html5_enabled = GFFormsModel::is_html5_enabled();
+		}
+
+		if ( $is_html5_enabled ) {
 			add_filter( 'gform_pre_render', array( $this, 'stash_current_form' ) );
 			add_filter( 'gform_field_input', array( $this, 'modify_quantity_input_tag' ), 10, 5 );
 		}
