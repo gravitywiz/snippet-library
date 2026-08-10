@@ -3,29 +3,57 @@
  * Gravity Perks // Bookings // Dynamic Capacity by Time + Day of Week
  * https://gravitywiz.com/documentation/gp-bookings/
  *
- * Adjust capacity per service using day-of-week, time ranges, and optional date ranges.
+ * Adjust capacity per service/resource using day-of-week, time ranges, and optional date ranges.
  */
 
 class GPB_Capacity_Limit_By_Time_And_Day {
 
 	private $service_ids = array();
 
+	private $resource_ids = array();
+
 	private $rules = array();
 
 	public function __construct( array $args ) {
-		$this->service_ids = isset( $args['service_ids'] ) ? array_map( 'intval', (array) $args['service_ids'] ) : array();
-		$this->rules       = isset( $args['rules'] ) ? (array) $args['rules'] : array();
+		$this->service_ids  = isset( $args['service_ids'] ) ? array_map( 'intval', (array) $args['service_ids'] ) : array();
+		$this->resource_ids = isset( $args['resource_ids'] ) ? array_map( 'intval', (array) $args['resource_ids'] ) : array();
+		$this->rules        = isset( $args['rules'] ) ? (array) $args['rules'] : array();
 
 		add_filter( 'gpb_capacity_limit', array( $this, 'filter_capacity' ), 10, 4 );
 	}
 
 	public function filter_capacity( $capacity, $start_datetime, $end_datetime, $bookable ) {
-		if ( ! $bookable instanceof \GP_Bookings\Service ) {
+		$is_service  = $bookable instanceof \GP_Bookings\Service;
+		$is_resource = $bookable instanceof \GP_Bookings\Resource;
+
+		if ( ! $is_service && ! $is_resource ) {
 			return $capacity;
 		}
 
-		if ( ! empty( $this->service_ids ) && ! in_array( (int) $bookable->get_id(), $this->service_ids, true ) ) {
-			return $capacity;
+		$has_service_ids  = ! empty( $this->service_ids );
+		$has_resource_ids = ! empty( $this->resource_ids );
+		$id               = (int) $bookable->get_id();
+
+		if ( $is_service ) {
+			// If this instance only targets resources, skip services entirely.
+			if ( ! $has_service_ids && $has_resource_ids ) {
+				return $capacity;
+			}
+
+			if ( $has_service_ids && ! in_array( $id, $this->service_ids, true ) ) {
+				return $capacity;
+			}
+		}
+
+		if ( $is_resource ) {
+			// If this instance only targets services, skip resources entirely.
+			if ( $has_service_ids && ! $has_resource_ids ) {
+				return $capacity;
+			}
+
+			if ( $has_resource_ids && ! in_array( $id, $this->resource_ids, true ) ) {
+				return $capacity;
+			}
 		}
 
 		if ( empty( $this->rules ) ) {
@@ -112,6 +140,19 @@ new GPB_Capacity_Limit_By_Time_And_Day( array(
 		),
 	),
 ) );
+
+// Example: capacity rules for a specific resource.
+// new GPB_Capacity_Limit_By_Time_And_Day( array(
+//	'resource_ids' => array( 456 ),
+//	'rules'        => array(
+//		array(
+//			'start'    => '08:00',
+//			'end'      => '17:00',
+//			'capacity' => 3,
+//			'days'     => array( 'mon', 'tue', 'wed', 'thu', 'fri' ),
+//		),
+//	),
+// ) );
 
 // Example: capacity by day only (no time restrictions).
 // new GPB_Capacity_Limit_By_Time_And_Day( array(
