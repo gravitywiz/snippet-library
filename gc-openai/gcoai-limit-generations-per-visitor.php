@@ -77,7 +77,7 @@ class GCOAI_Limit_Generations {
 			'form_id'  => $form_id,
 			'field_id' => $field_id,
 		);
-	
+
 		foreach ( $checks as $arg => $value ) {
 			$allowed = $this->args[ $arg ];
 	
@@ -85,7 +85,7 @@ class GCOAI_Limit_Generations {
 				return false;
 			}
 		}
-	
+
 		return true;
 	}
 
