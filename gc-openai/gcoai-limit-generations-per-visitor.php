@@ -80,7 +80,7 @@ class GCOAI_Limit_Generations {
 
 		foreach ( $checks as $arg => $value ) {
 			$allowed = $this->args[ $arg ];
-	
+
 			if ( $allowed !== null && ! in_array( $value, array_map( 'intval', (array) $allowed ), true ) ) {
 				return false;
 			}
