@@ -8,7 +8,7 @@
  * Plugin URI:  https://gravitywiz.com/submit-gravity-form-access-content/
  * Description: Require that a form be submitted before a post or page can be accessed.
  * Author:      Gravity Wiz
- * Version:     1.14
+ * Version:     1.14.1
  * Author URI:  https://gravitywiz.com
  */
 class GW_Submit_Access {
@@ -50,7 +50,12 @@ class GW_Submit_Access {
 
 		// setting later so we can use GFCommon::get_base_url() to get GF's spinner URL
 		if ( empty( $this->_args['loading_message'] ) ) {
-			$this->_args['loading_message'] = '<span class="gwsa-loading">Loading content... <img src="' . GFCommon::gf_global( false, true )['spinnerUrl'] . '" /></span>';
+			$spinner_url = GFCommon::get_base_url() . '/images/spinner.svg';
+			// GF 3.0 removed "spinnerUrl" from gf_global(); only use it on older versions.
+			if ( version_compare( GFCommon::$version, '3.0', '<' ) ) {
+				$spinner_url = rgar( GFCommon::gf_global( false, true ), 'spinnerUrl', $spinner_url );
+			}
+			$this->_args['loading_message'] = '<span class="gwsa-loading">Loading content... <img src="' . esc_url( $spinner_url ) . '" /></span>';
 		}
 
 		add_action( 'wp', array( $this, 'check_global_requirements' ), 5 );
