@@ -101,9 +101,10 @@ class GPB_Refresh_Google_Calendar_Events {
 	private function get_mapped_booking_ids( $config ) {
 		global $wpdb;
 
+		$table_name = \GP_Bookings\Database::table_google_event_map();
+
 		$booking_ids = $wpdb->get_col( $wpdb->prepare(
-			'SELECT booking_id FROM %i WHERE config_id = %d',
-			\GP_Bookings\Database::table_google_event_map(),
+			"SELECT booking_id FROM {$table_name} WHERE config_id = %d",
 			$config->get_id()
 		) );
 
