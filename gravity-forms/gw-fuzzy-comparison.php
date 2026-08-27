@@ -1,5 +1,12 @@
 <?php
 /**
+ * This snippet has evolved! 🦄
+ * This functionality is now available as a full feature in GP Advanced Conditional Logic.
+ * https://gravitywiz.com/documentation/gravity-forms-advanced-conditional-logic/
+ *
+ * You can access the original snippet in our Git repo.
+ */
+/**
  * Gravity Wiz // Gravity Forms // Conditional Logic: Fuzzy Comparison for "is" Operator
  *
  * This snippet adds fuzzy comparison for Gravity Forms' conditional logic "is" operator. This allows you to match values that are similar but not identical (e.g. "África", "Africa", "Africaa").

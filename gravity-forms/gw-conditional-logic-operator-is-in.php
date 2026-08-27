@@ -1,5 +1,12 @@
 <?php
 /**
+ * This snippet has evolved! 🦄
+ * This functionality is now available as a full feature in GP Advanced Conditional Logic.
+ * https://gravitywiz.com/documentation/gravity-forms-advanced-conditional-logic/
+ *
+ * You can access the original snippet in our Git repo.
+ */
+/**
  * Gravity Wiz // Gravity Forms // Conditional Logic Operator: "Is In"
  *
  * Instruction Video: https://www.loom.com/share/03c2d8bd75ed46b29d66a3c8b44eac8c

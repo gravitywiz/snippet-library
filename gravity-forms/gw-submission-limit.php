@@ -1,5 +1,12 @@
 <?php
 /**
+ * This snippet has evolved! 🦄
+ * This functionality is now available as a full feature in GP Limit Submissions.
+ * https://gravitywiz.com/documentation/gravity-forms-limit-submissions/
+ *
+ * You can access the original snippet in our Git repo.
+ */
+/**
  * Gravity Wiz // Gravity Forms // Limit Submissions Per Time Period (by IP, User, Role, Form URL, or Field Value)
  *
  * Limit the number of times a form can be submitted per a specific time period. You modify this limit to apply to
