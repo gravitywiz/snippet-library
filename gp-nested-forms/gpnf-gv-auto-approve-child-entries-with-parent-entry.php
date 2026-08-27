@@ -1,11 +1,11 @@
 <?php
 /**
- * Gravity Perks // Nested Forms // Auto-appprove Child Entries when its Parent Entry is approved with GravityView
+ * Gravity Perks // Nested Forms // Auto-approve Child Entries when its Parent Entry is approved with GravityView
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
  * Instruction Video: https://www.loom.com/share/a8ab5395a91d437eb1b393d7ba5b50c4
  *
- * Auto-appprove Child Entries when its Parent Entry is approved with GravityView
+ * Auto-approve child entries when its parent entry is approved with GravityView.
  */
 add_action( 'gravityview/approve_entries/approved', function( $entry_id ) {
 
