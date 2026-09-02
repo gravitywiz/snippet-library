@@ -13,7 +13,7 @@
  * Plugin URI: https://gravitywiz.com/
  * Description: Create User Registration feeds that will update the user by the submitted email address, allowing non-logged-in users to be targeted by GFUR update feeds.
  * Author: Gravity Wiz
- * Version: 0.8
+ * Version: 0.9
  * Author URI: https://gravitywiz.com/
  */
 class GW_UR_Update_By_Email {
@@ -24,6 +24,7 @@ class GW_UR_Update_By_Email {
 
 		// set our default arguments, parse against the provided arguments, and store for use throughout the class
 		$this->_args = wp_parse_args( $args, array(
+			/* Limit the snippet to a specific form ID. Leave false to use any form with an enabled Update by Email feed. */
 			'form_id'    => false,
 			'field_id'   => false,
 			/*
@@ -70,9 +71,14 @@ class GW_UR_Update_By_Email {
 
 		add_filter( 'gform_userregistration_feed_settings_fields', array( $this, 'add_setting' ) );
 
-		if ( current_user_can( $this->_args['capability'] ) || $this->_args['capability'] === false ) {
+		if ( $this->_args['capability'] === false || current_user_can( $this->_args['capability'] ) ) {
 			add_filter( 'gform_get_form_filter', array( $this, 'remove_hide_form_function' ), 10, 2 );
-			add_action( 'gform_pre_process', array( $this, 'handle_validation' ) );
+			/*
+			 * gform_pre_process runs before Gravity Forms initializes gform_uploaded_files. Building the
+			 * temporary entry there causes File Upload fields to cache an empty submission. Pre-validation
+			 * runs after the upload metadata has been initialized and before GFUR performs its validation.
+			 */
+			add_filter( 'gform_pre_validation', array( $this, 'handle_validation' ) );
 			add_filter( 'gform_entry_post_save', array( $this, 'add_created_by_by_email' ), 9, 2 );
 			add_filter( 'gform_gravityformsuserregistration_pre_process_feeds', array( $this, 'filter_feeds' ), 10, 3 );
 			add_filter( 'gform_gravityformsuserregistration_pre_process_feeds', array( $this, 'maybe_update_email' ), 11, 3 );
@@ -114,11 +120,17 @@ class GW_UR_Update_By_Email {
 
 	public function handle_validation( $form ) {
 
-		$feed = $this->get_single_submission_feed( GFFormsModel::get_current_lead(), $form );
+		/* Avoid creating and caching a temporary entry for forms this snippet cannot process. */
+		if ( ! $this->has_update_by_email( $form ) ) {
+			return $form;
+		}
 
-		if ( $this->is_update_by_email( $feed ) && $this->does_feed_email_exist( $feed, GFFormsModel::get_current_lead() ) ) {
+		$entry = GFFormsModel::get_current_lead( $form );
+		$feed  = $this->get_single_submission_feed( $entry, $form );
+
+		if ( $this->is_update_by_email( $feed ) && $this->does_feed_email_exist( $feed, $entry ) ) {
 			remove_filter( 'gform_validation', array( gf_user_registration(), 'validate' ) );
-			add_action( 'gform_validation', array( $this, 'validate_role' ) );
+			add_filter( 'gform_validation', array( $this, 'validate_role' ) );
 		}
 
 		return $form;
@@ -145,8 +157,16 @@ class GW_UR_Update_By_Email {
 	}
 
 	public function get_user_by_feed_email( $feed, $entry ) {
+		if ( ! $feed || ! is_array( $entry ) ) {
+			return false;
+		}
+
 		$email_field_id = rgars( $feed, 'meta/email' );
 		$email          = rgar( $entry, $email_field_id );
+		if ( empty( $email ) ) {
+			return false;
+		}
+
 		return get_user_by( 'email', $email );
 	}
 
@@ -157,7 +177,7 @@ class GW_UR_Update_By_Email {
 	 */
 	public function maybe_update_email( $feeds, $entry, $form ) {
 
-		if ( ! $this->_args['new_email_field_id'] ) {
+		if ( ! $this->is_applicable_form( $form ) || ! $this->_args['new_email_field_id'] ) {
 			return $feeds;
 		}
 
@@ -188,6 +208,9 @@ class GW_UR_Update_By_Email {
 	}
 
 	public function has_update_by_email( $form ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return false;
+		}
 
 		$feeds = gf_user_registration()->get_active_feeds( $form['id'] );
 		foreach ( $feeds as $feed ) {
@@ -203,6 +226,10 @@ class GW_UR_Update_By_Email {
 		return rgars( $feed, 'meta/updateByEmail' );
 	}
 
+	public function is_applicable_form( $form ) {
+		return ! $this->_args['form_id'] || absint( rgar( $form, 'id' ) ) === absint( $this->_args['form_id'] );
+	}
+
 	/**
 	 * Prevent users from submitted the form if the Update by Email feed matches their current role.
 	 *
@@ -210,13 +237,20 @@ class GW_UR_Update_By_Email {
 	 */
 	public function validate_role( $result ) {
 
-		$entry = GFFormsModel::get_current_lead();
+		if ( ! $this->is_applicable_form( $result['form'] ) ) {
+			return $result;
+		}
+
+		$entry = GFFormsModel::get_current_lead( $result['form'] );
 		$feed  = $this->get_single_submission_feed( $entry, $result['form'] );
+		if ( ! $feed ) {
+			return $result;
+		}
 
 		$target_role = rgars( $feed, 'meta/role' );
 		$user        = $this->get_user_by_feed_email( $feed, $entry );
 
-		if ( ! in_array( $target_role, $user->roles ) ) {
+		if ( ! $user || ! in_array( $target_role, $user->roles, true ) ) {
 			return $result;
 		}
 
@@ -234,6 +268,9 @@ class GW_UR_Update_By_Email {
 	}
 
 	public function get_single_submission_feed( $entry, $form ) {
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return false;
+		}
 
 		$feeds = gf_user_registration()->get_active_feeds( $form['id'] );
 
@@ -257,4 +294,6 @@ class GW_UR_Update_By_Email {
 
 # Configuration
 
-new GW_UR_Update_By_Email();
+new GW_UR_Update_By_Email( array(
+	// 'form_id' => 123, // Optional: replace 123 with the form that should support Update by Email.
+) );
