@@ -115,7 +115,7 @@ class GW_Multi_File_Merge_Tag {
 			$input_id = $match[1];
 			$field    = GFFormsModel::get_field( $form, $input_id );
 
-			if ( ! $this->is_applicable_field( $field ) ) {
+			if ( ! $field || ! $this->is_applicable_field( $field ) ) {
 				continue;
 			}
 
@@ -316,6 +316,13 @@ class GW_Multi_File_Merge_Tag {
 	}
 
 	public function is_applicable_field( $field ) {
+
+		// The merge tag regex can match text that is not a field merge tag (e.g. custom merge tags
+		// from other plugins) and merge tags can reference fields that have since been deleted. In
+		// both cases, GFFormsModel::get_field() returns null.
+		if ( ! $field instanceof GF_Field || ! $field->formId ) {
+			return false;
+		}
 
 		$field_ids = rgars( $this->_settings, "{$field->formId}/field_ids" );
 
