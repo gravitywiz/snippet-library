@@ -22,7 +22,7 @@
  *     - $args['value_mappings'] (the Airtable field IDs which you want to optionally add data to in the new linked record)
  *     - $args['match_field_id'] (the Airtable field ID to populate when a new linked record is created)
  *     - $args['match_field_name'] (the name of the same Airtable field, used to find an existing linked record)
- *     - $args['match_value_field_id'] (the Gravity Forms field ID containing the value to match)
+ *     - $args['match_value'] (a Gravity Forms merge-tag template used to build the value to match)
  *
  * Installation:
  *   1. Install per https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
@@ -41,7 +41,7 @@
  * @param? array $args['value_mappings']        An associative array mapping Airtable field IDs to Gravity Forms field IDs.
  * @param? string $args['match_field_id']       The ID of the Airtable field populated when a new linked record is created.
  * @param? string $args['match_field_name']     The name of the Airtable field used to match an existing linked record.
- * @param? string $args['match_value_field_id'] The ID of the Gravity Forms field containing the value to match.
+ * @param? string $args['match_value']          A Gravity Forms merge-tag template that resolves to the value to match.
  *
  * @return void
  */
@@ -57,7 +57,7 @@ function gca_create_relation( $args = array() ) {
 			'value_mappings'       => array(), // The value mappings of Airtable field ids to Gravity Forms field ids.
 			'match_field_id'       => null,
 			'match_field_name'     => null,
-			'match_value_field_id' => null,
+			'match_value'          => null,
 		)
 	);
 
@@ -65,8 +65,9 @@ function gca_create_relation( $args = array() ) {
 		return;
 	}
 
-	$has_match_config = $args['match_field_id'] || $args['match_field_name'] || $args['match_value_field_id'];
-	$can_match        = $args['match_field_id'] && $args['match_field_name'] && $args['match_value_field_id'];
+	$has_match_value  = $args['match_value'] !== null && $args['match_value'] !== '';
+	$has_match_config = $args['match_field_id'] || $args['match_field_name'] || $has_match_value;
+	$can_match        = $args['match_field_id'] && $args['match_field_name'] && $has_match_value;
 
 	if ( $has_match_config && ! $can_match ) {
 		gc_airtable()->log_error( 'gca_create_relation(): All three matching settings are required.' );
@@ -118,10 +119,18 @@ function gca_create_relation( $args = array() ) {
 				$airtable_api = $gca_connection_instance->get_airtable_api();
 
 				if ( $can_match ) {
-					$match_value = rgar( $entry, $args['match_value_field_id'] );
+					$match_value = trim( (string) GFCommon::replace_variables(
+						$args['match_value'],
+						$gca_connection_instance->get_form(),
+						$entry,
+						false,
+						false,
+						false,
+						'text'
+					) );
 
-					if ( $match_value === '' || $match_value === null ) {
-						gc_airtable()->log_error( 'gca_create_relation(): The configured match field has no value.' );
+					if ( $match_value === '' ) {
+						gc_airtable()->log_error( 'gca_create_relation(): The configured match value resolved to an empty value.' );
 						return;
 					}
 
@@ -281,13 +290,13 @@ gca_create_relation(
 		 *
 		 * - The ID of the Airtable field to populate when a new linked record is created.
 		 * - The name of that same Airtable field, used by Airtable's matching formula.
-		 * - The ID of the Gravity Forms field containing the value to match.
+		 * - A Gravity Forms merge-tag template that resolves to the value to match.
 		 *
 		 * Omit all three settings to retain the original always-create behavior.
 		 */
-		'match_field_id'       => 'fldXXXXXXXXXXXXXX',
-		'match_field_name'     => 'Name',
-		'match_value_field_id' => '3.3',
+		'match_field_id'   => 'fldXXXXXXXXXXXXXX',
+		'match_field_name' => 'Name',
+		'match_value'      => '{Name (First):3.3} {Name (Last):3.6}',
 		/**
 		 * Change this to an array of value mappings.
 		 * The keys are Airtable field IDs and the values are Gravity Forms field IDs.
