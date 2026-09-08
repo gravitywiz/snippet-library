@@ -87,7 +87,7 @@ function gca_create_relation( $args = array() ) {
 
 	add_action(
 		$filter_name,
-		function( $entry, $create_record_resp, $gca_connection_instance ) use ( $args, $can_match ) {
+		$sync_relation = function( $entry, $create_record_resp, $gca_connection_instance ) use ( $args, $can_match ) {
 			if ( empty( $args['linked_table_id'] ) ) {
 				return;
 			}
@@ -210,6 +210,48 @@ function gca_create_relation( $args = array() ) {
 		},
 		10,
 		3
+	);
+
+	add_action(
+		'gform_post_process_feed',
+		function( $feed, $entry, $form, $addon ) use ( $args, $sync_relation ) {
+			if ( rgar( $feed, 'addon_slug' ) !== 'gc-airtable' ) {
+				return;
+			}
+
+			if ( $args['form_id'] && (int) rgar( $form, 'id' ) !== (int) $args['form_id'] ) {
+				return;
+			}
+
+			if (
+				$args['form_id'] &&
+				$args['feed_id'] &&
+				(int) rgar( $feed, 'id' ) !== (int) $args['feed_id']
+			) {
+				return;
+			}
+
+			$main_record_id = gc_airtable()->get_resource_id( $entry, $feed );
+
+			if ( empty( $main_record_id ) ) {
+				return;
+			}
+
+			try {
+				$connection = \GC_Airtable\Airtable_Connection::create_from_feed( $feed );
+
+				$sync_relation(
+					$entry,
+					array( 'id' => $main_record_id ),
+					$connection
+				);
+			} catch ( Exception $e ) {
+				$msg = gca_get_exception_message( $e );
+				gc_airtable()->log_error( $msg );
+			}
+		},
+		10,
+		4
 	);
 }
 
