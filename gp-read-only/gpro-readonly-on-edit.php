@@ -21,7 +21,7 @@
  * Author URI:   https://gravitywiz.com/
  */
 // Set to true to also apply read-only when editing an entry in the GF Entries.
-define( 'GPRO_READONLY_GF_ENTRIES', false );
+define( 'GPRO_READONLY_GF_ENTRIES', true );
 
 add_filter( 'gform_admin_pre_render', 'gpeb_set_readonly_on_edit' );
 add_filter( 'gform_pre_render', 'gpeb_set_readonly_on_edit' );
@@ -36,7 +36,14 @@ function gpeb_set_readonly_on_edit( $form ) {
 
 	$is_gravityview  = function_exists( 'gravityview' ) && gravityview()->request->is_edit_entry();
 	$is_gravity_flow = rgget( 'lid' ) && rgget( 'page' ) == 'gravityflow-inbox';
-	$is_entry_detail = GPRO_READONLY_GF_ENTRIES && GFCommon::is_entry_detail();
+	$is_entry_detail = false;
+	if ( GPRO_READONLY_GF_ENTRIES ) {
+		if ( class_exists( 'GFCommon' ) && GFCommon::is_entry_detail() ) {
+			$is_entry_detail = true;
+		} elseif ( is_admin() && rgget( 'page' ) == 'gf_entries' && rgget( 'view' ) == 'entry' && rgget( 'screen_mode' ) == 'edit' ) {
+			$is_entry_detail = true;
+		}
+	}
 
 	// disable the target field for GPEB, GravityView and Gravity Flow User Input step.
 	if ( $is_block || $is_gravityview || $is_gravity_flow || $is_entry_detail ) {
@@ -51,7 +58,9 @@ function gpeb_set_readonly_on_edit( $form ) {
 }
 
 add_filter( 'gform_field_input', function( $input_html, $field ) {
-	if ( GPRO_READONLY_GF_ENTRIES && GFCommon::is_entry_detail_edit() && rgar( $field, 'gwreadonly_enable' ) ) {
+	$is_entries_list_edit = is_admin() && rgget( 'page' ) == 'gf_entries' && rgget( 'view' ) == 'entry' && rgget( 'screen_mode' ) == 'edit';
+
+	if ( GPRO_READONLY_GF_ENTRIES && ( ( class_exists( 'GFCommon' ) && GFCommon::is_entry_detail_edit() ) || $is_entries_list_edit ) && rgar( $field, 'gwreadonly_enable' ) ) {
 		add_filter( 'gform_is_entry_detail', '__return_false' );
 	}
 
