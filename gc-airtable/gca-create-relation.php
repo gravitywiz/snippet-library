@@ -49,15 +49,14 @@ function gca_create_relation( $args = array() ) {
 	$args = wp_parse_args(
 		$args,
 		array(
-			'form_id'              => null, // include form ID
-			'feed_id'              => null,
-			'linked_table_id'      => null, // The ID of the Phone Numbers table.
-			'link_field_id'        => null, // The ID of the field in the Phone Numbers table that links to the People table.
-
-			'value_mappings'       => array(), // The value mappings of Airtable field ids to Gravity Forms field ids.
-			'match_field_id'       => null,
-			'match_field_name'     => null,
-			'match_value'          => null,
+			'form_id'          => null, // include form ID
+			'feed_id'          => null,
+			'linked_table_id'  => null, // The ID of the Phone Numbers table.
+			'link_field_id'    => null, // The ID of the field in the Phone Numbers table that links to the People table.
+			'value_mappings'   => array(), // The value mappings of Airtable field ids to Gravity Forms field ids.
+			'match_field_id'   => null,
+			'match_field_name' => null,
+			'match_value'      => null,
 		)
 	);
 
@@ -88,7 +87,7 @@ function gca_create_relation( $args = array() ) {
 
 	add_action(
 		$filter_name,
-		$sync_relation = function( $entry, $create_record_resp, $gca_connection_instance ) use ( $args, $can_match ) {
+		$sync_relation = function ( $entry, $create_record_resp, $gca_connection_instance ) use ( $args, $can_match ) {
 			if ( empty( $args['linked_table_id'] ) ) {
 				return;
 			}
@@ -134,7 +133,7 @@ function gca_create_relation( $args = array() ) {
 						return;
 					}
 
-					$field_name = str_replace(
+					$field_name    = str_replace(
 						array( '\\', '}' ),
 						array( '\\\\', '\\}' ),
 						$args['match_field_name']
@@ -155,7 +154,7 @@ function gca_create_relation( $args = array() ) {
 							'pageSize'              => 2,
 						)
 					);
-					$matches = (array) rgar( $response, 'records', array() );
+					$matches  = (array) rgar( $response, 'records', array() );
 
 					if ( count( $matches ) > 1 ) {
 						gc_airtable()->log_error( 'gca_create_relation(): More than one linked record matched; no relation was created.' );
@@ -223,7 +222,7 @@ function gca_create_relation( $args = array() ) {
 
 	add_action(
 		'gform_post_process_feed',
-		function( $feed, $entry, $form, $addon ) use ( $args, $sync_relation ) {
+		function ( $feed, $entry, $form, $addon ) use ( $args, $sync_relation ) {
 			if ( rgar( $feed, 'addon_slug' ) !== 'gc-airtable' ) {
 				return;
 			}
@@ -272,19 +271,19 @@ gca_create_relation(
 		/**
 		 * Change this to your form ID.
 		 */
-		'form_id'         => 1,
+		'form_id'          => 1,
 		/**
 		 * Change this to the ID of the feed you want to use.
 		 */
-		'feed_id'         => 2,
+		'feed_id'          => 2,
 		/**
 		 * Change this to the ID of the linked table in Airtable.
 		 */
-		'linked_table_id' => 'tblXXXXXXXXXXXXXX',
+		'linked_table_id'  => 'tblXXXXXXXXXXXXXX',
 		/**
 		 * Change this to the ID of the link field in Airtable.
 		 */
-		'link_field_id'   => 'fldXXXXXXXXXXXXXX',
+		'link_field_id'    => 'fldXXXXXXXXXXXXXX',
 		/**
 		 * Optional. To link an existing record when one matches, provide all three settings:
 		 *
@@ -302,7 +301,7 @@ gca_create_relation(
 		 * The keys are Airtable field IDs and the values are Gravity Forms field IDs.
 		 * These values are only written when a new linked record is created.
 		 */
-		'value_mappings'       => array(
+		'value_mappings'   => array(
 			'fldXXXXXXXXXXXXXX' => 3, // map Airtable field "fldXXXXXXXXXXXXXX" to Gravity Forms field with ID 3
 			// Add more mappings as needed
 		),
