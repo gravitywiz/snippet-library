@@ -130,8 +130,8 @@ class GPNF_Listener_Field {
 }
 
 new GPNF_Listener_Field( array(
-	'form_id' => 53,
+	'form_id'              => 53,
 	'nested_form_field_id' => 1,
-	'target_field_id' => 2,
-	'source_field_id' => 2,
+	'target_field_id'      => 2,
+	'source_field_id'      => 2,
 ) );
