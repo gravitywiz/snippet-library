@@ -19,7 +19,7 @@
  *
  *     - $args['linked_table_id']
  *     - $args['link_field_id']
- *     - $args['value_mappings'] (the Airtable field IDs which you want to optionally add data to in the new linked record)
+ *     - $args['value_mappings'] (Airtable field IDs mapped to Gravity Forms field IDs or merge-tag templates)
  *     - $args['match_field_id'] (the Airtable field ID to populate when a new linked record is created)
  *     - $args['match_field_name'] (the name of the same Airtable field, used to find an existing linked record)
  *     - $args['match_value'] (a Gravity Forms merge-tag template used to build the value to match)
@@ -38,7 +38,7 @@
  * @param? array $args['feed_id']               The ID of the feed to which this relation applies. (Only used if form_id is also provided)
  * @param string $args['linked_table_id']       The ID of the linked table in Airtable.
  * @param string $args['link_field_id']         The ID of the field in the linked table that links to table connected to the feed.
- * @param? array $args['value_mappings']        An associative array mapping Airtable field IDs to Gravity Forms field IDs.
+ * @param? array $args['value_mappings']        Maps Airtable field IDs to Gravity Forms fields or merge-tag templates.
  * @param? string $args['match_field_id']       The ID of the Airtable field populated when a new linked record is created.
  * @param? string $args['match_field_name']     The name of the Airtable field used to match an existing linked record.
  * @param? string $args['match_value']          A Gravity Forms merge-tag template that resolves to the value to match.
@@ -53,7 +53,7 @@ function gca_create_relation( $args = array() ) {
 			'feed_id'          => null,
 			'linked_table_id'  => null, // The ID of the Phone Numbers table.
 			'link_field_id'    => null, // The ID of the field in the Phone Numbers table that links to the People table.
-			'value_mappings'   => array(), // The value mappings of Airtable field ids to Gravity Forms field ids.
+			'value_mappings'   => array(), // Map Airtable fields to Gravity Forms fields or merge-tag templates.
 			'match_field_id'   => null,
 			'match_field_name' => null,
 			'match_value'      => null,
@@ -103,8 +103,24 @@ function gca_create_relation( $args = array() ) {
 			$value_mappings = $args['value_mappings'];
 			$mappings       = array();
 
-			foreach ( $value_mappings as $airtable_field_id => $gf_field_id ) {
-				$value = rgar( $entry, $gf_field_id );
+			foreach ( $value_mappings as $airtable_field_id => $field_id_or_template ) {
+				$is_merge_tag_template = is_string( $field_id_or_template ) &&
+					strpos( $field_id_or_template, '{' ) !== false &&
+					strpos( $field_id_or_template, '}' ) !== false;
+
+				if ( $is_merge_tag_template ) {
+					$value = GFCommon::replace_variables(
+						$field_id_or_template,
+						$gca_connection_instance->get_form(),
+						$entry,
+						false,
+						false,
+						false,
+						'text'
+					);
+				} else {
+					$value = rgar( $entry, $field_id_or_template );
+				}
 
 				if ( $value === '' || $value === null ) {
 					// do not use empty() here so that the values 0 and 0.0 are allowed.
@@ -298,11 +314,13 @@ gca_create_relation(
 		'match_value'      => '{Name (First):3.3} {Name (Last):3.6}',
 		/**
 		 * Change this to an array of value mappings.
-		 * The keys are Airtable field IDs and the values are Gravity Forms field IDs.
+		 * The keys are Airtable field IDs. Values can be Gravity Forms field IDs
+		 * or merge-tag templates.
 		 * These values are only written when a new linked record is created.
 		 */
 		'value_mappings'   => array(
-			'fldXXXXXXXXXXXXXX' => 3, // map Airtable field "fldXXXXXXXXXXXXXX" to Gravity Forms field with ID 3
+			'fldXXXXXXXXXXXXXX' => 3, // Map to the raw value of Gravity Forms field 3.
+			'fldYYYYYYYYYYYYYY' => '{Booking time:4:startDate,format[yyyy-MM-dd]}',
 			// Add more mappings as needed
 		),
 	)
