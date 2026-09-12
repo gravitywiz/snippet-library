@@ -4,7 +4,7 @@
  *
  * Edit products (and payment details) via the Gravity Forms Edit Entry view.
  *
- * @version   1.5
+ * @version   1.6
  * @author    David Smith <david@gravitywiz.com>
  * @license   GPL-2.0+
  * @link      http://gravitywiz.com/
@@ -13,7 +13,7 @@
  * Plugin URI:   http://gravitywiz.com/
  * Description:  Edit products (and payment details) via the Gravity Forms Edit Entry view.
  * Author:       Gravity Wiz
- * Version:      1.5
+ * Version:      1.6
  * Author URI:   http://gravitywiz.com
  */
 class GW_Edit_Products {
@@ -52,7 +52,7 @@ class GW_Edit_Products {
 
 	public function display_product_edit_mode( $input, $field, $value, $entry_id, $form_id ) {
 
-		if ( ! $this->is_entry_detail() || ! GFCommon::is_product_field( $field['type'] ) || $field->type == 'total' ) {
+		if ( ! $this->is_entry_detail() || ! GFCommon::is_product_field( $field['type'] ) || $field->type == 'total' || $this->is_gp_bookings_field( $field ) ) {
 			return $input;
 		}
 
@@ -76,6 +76,21 @@ class GW_Edit_Products {
 		}
 
 		return $input;
+	}
+
+	/**
+	 * Determine whether a product field is managed by GP Bookings.
+	 *
+	 * GP Bookings needs its booking product to retain the native product type so
+	 * it can render the entry editor and detect booking changes when the entry is
+	 * saved. Treating it as a GWEP field prevents that rescheduling flow.
+	 *
+	 * @param GF_Field $field The field being processed.
+	 *
+	 * @return bool
+	 */
+	public function is_gp_bookings_field( $field ) {
+		return $field->type === 'product' && $field->inputType === 'gpb_booking';
 	}
 
 	public function is_removable_product( $field, $form ) {
@@ -107,7 +122,7 @@ class GW_Edit_Products {
 		$has_product_field = false;
 
 		foreach ( $form['fields'] as &$field ) {
-			if ( GFCommon::is_product_field( $field['type'] ) ) {
+			if ( GFCommon::is_product_field( $field['type'] ) && ! $this->is_gp_bookings_field( $field ) ) {
 				$has_product_field = true;
 				$field->origType   = $field->type;
 				$field->type       = 'GWEP';
