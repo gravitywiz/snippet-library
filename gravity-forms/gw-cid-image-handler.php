@@ -1,7 +1,7 @@
 <?php
 /**
  * Gravity Wiz // Gravity Forms // CID Image Handler
- * https://gravitywiz.com/gravity-forms-cid-image-handler/
+ * https://gravitywiz.com/how-to-embed-images-in-gravity-forms-notifications/
  *
  * Automatically detect and embed any img tag with a CID:URL src in email messages. This snippet eliminates the need
  * to manually register each image - it automatically finds CID images and handles replacing the URL with an absolute
@@ -17,7 +17,7 @@
  * 3. Images will be automatically detected, located, and embedded inline.
  *
  * Plugin Name:  GW CID Image Handler
- * Plugin URI:   https://gravitywiz.com/gravity-forms-cid-image-handler/
+ * Plugin URI:   https://gravitywiz.com/snippet-library/gw-cid-image-handler/
  * Description:  Automatically detect and embed any img tag with a CID:URL src in email messages. Supports both simple CID identifiers and full URLs.
  * Author:       Gravity Wiz
  * Version:      1.0
