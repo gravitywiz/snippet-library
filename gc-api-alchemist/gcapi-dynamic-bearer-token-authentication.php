@@ -98,6 +98,12 @@ function gcapi_register_dynamic_bearer_handler() {
 						'no'  => 'No',
 					),
 				),
+				'additional_payload' => array(
+					'type'        => 'text',
+					'label'       => 'Additional Token Body Fields (JSON)',
+					'description' => 'Optional. Provide a JSON object of extra key/value pairs to merge into the token request body. Example: {"grant_type":"client_credentials"}',
+					'default'     => '',
+				),
 				'token_ttl'         => array(
 					'type'        => 'number',
 					'label'       => 'Token Lifetime (seconds)',
@@ -276,10 +282,13 @@ function gcapi_register_dynamic_bearer_handler() {
 				$password_field = 'password';
 			}
 
+			$additional_payload = $this->parse_additional_payload( $profile, $username_field, $password_field );
+
 			$payload = array(
 				$username_field => $username,
 				$password_field => $password,
 			);
+			$payload = array_merge( $payload, $additional_payload );
 
 			$headers = array(
 				'Accept' => 'application/json',
@@ -355,6 +364,46 @@ function gcapi_register_dynamic_bearer_handler() {
 			$this->set_stored_token( $profile, $token, time() + $this->get_token_ttl( $profile ) );
 
 			return $token;
+		}
+
+		/**
+		 * Parse optional additional token request body fields.
+		 *
+		 * @param Connection_Profile $profile The connection profile.
+		 * @param string             $username_field The configured username field name.
+		 * @param string             $password_field The configured password field name.
+		 * @return array
+		 * @throws Exception If the payload is invalid.
+		 */
+		protected function parse_additional_payload( Connection_Profile $profile, string $username_field, string $password_field ): array {
+			$raw_payload = $profile->get_auth_config_value( 'additional_payload', '' );
+			if ( ! is_string( $raw_payload ) ) {
+				return array();
+			}
+
+			$raw_payload = trim( $raw_payload );
+			if ( $raw_payload === '' ) {
+				return array();
+			}
+
+			$decoded_payload = json_decode( $raw_payload, true );
+			if ( json_last_error() !== JSON_ERROR_NONE ) {
+				throw new Exception( 'Additional token payload must be valid JSON: ' . json_last_error_msg() );
+			}
+
+			if ( ! is_array( $decoded_payload ) ) {
+				throw new Exception( 'Additional token payload must be a JSON object with key/value pairs.' );
+			}
+
+			if ( ! empty( $decoded_payload ) && array_values( $decoded_payload ) === $decoded_payload ) {
+				throw new Exception( 'Additional token payload must be a JSON object with key/value pairs.' );
+			}
+
+			if ( array_key_exists( $username_field, $decoded_payload ) || array_key_exists( $password_field, $decoded_payload ) ) {
+				throw new Exception( sprintf( 'Additional token payload cannot override "%s" or "%s".', $username_field, $password_field ) );
+			}
+
+			return $decoded_payload;
 		}
 
 		/**
