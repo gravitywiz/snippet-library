@@ -48,6 +48,23 @@ const getSourceField = (formId, fieldId) => {
 	return jQuery(`#input_${formId}_${fieldId}`);
 };
 
-gform.addAction( 'gpld_after_set_min_date', function( $input, date ) {
-	$input.datepicker( 'setDate', date );
+gform.addAction( 'gpld_after_set_min_date', function( $input, date, selectedDate, fieldId, formId, data ) {
+
+	// GF 2.x: jQuery UI datepicker (popup, or the inline calendar's container).
+	if ( GPLimitDates.hasJqueryUiDatepicker( $input ) ) {
+		$input.datepicker( 'setDate', date );
+		return;
+	}
+
+	// GF 3.0+: WhatSock. Write the value; the input's change handler updates dependent fields.
+	$input.val( GPLimitDates.formatDate( date, fieldId, data ) ).change();
+
+	// Inline datepicker: move the selected-date marker and the view onto the new date.
+	const calendar = GPLimitDates.getWhatSockCalendar( $input.attr( 'id' ) );
+	if ( calendar && calendar.gpldInline ) {
+		calendar.date = new Date( date.getTime() );
+		calendar.setCurrent( calendar );
+		GPLimitDates.markWhatSockSelectedDate( calendar, date );
+		GPLimitDates.rerenderWhatSockCalendar( calendar );
+	}
 } );
