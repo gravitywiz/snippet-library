@@ -14,7 +14,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  * Description:  Sync the payment details of child entries with their parent's.
  * Author:       Gravity Wiz
- * Version:      0.4
+ * Version:      0.5
  * Author URI:   https://gravitywiz.com
  */
 add_action( 'gform_after_submission', function( $entry, $form ) {
@@ -32,6 +32,32 @@ add_action( 'gform_after_update_entry', function( $form, $entry_id, $original_en
 add_action( 'gform_update_payment_status', 'gpnf_get_parent_entry_and_sync_child_entries_payment_details' );
 add_action( 'gform_update_payment_date', 'gpnf_get_parent_entry_and_sync_child_entries_payment_details' );
 add_action( 'gform_update_transaction_id', 'gpnf_get_parent_entry_and_sync_child_entries_payment_details' );
+
+// Handle successful Stripe payment entries to ensure child entries are synced with the parent entry's payment details.
+foreach ( array( 'payment', 'card' ) as $gpnf_stripe_element ) {
+	foreach ( array( 'wp_ajax_', 'wp_ajax_nopriv_' ) as $gpnf_ajax_prefix ) {
+		add_action( "{$gpnf_ajax_prefix}gfstripe_{$gpnf_stripe_element}_element_handle_successful_entry", function() {
+
+			$entry_id = absint( rgpost( 'entry_id' ) );
+			if ( ! $entry_id ) {
+				return;
+			}
+
+			$entry = GFAPI::get_entry( $entry_id );
+			if ( is_wp_error( $entry ) ) {
+				return;
+			}
+
+			// Re-read the child entry IDs from entry meta to ensure they are attached before syncing payment details.
+			foreach ( GFCommon::get_fields_by_type( GFAPI::get_form( $entry['form_id'] ), array( 'form' ) ) as $gpnf_field ) {
+				$entry[ $gpnf_field->id ] = (string) gform_get_meta( $entry_id, $gpnf_field->id );
+			}
+
+			gpnf_sync_child_entries_payment_details( $entry );
+
+		}, 9 );
+	}
+}
 
 /**
  * Bulk Sync Parent/Child Entry Payment Details
