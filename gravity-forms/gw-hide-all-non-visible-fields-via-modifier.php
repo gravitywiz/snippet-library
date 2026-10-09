@@ -4,7 +4,7 @@
  * https://gravitywiz.com/how-to-not-show-hidden-fields-using-all-fields-merge-tag/
  *
  * By default, the {all_fields:nohidden} merge tag will only hide Hidden fields. This snippet will also hide fields that
- * have a Visibility of "Hidden" and fields that are hidden via the "gf_hidden" or "gf_invisible" CSS classes.
+ * have a Visibility of "Hidden" and fields that are hidden via the "gf_hidden", "gf_invisible" or "make_invisible" CSS classes.
  *
  * Pairs well with [GP Preview Submission](https://gravitywiz.com/documentation/gravity-forms-preview-submssion/)!
  *
@@ -31,7 +31,7 @@ add_filter( 'gform_merge_tag_filter', function( $value, $merge_tag, $modifier, $
 
 		// Hide fields hidden via CSS classes.
 		$css_classes      = explode( ' ', $field->cssClass );
-		$matching_classes = array_intersect( array( 'gf_hidden', 'gf_invisible' ), $css_classes );
+		$matching_classes = array_intersect( array( 'gf_hidden', 'gf_invisible', 'make_invisible' ), $css_classes );
 		if ( ! empty( $matching_classes ) ) {
 			return false;
 		}
