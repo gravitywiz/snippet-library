@@ -305,7 +305,10 @@ class GW_Email_Entry_Notes {
 	}
 
 	private function add_notice( $message, $type = 'success' ) {
-		$this->_notices[] = array( 'message' => $message, 'type' => $type );
+		$this->_notices[] = array(
+			'message' => $message,
+			'type'    => $type,
+		);
 	}
 
 	public function display_notices() {
