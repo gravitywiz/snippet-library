@@ -38,15 +38,31 @@ class GW_Email_Entry_Notes {
 
 		add_action( 'admin_init', array( $this, 'maybe_email_notes' ) );
 		add_action( 'admin_footer', array( $this, 'output_script' ) );
+		add_action( 'admin_notices', array( $this, 'display_notices' ) );
 
 	}
 
-	private function is_entry_detail() {
-		return is_admin() && rgget( 'page' ) === 'gf_entries' && rgget( 'view' ) === 'entry';
-	}
+	/**
+	 * The entry and form for the current entry detail screen, or false if this isn't
+	 * that screen (or the snippet isn't enabled for the form).
+	 */
+	private function get_context() {
 
-	private function is_enabled_for_form( $form_id ) {
-		return ! $this->_args['form_id'] || (int) $this->_args['form_id'] === (int) $form_id;
+		if ( ! is_admin() || rgget( 'page' ) !== 'gf_entries' || rgget( 'view' ) !== 'entry' ) {
+			return false;
+		}
+
+		$entry = GFAPI::get_entry( absint( rgget( 'lid' ) ) );
+		if ( is_wp_error( $entry ) ) {
+			return false;
+		}
+
+		$form = GFAPI::get_form( $entry['form_id'] );
+		if ( ! $form || ( $this->_args['form_id'] && (int) $this->_args['form_id'] !== (int) $form['id'] ) ) {
+			return false;
+		}
+
+		return array( $form, $entry );
 	}
 
 	/**
@@ -85,23 +101,18 @@ class GW_Email_Entry_Notes {
 	 */
 	public function output_script() {
 
-		if ( ! $this->is_entry_detail() ) {
+		$context = $this->get_context();
+		if ( ! $context ) {
 			return;
 		}
 
-		$entry = GFAPI::get_entry( absint( rgget( 'lid' ) ) );
-		if ( is_wp_error( $entry ) ) {
-			return;
-		}
+		list( $form, $entry ) = $context;
 
-		$form = GFAPI::get_form( $entry['form_id'] );
-		if ( ! $form || ! $this->is_enabled_for_form( $form['id'] ) ) {
-			return;
-		}
+		$candidates = $this->get_candidates( $form, $entry );
 
-		$candidates = array();
-		foreach ( $this->get_candidates( $form, $entry ) as $email => $label ) {
-			$candidates[] = array( 'email' => $email, 'label' => $label );
+		// Nothing to send to and no way to type an address; don't offer the action at all.
+		if ( empty( $candidates ) && ! $this->_args['allow_custom_recipient'] ) {
+			return;
 		}
 
 		$config = array(
@@ -110,15 +121,6 @@ class GW_Email_Entry_Notes {
 			'label'       => $this->_args['action_label'],
 			'candidates'  => $candidates,
 			'allowCustom' => (bool) $this->_args['allow_custom_recipient'],
-			'i18n'        => array(
-				'title'       => 'Email selected notes to:',
-				'other'       => 'Other address…',
-				'placeholder' => 'name@example.com',
-				'send'        => 'Send',
-				'cancel'      => 'Cancel',
-				'noNotes'     => 'Please select at least one note to email.',
-				'noOptions'   => 'No email address was found in this entry.',
-			),
 		);
 
 		?>
@@ -139,25 +141,18 @@ class GW_Email_Entry_Notes {
 
 				// Recipient dialog.
 				var $dialog = $( '<dialog style="padding:20px 24px;border:1px solid #c3c4c7;border-radius:4px;min-width:320px;"></dialog>' );
-				var $title  = $( '<p style="margin:0 0 12px;font-weight:600;"></p>' ).text( cfg.i18n.title );
+				var $title  = $( '<p style="margin:0 0 12px;font-weight:600;">Email selected notes to:</p>' );
 				var $choice = $( '<select style="width:100%;margin-bottom:8px;"></select>' );
-				var $custom = $( '<input type="email" style="width:100%;margin-bottom:8px;display:none;">' ).attr( 'placeholder', cfg.i18n.placeholder );
-				var $error  = $( '<p style="color:#b32d2e;margin:0 0 8px;display:none;"></p>' );
-				var $send   = $( '<button type="button" class="button button-primary" style="margin-right:6px;"></button>' ).text( cfg.i18n.send );
-				var $cancel = $( '<button type="button" class="button"></button>' ).text( cfg.i18n.cancel );
+				var $custom = $( '<input type="email" multiple placeholder="name@example.com, name@example.org" style="width:100%;margin-bottom:8px;display:none;">' );
+				var $send   = $( '<button type="button" class="button button-primary" style="margin-right:6px;">Send</button>' );
+				var $cancel = $( '<button type="button" class="button">Cancel</button>' );
 
-				$.each( cfg.candidates, function( i, c ) {
-					$choice.append( $( '<option>', { value: c.email, text: c.label + ' — ' + c.email } ) );
+				$.each( cfg.candidates, function( email, label ) {
+					$choice.append( $( '<option>', { value: email, text: label + ' — ' + email } ) );
 				} );
 
 				if ( cfg.allowCustom ) {
-					$choice.append( $( '<option>', { value: '__other__', text: cfg.i18n.other } ) );
-				}
-
-				if ( ! $choice.children().length ) {
-					$error.text( cfg.i18n.noOptions ).show();
-					$choice.hide();
-					$send.prop( 'disabled', true );
+					$choice.append( $( '<option>', { value: '__other__', text: 'Other address…' } ) );
 				}
 
 				function toggleCustom() {
@@ -167,22 +162,21 @@ class GW_Email_Entry_Notes {
 				$choice.on( 'change', toggleCustom );
 				toggleCustom();
 
-				$dialog.append( $title, $choice, $custom, $error, $send, $cancel ).appendTo( 'body' );
+				$dialog.append( $title, $choice, $custom, $send, $cancel ).appendTo( 'body' );
 
 				$cancel.on( 'click', function() {
-					$hidden.val( '' );
 					$dialog[0].close();
 				} );
 
 				$send.on( 'click', function() {
-					var value = $choice.val() === '__other__' ? $.trim( $custom.val() ) : $choice.val();
+					var isCustom = $choice.val() === '__other__';
 
-					if ( $choice.val() === '__other__' && ( ! value || ! $custom[0].checkValidity() ) ) {
+					if ( isCustom && ! $custom[0].checkValidity() ) {
 						$custom[0].reportValidity();
 						return;
 					}
 
-					$hidden.val( value );
+					$hidden.val( isCustom ? $.trim( $custom.val() ) : $choice.val() );
 					$dialog[0].close();
 					// Bypass any "submit" input shadowing the native method.
 					HTMLFormElement.prototype.submit.call( $form[0] );
@@ -202,7 +196,7 @@ class GW_Email_Entry_Notes {
 					e.preventDefault();
 
 					if ( ! $form.find( 'input[name="note[]"]:checked' ).length ) {
-						window.alert( cfg.i18n.noNotes );
+						window.alert( 'Please select at least one note to email.' );
 						return;
 					}
 
@@ -220,14 +214,17 @@ class GW_Email_Entry_Notes {
 	 */
 	public function maybe_email_notes() {
 
-		if ( ! $this->is_entry_detail() || rgpost( 'action' ) !== 'bulk' ) {
+		$bulk_action = rgpost( 'bulk_action' ) ? rgpost( 'bulk_action' ) : rgpost( 'bulk_action2' );
+		if ( rgpost( 'action' ) !== 'bulk' || $bulk_action !== self::ACTION ) {
 			return;
 		}
 
-		$bulk_action = rgpost( 'bulk_action' ) ? rgpost( 'bulk_action' ) : rgpost( 'bulk_action2' );
-		if ( $bulk_action !== self::ACTION ) {
+		$context = $this->get_context();
+		if ( ! $context ) {
 			return;
 		}
+
+		list( $form, $entry ) = $context;
 
 		// Same nonce Gravity Forms uses for its own note actions.
 		check_admin_referer( 'gforms_update_note', 'gforms_update_note' );
@@ -236,32 +233,25 @@ class GW_Email_Entry_Notes {
 			wp_die( esc_html__( 'You do not have permission to do this.', 'gravityforms' ) );
 		}
 
-		$entry = GFAPI::get_entry( absint( rgget( 'lid' ) ) );
-		if ( is_wp_error( $entry ) ) {
-			return $this->add_notice( 'The entry could not be found.', 'error' );
-		}
-
-		$form = GFAPI::get_form( $entry['form_id'] );
-		if ( ! $form || ! $this->is_enabled_for_form( $form['id'] ) ) {
-			return;
-		}
-
 		$note_ids = array_filter( array_map( 'absint', (array) rgpost( 'note' ) ) );
 		if ( empty( $note_ids ) ) {
 			return $this->add_notice( 'Please select at least one note to email.', 'error' );
 		}
 
-		// Recipient chosen in the dialog; fall back to the first address in the entry.
+		// The custom address input accepts a comma-separated list.
+		$to         = array_filter( array_map( 'trim', explode( ',', (string) rgpost( self::FIELD ) ) ) );
 		$candidates = $this->get_candidates( $form, $entry );
-		$to         = trim( (string) rgpost( self::FIELD ) );
 
-		if ( $to === '' ) {
-			$to = (string) key( $candidates );
-		} elseif ( ! $this->_args['allow_custom_recipient'] && ! isset( $candidates[ $to ] ) ) {
-			return $this->add_notice( 'That email address is not allowed.', 'error' );
+		foreach ( $to as $email ) {
+			if ( ! is_email( $email ) ) {
+				return $this->add_notice( sprintf( '"%s" is not a valid email address.', $email ), 'error' );
+			}
+			if ( ! $this->_args['allow_custom_recipient'] && ! isset( $candidates[ $email ] ) ) {
+				return $this->add_notice( sprintf( '"%s" is not an allowed email address.', $email ), 'error' );
+			}
 		}
 
-		if ( ! is_email( $to ) ) {
+		if ( empty( $to ) ) {
 			return $this->add_notice( 'No valid email address was provided.', 'error' );
 		}
 
@@ -290,7 +280,7 @@ class GW_Email_Entry_Notes {
 		);
 
 		if ( $sent ) {
-			$this->add_notice( sprintf( '%d note(s) emailed to %s.', count( $notes ), $to ), 'success' );
+			$this->add_notice( sprintf( '%d note(s) emailed to %s.', count( $notes ), implode( ', ', $to ) ), 'success' );
 		} else {
 			$this->add_notice( 'The email could not be sent. Please check your site\'s email configuration.', 'error' );
 		}
@@ -303,14 +293,11 @@ class GW_Email_Entry_Notes {
 		$html        = '';
 
 		foreach ( $notes as $note ) {
-			$author = $note->user_name ? $note->user_name : 'System';
-			$date   = get_date_from_gmt( $note->date_created, $date_format );
-
 			$html .= sprintf(
 				'<div style="margin:0 0 20px;padding:0 0 15px;border-bottom:1px solid #ddd;"><p style="margin:0 0 8px;color:#666;font-size:13px;">%s &middot; %s</p>%s</div>',
-				esc_html( $author ),
-				esc_html( $date ),
-				wp_kses_post( wpautop( $note->value ) )
+				esc_html( $note->user_name ? $note->user_name : 'System' ),
+				esc_html( get_date_from_gmt( $note->date_created, $date_format ) ),
+				wpautop( esc_html( $note->value ) )
 			);
 		}
 
@@ -318,13 +305,7 @@ class GW_Email_Entry_Notes {
 	}
 
 	private function add_notice( $message, $type = 'success' ) {
-
 		$this->_notices[] = array( 'message' => $message, 'type' => $type );
-
-		if ( ! has_action( 'admin_notices', array( $this, 'display_notices' ) ) ) {
-			add_action( 'admin_notices', array( $this, 'display_notices' ) );
-		}
-
 	}
 
 	public function display_notices() {
@@ -341,7 +322,7 @@ class GW_Email_Entry_Notes {
 
 # Configuration
 new GW_Email_Entry_Notes( array(
-  // 'form_id'                => 123, // Optional. Limit to one form. Leave false for all forms.
+	// 'form_id'                => 123, // Optional. Limit to one form. Leave false for all forms.
 	// 'email_field_id'         => 4, // Optional. Sets the default recipient.
 	// 'allow_custom_recipient' => false, // Optional. Set to false to only allow addresses found in the entry.
 ) );
