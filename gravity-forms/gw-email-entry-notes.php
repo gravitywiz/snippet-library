@@ -12,9 +12,11 @@
  *   2. Optionally set form and field IDs in the configuration at the bottom
  *
  *     new GW_Email_Entry_Notes( array(
- *         'form_id'                => 123,   // Optional. Limit to one form. Leave false for all forms.
- *         'email_field_id'         => 4,     // Optional. Field listed first / used as the default recipient.
- *         'allow_custom_recipient' => true,  // Set to false to only allow addresses found in the entry.
+ *         'form_id'                => 123,               // Optional. Limit to one form. Leave false for all forms.
+ *         'email_field_id'         => 4,                 // Optional. Field listed first / used as the default recipient.
+ *         'allow_custom_recipient' => true,              // Set to false to only allow addresses found in the entry.
+ *         'from_email'             => 'current_user',    // Optional. Use "current_user" or a hard-coded email address.
+ *         'sort_order'             => 'ASC',             // Optional. Use "ASC" or "DESC" to sort notes chronologically.
  *     ) );
  */
 class GW_Email_Entry_Notes {
@@ -31,6 +33,8 @@ class GW_Email_Entry_Notes {
 			'form_id'                => false,
 			'email_field_id'         => false,
 			'allow_custom_recipient' => true,
+			'from_email'             => false,
+			'sort_order'             => 'ASC',
 			// Merge tags: {entry_id}, {form_title}
 			'subject'                => 'Notes for {form_title} (Entry #{entry_id})',
 			'action_label'           => 'Email Notes',
@@ -124,7 +128,7 @@ class GW_Email_Entry_Notes {
 		);
 
 		?>
-		<script type="text/javascript">
+			<script type="text/javascript">
 			jQuery( function( $ ) {
 
 				var cfg      = <?php echo wp_json_encode( $config ); ?>;
@@ -205,9 +209,9 @@ class GW_Email_Entry_Notes {
 
 			} );
 		</script>
-		<?php
+			<?php
 
-	}
+		}
 
 	/**
 	 * Handle the submitted bulk action.
@@ -266,17 +270,30 @@ class GW_Email_Entry_Notes {
 			return $this->add_notice( 'The selected notes could not be found.', 'error' );
 		}
 
+		$this->sort_notes( $notes );
+
 		$subject = str_replace(
 			array( '{entry_id}', '{form_title}' ),
 			array( $entry['id'], $form['title'] ),
 			$this->_args['subject']
 		);
 
+		$headers    = array( 'Content-Type: text/html; charset=UTF-8' );
+		$from_email = $this->get_from_email();
+
+		if ( $from_email && ! is_email( $from_email ) ) {
+			return $this->add_notice( sprintf( '"%s" is not a valid from email address.', $from_email ), 'error' );
+		}
+
+		if ( $from_email ) {
+			$headers[] = 'From: ' . $from_email;
+		}
+
 		$sent = wp_mail(
 			$to,
 			$subject,
 			$this->build_message( $notes ),
-			array( 'Content-Type: text/html; charset=UTF-8' )
+			$headers
 		);
 
 		if ( $sent ) {
@@ -285,6 +302,31 @@ class GW_Email_Entry_Notes {
 			$this->add_notice( 'The email could not be sent. Please check your site\'s email configuration.', 'error' );
 		}
 
+	}
+
+	private function get_from_email() {
+
+		if ( $this->_args['from_email'] === 'current_user' ) {
+			$user = wp_get_current_user();
+			return $user->exists() ? $user->user_email : false;
+		}
+
+		return $this->_args['from_email'] ? trim( (string) $this->_args['from_email'] ) : false;
+	}
+
+	private function sort_notes( &$notes ) {
+
+		$order = strtoupper( (string) $this->_args['sort_order'] ) === 'DESC' ? -1 : 1;
+
+		usort( $notes, function( $a, $b ) use ( $order ) {
+			$date_comparison = strcmp( $a->date_created, $b->date_created );
+
+			if ( $date_comparison !== 0 ) {
+				return $date_comparison * $order;
+			}
+
+			return ( (int) $a->id <=> (int) $b->id ) * $order;
+		} );
 	}
 
 	private function build_message( $notes ) {
@@ -328,4 +370,6 @@ new GW_Email_Entry_Notes( array(
 	// 'form_id'                => 123, // Optional. Limit to one form. Leave false for all forms.
 	// 'email_field_id'         => 4, // Optional. Sets the default recipient.
 	// 'allow_custom_recipient' => false, // Optional. Set to false to only allow addresses found in the entry.
+	// 'from_email'             => 'current_user', // Optional. Use "current_user" or a hard-coded email address.
+	// 'sort_order'             => 'DESC', // Optional. Use "ASC" or "DESC" to sort notes chronologically.
 ) );
