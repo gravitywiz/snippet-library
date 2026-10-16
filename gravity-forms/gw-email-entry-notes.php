@@ -211,7 +211,7 @@ class GW_Email_Entry_Notes {
 		</script>
 			<?php
 
-		}
+	}
 
 	/**
 	 * Handle the submitted bulk action.
