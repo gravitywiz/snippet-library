@@ -1,5 +1,5 @@
 <?php
- /**
+/**
  * Gravity Perks // Bookings // Auto-select the Only Available Time Slot
  *
  * When a date is chosen and exactly ONE time slot is available, select it automatically so users
