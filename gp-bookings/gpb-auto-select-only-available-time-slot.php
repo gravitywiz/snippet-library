@@ -10,8 +10,6 @@
  * Instructions:
  * 1. Install this snippet: https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  * 2. Set 'form_id' in the configuration at the bottom. 'slot_selector' only needs changing if your markup differs.
- * 3. Set 'debug' => true, open the form in the browser console (F12 > Console), pick a date, and check what is logged.
- *    Set it back to false when done.
  *
  * If the snippet doesn't select anything:
  *   Pick a date so slots appear, right-click a time slot > Inspect, and confirm the slot element has the class
@@ -26,7 +24,6 @@ class GPB_Auto_Select_Only_Time_Slot {
 		$this->_args = wp_parse_args( $args, array(
 			'form_id'       => 0,
 			'slot_selector' => '',
-			'debug'         => false,
 		) );
 
 		add_filter( 'gform_pre_render', array( $this, 'add_init_script' ), 10, 1 );
@@ -41,7 +38,6 @@ class GPB_Auto_Select_Only_Time_Slot {
 		$args = array(
 			'formId'       => (int) $this->_args['form_id'],
 			'slotSelector' => $this->_args['slot_selector'],
-			'debug'        => (bool) $this->_args['debug'],
 		);
 
 		$script = 'new GPBAutoSelectOnlyTimeSlot( ' . wp_json_encode( $args ) . ' );';
@@ -70,12 +66,6 @@ class GPB_Auto_Select_Only_Time_Slot {
 				}
 				wrapper.setAttribute( 'data-gpb-autoselect', '1' );
 
-				function log() {
-					if ( args.debug && window.console ) {
-						console.log.apply( console, [ '[GPB auto-select]' ].concat( Array.prototype.slice.call( arguments ) ) );
-					}
-				}
-
 				function isAvailable( el ) {
 					if ( el.disabled || el.getAttribute( 'aria-disabled' ) === 'true' ) {
 						return false;
@@ -97,10 +87,7 @@ class GPB_Auto_Select_Only_Time_Slot {
 
 				function run() {
 					var slots = Array.prototype.slice.call( wrapper.querySelectorAll( args.slotSelector ) );
-					log( 'Slots matching selector:', slots.length, slots );
-
 					var available = slots.filter( isAvailable );
-					log( 'Available slots:', available.length );
 
 					if ( available.length !== 1 ) {
 						return;
@@ -114,7 +101,6 @@ class GPB_Auto_Select_Only_Time_Slot {
 					}
 
 					slot.setAttribute( 'data-gpb-autoselected', '1' );
-					log( 'Auto-selecting:', slot );
 					slot.click();
 				}
 
@@ -137,5 +123,4 @@ class GPB_Auto_Select_Only_Time_Slot {
 new GPB_Auto_Select_Only_Time_Slot( array(
 	'form_id'       => 123,
 	'slot_selector' => '.gpb-booking-time-picker__slot',
-	'debug'         => false,
 ) );
