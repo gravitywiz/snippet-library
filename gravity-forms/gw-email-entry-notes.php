@@ -16,6 +16,7 @@
  *         'email_field_id'         => 4,                 // Optional. Field listed first / used as the default recipient.
  *         'allow_custom_recipient' => true,              // Set to false to only allow addresses found in the entry.
  *         'from_email'             => 'current_user',    // Optional. Use "current_user" or a hard-coded email address.
+ *         'from_name'              => 'Gravity Wiz',     // Optional. Defaults to the current user's display name when using "current_user".
  *         'sort_order'             => 'ASC',             // Optional. Use "ASC" or "DESC" to sort notes chronologically.
  *     ) );
  */
@@ -34,6 +35,7 @@ class GW_Email_Entry_Notes {
 			'email_field_id'         => false,
 			'allow_custom_recipient' => true,
 			'from_email'             => false,
+			'from_name'              => false,
 			'sort_order'             => 'ASC',
 			// Merge tags: {entry_id}, {form_title}
 			'subject'                => 'Notes for {form_title} (Entry #{entry_id})',
@@ -92,6 +94,7 @@ class GW_Email_Entry_Notes {
 			if ( ! is_email( $value ) || isset( $candidates[ $value ] ) ) {
 				continue;
 			}
+
 			$field                = GFAPI::get_field( $form, $field_id );
 			$candidates[ $value ] = $field ? GFCommon::get_label( $field ) : 'Field ' . $field_id;
 		}
@@ -138,10 +141,15 @@ class GW_Email_Entry_Notes {
 					return;
 				}
 
-				$selects.append( $( '<option>', { value: cfg.action, text: cfg.label } ) );
+				$selects.append( $( '<option>', {
+					value: cfg.action,
+					text: cfg.label
+				} ) );
 
 				var $form   = $selects.first().closest( 'form' );
-				var $hidden = $( '<input type="hidden">' ).attr( 'name', cfg.field ).appendTo( $form );
+				var $hidden = $( '<input type="hidden">' )
+					.attr( 'name', cfg.field )
+					.appendTo( $form );
 
 				// Recipient dialog.
 				var $dialog = $( '<dialog style="padding:20px 24px;border:1px solid #c3c4c7;border-radius:4px;min-width:320px;"></dialog>' );
@@ -152,11 +160,17 @@ class GW_Email_Entry_Notes {
 				var $cancel = $( '<button type="button" class="button">Cancel</button>' );
 
 				$.each( cfg.candidates, function( email, label ) {
-					$choice.append( $( '<option>', { value: email, text: label + ' — ' + email } ) );
+					$choice.append( $( '<option>', {
+						value: email,
+						text: label + ' — ' + email
+					} ) );
 				} );
 
 				if ( cfg.allowCustom ) {
-					$choice.append( $( '<option>', { value: '__other__', text: 'Other address…' } ) );
+					$choice.append( $( '<option>', {
+						value: '__other__',
+						text: 'Other address…'
+					} ) );
 				}
 
 				function toggleCustom() {
@@ -166,7 +180,13 @@ class GW_Email_Entry_Notes {
 				$choice.on( 'change', toggleCustom );
 				toggleCustom();
 
-				$dialog.append( $title, $choice, $custom, $send, $cancel ).appendTo( 'body' );
+				$dialog.append(
+					$title,
+					$choice,
+					$custom,
+					$send,
+					$cancel
+				).appendTo( 'body' );
 
 				$cancel.on( 'click', function() {
 					$dialog[0].close();
@@ -180,8 +200,12 @@ class GW_Email_Entry_Notes {
 						return;
 					}
 
-					$hidden.val( isCustom ? $.trim( $custom.val() ) : $choice.val() );
+					$hidden.val(
+						isCustom ? $.trim( $custom.val() ) : $choice.val()
+					);
+
 					$dialog[0].close();
+
 					// Bypass any "submit" input shadowing the native method.
 					HTMLFormElement.prototype.submit.call( $form[0] );
 				} );
@@ -218,7 +242,10 @@ class GW_Email_Entry_Notes {
 	 */
 	public function maybe_email_notes() {
 
-		$bulk_action = rgpost( 'bulk_action' ) ? rgpost( 'bulk_action' ) : rgpost( 'bulk_action2' );
+		$bulk_action = rgpost( 'bulk_action' )
+			? rgpost( 'bulk_action' )
+			: rgpost( 'bulk_action2' );
+
 		if ( rgpost( 'action' ) !== 'bulk' || $bulk_action !== self::ACTION ) {
 			return;
 		}
@@ -237,29 +264,61 @@ class GW_Email_Entry_Notes {
 			wp_die( esc_html__( 'You do not have permission to do this.', 'gravityforms' ) );
 		}
 
-		$note_ids = array_filter( array_map( 'absint', (array) rgpost( 'note' ) ) );
+		$note_ids = array_filter(
+			array_map( 'absint', (array) rgpost( 'note' ) )
+		);
+
 		if ( empty( $note_ids ) ) {
-			return $this->add_notice( 'Please select at least one note to email.', 'error' );
+			return $this->add_notice(
+				'Please select at least one note to email.',
+				'error'
+			);
 		}
 
 		// The custom address input accepts a comma-separated list.
-		$to         = array_filter( array_map( 'trim', explode( ',', (string) rgpost( self::FIELD ) ) ) );
+		$to = array_filter(
+			array_map(
+				'trim',
+				explode( ',', (string) rgpost( self::FIELD ) )
+			)
+		);
+
 		$candidates = $this->get_candidates( $form, $entry );
 
 		foreach ( $to as $email ) {
 			if ( ! is_email( $email ) ) {
-				return $this->add_notice( sprintf( '"%s" is not a valid email address.', $email ), 'error' );
+				return $this->add_notice(
+					sprintf(
+						'"%s" is not a valid email address.',
+						$email
+					),
+					'error'
+				);
 			}
-			if ( ! $this->_args['allow_custom_recipient'] && ! isset( $candidates[ $email ] ) ) {
-				return $this->add_notice( sprintf( '"%s" is not an allowed email address.', $email ), 'error' );
+
+			if (
+				! $this->_args['allow_custom_recipient']
+				&& ! isset( $candidates[ $email ] )
+			) {
+				return $this->add_notice(
+					sprintf(
+						'"%s" is not an allowed email address.',
+						$email
+					),
+					'error'
+				);
 			}
 		}
 
 		if ( empty( $to ) ) {
-			return $this->add_notice( 'No valid email address was provided.', 'error' );
+			return $this->add_notice(
+				'No valid email address was provided.',
+				'error'
+			);
 		}
 
 		$notes = array();
+
 		foreach ( GFFormsModel::get_lead_notes( $entry['id'] ) as $note ) {
 			if ( in_array( (int) $note->id, $note_ids, true ) ) {
 				$notes[] = $note;
@@ -267,7 +326,10 @@ class GW_Email_Entry_Notes {
 		}
 
 		if ( empty( $notes ) ) {
-			return $this->add_notice( 'The selected notes could not be found.', 'error' );
+			return $this->add_notice(
+				'The selected notes could not be found.',
+				'error'
+			);
 		}
 
 		$this->sort_notes( $notes );
@@ -282,11 +344,25 @@ class GW_Email_Entry_Notes {
 		$from_email = $this->get_from_email();
 
 		if ( $from_email && ! is_email( $from_email ) ) {
-			return $this->add_notice( sprintf( '"%s" is not a valid from email address.', $from_email ), 'error' );
+			return $this->add_notice(
+				sprintf(
+					'"%s" is not a valid from email address.',
+					$from_email
+				),
+				'error'
+			);
 		}
 
 		if ( $from_email ) {
-			$headers[] = 'From: ' . $from_email;
+			$from_name = $this->get_from_name();
+
+			$headers[] = $from_name
+				? sprintf(
+					'From: "%s" <%s>',
+					$from_name,
+					$from_email
+				)
+				: 'From: ' . $from_email;
 		}
 
 		$sent = wp_mail(
@@ -297,48 +373,129 @@ class GW_Email_Entry_Notes {
 		);
 
 		if ( $sent ) {
-			$this->add_notice( sprintf( '%d note(s) emailed to %s.', count( $notes ), implode( ', ', $to ) ), 'success' );
+			$this->add_notice(
+				sprintf(
+					'%d note(s) emailed to %s.',
+					count( $notes ),
+					implode( ', ', $to )
+				),
+				'success'
+			);
 		} else {
-			$this->add_notice( 'The email could not be sent. Please check your site\'s email configuration.', 'error' );
+			$this->add_notice(
+				'The email could not be sent. Please check your site\'s email configuration.',
+				'error'
+			);
 		}
 
 	}
 
+	/**
+	 * Get the configured sender email address.
+	 *
+	 * @return string|false
+	 */
 	private function get_from_email() {
 
 		if ( $this->_args['from_email'] === 'current_user' ) {
 			$user = wp_get_current_user();
-			return $user->exists() ? $user->user_email : false;
+
+			return $user->exists()
+				? $user->user_email
+				: false;
 		}
 
-		return $this->_args['from_email'] ? trim( (string) $this->_args['from_email'] ) : false;
+		return $this->_args['from_email']
+			? trim( (string) $this->_args['from_email'] )
+			: false;
 	}
 
+	/**
+	 * Get the configured sender name.
+	 *
+	 * If no name is configured and the sender email uses the current user,
+	 * use that user's WordPress display name.
+	 *
+	 * @return string|false
+	 */
+	private function get_from_name() {
+
+		$from_name = $this->_args['from_name'];
+
+		if (
+			! $from_name
+			&& $this->_args['from_email'] === 'current_user'
+		) {
+			$user      = wp_get_current_user();
+			$from_name = $user->exists()
+				? $user->display_name
+				: false;
+		}
+
+		return $from_name
+			? wp_strip_all_tags(
+				trim( (string) $from_name ),
+				true
+			)
+			: false;
+	}
+
+	/**
+	 * Sort the selected notes.
+	 *
+	 * @param array $notes Notes to sort.
+	 */
 	private function sort_notes( &$notes ) {
 
-		$order = strtoupper( (string) $this->_args['sort_order'] ) === 'DESC' ? -1 : 1;
+		$order = strtoupper( (string) $this->_args['sort_order'] ) === 'DESC'
+			? -1
+			: 1;
 
 		usort( $notes, function( $a, $b ) use ( $order ) {
-			$date_comparison = strcmp( $a->date_created, $b->date_created );
+			$date_comparison = strcmp(
+				$a->date_created,
+				$b->date_created
+			);
 
 			if ( $date_comparison !== 0 ) {
 				return $date_comparison * $order;
 			}
 
-			return ( (int) $a->id <=> (int) $b->id ) * $order;
+			return (
+				(int) $a->id <=> (int) $b->id
+			) * $order;
 		} );
 	}
 
+	/**
+	 * Build the HTML email body.
+	 *
+	 * @param array $notes Notes to include.
+	 *
+	 * @return string
+	 */
 	private function build_message( $notes ) {
 
-		$date_format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
-		$html        = '';
+		$date_format = get_option( 'date_format' )
+			. ' '
+			. get_option( 'time_format' );
+
+		$html = '';
 
 		foreach ( $notes as $note ) {
 			$html .= sprintf(
 				'<div style="margin:0 0 20px;padding:0 0 15px;border-bottom:1px solid #ddd;"><p style="margin:0 0 8px;color:#666;font-size:13px;">%s &middot; %s</p>%s</div>',
-				esc_html( $note->user_name ? $note->user_name : 'System' ),
-				esc_html( get_date_from_gmt( $note->date_created, $date_format ) ),
+				esc_html(
+					$note->user_name
+						? $note->user_name
+						: 'System'
+				),
+				esc_html(
+					get_date_from_gmt(
+						$note->date_created,
+						$date_format
+					)
+				),
 				wpautop( esc_html( $note->value ) )
 			);
 		}
@@ -346,14 +503,25 @@ class GW_Email_Entry_Notes {
 		return $html;
 	}
 
+	/**
+	 * Add an admin notice.
+	 *
+	 * @param string $message Notice text.
+	 * @param string $type    Notice type.
+	 */
 	private function add_notice( $message, $type = 'success' ) {
+
 		$this->_notices[] = array(
 			'message' => $message,
 			'type'    => $type,
 		);
 	}
 
+	/**
+	 * Display queued admin notices.
+	 */
 	public function display_notices() {
+
 		foreach ( $this->_notices as $notice ) {
 			printf(
 				'<div class="notice notice-%s is-dismissible"><p>%s</p></div>',
@@ -371,5 +539,6 @@ new GW_Email_Entry_Notes( array(
 	// 'email_field_id'         => 4, // Optional. Sets the default recipient.
 	// 'allow_custom_recipient' => false, // Optional. Set to false to only allow addresses found in the entry.
 	// 'from_email'             => 'current_user', // Optional. Use "current_user" or a hard-coded email address.
+	// 'from_name'              => 'Gravity Wiz', // Optional. Defaults to the current user's display name when using "current_user".
 	// 'sort_order'             => 'DESC', // Optional. Use "ASC" or "DESC" to sort notes chronologically.
 ) );
