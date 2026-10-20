@@ -151,6 +151,7 @@ class GPNF_Populate_Child_Entry_By_URL {
 						form_id: args.formId,
 						field_id: args.fieldId,
 						query: window.location.search,
+						session_hash: jQuery( '#gpnf_session_hash_' + args.formId ).val(),
 						gpnf_context: gpnf.ajaxContext,
 					}, function( response ) {
 						if ( response.success && response.data ) {
@@ -184,8 +185,18 @@ class GPNF_Populate_Child_Entry_By_URL {
 
 		$child_form = $this->get_child_form();
 
-		$session      = new GPNF_Session( $this->_args['form_id'] );
-		$session_hash = $session->get( 'hash' );
+		$session = new GPNF_Session( $this->_args['form_id'] );
+
+		/*
+		 * Prefer the hash the parent form rendered into its session hash input. The session cookie is not
+		 * guaranteed to be available on this request, so falling back to the cookie's hash only as a
+		 * secondary source keeps the child entries linked to the session the form is actually using.
+		 */
+		$session_hash = rgpost( 'session_hash' );
+		if ( ! GPNF_Session::is_valid_hash( $session_hash ) ) {
+			$session_hash = $session->get( 'hash' );
+		}
+
 		if ( ! $session_hash ) {
 			wp_send_json_error( 'No session.' );
 		}
@@ -220,7 +231,7 @@ class GPNF_Populate_Child_Entry_By_URL {
 			$entry = GFAPI::get_entry( $child_entry_id );
 
 			$child_entry = new GPNF_Entry( $entry );
-			$child_entry->set_parent_meta( $this->_args['form_id'] );
+			$child_entry->set_parent_meta( $this->_args['form_id'], $session_hash );
 			$child_entry->set_nested_form_field( $this->_args['nested_form_field_id'] );
 			$child_entry->set_expiration();
 
