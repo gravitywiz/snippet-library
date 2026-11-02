@@ -11,7 +11,7 @@
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-media-library/
  * Description:  Upload images to the Media Library as they are uploaded via the Gravity Forms Multi-file Upload field.
  * Author:       Gravity Wiz
- * Version:      0.16
+ * Version:      0.17
  * Author URI:   https://gravitywiz.com/
  */
 class GPML_Ajax_Upload {
@@ -46,25 +46,24 @@ class GPML_Ajax_Upload {
 		// seem to trigger `gform_entry_post_save` when updating entries.
 		add_filter( 'gravityflow_next_step', array( $this, 'gpml_gflow_next_step' ), 10, 4 );
 
-		// Bypass GF's file URL validation for fields already uploaded and validated during the
-		// AJAX upload step. GF rejects these URLs because they point to wp-content/uploads/
-		// instead of GF's expected temp directory.
-		add_filter( 'gform_field_validation', array( $this, 'bypass_file_validation' ), 10, 4 );
+		// Validation has passed at this point and the files are already in the Media Library, so
+		// discard them from the submission. This keeps GF from moving the temporary files into its
+		// own uploads folder and saving those URLs to the entry alongside ours.
+		add_action( 'gform_pre_submission', array( $this, 'discard_submission_files' ) );
 
-		// Retain AJAX-uploaded files when using Save & Continue. GF strips our uploaded files
-		// from the draft because they include a URL (see GFFormsModel::set_uploaded_files()),
-		// so we re-inject them into the draft submission before it is saved.
+		// Retain AJAX-uploaded files when using Save & Continue. Temporary files are purged from the
+		// GF tmp folder long before a draft is typically resumed, so the files are re-injected into
+		// the draft submission as populated file URLs pointing at the Media Library.
 		add_filter( 'gform_incomplete_submission_pre_save', array( $this, 'retain_files_in_draft' ), 10, 3 );
-
-		// GF 2.10.3+ strips file entries with a 'url' key in set_uploaded_files(), which runs
-		// during process_form(). Strip our 'url' key from gform_uploaded_files before that
-		// happens so the temp_filename/uploaded_filename entries survive for validation.
-		add_filter( 'gform_pre_process', array( $this, 'strip_url_from_gform_uploaded_files' ) );
 
 	}
 
 	public function is_applicable_form( $form ) {
 		return empty( $this->form_id ) || (int) rgar( $form, 'id' ) === (int) $this->form_id;
+	}
+
+	public function is_applicable_field( $field ) {
+		return $field->get_input_type() === 'fileupload' && $field->multipleFiles && gp_media_library()->is_applicable_field( $field );
 	}
 
 	public function gpml_gflow_next_step( $step, $current_step, $entry, $steps ) {
@@ -85,11 +84,27 @@ class GPML_Ajax_Upload {
 
 		$field_uid = implode( '_', array( rgpost( 'gform_unique_id' ), $field->id ) );
 
-		$renamed_file_path = str_replace( basename( $file_path ), $uploaded_filename, $file_path );
-		rename( $file_path, $renamed_file_path );
+		// Decoding filename to prevent file name mismatch.
+		$decoded_filename = str_replace( "\\'", "'", urldecode( $uploaded_filename ) );
 
-		$id = gp_media_library()->upload_to_media_library( $renamed_file_path, $field, array( 'id' => $this->_args['default_entry_id'] ) );
+		/**
+		 * Copy—rather than rename—the temporary file. Gravity Forms removes files from the submission
+		 * when their temporary file is missing (see GF_Field_FileUpload::is_value_submission_empty()),
+		 * which is why AJAX-uploaded files disappeared on validation errors and page navigation. The
+		 * copy is what gets moved into the Media Library; GF's temporary file is left untouched.
+		 */
+		$tmp_dir       = trailingslashit( dirname( $file_path ) );
+		$sideload_path = $tmp_dir . wp_unique_filename( $tmp_dir, $decoded_filename );
+
+		if ( ! copy( $file_path, $sideload_path ) ) {
+			return;
+		}
+
+		$id = gp_media_library()->upload_to_media_library( $sideload_path, $field, array( 'id' => $this->_args['default_entry_id'] ) );
 		if ( is_wp_error( $id ) ) {
+			if ( file_exists( $sideload_path ) ) {
+				unlink( $sideload_path );
+			}
 			return;
 		}
 
@@ -121,14 +136,72 @@ class GPML_Ajax_Upload {
 			'status' => 'ok',
 			'data'   => array(
 				'temp_filename'     => $tmp_file_name,
-				'uploaded_filename' => str_replace( "\\'", "'", urldecode( $uploaded_filename ) ), //Decoding filename to prevent file name mismatch.
-				'url'               => wp_get_attachment_url( $id[0] ),
+				'uploaded_filename' => $decoded_filename,
+				// GF 3.1.2+ rejects temporary files without a valid hash. Mirrors GFAsyncUpload::get_upload_hash().
+				'hash'              => hash_hmac( 'sha256', $tmp_file_name . '|' . $decoded_filename, wp_salt( 'auth' ) ),
 			),
 		);
 
 		$output = json_encode( $output );
 
 		die( $output );
+
+	}
+
+	/**
+	 * Remove our files from the submission once validation has passed.
+	 *
+	 * The files are already in the Media Library and update_entry_field_values() writes their URLs to
+	 * the entry, so there is nothing left for GF to do with the temporary files.
+	 */
+	public function discard_submission_files( $form ) {
+
+		if ( ! $this->is_applicable_form( $form ) ) {
+			return;
+		}
+
+		$form_id  = absint( rgar( $form, 'id' ) );
+		$tmp_path = rgar( GFFormsModel::get_tmp_upload_location( $form_id ), 'path' );
+
+		foreach ( $form['fields'] as $field ) {
+
+			if ( ! $this->is_applicable_field( $field ) ) {
+				continue;
+			}
+
+			$field_uid = implode( '_', array( rgpost( 'gform_unique_id' ), $field->id ) );
+			if ( ! gform_get_meta( $this->_args['default_entry_id'], sprintf( 'gpml_ids_%s', $field_uid ) ) ) {
+				continue;
+			}
+
+			$input_name = 'input_' . absint( $field->id );
+			$files      = rgars( GFFormsModel::$uploaded_files, $form_id . '/' . $input_name, array() );
+
+			// Clean up the temporary files; they've served their purpose.
+			if ( $tmp_path && is_array( $files ) ) {
+				foreach ( $files as $file ) {
+					$temp_filename = rgar( (array) $file, 'temp_filename' );
+					if ( ! $temp_filename ) {
+						continue;
+					}
+					$temp_filepath = $tmp_path . wp_basename( $temp_filename );
+					if ( file_exists( $temp_filepath ) ) {
+						unlink( $temp_filepath );
+					}
+				}
+			}
+
+			unset( GFFormsModel::$uploaded_files[ $form_id ][ $input_name ] );
+
+			// GF 2.9.18+ caches the submission files on the field; clear that too.
+			if ( method_exists( $field, 'set_submission_files' ) ) {
+				$field->formId = $form_id;
+				$field->set_submission_files( array(
+					'existing' => array(),
+					'new'      => array(),
+				) );
+			}
+		}
 
 	}
 
@@ -141,7 +214,7 @@ class GPML_Ajax_Upload {
 		}
 
 		foreach ( $form['fields'] as $field ) {
-			if ( $field->get_input_type() != 'fileupload' || ! $field->multipleFiles || ! gp_media_library()->is_applicable_field( $field ) ) {
+			if ( ! $this->is_applicable_field( $field ) ) {
 				continue;
 			}
 
@@ -151,7 +224,6 @@ class GPML_Ajax_Upload {
 			}
 
 			$files = array();
-			$urls  = array();
 
 			foreach ( $ids as $id ) {
 				$url = is_wp_error( $id ) ? false : wp_get_attachment_url( $id );
@@ -159,82 +231,40 @@ class GPML_Ajax_Upload {
 					continue;
 				}
 
-				$files[] = array(
-					'uploaded_filename' => wp_basename( $url ),
-					'id' => 'gpml-' . $id,
-				);
-				$urls[]  = $url;
+				$files[] = $this->get_populated_file_url_details( $url, $field, $form );
 			}
 
 			if ( $files ) {
 				$submission['files'][ 'input_' . $field->id ] = $files;
-				$submission['partial_entry'][ $field->id ]    = json_encode( $urls );
-				$submission['submitted_values'][ $field->id ] = $urls;
 			}
 		}
 
 		return json_encode( $submission );
 	}
 
-	public function strip_url_from_gform_uploaded_files( $form ) {
-		if ( ! $this->is_applicable_form( $form ) ) {
-			return $form;
-		}
+	/**
+	 * Build a file record that GF will accept on a resumed draft.
+	 *
+	 * GF 2.9.18+ requires a hash for files submitted as a URL (see
+	 * GF_Field_FileUpload::is_valid_populated_file_url()); older versions ignore the extra key.
+	 */
+	public function get_populated_file_url_details( $url, $field, $form ) {
 
-		$raw = rgpost( 'gform_uploaded_files' );
-		if ( empty( $raw ) ) {
-			return $form;
-		}
+		$details = array(
+			'uploaded_filename' => sanitize_file_name( wp_basename( $url ) ),
+			'url'               => esc_url_raw( $url ),
+			'id'                => GFFormsModel::get_uuid(),
+		);
 
-		$uploaded_files = json_decode( $raw, true );
-		if ( ! is_array( $uploaded_files ) ) {
-			return $form;
-		}
+		// Mirrors GF_Field_FileUpload::get_populated_file_url_hash(); key order is significant.
+		$hash_details = $details;
 
-		$modified = false;
-		foreach ( $uploaded_files as &$files ) {
-			if ( ! is_array( $files ) || ! isset( $files[0] ) || ! is_array( $files[0] ) ) {
-				continue;
-			}
-			foreach ( $files as &$file ) {
-				if ( isset( $file['url'] ) ) {
-					unset( $file['url'] );
-					$modified = true;
-				}
-			}
-		}
-		unset( $files, $file );
+		$hash_details['field_id'] = (int) $field->id;
+		$hash_details['form_id']  = (int) rgar( $form, 'id' );
 
-		if ( $modified ) {
-			$_POST['gform_uploaded_files'] = json_encode( $uploaded_files );
-		}
+		$details['hash'] = wp_hash( json_encode( $hash_details ) );
 
-		return $form;
-	}
-
-	public function bypass_file_validation( $result, $value, $form, $field ) {
-
-		if ( ! $this->is_applicable_form( $form ) ) {
-			return $result;
-		}
-
-		if ( $field->get_input_type() !== 'fileupload' || ! $field->multipleFiles ) {
-			return $result;
-		}
-
-		if ( ! gp_media_library()->is_applicable_field( $field ) ) {
-			return $result;
-		}
-
-		$field_uid = implode( '_', array( rgpost( 'gform_unique_id' ), $field->id ) );
-		$ids       = gform_get_meta( $this->_args['default_entry_id'], sprintf( 'gpml_ids_%s', $field_uid ) );
-
-		if ( ! empty( $ids ) && ! $result['is_valid'] ) {
-			$result['is_valid'] = true;
-			$result['message']  = '';
-		}
-
-		return $result;
+		return $details;
 	}
 
 	public function update_entry_field_values( $entry, $form ) {
@@ -265,9 +295,11 @@ class GPML_Ajax_Upload {
 			// Append to current value if present
 			$current_value = rgar( $entry, $field->id, false );
 			if ( $current_value ) {
-				$new_value = array_merge( json_decode( $current_value ), $new_value );
+				$new_value = array_merge( (array) json_decode( $current_value ), $new_value );
 			}
-			$entry[ $field->id ] = json_encode( $new_value );
+
+			// Guard against a file being saved by both GF and this snippet.
+			$new_value = array_values( array_unique( $new_value ) );
 
 			$entry[ $field->id ] = json_encode( $new_value );
 
