@@ -3,34 +3,24 @@
  * Gravity Perks // Read Only // GP Bookings Field Support
  * https://gravitywiz.com/documentation/gravity-forms-read-only/
  *
- * GP Read Only has no handling for the GP Bookings Resource and Booking Time fields. This snippet adds that support.
- *
- * Usage:
- *
- * 1. Install this snippet as a plugin (or via a snippet plugin).
- * 2. Enable the "Read-only" field setting on your GP Bookings Resource and/or Booking Time field.
- * 3. Configure GPPA to populate the field's value.
+ * Makes GP Bookings Resource and Booking Time fields read-only when GP Populate Anything populates a
+ * value for them. If no value is populated, the field is left interactive.
  *
  * Plugin Name:  GP Read Only — GP Bookings Field Support
  * Plugin URI:   https://gravitywiz.com/documentation/gravity-forms-read-only/
- * Description:  Apply GP Read Only to GP Bookings Resource and Booking Time fields when GPPA populates a value.
+ * Description:  Automatically make GP Bookings Resource and Booking Time fields read-only when GPPA populates a value.
  * Author:       Gravity Wiz
- * Version:      1.0
+ * Version:      0.1
  * Author URI:   https://gravitywiz.com/
  */
 class GPRO_GP_Bookings_Fields {
 
-	/**
-	 * Field types handled by this snippet.
-	 */
 	private $field_types = array( 'gpb_resource', 'gpb_booking_time' );
 
 	public function __construct() {
 		// Priority 12 so we run after GP Read Only's own `read_only_input()` (priority 11), which regenerates
 		// the field markup from scratch and would otherwise discard our changes.
 		add_filter( 'gform_field_input', array( $this, 'read_only_input' ), 12, 5 );
-		add_filter( 'gform_pre_render', array( $this, 'maybe_flag_form' ) );
-		add_action( 'wp_footer', array( $this, 'styles' ) );
 	}
 
 	/**
@@ -54,61 +44,61 @@ class GPRO_GP_Bookings_Fields {
 
 		$populated_value = $this->get_populated_value( $field, $value );
 
-		/**
-		 * Filter whether a GP Bookings field should be rendered as read-only.
-		 *
-		 * @param bool     $is_read_only    Whether the field should be read-only.
-		 * @param GF_Field $field           The current field.
-		 * @param mixed    $populated_value The value GPPA populated, if any.
-		 */
-		$is_read_only = gf_apply_filters(
-			array( 'gpro_gpb_is_read_only', $form_id, $field->id ),
-			rgar( $field, 'gwreadonly_enable' ) && ! rgblank( $populated_value ),
-			$field,
-			$populated_value
-		);
-
-		if ( ! $is_read_only ) {
+		if ( ! $this->is_dynamically_populated( $field ) || rgblank( $populated_value ) ) {
 			return $input_html;
 		}
 
 		switch ( $field->get_input_type() ) {
 			case 'gpb_resource':
-				return $this->read_only_resource( $input_html, $field, $populated_value, $form_id );
+				return $this->read_only_resource( $input_html, $field, $populated_value );
 			case 'gpb_booking_time':
-				return $this->read_only_booking_time( $input_html, $field, $populated_value );
+				return $this->read_only_booking_time( $input_html );
 		}
 
 		return $input_html;
 	}
 
 	/**
-	 * Flag forms that have a read-only GP Bookings field so our styles are printed.
+	 * Whether the field gets its value from GPPA, either via dynamic population or a Live Merge Tag in its
+	 * default value.
 	 *
-	 * This runs on render rather than when a field is actually made read-only so that the styles are
-	 * present even when GPPA only returns a value later, via one of its AJAX re-renders.
+	 * @param GF_Field $field
 	 *
-	 * @param array $form
-	 *
-	 * @return array
+	 * @return bool
 	 */
-	public function maybe_flag_form( $form ) {
+	public function is_dynamically_populated( $field ) {
 
-		foreach ( $form['fields'] as $field ) {
-			if ( in_array( $field->get_input_type(), $this->field_types, true ) && rgar( $field, 'gwreadonly_enable' ) ) {
-				self::$has_read_only_field = true;
-				break;
+		if ( ! function_exists( 'gp_populate_anything' ) ) {
+			return false;
+		}
+
+		$gppa = gp_populate_anything();
+
+		if ( $gppa->is_field_dynamically_populated( $field, 'values' ) ) {
+			return true;
+		}
+
+		if ( ! $gppa->live_merge_tags ) {
+			return false;
+		}
+
+		$default_values = is_array( $field->defaultValue ) ? $field->defaultValue : array( $field->defaultValue );
+
+		foreach ( $default_values as $default_value ) {
+			if ( is_string( $default_value ) && $gppa->live_merge_tags->has_live_merge_tag( $default_value ) ) {
+				return true;
 			}
 		}
 
-		return $form;
+		return false;
 	}
 
 	/**
-	 * Get the value GPPA populated for this field.
+	 * Get the value that was populated for this field.
 	 *
-	 * GPPA stores the hydrated value on the field for exactly this purpose; it is set on every render,
-	 * including the AJAX re-renders that follow a change to one of the field's filter values.
+	 * GPPA stores the hydrated value on the field on every render, including the AJAX re-renders that
+	 * follow a change to one of the field's filter values. Live Merge Tags are resolved into the rendered
+	 * value instead, so that is used as the fallback.
 	 *
 	 * @param GF_Field $field
 	 * @param mixed    $value The value passed to gform_field_input.
@@ -117,11 +107,8 @@ class GPRO_GP_Bookings_Fields {
 	 */
 	public function get_populated_value( $field, $value ) {
 
-		if ( ! rgar( $field, 'gppa-values-enabled' ) ) {
-			return null;
-		}
-
 		$populated_value = rgar( $field, 'gppa_hydrated_value' );
+
 		if ( rgblank( $populated_value ) ) {
 			$populated_value = $value;
 		}
@@ -136,18 +123,18 @@ class GPRO_GP_Bookings_Fields {
 	/**
 	 * Disable the Resource drop down and submit its value via a hidden input.
 	 *
-	 * A disabled <select> is not submitted, so the hidden input is what actually carries the value. The
-	 * select keeps its ID since GP Bookings' JavaScript reads the selected resource from it when loading
-	 * availability for the Booking Time field.
+	 * The drop down keeps its options and its selection so the populated resource is still displayed. A
+	 * disabled <select> is not submitted, so the hidden input is what actually carries the value. The
+	 * select also keeps its ID, since GP Bookings' JavaScript reads the selected resource from it when
+	 * loading availability for the Booking Time field.
 	 *
 	 * @param string   $input_html
 	 * @param GF_Field $field
 	 * @param mixed    $value
-	 * @param int      $form_id
 	 *
 	 * @return string
 	 */
-	public function read_only_resource( $input_html, $field, $value, $form_id ) {
+	public function read_only_resource( $input_html, $field, $value ) {
 
 		// Automatic and static allocation modes already render a hidden input rather than a drop down.
 		if ( strpos( $input_html, '<select' ) === false ) {
@@ -169,98 +156,32 @@ class GPRO_GP_Bookings_Fields {
 			esc_attr( $value )
 		);
 
-		return $this->append_to_container( $input_html, $hidden_input );
+		$position = strrpos( $input_html, '</div>' );
+
+		return $position === false ? $input_html . $hidden_input : substr_replace( $input_html, $hidden_input, $position, 0 );
 	}
 
 	/**
-	 * Hide the Booking Time picker and display the populated booking time as a disabled text input.
+	 * Make the Booking Time picker non-interactive while leaving it on the page.
 	 *
-	 * The field's own hidden input already carries the value, so it is left untouched. The picker element
-	 * is hidden rather than removed; GP Bookings mounts its React app into it on load and again whenever
-	 * GPPA re-renders the field, and logs an error if it is missing.
+	 * The picker is left in place rather than replaced with a static value for two reasons: GP Bookings
+	 * mounts its React app into this element on load and again whenever GPPA re-renders the field, and
+	 * leaving it rendered means the user still sees the calendar (or slot list) with their booking time
+	 * selected. `inert` blocks both pointer and keyboard interaction with everything inside it.
 	 *
-	 * @param string   $input_html
-	 * @param GF_Field $field
-	 * @param mixed    $value
-	 *
-	 * @return string
-	 */
-	public function read_only_booking_time( $input_html, $field, $value ) {
-
-		$input_html = str_replace(
-			'class="gpb-booking-time-picker',
-			'class="gpro-gpb-hidden-picker gpb-booking-time-picker',
-			$input_html
-		);
-
-		$display = sprintf(
-			'<input type="text" class="gpro-gpb-readonly-display gf-default-disabled %s" value="%s" disabled="disabled" aria-disabled="true" tabindex="-1" />',
-			esc_attr( $field->size ),
-			esc_attr( $this->format_booking_time( $field, $value ) )
-		);
-
-		return $this->append_to_container( $input_html, $display );
-	}
-
-	/**
-	 * Format a Booking Time value for display using GP Bookings' own formatting.
-	 *
-	 * @param GF_Field $field
-	 * @param mixed    $value
-	 *
-	 * @return string
-	 */
-	public function format_booking_time( $field, $value ) {
-
-		if ( ! is_callable( array( $field, 'get_value_entry_detail' ) ) ) {
-			return $value;
-		}
-
-		try {
-			$formatted = $field->get_value_entry_detail( $value, array(), false, 'text' );
-		} catch ( \Throwable $e ) {
-			return $value;
-		}
-
-		return rgblank( $formatted ) ? $value : $formatted;
-	}
-
-	/**
-	 * Append markup inside the field's ginput_container, falling back to the end of the markup.
+	 * The field's hidden input already carries the value and is left untouched.
 	 *
 	 * @param string $input_html
-	 * @param string $markup
 	 *
 	 * @return string
 	 */
-	public function append_to_container( $input_html, $markup ) {
+	public function read_only_booking_time( $input_html ) {
 
-		$position = strrpos( $input_html, '</div>' );
-		if ( $position === false ) {
-			return $input_html . $markup;
-		}
-
-		return substr_replace( $input_html, $markup, $position, 0 );
-	}
-
-	private static $has_read_only_field = false;
-
-	public function styles() {
-
-		if ( ! self::$has_read_only_field ) {
-			return;
-		}
-
-		?>
-		<style>
-			.gpro-gpb-hidden-picker {
-				display: none !important;
-			}
-			.gpro-gpb-readonly-display {
-				width: 100%;
-			}
-		</style>
-		<?php
+		return str_replace(
+			'<div class="gpb-booking-time-picker',
+			'<div inert aria-disabled="true" class="gpb-booking-time-picker',
+			$input_html
+		);
 	}
 
 }
