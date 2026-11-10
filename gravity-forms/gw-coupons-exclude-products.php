@@ -6,7 +6,7 @@
  *
  * Requires Gravity Forms Coupons v1.1
  *
- * @version 1.4
+ * @version 1.5
  */
 class GW_Coupons_Exclude_Products {
 
@@ -71,6 +71,10 @@ class GW_Coupons_Exclude_Products {
 				if( window.gform ) {
 
 					gform.addFilter( 'gform_coupons_discount_amount', function( discount, couponType, couponAmount, price, totalDiscount, formId ) {
+
+						if ( gf_global.gfcep && gf_global.gfcep.skipFor100Percent && couponType == 'percentage' && parseFloat( couponAmount ) === 100 ) {
+							return discount;
+						}
 
 						price -= getExcludedAmount( formId );
 
