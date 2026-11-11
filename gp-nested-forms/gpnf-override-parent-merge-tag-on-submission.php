@@ -35,7 +35,9 @@ class GPNF_Override_Parent_Merge_Tags {
 			return;
 		}
 
-		$this->child_form_id = $config['child_form_id'];
+		if ( isset( $config['child_form_id'] ) ) {
+			$this->child_form_id = $config['child_form_id'];
+		}
 
 		if ( isset( $config['exclude_field_ids'] ) ) {
 			$this->exclude_field_ids = $config['exclude_field_ids'];
@@ -51,6 +53,9 @@ class GPNF_Override_Parent_Merge_Tags {
 
 		add_action( 'gform_after_update_entry', function ( $form, $entry_id ) {
 			$entry = GFAPI::get_entry( $entry_id );
+			if ( is_wp_error( $entry ) ) {
+				return;
+			}
 			$this->override_parent_merge_tags( $entry, $form );
 		}, 11, 2 );
 
@@ -61,6 +66,11 @@ class GPNF_Override_Parent_Merge_Tags {
 	}
 
 	function override_parent_merge_tags( $entry, $form ) {
+		// Bail if we don't have a usable entry/form (e.g. an entry that failed to load or a deleted form).
+		if ( ! is_array( $entry ) || empty( $form['fields'] ) ) {
+			return $entry;
+		}
+
 		foreach ( $form['fields'] as $field ) {
 			if ( $field->get_input_type() !== 'form' ) {
 				continue;
@@ -71,6 +81,11 @@ class GPNF_Override_Parent_Merge_Tags {
 			}
 
 			$child_form = GFAPI::get_form( $field->gpnfForm );
+
+			// Skip Nested Form fields whose child form is missing or inactive.
+			if ( empty( $child_form['fields'] ) ) {
+				continue;
+			}
 
 			foreach ( $child_form['fields'] as $child_field ) {
 				/**
@@ -105,6 +120,10 @@ class GPNF_Override_Parent_Merge_Tags {
 
 	function override_child_entry_input_value( $entry, $field, $child_form, $input_id, $default_value ) {
 
+		if ( ! is_string( $default_value ) || $default_value === '' ) {
+			return;
+		}
+
 		preg_match_all( '/{Parent:(\d+(\.\d+)?)[^}]*}/i', $default_value, $matches, PREG_SET_ORDER );
 		if ( empty( $matches ) ) {
 			return;
@@ -136,7 +155,9 @@ class GPNF_Override_Parent_Merge_Tags {
 				$child_entry = GFAPI::get_entry( $child_entry_id );
 
 				// Force the renaming of uploaded files if set.
-				gp_file_renamer()->rename_uploaded_files( $child_entry, $child_form, true );
+				if ( ! is_wp_error( $child_entry ) ) {
+					gp_file_renamer()->rename_uploaded_files( $child_entry, $child_form, true );
+				}
 			}
 		}
 
