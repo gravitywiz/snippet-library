@@ -116,11 +116,18 @@ class GPNF_Override_Parent_Merge_Tags {
 		}
 
 		$default_value   = $value;
-		$child_entry_ids = explode( ',', rgar( $entry, $field->id ) );
+		$child_entry_ids = array_filter( explode( ',', rgar( $entry, $field->id ) ) );
 		foreach ( $child_entry_ids as $child_entry_id ) {
 			// If any child entry merge tag is present, replace it with the child entry value before replacing with the Parent merge tag values.
 			$child_entry = GFAPI::get_entry( $child_entry_id );
-			$value       = GFCommon::replace_variables( $default_value, $child_form, $child_entry );
+
+			// Skip child entries that can't be loaded (e.g. deleted entries); passing a WP_Error to
+			// GFCommon::replace_variables() can trigger fatal errors in other plugins.
+			if ( is_wp_error( $child_entry ) ) {
+				continue;
+			}
+
+			$value = GFCommon::replace_variables( $default_value, $child_form, $child_entry );
 			GFAPI::update_entry_field( $child_entry_id, $input_id, $value );
 
 			// Added support to force the renaming of uploaded files if the GP File Renamer plugin is active and the version is greater than 1.0.9 because `rename_uploaded_files` method of `GP_File_Renamer` class supports third argument `force` only after 1.0.9.
