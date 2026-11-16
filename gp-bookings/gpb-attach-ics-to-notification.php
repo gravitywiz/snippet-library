@@ -4,8 +4,6 @@
  *
  * Attach an ICS file to specified notifications that includes all bookings from the entry.
  *
- * Note, this 
- *
  * Instructions:
  * 1. Install this snippet: https://gravitywiz.com/documentation/how-do-i-install-a-snippet/
  * 2. Set 'form_id' and `notification` in the configuration at the bottom. Find the notification ID in the "nid" parameter when editing the notification. A notification ID array is also supported.
@@ -14,20 +12,21 @@ class GPB_Notification_ICS {
 	private $form_id;
 	private $notification_ids;
 	private $include_pending;
-	private $files = [];
+	private $files = array();
 
 	public function __construct( array $args ) {
-		$args = wp_parse_args( $args, [
+		$args = wp_parse_args( $args, array(
 			'form_id'         => 0,
 			'notification'    => [],
 			'include_pending' => false,
-		] );
+		) );
 		$this->form_id          = (int) $args['form_id'];
 		$this->notification_ids = (array) $args['notification'];
 		$this->include_pending  = (bool) $args['include_pending'];
-		add_filter( 'gform_pre_send_email', [ $this, 'attach' ], 20, 4 );
-		add_action( 'gform_after_email', [ $this, 'after_email' ], 20, 6 );
-		add_action( 'shutdown', [ $this, 'cleanup' ] );
+
+		add_filter( 'gform_pre_send_email', array( $this, 'attach' ), 20, 4 );
+		add_action( 'gform_after_email', array( $this, 'after_email' ), 20, 6 );
+		add_action( 'shutdown', array( $this, 'cleanup' ) );
 	}
 
 	public function attach( $email, $format, $notification, $entry ) {
@@ -54,11 +53,12 @@ class GPB_Notification_ICS {
 			}
 
 			$utc      = new \DateTimeZone( 'UTC' );
-			$calendar = new \Sabre\VObject\Component\VCalendar( [
+			$calendar = new \Sabre\VObject\Component\VCalendar( array(
 				'VERSION'  => '2.0',
 				'PRODID'   => '-//Gravity Wiz//GPB Notification ICS//EN',
 				'CALSCALE' => 'GREGORIAN',
-			] );
+			) );
+
 			foreach ( $bookings as $booking ) {
 				try {
 					$status  = $booking->get_status();
@@ -69,13 +69,13 @@ class GPB_Notification_ICS {
 					}
 
 					// Build separately so a failed booking cannot leave a partial event.
-					$event = $calendar->createComponent( 'VEVENT', [
+					$event = $calendar->createComponent( 'VEVENT', array(
 						'UID'         => 'gpb-notification-' . hash( 'sha256', home_url( '/' ) . '|' . $booking->get_id() ),
 						'DTSTAMP'     => new \DateTimeImmutable( 'now', $utc ),
 						'SUMMARY'     => wp_strip_all_tags( $service->get_name() ),
 						'DESCRIPTION' => 'Your booking: ' . wp_strip_all_tags( $service->get_name() ),
 						'STATUS'      => $status === 'pending' ? 'TENTATIVE' : 'CONFIRMED',
-					] );
+					) );
 
 					$mode = $booking->get_mode();
 					if ( $mode === 'datetime-range' ) {
@@ -83,7 +83,7 @@ class GPB_Notification_ICS {
 						$end   = $this->parse_datetime( $booking->get_end_datetime_utc(), $utc );
 						$event->add( 'DTSTART', $start );
 						$event->add( 'DTEND', $end );
-					} elseif ( in_array( $mode, [ 'nightly', 'date-range-end-inclusive' ], true ) ) {
+					} elseif ( in_array( $mode, array( 'nightly', 'date-range-end-inclusive' ), true ) ) {
 						// Keep date-only values as local calendar dates, without a UTC shift.
 						$start = $this->parse_datetime( $booking->get_start_datetime(), $utc )->setTime( 0, 0 );
 						$end   = $this->parse_datetime( $booking->get_end_datetime(), $utc )->setTime( 0, 0 );
@@ -116,9 +116,10 @@ class GPB_Notification_ICS {
 			if ( ! mkdir( $directory, 0700 ) ) {
 				throw new \RuntimeException( 'Could not create temporary directory.' );
 			}
-			$file = $directory . '/booking.ics';
+
+			$file                 = $directory . '/booking.ics';
 			$this->files[ $file ] = $directory;
-			$content = $calendar->serialize();
+			$content              = $calendar->serialize();
 			if ( file_put_contents( $file, $content ) !== strlen( $content ) || ! chmod( $file, 0600 ) ) {
 				throw new \RuntimeException( 'Could not write temporary calendar file.' );
 			}
@@ -173,7 +174,7 @@ class GPB_Notification_ICS {
 # Configuration
 
 new GPB_Notification_ICS( array(
-	'form_id'         => 123,
-	'notification'    => 'abc123def456',
+	'form_id'      => 123,
+	'notification' => 'abc123def456',
 	//'include_pending' => true, // Uncomment to attach pending bookings. Only confirmed are attached by default.
 ) );
