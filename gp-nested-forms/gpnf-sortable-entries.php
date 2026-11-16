@@ -1,5 +1,12 @@
 <?php
 /**
+ * This snippet has evolved! 🦄
+ * This functionality is now available as a full feature in GP Nested Forms.
+ * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
+ *
+ * You can access the original snippet in our Git repo.
+ */
+/**
  * Gravity Perks // Nested Forms // Sortable Entries
  * https://gravitywiz.com/documentation/gravity-forms-nested-forms/
  *
