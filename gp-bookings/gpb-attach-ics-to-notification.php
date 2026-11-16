@@ -17,9 +17,10 @@ class GPB_Notification_ICS {
 	public function __construct( array $args ) {
 		$args = wp_parse_args( $args, array(
 			'form_id'         => 0,
-			'notification'    => [],
+			'notification'    => array(),
 			'include_pending' => false,
 		) );
+
 		$this->form_id          = (int) $args['form_id'];
 		$this->notification_ids = (array) $args['notification'];
 		$this->include_pending  = (bool) $args['include_pending'];
@@ -91,8 +92,8 @@ class GPB_Notification_ICS {
 						if ( $mode === 'date-range-end-inclusive' ) {
 							$end = $end->modify( '+1 day' );
 						}
-						$event->add( 'DTSTART', $start->format( 'Ymd' ), [ 'VALUE' => 'DATE' ] );
-						$event->add( 'DTEND', $end->format( 'Ymd' ), [ 'VALUE' => 'DATE' ] );
+						$event->add( 'DTSTART', $start->format( 'Ymd' ), array( 'VALUE' => 'DATE' ) );
+						$event->add( 'DTEND', $end->format( 'Ymd' ), array( 'VALUE' => 'DATE' ) );
 					} else {
 						continue;
 					}
@@ -125,8 +126,8 @@ class GPB_Notification_ICS {
 			}
 
 			// Keep all attachments supplied by Gravity Forms or other snippets.
-			$attachments          = $email['attachments'] ?? [];
-			$email['attachments'] = array_merge( $attachments ? (array) $attachments : [], [ $file ] );
+			$attachments          = $email['attachments'] ?? array();
+			$email['attachments'] = array_merge( $attachments ? (array) $attachments : array(), array( $file ) );
 		} catch ( \Throwable $exception ) {
 			// Keep the notification working if an attachment cannot be generated.
 			// Do not log calendar contents or customer data.
