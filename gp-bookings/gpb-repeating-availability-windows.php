@@ -30,26 +30,42 @@
  * the desired days and hours.
  */
 class GPB_Repeating_Availability {
-	private array $bookable_ids;
-	private array $window_descriptions;
-	private DateTimeImmutable $anchor;
-	private int $cycle_days;
-	private int $active_days;
+	/** @var int[] */
+	private $bookable_ids;
+
+	/** @var string[] */
+	private $window_descriptions;
+
+	/** @var DateTimeImmutable */
+	private $anchor;
+
+	/** @var int */
+	private $cycle_days;
+
+	/** @var int */
+	private $active_days;
 
 	public function __construct( array $args ) {
-		if ( array_key_exists( 'resource_ids', $args ) || array_key_exists( 'service_ids', $args ) ) {
-			throw new InvalidArgumentException( 'Use bookable_ids for both resource and service IDs.' );
+		try {
+			$this->set_config( $args );
+		} catch ( InvalidArgumentException $e ) {
+			// Log rather than throw so a configuration mistake can't take the whole site down.
+			// The listed windows run every week until the configuration is fixed.
+			error_log( 'GPB Repeating Availability Windows: ' . $e->getMessage() );
+			return;
 		}
-		if ( array_key_exists( 'repeat', $args ) ) {
-			throw new InvalidArgumentException( 'Use repeat_weeks with a positive integer instead of repeat.' );
-		}
-		$args = array_merge( [
-			'bookable_ids'        => [],
-			'window_descriptions' => [],
+
+		add_filter( 'gpb_availability_blocks', array( $this, 'filter_blocks' ), 10, 2 );
+	}
+
+	private function set_config( array $args ) {
+		$args = array_merge( array(
+			'bookable_ids'        => array(),
+			'window_descriptions' => array(),
 			'repeat_weeks'        => 2,
 			'active_weeks'        => 1,
 			'anchor'              => '',
-		], $args );
+		), $args );
 
 		$this->bookable_ids = $this->validate_ids( $args['bookable_ids'] );
 		if ( ! $this->bookable_ids ) {
@@ -67,8 +83,8 @@ class GPB_Repeating_Availability {
 		$this->window_descriptions = array_values( $args['window_descriptions'] );
 
 		$weeks = $args['repeat_weeks'];
-		if ( ! is_int( $weeks ) || $weeks < 1 || $weeks > intdiv( PHP_INT_MAX, 7 ) ) {
-			throw new InvalidArgumentException( 'Repeat weeks must be a positive whole number small enough to convert to days.' );
+		if ( ! is_int( $weeks ) || $weeks < 1 ) {
+			throw new InvalidArgumentException( 'Repeat weeks must be a positive whole number.' );
 		}
 		if ( ! is_int( $args['active_weeks'] ) || $args['active_weeks'] < 1 || $args['active_weeks'] > $weeks ) {
 			throw new InvalidArgumentException( 'Active weeks must be a whole number from 1 to the repeat interval.' );
@@ -83,9 +99,6 @@ class GPB_Repeating_Availability {
 			throw new InvalidArgumentException( 'Anchor must be a valid Monday in YYYY-MM-DD format.' );
 		}
 		$this->anchor = $anchor;
-
-		// Register only after configuration has been validated in full.
-		add_filter( 'gpb_availability_blocks', [ $this, 'filter_blocks' ], 10, 2 );
 	}
 
 	private function validate_ids( $ids ): array {
@@ -126,11 +139,14 @@ class GPB_Repeating_Availability {
 			}
 
 			$blocks[ $key ] = new class( $block, $bookable, $this ) extends \GP_Bookings\AvailabilityBlock {
-				private \GP_Bookings\AvailabilityBlock $original;
-				private GPB_Repeating_Availability $schedule;
+				/** @var \GP_Bookings\AvailabilityBlock */
+				private $original;
+
+				/** @var GPB_Repeating_Availability */
+				private $schedule;
 
 				public function __construct( $block, $bookable, $schedule ) {
-					parent::__construct( [
+					parent::__construct( array(
 						'block_id'          => $block->get_id(),
 						'object_id'         => $bookable->get_id(),
 						'object_type'       => $bookable->get_type(),
@@ -142,7 +158,7 @@ class GPB_Repeating_Availability {
 						'description'       => $block->get_description(),
 						'is_negative'       => false,
 						'recurring'         => $block->is_recurring(),
-					], $bookable );
+					), $bookable );
 					$this->time_behavior = $block->get_time_behavior();
 					$this->original      = $block;
 					$this->schedule      = $schedule;
@@ -158,9 +174,9 @@ class GPB_Repeating_Availability {
 }
 
 // Change these values for your own site.
-new GPB_Repeating_Availability( [
-	'bookable_ids'        => [ 123 ], // Resource and/or service IDs.
-	'window_descriptions' => [ 'Fortnightly rota' ],
+new GPB_Repeating_Availability( array(
+	'bookable_ids'        => array( 123 ), // Resource and/or service IDs.
+	'window_descriptions' => array( 'Fortnightly rota' ),
 	'anchor'              => '2026-11-09', // Monday of a working week; keep fixed.
 	'repeat_weeks'        => 2,
-] );
+) );
