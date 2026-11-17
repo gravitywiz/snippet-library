@@ -30,6 +30,8 @@ class GW_Custom_Form_Meta {
 
 	private static $instance = null;
 
+	private $current_form = null;
+
 	public static function get_instance() {
 		if ( self::$instance === null ) {
 			self::$instance = new self();
@@ -52,6 +54,10 @@ class GW_Custom_Form_Meta {
 
 		add_filter( 'gform_custom_merge_tags', array( $this, 'add_merge_tags' ), 10, 2 );
 		add_filter( 'gform_replace_merge_tags', array( $this, 'replace_merge_tags' ), 10, 7 );
+
+		add_filter( 'gform_pre_render', array( $this, 'set_current_form' ), 1 );
+		add_filter( 'gform_pre_validation', array( $this, 'set_current_form' ), 1 );
+		add_filter( 'gform_pre_submission_filter', array( $this, 'set_current_form' ), 1 );
 
 	}
 
@@ -282,9 +288,22 @@ class GW_Custom_Form_Meta {
 		return $merge_tags;
 	}
 
+	public function set_current_form( $form ) {
+		$this->current_form = $form;
+		return $form;
+	}
+
 	public function replace_merge_tags( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ) {
 
-		if ( empty( $form ) || strpos( $text, '{form_meta:' ) === false ) {
+		if ( ! is_string( $text ) || strpos( $text, '{form_meta:' ) === false ) {
+			return $text;
+		}
+
+		if ( empty( $form ) ) {
+			$form = $this->current_form;
+		}
+
+		if ( empty( $form ) ) {
 			return $text;
 		}
 
