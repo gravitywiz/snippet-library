@@ -22,13 +22,19 @@ class GPEB_Archive_Entry_Link {
 	}
 
 	public function init() {
-		if ( ! function_exists( 'gp_entry_blocks' ) || ! class_exists( 'GFAPI' ) ) {
+		// Without GF Entry Archive, archived entries would be hidden everywhere with no way to restore them.
+		if ( ! function_exists( 'gp_entry_blocks' ) || ! function_exists( 'gf_entry_archive' ) ) {
 			return;
 		}
 
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_editor_script' ) );
 		add_filter( 'gpeb_table_row_cell_content', array( $this, 'render_archive_link' ), 10, 3 );
+		add_filter( 'gpeb_cleaned_current_url', array( $this, 'remove_archive_entry_query_arg' ) );
 		add_action( 'template_redirect', array( $this, 'archive_entry' ) );
+	}
+
+	public function remove_archive_entry_query_arg( $url ) {
+		return remove_query_arg( 'archive_entry', $url );
 	}
 
 	public function enqueue_editor_script() {
@@ -56,7 +62,8 @@ JS
 			return $content;
 		}
 
-		if ( ! gp_entry_blocks()->permissions->can_current_user_edit_entry( $row->entry ) ) {
+		// Only active entries can be archived. Blocks filtered by Status may also list trashed, spam or archived entries.
+		if ( rgar( $row->entry, 'status' ) !== 'active' || ! gp_entry_blocks()->permissions->can_current_user_edit_entry( $row->entry ) ) {
 			return '';
 		}
 
@@ -86,7 +93,7 @@ JS
 
 		$entry = GFAPI::get_entry( $entry_id );
 
-		if ( ! $entry || is_wp_error( $entry ) || ! gp_entry_blocks()->permissions->can_current_user_edit_entry( $entry ) ) {
+		if ( ! $entry || is_wp_error( $entry ) || rgar( $entry, 'status' ) !== 'active' || ! gp_entry_blocks()->permissions->can_current_user_edit_entry( $entry ) ) {
 			return;
 		}
 
